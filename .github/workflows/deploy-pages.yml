@@ -25,7 +25,7 @@ jobs:
           node-version: 26
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm --filter coffeejson-site run build
+      - run: pnpm --filter coffeejson-site... run build
       - uses: actions/upload-pages-artifact@v3
         with:
           path: apps/site/dist
