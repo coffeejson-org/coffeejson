@@ -6,6 +6,7 @@ import { filterBeans, filterEntries } from "./filter";
 import type { BeanEntry, Filters, IndexEntry, View } from "./filter";
 import { esc, slugify } from "./text.mjs";
 import { siteHeader } from "./site-header.mjs";
+import { CORRECTIONS as SHARED_CORRECTIONS } from "./footer.mjs";
 import { docJsonLd } from "./jsonld";
 
 // The recipe directory's markup, as a value. The build writes the unfiltered
@@ -138,9 +139,7 @@ function card(e: IndexEntry): string {
 }
 
 const CORRECTIONS = `Quoted text stays the roasters’ — structure and
-  transcription are CC0. Spot an error, or want your material corrected or
-  removed? <a href="https://github.com/coffeejson-org/coffeejson/issues"
-  rel="noopener">Open an issue or a PR</a> — both are honored.`;
+  transcription are CC0. ${SHARED_CORRECTIONS}`;
 
 /** Every corpus recipe as schema.org Recipe, for the shell's static head. */
 export function recipesJsonLd(): unknown[] {

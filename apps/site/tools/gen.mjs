@@ -18,7 +18,7 @@ import {
 } from "@coffeejson/core";
 // The page footers, shared with the hand-written pages so the license and
 // privacy wording has exactly one source across generated and authored HTML.
-import { LICENSE_CORPUS, QUOTED_PROSE, footerHtml } from "../src/lib/footer.mjs";
+import { CORRECTIONS, LICENSE_CORPUS, QUOTED_PROSE, footerHtml } from "../src/lib/footer.mjs";
 import { esc, slugify } from "../src/lib/text.mjs";
 import { siteHeader } from "../src/lib/site-header.mjs";
 
@@ -647,7 +647,7 @@ export function buildCorpusPage(entry, doc) {
         data-slug="${esc(entry.slug)}"${multi ? ` data-label="Take the whole publication — all ${recipes.length} brews"` : ""}></div>
       ${beanHtml(doc.beans?.[0])}
       ${related}
-      ${footerHtml(LICENSE_CORPUS)}
+      ${footerHtml(LICENSE_CORPUS, QUOTED_PROSE, CORRECTIONS)}
     </main>
     <script type="module" src="/src/pages/corpus.ts"></script>
     <script type="module" src="/src/lib/analytics.ts"></script>
@@ -714,7 +714,7 @@ export function buildBeanPage(bean) {
         <a href="/beans/">All bags</a>
         <a href="/recipes/">All recipes</a>
       </nav>
-      ${footerHtml(LICENSE_CORPUS, QUOTED_PROSE)}
+      ${footerHtml(LICENSE_CORPUS, QUOTED_PROSE, CORRECTIONS)}
     </main>
     <script type="module" src="/src/pages/corpus.ts"></script>
     <script type="module" src="/src/lib/analytics.ts"></script>

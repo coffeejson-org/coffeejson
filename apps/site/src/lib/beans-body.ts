@@ -1,5 +1,5 @@
 import beans from "../generated/beans-index.json";
-import { LICENSE_SITE, QUOTED_PROSE, licenseLine } from "./footer.mjs";
+import { CORRECTIONS, LICENSE_SITE, QUOTED_PROSE, licenseLine } from "./footer.mjs";
 import { esc, slugify } from "./text.mjs";
 import { siteHeader } from "./site-header.mjs";
 
@@ -64,6 +64,6 @@ return `
     <a href="/">Home</a> · <a href="/recipes/">Browse</a><a href="/showcase/">Showcase</a> ·
     <a href="/docs/">Spec</a> ·
     <a href="https://github.com/coffeejson-org/coffeejson" rel="noopener">GitHub</a>
-    ${licenseLine(LICENSE_SITE, QUOTED_PROSE)}
+    ${licenseLine(LICENSE_SITE, QUOTED_PROSE, CORRECTIONS)}
   </footer>`;
 }

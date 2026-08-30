@@ -10,6 +10,17 @@ export const LICENSE_CORPUS = "CC0 1.0 Universal — public domain.";
 export const PACKAGES = "Packages: Apache-2.0.";
 /** Wherever a page can show quoted roaster copy, the quotation's owner is named. */
 export const QUOTED_PROSE = "Quoted roaster prose remains its author’s.";
+/**
+ * Naming the owner is half of it; the other half is a way to reach us. Every
+ * page that shows quoted material carries this, including the per-recipe and
+ * per-bag pages a search engine sends someone to directly — those are where a
+ * roaster meets their own words, and a promise they have to leave the site to
+ * find is not one they will find.
+ */
+export const CORRECTIONS =
+  "Spot an error, or want your material corrected or removed? " +
+  '<a href="https://github.com/coffeejson-org/coffeejson/issues" rel="noopener">' +
+  "Open an issue or a PR</a> — both are honored.";
 
 /**
  * The privacy sentence — true of `src/lib/analytics.ts` and of nothing else.
