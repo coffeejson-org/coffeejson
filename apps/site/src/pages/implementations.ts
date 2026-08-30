@@ -5,6 +5,12 @@
 import { LICENSE_SITE, PACKAGES, licenseLine } from "../lib/footer.mjs";
 import { siteHeader } from "../lib/site-header.mjs";
 
+// The site serves the docs only as raw Markdown at their exact paths, so a page
+// links the rendered copy on GitHub, the way the landing and showcase pages do.
+const REPO = "https://github.com/coffeejson-org/coffeejson";
+const GUIDE = `${REPO}/blob/main/docs/integration-guide.md`;
+const SPEC = `${REPO}/blob/main/docs/README.md`;
+
 
 /** The implementations body. Prerendered — see the note on `landingBody`. */
 export const implementationsBody = (): string => `
@@ -13,7 +19,7 @@ export const implementationsBody = (): string => `
   <h1>How to implement CoffeeJSON</h1>
   <p>Two functions: JSON in, your recipe type out, and back again. Required: a
   title, a dose, and either the water or the ratio. A reader ignores the rest.</p>
-  <p>The <a href="/docs/integration-guide.html">integration guide</a> is the
+  <p>The <a href="${GUIDE}">integration guide</a> is the
   checklist. This page is what you lean on while you work it.</p>
 
   <h2>Reference SDKs</h2>
@@ -59,7 +65,7 @@ export const implementationsBody = (): string => `
 
   <footer class="site-footer">
     <a href="/">Home</a> · <a href="/showcase/">Showcase</a> ·
-    <a href="/docs/">Spec</a> · <a href="/for-ai-agents/">For AI agents</a> ·
+    <a href="${SPEC}">Spec</a> · <a href="/for-ai-agents/">For AI agents</a> ·
     <a href="https://github.com/coffeejson-org/coffeejson" rel="noopener">GitHub</a>
     ${licenseLine(LICENSE_SITE, PACKAGES)}
   </footer>`;
