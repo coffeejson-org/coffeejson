@@ -1,0 +1,10 @@
+{
+  "coffeejson": "v1.0",
+  "recipes": [
+    {
+      "title": "Sunday V60",
+      "coffee": { "value": 15, "unit": "gram" },
+      "water": { "value": 250, "unit": "gram" }
+    }
+  ]
+}

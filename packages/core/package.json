@@ -1,0 +1,58 @@
+{
+  "name": "@coffeejson/core",
+  "version": "1.0.0",
+  "license": "Apache-2.0",
+  "description": "Framework-free TypeScript SDK for CoffeeJSON: wire types, payload codec, tolerant normalize, formatters.",
+  "type": "module",
+  "sideEffects": false,
+  "keywords": [
+    "coffee",
+    "coffeejson",
+    "recipe",
+    "brewing",
+    "espresso",
+    "pour-over",
+    "json",
+    "json-schema",
+    "interchange-format"
+  ],
+  "homepage": "https://coffeejson.org",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coffeejson-org/coffeejson.git",
+    "directory": "packages/core"
+  },
+  "bugs": {
+    "url": "https://github.com/coffeejson-org/coffeejson/issues"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./schema": "./schema/coffeejson-1.0.schema.json",
+    "./schema/authoring": "./schema/coffeejson-1.0.authoring.schema.json"
+  },
+  "files": [
+    "dist",
+    "schema"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "rm -rf dist schema && node tools/sync-schema.mjs && tsc -p tsconfig.build.json",
+    "prepack": "pnpm run build",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.build.json --noEmit",
+    "pretest": "node tools/sync-schema.mjs",
+    "test": "pnpm run typecheck && vitest run"
+  },
+  "devDependencies": {
+    "@types/node": "^26.2.0",
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.11"
+  }
+}

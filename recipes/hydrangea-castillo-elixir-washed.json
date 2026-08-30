@@ -1,0 +1,31 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "Castillo - Elixir Washed - Finca Santa Monica",
+      "roaster": { "name": "Hydrangea Coffee Roasters", "url": "https://hydrangea.coffee", "type": "organization" },
+      "url": "https://hydrangea.coffee/products/castillo-elixir-washed-finca-santa-monica",
+      "origin": {
+        "type": "single",
+        "items": [
+          {
+            "country": "CO",
+            "region": "Quindio",
+            "producers": [
+              { "name": "Felipe Arcila", "role": "producer", "type": "person" },
+              { "name": "Finca Santa Monica", "role": "farm" }
+            ],
+            "altitude": { "min": 1450, "max": 1500, "unit": "meter" },
+            "varietals": ["Castillo"],
+            "process": ["washed"]
+          }
+        ]
+      },
+      "process": ["washed"],
+      "varietals": ["Castillo"],
+      "roaster_notes": ["Lemongrass", "Chartreuse", "Dragon fruit"],
+      "description": "Process: Elixir Washed with Fruit and Spices",
+      "lang": "en"
+    }
+  ]
+}

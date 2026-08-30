@@ -1,0 +1,22 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "Hair Bender",
+      "roaster": { "name": "Stumptown Coffee Roasters", "url": "https://www.stumptowncoffee.com", "type": "organization" },
+      "url": "https://www.stumptowncoffee.com/products/hair-bender",
+      "origin": {
+        "type": "blend",
+        "items": [
+          { "region": "Central and South America" },
+          { "region": "East Africa" },
+          { "region": "Indonesia" }
+        ]
+      },
+      "preferred_extraction": "espresso",
+      "roaster_notes": ["Citrus", "Dark Chocolate", "Raisin"],
+      "description": "The sweet, balanced coffee that started it all. Hair Bender is Stumptown’s signature espresso blend, featuring notes of citrus, dark chocolate, and raisin that shine across every brew method.\n\nOur go-to espresso in all Stumptown cafés, Hair Bender also makes an exceptional cup as pour-over, drip, or French press—rich, versatile, and consistently delicious.",
+      "lang": "en"
+    }
+  ]
+}

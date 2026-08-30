@@ -1,0 +1,73 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "013 RUDDER BLEND Medium Dark",
+      "roaster": { "name": "PHILOCOFFEA", "url": "https://philocoffea.com", "type": "organization" },
+      "url": "https://philocoffea.com/?pid=127474243",
+      "origin": {
+        "type": "blend",
+        "items": [
+          {
+            "name": "Kenya Kariaini",
+            "country": "KE",
+            "region": "Kirinyaga",
+            "producers": [{ "name": "Kariaini Coffee Factory" }],
+            "altitude": { "value": 1600, "unit": "meter" },
+            "process": ["washed"],
+            "varietals": ["SL28", "SL34", "Ruiru 11", "Batian"]
+          },
+          {
+            "name": "Brazil Fazenda Passeio",
+            "country": "BR",
+            "region": "Sul de Minas",
+            "producers": [{ "name": "Adolfo Henrique Ferreira" }],
+            "altitude": { "min": 1100, "max": 1200, "unit": "meter" },
+            "process": ["natural"],
+            "varietals": ["Yellow Bourbon"]
+          },
+          {
+            "name": "Honduras Classic Marcala",
+            "country": "HN",
+            "region": "Marcala, La Paz",
+            "producers": [{ "name": "Smallholder Farmers (Marcala)" }],
+            "altitude": { "min": 1300, "max": 1500, "unit": "meter" },
+            "varietals": ["Catuai", "Lempira", "IHCAFE 90"]
+          }
+        ]
+      },
+      "roast_level": "medium_dark",
+      "description": "定番ブレンドの中深煎り。迷ったらこれ、のバランス。\n\nほんのりとした苦味と、その奥にしっかりと感じる甘さ。酸味・苦味・甘味のバランスを高いレベルで整えた、最もニュートラルな位置づけのブレンドです。味わいは重すぎず、軽すぎず。口当たりは滑らかで、後味には甘さが長く残ります。飲み手やシーンを選ばないため、ギフト用途にも適しています。\n\nRUDDER BLENDの中核となる存在であり、「日常における最適解」に最も近いブレンドです。",
+      "lang": "ja"
+    }
+  ],
+  "recipes": [
+    {
+      "title": "PHILOCOFFEA 013 RUDDER BLEND Medium Dark — おすすめの抽出レシピ｜ハリオ V60",
+      "description": "PHILOCOFFEA が013 RUDDER BLEND Medium Darkに添えるV60レシピ。粉20gに85℃のお湯300gを、60gずつ5投で注ぐ。",
+      "method": "pour_over",
+      "recommended": true,
+      "brewer": { "id": "hario-v60", "brand": "HARIO", "model": "V60" },
+      "coffee": { "value": 20, "unit": "gram" },
+      "water": { "value": 300, "unit": "gram" },
+      "water_temp": { "value": 85, "unit": "celsius" },
+      "grind": {
+        "grinder": { "id": "comandante-c40", "brand": "Comandante", "model": "C40 MK4" },
+        "setting": "27〜33クリック前後",
+        "size": "medium_coarse"
+      },
+      "steps": [
+        { "kind": "bloom", "at_s": 0, "to_water": { "value": 60, "unit": "gram" }, "instruction": "60g（+60g）まで注ぐ。" },
+        { "at_s": 40, "to_water": { "value": 120, "unit": "gram" }, "instruction": "合計120g（+60g）まで注ぐ。" },
+        { "at_s": 80, "to_water": { "value": 180, "unit": "gram" }, "instruction": "合計180g（+60g）まで注ぐ。" },
+        { "at_s": 120, "to_water": { "value": 240, "unit": "gram" }, "instruction": "合計240g（+60g）まで注ぐ。" },
+        { "at_s": 160, "to_water": { "value": 300, "unit": "gram" }, "instruction": "合計300g（+60g）まで注ぐ。" }
+      ],
+      "finish_s": 210,
+      "notes": "3:30に落ち切り。豆は中粗挽き、コマンダンテC40 MK4で27〜33クリック前後と指定されている。012 RUDDER BLEND Mediumと注湯スケジュールは同一で、湯温だけが88℃に対し85℃と異なる。",
+      "lang": "ja",
+      "author": { "name": "PHILOCOFFEA", "url": "https://philocoffea.com", "type": "organization" },
+      "based_on": "https://philocoffea.com/?pid=127474243"
+    }
+  ]
+}

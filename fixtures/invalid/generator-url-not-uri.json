@@ -1,0 +1,11 @@
+{
+  "coffeejson": "1.0",
+  "generator": { "name": "ExampleBrewApp", "url": "not a url" },
+  "recipes": [
+    {
+      "title": "Weekday V60",
+      "coffee": { "value": 15, "unit": "gram" },
+      "water": { "value": 250, "unit": "gram" }
+    }
+  ]
+}

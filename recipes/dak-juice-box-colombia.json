@@ -1,0 +1,29 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "Juice Box - Colombia",
+      "roaster": { "name": "Dak Coffee Roasters", "url": "https://www.dakcoffeeroasters.com", "type": "organization" },
+      "url": "https://www.dakcoffeeroasters.com/shop/coffee/juice-box?roast=espresso",
+      "origin": {
+        "type": "single",
+        "items": [
+          {
+            "country": "CO",
+            "region": "Urrao",
+            "producers": [{ "name": "Las Perlitas" }],
+            "altitude": { "value": 2000, "unit": "meter" },
+            "varietals": ["Chiroso Field Blend"],
+            "process": ["washed"]
+          }
+        ]
+      },
+      "process": ["washed"],
+      "varietals": ["Chiroso Field Blend"],
+      "preferred_extraction": "espresso",
+      "roaster_notes": ["Blood Orange", "Rhubarb", "Honey"],
+      "description": "A washed Chiroso from the Urrao region, grown by a group of producers there. Chiroso is a Colombian name for a variety that traces back to Ethiopia, and it shows in the cup: this drinks closer to a washed Ethiopian than to most Colombians, with honey, lemon peel, and rhubarb running through it. One of the washed coffees we've come back to most this year. This used to be called Honeymoon. We renamed it once Honey Burst joined the lineup, since two honey names at once was asking for trouble on the packing and dispatching floor.\n\nLas Perlitas is processed in cochadas: every four to seven days a new picking is depulped onto the previous days' coffee, homogenised, then washed together on the final day before drying. Most of the lot ferments in water, which keeps the profile clean and free of the excess funk other methods can bring. Chiroso is a newer variety grown mainly in Antioquia, Colombia. It's only been on the radar a few years, but it's catching on fast for its quality. Genetically it's been identified as an Ethiopian landrace, though no one can place it more precisely than that yet.",
+      "lang": "en"
+    }
+  ]
+}

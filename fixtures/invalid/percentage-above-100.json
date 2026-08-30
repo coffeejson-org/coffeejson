@@ -1,0 +1,15 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "House Blend",
+      "origin": {
+        "type": "blend",
+        "items": [
+          { "country": "BR", "percentage": 130 },
+          { "country": "ET", "percentage": 30 }
+        ]
+      }
+    }
+  ]
+}

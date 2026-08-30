@@ -1,0 +1,13 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "Altitude needs value, min, or max",
+      "origin": {
+        "items": [
+          { "country": "ET", "altitude": { "unit": "meter" } }
+        ]
+      }
+    }
+  ]
+}

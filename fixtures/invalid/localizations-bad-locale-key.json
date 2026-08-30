@@ -1,0 +1,14 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "4:6メソッド",
+      "lang": "ja",
+      "coffee": { "value": 20, "unit": "gram" },
+      "water": { "value": 300, "unit": "gram" },
+      "localizations": {
+        "english": { "title": "4:6 Method" }
+      }
+    }
+  ]
+}

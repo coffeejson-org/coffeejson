@@ -1,0 +1,9 @@
+{
+  "recipes": [
+    {
+      "title": "No version marker",
+      "coffee": { "value": 15, "unit": "gram" },
+      "water": { "value": 250, "unit": "gram" }
+    }
+  ]
+}

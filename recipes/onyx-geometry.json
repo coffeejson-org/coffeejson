@@ -1,0 +1,179 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "Geometry",
+      "roaster": {
+        "name": "Onyx Coffee Lab",
+        "url": "https://onyxcoffeelab.com",
+        "type": "organization"
+      },
+      "url": "https://onyxcoffeelab.com/products/geometry",
+      "origin": {
+        "type": "blend",
+        "items": [
+          {
+            "country": "CO",
+            "altitude": {
+              "value": 1950,
+              "unit": "meter"
+            },
+            "harvest_time": "Rotating Microlots"
+          },
+          {
+            "country": "ET",
+            "altitude": {
+              "value": 1950,
+              "unit": "meter"
+            },
+            "harvest_time": "Rotating Microlots"
+          }
+        ]
+      },
+      "process": [
+        "washed"
+      ],
+      "drying_method": "raised_bed",
+      "varietals": [
+        "Mixed"
+      ],
+      "roast_level": "light",
+      "production_roaster": "Loring S70 Peregrine",
+      "decaf": false,
+      "form": "bean",
+      "preferred_extraction": "omni",
+      "roaster_notes": [
+        "Berries",
+        "Stone Fruit",
+        "Earl Grey",
+        "Honeysuckle",
+        "Round"
+      ],
+      "description": "Geometry has been defined as \"describing spaces that lie beyond the normal range of human experience.\" Soon it will also be defined as \"that coffee from Onyx that I am in love with and completely redefined my relationship with coffee.\" It's our answer for everything and has two of our favorite coffees—a washed processed Ethiopian & Colombian. This blend has become one of our favorite coffees. We love it as a filter coffee, and we love it as espresso. And not only does is it taste great as either but it's easy to dial in as espresso or filter.",
+      "lang": "en"
+    }
+  ],
+  "recipes": [
+    {
+      "title": "Onyx Geometry Origami",
+      "description": "Onyx's Origami brew guide for Geometry: a bloom and five spiral pours at 1:16 and 205 °F for a berry and stone-fruit filter cup.",
+      "method": "pour_over",
+      "recommended": true,
+      "brewer": {
+        "id": "origami",
+        "brand": "Origami",
+        "label": "Origami"
+      },
+      "coffee": {
+        "value": 25,
+        "unit": "gram"
+      },
+      "water": {
+        "value": 400,
+        "unit": "gram"
+      },
+      "ratio": 16,
+      "water_temp": {
+        "value": 205,
+        "unit": "fahrenheit"
+      },
+      "grind": {
+        "microns_approx": 725
+      },
+      "steps": [
+        {
+          "kind": "bloom",
+          "at_s": 0,
+          "to_water": {
+            "value": 50,
+            "unit": "gram"
+          },
+          "instruction": "bloom"
+        },
+        {
+          "at_s": 30,
+          "to_water": {
+            "value": 160,
+            "unit": "gram"
+          },
+          "instruction": "spiral pour"
+        },
+        {
+          "at_s": 45,
+          "to_water": {
+            "value": 220,
+            "unit": "gram"
+          },
+          "instruction": "spiral pour"
+        },
+        {
+          "at_s": 65,
+          "to_water": {
+            "value": 280,
+            "unit": "gram"
+          },
+          "instruction": "spiral pour"
+        },
+        {
+          "at_s": 90,
+          "to_water": {
+            "value": 340,
+            "unit": "gram"
+          },
+          "instruction": "spiral pour"
+        },
+        {
+          "at_s": 120,
+          "to_water": {
+            "value": 400,
+            "unit": "gram"
+          },
+          "instruction": "spiral pour"
+        }
+      ],
+      "finish_s": 215,
+      "notes": "Onyx pairs the Origami with a Hario cone filter for this guide.",
+      "lang": "en",
+      "author": {
+        "name": "Onyx Coffee Lab",
+        "url": "https://onyxcoffeelab.com",
+        "type": "organization"
+      },
+      "based_on": "https://onyxcoffeelab.com/products/geometry"
+    },
+    {
+      "title": "Onyx Geometry Espresso",
+      "description": "Onyx Coffee Lab's espresso for Geometry: 20 g in, 47 g out on a Series 1 profile — line pressure, then 9 bar for 26 seconds.",
+      "method": "espresso",
+      "basis": "yield",
+      "recommended": true,
+      "coffee": {
+        "value": 20,
+        "unit": "gram"
+      },
+      "yield": {
+        "value": 47,
+        "unit": "gram"
+      },
+      "pressure": {
+        "value": 9,
+        "unit": "bar"
+      },
+      "preinfusion_s": 3.5,
+      "steps": [
+        {
+          "kind": "pull",
+          "instruction": "Series 1 profile: line pressure for 0–3.5 seconds, then extract at 9 bar for 26 seconds."
+        }
+      ],
+      "finish_s": 29.5,
+      "lang": "en",
+      "author": {
+        "name": "Onyx Coffee Lab",
+        "url": "https://onyxcoffeelab.com",
+        "type": "organization"
+      },
+      "based_on": "https://onyxcoffeelab.com/products/geometry"
+    }
+  ]
+}

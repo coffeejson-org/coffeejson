@@ -1,0 +1,38 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "Roaster's Reserve: Ethiopia Yirgacheffe Banko Chelchele Supernatural",
+      "roaster": {
+        "name": "DRINK COFFEE DO STUFF",
+        "url": "https://drinkcoffeedostuff.com",
+        "type": "organization"
+      },
+      "url": "https://drinkcoffeedostuff.com/products/roasters-reserve-ethiopia-yirgacheffe-yirgacheffe-banko-chelchele-supernatural",
+      "origin": {
+        "type": "single",
+        "items": [
+          {
+            "country": "ET",
+            "region": "Yirgacheffe Banko Chelchele Kebele",
+            "producers": [
+              {
+                "name": "Smallholder Farmers"
+              }
+            ],
+            "altitude": {
+              "value": 7500,
+              "unit": "foot"
+            }
+          }
+        ]
+      },
+      "process": [
+        "natural"
+      ],
+      "roast_level": "medium",
+      "description": "2026 Good Food Awards Winner\n\nIt’s back. And it just made national headlines.\n\nRoaster’s Reserve: Ethiopia Yirgacheffe Banko Chelchele Supernatural has officially been named a 2026 Good Food Awards Winner — one of the most respected honors in the food and beverage world. This marks the third time since our 2017 launch that a DRINK COFFEE DO STUFF single origin has been selected as a finalist, and second time we have won. Humble brag: we were proud to take home a win in 2018 with another Ethiopia after less than a year in business!\n\nThis coffee isn’t just special to us. It’s objectively exceptional.\n\nSourced from smallholder farmers in the legendary Banko Chelchele Kebele (neighborhood) of Yirgacheffe, this lot is vibrant, expressive, and wildly aromatic. Expect an explosion of stone fruit, ripe strawberry, rose florals, and powdered sugar sweetness, all carried by a creamy, luxurious body that feels impossibly silky. Our sourcing team calls it one of the best coffees we've ever brought in, and we know you'll agree!\n\nSo, why \"supernatural\"? It’s all about the processing.\n\nWhole coffee cherries are sealed in carbon fiber drums and fermented for up to 10 days before being carefully dried on raised beds. This extended natural process intensifies the fruit character and builds layered sugars, creating a cup that tastes like nectarine and strawberry folded into cream and dusted with confectioner’s sugar. Grown at 7,500ft and roasted with intention at altitude, this coffee is elegant, high-definition, and unforgettable.",
+      "lang": "en"
+    }
+  ]
+}

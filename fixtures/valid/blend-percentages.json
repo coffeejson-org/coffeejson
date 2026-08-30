@@ -1,0 +1,20 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "House Blend",
+      "roaster": { "name": "Example Roastery" },
+      "origin": {
+        "type": "blend",
+        "items": [
+          { "country": "BR", "region": "Cerrado", "percentage": 70, "harvest_time": "2025" },
+          { "country": "ET", "region": "Sidama", "percentage": 30, "harvest_time": "2025" }
+        ]
+      },
+      "process": ["natural"],
+      "roast_level": "medium_dark",
+      "certifications": ["rainforest_alliance"],
+      "roaster_notes": ["milk chocolate", "hazelnut", "orange"]
+    }
+  ]
+}

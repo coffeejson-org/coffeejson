@@ -1,0 +1,158 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "Tropical Weather",
+      "roaster": {
+        "name": "Onyx Coffee Lab",
+        "url": "https://onyxcoffeelab.com",
+        "type": "organization"
+      },
+      "url": "https://onyxcoffeelab.com/products/tropical-weather",
+      "origin": {
+        "type": "blend",
+        "items": [
+          {
+            "country": "ET",
+            "process": [
+              "washed"
+            ],
+            "altitude": {
+              "value": 1900,
+              "unit": "meter"
+            },
+            "harvest_time": "Rotating Microlots",
+            "percentage": 50
+          },
+          {
+            "country": "ET",
+            "process": [
+              "natural"
+            ],
+            "altitude": {
+              "value": 1900,
+              "unit": "meter"
+            },
+            "harvest_time": "Rotating Microlots",
+            "percentage": 50
+          }
+        ]
+      },
+      "drying_method": "raised_bed",
+      "varietals": [
+        "Mixed"
+      ],
+      "roast_level": "light",
+      "production_roaster": "Loring S70 Peregrine",
+      "decaf": false,
+      "form": "bean",
+      "preferred_extraction": "omni",
+      "roaster_notes": [
+        "Mixed Berries",
+        "Sweet Tea",
+        "Raw Honey",
+        "Plum"
+      ],
+      "description": "Tropical Weather is a seasonal blend that celebrates coffees from our favorite coffee producing country: Ethiopia. We take a fresh washed offering that provides delicate florals and juicy texture, and incorporate a natural processed coffee that promotes pungent fruits and natural sugars. The result is indeed better than the sum of its parts. If you miss the long days of summer then Tropical Weather is your cup of sunshine. With a floral aroma, notes of berries and plum, along with the tannins and sweetness of sweet tea, you'll be leaving the house wearing shorts all year long.",
+      "lang": "en"
+    }
+  ],
+  "recipes": [
+    {
+      "title": "Onyx Tropical Weather Origami",
+      "description": "Onyx's Origami brew guide for Tropical Weather: a bloom, a center pour, and a spiral pour at 200 °F for a juicy Ethiopian filter cup.",
+      "method": "pour_over",
+      "recommended": true,
+      "brewer": {
+        "id": "origami",
+        "brand": "Origami",
+        "label": "Origami"
+      },
+      "coffee": {
+        "value": 15,
+        "unit": "gram"
+      },
+      "water": {
+        "value": 250,
+        "unit": "gram"
+      },
+      "water_temp": {
+        "value": 200,
+        "unit": "fahrenheit"
+      },
+      "grind": {
+        "microns_approx": 530
+      },
+      "steps": [
+        {
+          "kind": "bloom",
+          "at_s": 0,
+          "to_water": {
+            "value": 50,
+            "unit": "gram"
+          },
+          "instruction": "bloom"
+        },
+        {
+          "at_s": 30,
+          "to_water": {
+            "value": 150,
+            "unit": "gram"
+          },
+          "instruction": "center pour"
+        },
+        {
+          "at_s": 90,
+          "to_water": {
+            "value": 250,
+            "unit": "gram"
+          },
+          "instruction": "spiral pour"
+        }
+      ],
+      "finish_s": 180,
+      "notes": "Onyx pairs the Origami with a cone filter for this guide.",
+      "lang": "en",
+      "author": {
+        "name": "Onyx Coffee Lab",
+        "url": "https://onyxcoffeelab.com",
+        "type": "organization"
+      },
+      "based_on": "https://onyxcoffeelab.com/products/tropical-weather"
+    },
+    {
+      "title": "Onyx Tropical Weather Espresso",
+      "description": "Onyx Coffee Lab's espresso for Tropical Weather: 19 g in, 45 g out on a Series 1 profile — line pressure, then 9 bar for 25 seconds.",
+      "method": "espresso",
+      "basis": "yield",
+      "recommended": true,
+      "coffee": {
+        "value": 19,
+        "unit": "gram"
+      },
+      "yield": {
+        "value": 45,
+        "unit": "gram"
+      },
+      "pressure": {
+        "value": 9,
+        "unit": "bar"
+      },
+      "preinfusion_s": 3.5,
+      "steps": [
+        {
+          "kind": "pull",
+          "instruction": "Series 1 profile: line pressure for 0–3.5 seconds, then extract at 9 bar for 25 seconds."
+        }
+      ],
+      "finish_s": 28.5,
+      "lang": "en",
+      "author": {
+        "name": "Onyx Coffee Lab",
+        "url": "https://onyxcoffeelab.com",
+        "type": "organization"
+      },
+      "based_on": "https://onyxcoffeelab.com/products/tropical-weather"
+    }
+  ]
+}

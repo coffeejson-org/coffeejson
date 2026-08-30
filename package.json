@@ -1,0 +1,17 @@
+{
+  "name": "coffeejson-spec",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Tooling for the CoffeeJSON specification repository: schema, fixture, and example validation.",
+  "type": "module",
+  "packageManager": "pnpm@11.23.0",
+  "scripts": {
+    "test": "node tools/validate-fixtures.mjs",
+    "test:all": "pnpm test && pnpm -r test",
+    "validate:doc": "node tools/validate-doc.mjs"
+  },
+  "devDependencies": {
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1"
+  }
+}

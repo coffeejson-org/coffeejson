@@ -1,0 +1,11 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "Ratio must be positive",
+      "coffee": { "value": 15, "unit": "gram" },
+      "water": { "value": 250, "unit": "gram" },
+      "ratio": 0
+    }
+  ]
+}

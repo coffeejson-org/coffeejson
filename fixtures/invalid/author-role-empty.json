@@ -1,0 +1,11 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "4:6 method",
+      "coffee": { "value": 20, "unit": "gram" },
+      "water": { "value": 300, "unit": "gram" },
+      "author": { "name": "Example Roastery", "role": "" }
+    }
+  ]
+}

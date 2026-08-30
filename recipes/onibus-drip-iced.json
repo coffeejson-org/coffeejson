@@ -1,0 +1,32 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "ONIBUS COFFEE — ハンドドリップ　アイスコーヒーの淹れ方",
+      "description": "ONIBUS COFFEE のハンドドリップ（HARIO V60）によるアイスコーヒーのレシピ。中挽きの粉18gに92℃のお湯150ccを3投で注ぎ、氷160gを80gずつ2回に分けて加える。",
+      "method": "pour_over",
+      "brewer": { "id": "hario-v60", "brand": "HARIO", "model": "ドリッパー01（V60）" },
+      "coffee": { "value": 18, "unit": "gram" },
+      "water": { "value": 150, "unit": "milliliter" },
+      "water_temp": { "value": 92, "unit": "celsius" },
+      "grind": { "size": "medium" },
+      "filter": { "material": "paper", "label": "ペーパーフィルター01 ※HARIO V60使用" },
+      "additions": [
+        { "type": "ice", "amount": { "value": 160, "unit": "gram" } }
+      ],
+      "steps": [
+        { "kind": "prep", "instruction": "ペーパーフィルターを湯通しをします。ペーパーフィルターのにおいを取り除きます。" },
+        { "kind": "prep", "instruction": "ペーパーフィルターにコーヒー豆を18g入れ、平らにならします。" },
+        { "kind": "bloom", "at_s": 0, "to_water": { "value": 50, "unit": "milliliter" }, "instruction": "50ccのお湯を注ぎ、スプーンで混ぜて、30秒蒸らします。" },
+        { "at_s": 30, "to_water": { "value": 80, "unit": "milliliter" }, "instruction": "30ccのお湯をドリッパーの中心から外側へ、外側から内側へと円を描くように注ぎます。" },
+        { "at_s": 70, "to_water": { "value": 150, "unit": "milliliter" }, "instruction": "さらに70ccのお湯を注ぎ、もう一度スプーンで混ぜます。落としきり、氷80gを入れ、溶かしきります。" },
+        { "at_s": 110, "instruction": "グラスに氷80gを入れ、注いで完成です。" }
+      ],
+      "finish_s": 120,
+      "notes": "氷は合計160gを80gずつ2回（抽出液に溶かす分とグラスに入れる分）に分けて使う。お湯の量は出典どおり体積（cc）で、氷は出典どおり質量（g）で記録している。各ステップの数値は出典の1投ごとの量（50・30・70cc）を累計に直したもの。",
+      "lang": "ja",
+      "author": { "name": "ONIBUS COFFEE", "url": "https://onibuscoffee.com", "type": "organization" },
+      "based_on": "https://onibuscoffee.com/pages/brewing_guide/drip_ice_coffee"
+    }
+  ]
+}

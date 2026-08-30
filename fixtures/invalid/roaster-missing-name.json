@@ -1,0 +1,9 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "Nano Challa",
+      "roaster": { "url": "https://example.com" }
+    }
+  ]
+}

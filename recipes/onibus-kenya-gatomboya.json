@@ -1,0 +1,27 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "ケニア / ガトンボヤ",
+      "roaster": { "name": "ONIBUS COFFEE", "url": "https://onibuscoffee.com", "type": "organization" },
+      "url": "https://onibuscoffee.com/products/kenya-gatomboya",
+      "origin": {
+        "type": "single",
+        "items": [
+          {
+            "country": "KE",
+            "region": "Nyeri",
+            "producers": [{ "name": "Gatomboya Coffee Factory" }],
+            "altitude": { "min": 1700, "max": 1750, "unit": "meter" },
+            "process": ["washed"]
+          }
+        ]
+      },
+      "process": ["washed"],
+      "varietals": ["SL28", "SL34", "Batian", "Ruiru11"],
+      "roaster_notes": ["レモンキャンディ", "ハーブ", "紅茶", "丸みのある口当たり"],
+      "description": "レモンキャンディを思わせるやさしく明るい甘さに、ほのかなハーバルのニュアンス。紅茶のような軽やかな飲み心地と、丸みのある口当たりが心地よく広がる一杯です。\n\n組合：Barichu FCS（バリチュ生産組合）",
+      "lang": "ja"
+    }
+  ]
+}

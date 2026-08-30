@@ -1,0 +1,11 @@
+{
+  "coffeejson": "1.0",
+  "generator": { "version": "2.3.0" },
+  "recipes": [
+    {
+      "title": "Weekday V60",
+      "coffee": { "value": 15, "unit": "gram" },
+      "water": { "value": 250, "unit": "gram" }
+    }
+  ]
+}

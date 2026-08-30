@@ -1,0 +1,20 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "id": "shot-of-the-day",
+      "title": "Shot of the day",
+      "method": "espresso",
+      "basis": "yield",
+      "coffee": { "value": 18, "unit": "gram" },
+      "yield": { "value": 36, "unit": "gram" },
+      "finish_s": 28
+    }
+  ],
+  "tastings": [
+    {
+      "recipe_ref": "shot-of-the-day",
+      "measured": { "tds": 9.4 }
+    }
+  ]
+}

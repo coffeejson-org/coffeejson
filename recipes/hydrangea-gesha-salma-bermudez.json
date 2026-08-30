@@ -1,0 +1,32 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "Gesha - Salma Bermudez - Finca El Paraiso",
+      "roaster": { "name": "Hydrangea Coffee Roasters", "url": "https://hydrangea.coffee", "type": "organization" },
+      "url": "https://hydrangea.coffee/products/salma-bermudez",
+      "origin": {
+        "type": "single",
+        "items": [
+          {
+            "country": "CO",
+            "region": "Cauca",
+            "producers": [
+              { "name": "Samuel Diego Bermudez", "role": "producer", "type": "person" },
+              { "name": "Finca El Paraiso", "role": "farm" }
+            ],
+            "altitude": { "value": 1930, "unit": "meter" },
+            "varietals": ["Gesha"],
+            "process": ["anaerobic", "washed"]
+          }
+        ]
+      },
+      "process": ["anaerobic", "washed"],
+      "drying_method": "dehumidifier",
+      "varietals": ["Gesha"],
+      "roaster_notes": ["Mango", "Dulce de Leches", "Elderflower"],
+      "description": "Process: Special Fermentation Washed\n\nSalma is a Gesha profile that begins with the harvest of overripe cherries, followed by a 72-hour submerged anaerobic fermentation with yeast. The coffee is dried using a dehumidifier to preserve softness and aromatic clarity.\n\nIn the cup, look for mango, dulce de leches, and elderflower, with a silky body and citric acidity.\n\nWe chose this lot for its rich sweetness, tropical character, and floral complexity.",
+      "lang": "en"
+    }
+  ]
+}

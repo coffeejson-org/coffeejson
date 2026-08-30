@@ -1,0 +1,28 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "LIGHT UP COFFEE — DRIP COFFEE [KALITA WAVE]",
+      "description": "LIGHT UP COFFEE のカリタウェーブによるドリップレシピ。粉15gに90℃のお湯240gを、35g・90g・140g・190g・240gと5投で注ぐ。",
+      "method": "pour_over",
+      "brewer": { "id": "kalita-wave", "brand": "Kalita", "model": "Wave" },
+      "coffee": { "value": 15, "unit": "gram" },
+      "water": { "value": 240, "unit": "gram" },
+      "water_temp": { "value": 90, "unit": "celsius" },
+      "filter": { "material": "paper", "label": "ペーパーフィルター" },
+      "steps": [
+        { "kind": "prep", "instruction": "湯通し：ペーパーフィルターの全体を湿らせるようにお湯を注ぎ、捨てる。（真ん中を中心にお湯をかけ、最後にフィルターの端にお湯をかけると、フィルターの折り目が崩れにくいです。）" },
+        { "kind": "prep", "instruction": "粉をセット：フィルターに粉にしたコーヒーを入れ、ドリッパーを揺らして平らにならす。" },
+        { "kind": "bloom", "at_s": 0, "to_water": { "value": 35, "unit": "gram" }, "instruction": "蒸らし：コーヒー粉全体を濡らすように、35gのお湯を穏やかに注ぎ、30秒待つ。※スプーンなどで粉を混ぜる必要はありません" },
+        { "at_s": 30, "to_water": { "value": 90, "unit": "gram" }, "instruction": "計90gまで注ぐ。お湯は粉に乗せるように、円を描くように注ぐ。1回の注ぎは10秒ほどの時間で注ぐ勢いがおすすめです。" },
+        { "at_s": 60, "to_water": { "value": 140, "unit": "gram" }, "instruction": "計140gまで注ぐ。" },
+        { "at_s": 90, "to_water": { "value": 190, "unit": "gram" }, "instruction": "計190gまで注ぐ。" },
+        { "at_s": 110, "to_water": { "value": 240, "unit": "gram" }, "instruction": "計240gまで注ぐ。注ぎ終わったらドリッパーを軽く揺すり、粉を平らにして待つ。" }
+      ],
+      "notes": "お湯は「90℃目安」、240gに加えて湯通し用のお湯を別に用意する。お湯が落ちきるまで合計2:30〜3:00くらいになる挽き目がちょうど良い、とされている（落ち切り時間そのものではなく挽き目の目安として示されているため、ここでは抽出終了時間として記録していない）。挽き目は6機種のグラインダーごとの目盛りで示されている。",
+      "lang": "ja",
+      "author": { "name": "LIGHT UP COFFEE", "url": "https://lightupcoffee.com", "type": "organization" },
+      "based_on": "https://lightupcoffee.com/blogs/brew-guide/drip-kalitawave"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "Mis-cased gear id",
+      "method": "pour_over",
+      "brewer": { "id": "Hario-V60", "brand": "Hario", "model": "V60", "label": "Hario V60" },
+      "coffee": { "value": 15, "unit": "gram" },
+      "water": { "value": 250, "unit": "gram" }
+    }
+  ]
+}

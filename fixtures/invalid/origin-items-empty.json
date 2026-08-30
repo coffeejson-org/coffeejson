@@ -1,0 +1,10 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "House Blend",
+      "roaster": { "name": "Example Roastery" },
+      "origin": { "type": "blend", "items": [] }
+    }
+  ]
+}

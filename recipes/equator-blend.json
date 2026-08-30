@@ -1,0 +1,50 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "Equator Blend",
+      "roaster": { "name": "Equator Coffees", "url": "https://www.equatorcoffees.com", "type": "organization" },
+      "url": "https://www.equatorcoffees.com/products/equator-blend",
+      "origin": {
+        "type": "blend",
+        "items": [
+          {
+            "region": "Dolok Sanggul, Lintong",
+            "producers": [{ "name": "Multiple producers" }],
+            "altitude": { "min": 4600, "max": 4750, "unit": "foot" },
+            "process": ["wet_hulled"],
+            "varietals": ["Onanganjang", "Sigararutang"]
+          },
+          {
+            "country": "KE",
+            "region": "Aberdare Mts., Mt. Kenya",
+            "producers": [{ "name": "Multiple producers" }],
+            "altitude": { "min": 5250, "max": 5900, "unit": "foot" },
+            "process": ["washed"],
+            "varietals": ["SL28", "SL34", "Ruiru 11"]
+          },
+          {
+            "country": "CO",
+            "region": "La Plata, Huila",
+            "producers": [{ "name": "Las Rosas Women’s Group" }],
+            "altitude": { "min": 5575, "max": 6550, "unit": "foot" },
+            "process": ["washed"],
+            "varietals": ["Caturra", "Castillo"]
+          },
+          {
+            "country": "SV",
+            "region": "Apaneca, Ahuachapán Department",
+            "producers": [{ "name": "Magana Coffee" }],
+            "altitude": { "min": 4360, "max": 4430, "unit": "foot" },
+            "process": ["washed"],
+            "varietals": ["Pacamara"]
+          }
+        ]
+      },
+      "roast_level": "medium_dark",
+      "roaster_notes": ["Cedar", "apricot", "marzipan", "milk chocolate", "nutmeg"],
+      "description": "The all-time classic served at all Equator cafes. We designed our namesake blend with versatility in mind: a mellow and complex coffee that brings together the world’s best known growing regions.",
+      "lang": "en"
+    }
+  ]
+}

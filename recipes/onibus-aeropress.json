@@ -1,0 +1,25 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "ONIBUS COFFEE — エアロプレス　ホットコーヒーの淹れ方",
+      "description": "ONIBUS COFFEE のエアロプレスによるホットコーヒーのレシピ。中挽きの粉15gに90℃のお湯を30cc注いで攪拌し、170ccを追加してから30秒かけて押し切る。",
+      "method": "aeropress",
+      "brewer": { "id": "aeropress", "brand": "AeroPress", "model": "エアロプレス" },
+      "coffee": { "value": 15, "unit": "gram" },
+      "water": { "value": 200, "unit": "milliliter" },
+      "water_temp": { "value": 90, "unit": "celsius" },
+      "grind": { "size": "medium" },
+      "steps": [
+        { "at_s": 0, "to_water": { "value": 30, "unit": "milliliter" }, "instruction": "30ccの熱湯を注ぎ、熱湯とコーヒーをなじませるように3回攪拌する。" },
+        { "at_s": 30, "to_water": { "value": 200, "unit": "milliliter" }, "instruction": "30秒経過後、170ccの熱湯を注ぎ、底までしっかりと3回撹拌する。" },
+        { "kind": "press", "at_s": 60, "instruction": "30秒経過後、さらに30秒かけてエアロプレスを下に押していきます。「プシュッ」という音が聞こえ始めたら終了です。" }
+      ],
+      "finish_s": 120,
+      "notes": "出典の1番目の手順は見出しに「50cc」、本文に「30cc」と異なる数値を示している。本文の30ccのみが記載の合計200cc（30 + 170）と整合するため、本文の値を採用した。このガイドはフィルターについて何も述べていない。お湯の量は出典どおり体積（cc）で記録している。",
+      "lang": "ja",
+      "author": { "name": "ONIBUS COFFEE", "url": "https://onibuscoffee.com", "type": "organization" },
+      "based_on": "https://onibuscoffee.com/pages/brewing_guide/brewing_aeropress"
+    }
+  ]
+}

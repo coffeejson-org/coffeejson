@@ -1,0 +1,11 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "Point and window at once",
+      "method": "pour_over",
+      "coffee": { "value": 15, "min": 14, "max": 16, "unit": "gram" },
+      "water": { "value": 250, "unit": "gram" }
+    }
+  ]
+}

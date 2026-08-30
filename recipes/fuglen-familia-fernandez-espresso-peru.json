@@ -1,0 +1,29 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "FAMILIA FERNANDEZ ESPRESSO / PERU",
+      "roaster": { "name": "FUGLEN COFFEE ROASTERS TOKYO", "url": "https://fuglencoffee.jp", "type": "organization" },
+      "url": "https://fuglencoffee.jp/products/familia-fernandez-peru",
+      "origin": {
+        "type": "single",
+        "items": [
+          {
+            "country": "PE",
+            "region": "Cajamarca > Jaen > Colasay > La Higuera",
+            "producers": [{ "name": "Fernandez Familia" }],
+            "altitude": { "value": 1863, "unit": "meter" },
+            "process": ["washed"],
+            "harvest_time": "2025"
+          }
+        ]
+      },
+      "process": ["washed"],
+      "varietals": ["Bourbon de Colasay"],
+      "preferred_extraction": "espresso",
+      "roaster_notes": ["Apricot", "Chocolate", "Macadamia Nut", "Red Wine"],
+      "description": "Apricot-like fruitiness with notes of chocolate and macadamia nut sweetness, followed by a red wine-like finish and aftertaste.\n\nThe Fernandez family operates individual farms in the Colasay region, where they cultivate coffee with a distinct sweetness and greater cherry ripeness compared to many other producers in the area.\n\nWhile the Peruvian coffees we released this season have generally been bright and delicate in character, this coffee offers a richer and more full-bodied impression. With notes reminiscent of apricot, chocolate, and macadamia nuts, this coffee delivers a consistently balanced, sweet, and mellow cup. When prepared as espresso and paired with milk, its sweetness becomes even more pronounced. The finish also carries a rich, red wine-like character.",
+      "lang": "en"
+    }
+  ]
+}

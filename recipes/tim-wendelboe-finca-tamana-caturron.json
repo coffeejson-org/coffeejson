@@ -1,0 +1,26 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "Finca Tamana Caturron",
+      "roaster": { "name": "Tim Wendelboe", "url": "https://timwendelboe.no", "type": "organization" },
+      "url": "https://timwendelboe.no/products/finca-tamana-caturron",
+      "origin": {
+        "type": "single",
+        "items": [
+          {
+            "country": "CO",
+            "region": "El Pital, Huila",
+            "producers": [{ "name": "Elias Roa & Bellanid Sanchez" }],
+            "harvest_time": "May - July 2025"
+          }
+        ]
+      },
+      "process": ["washed"],
+      "varietals": ["Caturron"],
+      "roaster_notes": ["Herbal", "floral habanero", "papaya"],
+      "description": "A coffee with unique and distinct flavours of bell pepper, habanero and tropical fruit.",
+      "lang": "en"
+    }
+  ]
+}

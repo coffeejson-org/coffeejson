@@ -1,0 +1,793 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coffeejson.org/schema/1.0",
+  "title": "CoffeeJSON Document",
+  "description": "JSON Schema for a CoffeeJSON 1.x document. The prose specification at https://coffeejson.org/docs is authoritative where the two differ. The schema deliberately leaves objects open (no additionalProperties:false) so that forward-compatible documents carrying unknown fields still validate, per the spec's forward-compatibility contract. Closed enums are validated against the v1.0-defined values; at runtime a conformant consumer must still tolerate unknown enum values by mapping them to each vocabulary's defined fallback.",
+  "type": "object",
+  "required": ["coffeejson"],
+  "properties": {
+    "coffeejson": {
+      "type": "string",
+      "pattern": "^1\\.\\d+$",
+      "description": "Specification version. This schema validates major version 1 (1.0, 1.1, ...)."
+    },
+    "beans": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/bean" },
+      "description": "Zero or more Beans. One element shares a single coffee; several form a catalog / lineup. There is no singular 'bean' key — a single coffee is an array of one. A blend is still ONE bean (origin.type 'blend' with multiple items), not multiple beans."
+    },
+    "recipes": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/recipe" },
+      "description": "Zero or more Recipes. One element is a share; several are a library export. There is no singular 'recipe' key — a single recipe is an array of one."
+    },
+    "tastings": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/tasting" },
+      "description": "Zero or more Tastings — how a brewed cup actually turned out. A tasting rides with the recipe it evaluates (recipe_ref) and completes the recipe / bean / tasting trio. There is no singular 'tasting' key. A document must still carry a bean or a recipe: a tastings-only document evaluates nothing."
+    },
+    "generator": {
+      "type": "object",
+      "required": ["name"],
+      "description": "Informational provenance: the software that serialized this document. A property of the DOCUMENT, not of any recipe or coffee inside it — one file is written once, by one program. Consumers must not depend on it, and must not change how they import based on it. Distinct from a recipe's `based_on` (where that recipe was published) and from `author` (who wrote it).",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Name of the producing software — an app, a hosted service, a script, a language model. Never empty: a generator that does not name the software states nothing at all."
+        },
+        "version": { "type": "string", "description": "The producing software's version string." },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "The producing software's own URL (its site or store listing), if any — not where a recipe was published or transcribed from; see a Recipe's `based_on` for that."
+        }
+      }
+    }
+  },
+  "$comment": "Envelope rule: a document carries three optional array collections \u2014 beans, recipes and tastings \u2014 and MUST contain at least one of beans or recipes present and non-empty. tastings does not satisfy that rule: a tasting evaluates something, so a document of tastings alone describes nothing. A single coffee, recipe or tasting is an array of one element; there is no singular key. Association, per recipe: a recipe with bean_ref is associated with the bean whose id matches exactly (case-sensitive); an unresolved bean_ref leaves the recipe unlinked (never an error, no fall-back to co-location). A recipe without bean_ref is associated with the single bean when beans has exactly one element (co-location, the bag-to-brew case); otherwise it is unlinked. Association, per tasting: recipe_ref names the recipe whose id matches exactly (case-sensitive), and an unresolved recipe_ref leaves the tasting unlinked. A tasting resolves its coffee independently of that recipe: its own bean_ref wins whenever present, even when the referenced recipe names a different bean \u2014 that is not a conflict but 'I brewed your recipe with my coffee'. A tasting without bean_ref falls back to co-location on the single bean when beans has exactly one element; otherwise it is linked to no bean. Id uniqueness (each id unique within its own collection) is a semantic rule JSON Schema cannot express; validators should surface violations as warnings.",
+  "anyOf": [
+    {
+      "required": ["beans"],
+      "properties": { "beans": { "type": "array", "minItems": 1 } }
+    },
+    {
+      "required": ["recipes"],
+      "properties": { "recipes": { "type": "array", "minItems": 1 } }
+    }
+  ],
+  "$defs": {
+    "recipe": {
+      "type": "object",
+      "required": ["title", "coffee"],
+      "allOf": [
+        {
+          "$comment": "The stated brew quantity switches with `basis`: a yield-basis recipe (basis:\"yield\") states dose and beverage yield and MUST NOT carry water (total brew water) or ratio (water / coffee) — both would misdescribe it. Every other recipe (basis:\"water\", or absent — the default) must state the brew water, as either water or ratio: coffee is already required, so either one fixes the other, and recipes are commonly published as a dose and a ratio (\"20 g at 1:15\") with no total given. `method` is descriptive only.",
+          "if": {
+            "properties": { "basis": { "const": "yield" } },
+            "required": ["basis"]
+          },
+          "then": {
+            "required": ["yield"],
+            "properties": { "water": false, "ratio": false }
+          },
+          "else": {
+            "anyOf": [{ "required": ["water"] }, { "required": ["ratio"] }]
+          }
+        }
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Document-scoped identifier so this recipe can be named from outside the document — a share link, a page anchor, or a consumer that stored it and later re-shares one of several. A local label (unique within recipes, case-sensitive), never a global identity. Uniqueness is a semantic rule JSON Schema cannot express; validators should surface violations as warnings."
+        },
+        "title": { "type": "string", "minLength": 1, "description": "Short display name of the recipe, as written by the author. Never empty. Human text; language hinted by `lang`." },
+        "description": {
+          "type": "string",
+          "description": "One- or two-sentence summary of the recipe — what it is and why (the preview/snippet text; schema.org Recipe.description). Distinct from `title` (the name) and `notes` (long-form guidance). Human text; language hinted by `lang`."
+        },
+        "method": { "$ref": "#/$defs/method" },
+        "basis": {
+          "type": "string",
+          "enum": ["water", "yield"],
+          "default": "water",
+          "description": "Which quantity the recipe is stated in terms of. \"water\" (default when absent): total brew water — requires `water`. \"yield\": beverage mass in the cup — requires `yield`, forbids `water`/`ratio`. Structural switch; `method` is descriptive only. Unknown values: derive the effective basis from the quantities present (water → water-basis, yield → yield-basis) — a new basis value changes which required quantity exists, so it is breaking in effect and waits for a major version."
+        },
+        "brewer": {
+          "$ref": "#/$defs/gear",
+          "description": "The brewing device (V60, AeroPress, espresso machine…)."
+        },
+        "coffee": {
+          "$ref": "#/$defs/massMeasurement",
+          "description": "The coffee dose — dry coffee in, by mass."
+        },
+        "water": {
+          "$ref": "#/$defs/waterMeasurement",
+          "description": "Total brew water. Required on a water-basis recipe (`basis` \"water\" or absent); never on a yield-basis recipe. States mass or volume, whichever the source published — see the Water quantity definition for why no conversion is defined."
+        },
+        "yield": {
+          "$ref": "#/$defs/massMeasurement",
+          "description": "Beverage mass out, in the cup. REQUIRED when `basis` is `yield`; optional otherwise."
+        },
+        "ratio": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "Water-to-coffee ratio (water / coffee, by mass). Bare dimensionless number. Never present on a yield-basis recipe. If it disagrees with the coffee/water measurements, the measurements are authoritative."
+        },
+        "water_temp": { "$ref": "#/$defs/tempMeasurement", "description": "Brew-water temperature." },
+        "grind": { "$ref": "#/$defs/grind" },
+        "pressure": {
+          "$ref": "#/$defs/pressureMeasurement",
+          "description": "Nominal peak brew pressure."
+        },
+        "preinfusion_s": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Seconds of low-pressure pre-wetting before full pressure."
+        },
+        "basket": {
+          "$ref": "#/$defs/gear",
+          "description": "The filter basket (espresso)."
+        },
+        "filter": {
+          "$ref": "#/$defs/filter",
+          "description": "The brew filter this recipe calls for — what the water passes through."
+        },
+        "steps": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/step" },
+          "description": "Ordered, typed brew steps — array order is authoritative. Omit (or leave empty) for a recipe with no step guide."
+        },
+        "finish_s": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Seconds from brew start to the drawdown / brewer-removal cue — for espresso, the target shot time."
+        },
+        "lang": {
+          "$ref": "#/$defs/langTag",
+          "description": "BCP-47 language tag hinting the language of human text fields."
+        },
+        "bean_ref": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The id of the bean in this document's beans array that this recipe is for (exact, case-sensitive match). An unresolved reference leaves the recipe unlinked; consumers must not fail."
+        },
+        "author": {
+          "$ref": "#/$defs/party",
+          "description": "Who authored this recipe. Attribution that must survive re-share."
+        },
+        "based_on": {
+          "type": "string",
+          "format": "uri",
+          "description": "Where this recipe was originally published — the source it is based on (schema.org isBasedOn). Distinct from the envelope's `generator` (software provenance) and from `author.url`."
+        },
+        "images": {
+          "$ref": "#/$defs/images",
+          "description": "Images of this recipe — the resulting brew, the method in progress."
+        },
+        "date_published": {
+          "type": "string",
+          "format": "date",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "ISO 8601 calendar date this recipe was first published (schema.org datePublished). Publication metadata about the recipe — distinct from the coffee's roast_date, and from based_on (where it was published). Pattern-pinned to the yyyy-mm-dd day form, like roast_date."
+        },
+        "recommended": {
+          "type": "boolean",
+          "description": "true marks this recipe as the producer's recommended brew (typically the roaster's pick for the associated coffee). Absent and false are equivalent; omit rather than emit false."
+        },
+        "notes": {
+          "type": "string",
+          "description": "Free-text prose about the whole recipe (character, tips, troubleshooting). Human text; language hinted by `lang`. Distinct from the short `title` and the per-step `instruction`."
+        },
+        "additions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/addition" },
+          "description": "Liquids added to the brew beyond the brew `water` — e.g. ice for Japanese-style flash-brew iced coffee. Each entry is a typed amount; the presence of an `ice` addition marks the recipe as iced. Additions are separate inputs: `ratio` remains water / coffee."
+        },
+        "localizations": {
+          "type": "object",
+          "description": "The publisher's OWN translations of this recipe's human text, keyed by BCP-47 tag. Only wording varies: every number, unit, enum and reference stays the base recipe's, because a translation that changed them would be a different recipe. Requires `lang`, which names the language the base fields are in. Never a place to put a translation the publisher did not write — see the spec's authoring rule.",
+          "propertyNames": { "$ref": "#/$defs/langTag" },
+          "additionalProperties": { "$ref": "#/$defs/recipeLocalization" }
+        }
+      },
+      "dependentRequired": {
+        "localizations": ["lang"]
+      }
+    },
+
+    "recipeLocalization": {
+      "type": "object",
+      "description": "One locale's wording for a recipe. Every member is optional: a publisher who translated only the title states only the title, and a field absent here falls back to the base recipe's. Carries no quantities, no gear, no enums — those are the recipe, not its wording.",
+      "properties": {
+        "title": { "type": "string", "minLength": 1, "description": "The recipe's name in this locale." },
+        "description": { "type": "string", "description": "The one- or two-sentence summary in this locale." },
+        "notes": { "type": "string", "description": "The long-form prose in this locale." },
+        "steps": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/stepLocalization" },
+          "description": "Per-step wording, POSITIONAL against the base recipe's `steps`: entry i translates step i, and an empty object leaves step i untranslated. The array MUST have the same length as the base `steps`; on any other length a consumer ignores the whole array rather than risk pairing an instruction with the wrong pour, and a validator SHOULD warn. Length equality is a semantic rule JSON Schema cannot express."
+        }
+      }
+    },
+
+    "stepLocalization": {
+      "type": "object",
+      "description": "One step's wording in one locale. Timing and water targets are never here — they are the brew, identical in every language.",
+      "properties": {
+        "instruction": { "type": "string", "description": "This step's instruction in this locale." },
+        "label": { "type": "string", "description": "This step's custom label in this locale." }
+      }
+    },
+
+    "tasting": {
+      "type": "object",
+      "description": "How one brewed cup actually turned out — the outcome of following a recipe, not the recipe itself. Carries the drinker's attributed impression (rating, perceived, descriptors) alongside anything an instrument measured (`measured`). Never a journal entry: no timestamp, no personal identity, no inventory state. The subjective fields belong to whoever produced the document; `generator` names software and is never read to decide whose impression this is.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Document-scoped identifier so this tasting can be named from outside the document — a share link, a page anchor, or a consumer that stored it and later re-shares one of several. A local label (unique within tastings, case-sensitive), never a global identity. Uniqueness is a semantic rule JSON Schema cannot express; validators should surface violations as warnings."
+        },
+        "recipe_ref": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The id of the recipe in this document's recipes array that this cup was brewed from (exact, case-sensitive match). An unresolved reference leaves the tasting unlinked; consumers must not fail."
+        },
+        "bean_ref": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The id of the bean in this document's beans array that was brewed (exact, case-sensitive match). An unresolved reference leaves the tasting unlinked; consumers must not fail."
+        },
+        "rating": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5,
+          "description": "How much the drinker liked this cup, on a 1–5 integer scale — the scale this format declares, so a value is never a bare number a consumer can only misread. A producer whose own scale differs maps to the nearest whole star; one that cannot map omits the field. An attributed opinion about one brew on one occasion — never a quality score for the coffee itself, and never comparable across producers."
+        },
+        "perceived": {
+          "type": "object",
+          "description": "How the cup was PERCEIVED by the drinker, on the two dial-in axes. Both run -1 to 1 with 0 as 'about right'. These are impressions, not instrument readings: measured values belong in `measured`. The -1..1 bipolar scale belongs to these two dimensions, not to the member: a future perceived dimension that is an intensity rather than a direction would carry its own scale.",
+          "properties": {
+            "extraction": {
+              "type": "number",
+              "minimum": -1,
+              "maximum": 1,
+              "description": "Perceived extraction: -1 sour, acidic, under-extracted … 0 balanced … 1 bitter, harsh, over-extracted. A judgment, not a measured extraction yield."
+            },
+            "strength": {
+              "type": "number",
+              "minimum": -1,
+              "maximum": 1,
+              "description": "Perceived strength: -1 weak, watery, thin … 0 about right … 1 strong, heavy, muddy. A judgment, not a measured concentration."
+            }
+          }
+        },
+        "descriptors": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "description": "What the drinker tasted, in the drinker's own words. Free strings, not tokens: CoffeeJSON ships no descriptor list, so a value carries the source's own spacing and casing ('dark chocolate') and is displayed verbatim, never dropped or rewritten. Two descriptors are the same when they match after folding case and trimming surrounding whitespace, and by no looser rule. The drinker's attributed impression, distinct from a bean's roaster_notes, which are the roaster's claim about the coffee."
+        },
+        "note": {
+          "type": "string",
+          "description": "The drinker's own words about this cup. Free prose; producers that treat notes as private should omit the field rather than emit an empty string."
+        },
+        "lang": {
+          "$ref": "#/$defs/langTag",
+          "description": "BCP-47 language tag hinting the language of this tasting's human text — `note`, and the drinker's own descriptors. A hint only. There is no localizations counterpart here: a tasting is one person's account of one cup, and nobody publishes translations of their own note."
+        },
+        "measured": {
+          "type": "object",
+          "description": "What an instrument read from the finished beverage — measured fact, not impression. Kept separate from `perceived` so a consumer never mistakes a judgment for a reading. Extraction yield is not carried: it is derived from this TDS, a beverage mass — this `yield` when present, the recipe's otherwise — and the recipe's dose.",
+          "properties": {
+            "tds": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "maximum": 100,
+              "description": "Total dissolved solids in the beverage, as a percentage by mass, as read by a refractometer. Filter coffee typically lands near 1.2–1.6 and espresso near 8–12; the schema does not bound it to those, because concentrates and cold brew legitimately exceed them."
+            },
+            "yield": {
+              "$ref": "#/$defs/massMeasurement",
+              "description": "Beverage mass actually weighed out of this brew — what reached the cup, read off a scale, as much an instrument reading as the tds beside it. Distinct from a recipe's `yield`, which is the mass the brew aimed at. A consumer deriving extraction yield prefers this value over the recipe's."
+            }
+          }
+        }
+      }
+    },
+
+    "party": {
+      "type": "object",
+      "required": ["name"],
+      "description": "A person or organization credited on a document (schema.org Person/Organization-aligned). One shape for every credit, so a consumer renders a producer with the code it uses for a roaster or an author. Referenced by recipe `author`, bean `roaster`, and each entry of an origin item's `producers`.",
+      "properties": {
+        "name": { "type": "string", "minLength": 1, "description": "Display name, as the source writes it. Never empty." },
+        "url":  { "type": "string", "format": "uri", "description": "The party's own page, where the source gives one." },
+        "type": {
+          "type": "string",
+          "enum": ["person", "organization"],
+          "description": "What kind of party this is, when the source makes it clear. Absent or unrecognized → infer from the crediting field: an `author` reads as a person, a `roaster` as an organization, and any party whose `role` is farm, cooperative, washing_station or mill as an organization. Any other role, or none, leaves it unstated. Matters chiefly to structured-data exporters (schema.org Person vs Organization)."
+        },
+        "role": {
+          "type": "string",
+          "minLength": 1,
+          "examples": ["producer", "farm", "cooperative", "washing_station", "mill", "exporter"],
+          "description": "The part this party played, on any credit — an author, a roaster, or an entry of an origin item's `producers`. An open registry; recommended: producer · farm · cooperative · washing_station · mill · exporter, the parts an origin names. Omitted when the source names a party without labeling its part, which is common; an unrecognized role is displayed beside the name, never a reason to drop the party."
+        }
+      }
+    },
+
+    "filter": {
+      "type": "object",
+      "required": ["material"],
+      "description": "The brew filter — what the water passes through on its way out of the bed. Material is the part that travels and affects the cup: paper retains oils and fines, metal lets them through, cloth sits between. The specific product is usually implied by the brewer, so it is a free label rather than a registry.",
+      "properties": {
+        "material": {
+          "type": "string",
+          "enum": ["paper", "metal", "cloth", "other"],
+          "description": "What the filter is made of. Unknown values map to \"other\" at runtime."
+        },
+        "label": {
+          "type": "string",
+          "description": "The filter as the source names it, when that says more than the material — a product (\"V60-02\", \"Chemex bonded, 3-ply on one side\"), a form (a tea bag), or the brewer's own part (a plunger mesh). Human text; language hinted by the recipe's `lang`."
+        }
+      }
+    },
+
+    "images": {
+      "type": "array",
+      "items": { "type": "string", "format": "uri" },
+      "description": "Absolute image URLs. Always an array — a single image is an array of one. Omit or leave empty when there are none (a consumer treats an empty array as absent, like the other optional arrays). Reference metadata; maps to schema.org `image`."
+    },
+
+    "addition": {
+      "type": "object",
+      "required": ["type"],
+      "description": "A liquid added to the brew beyond the brew water — an open registry (ice, milk, sugar, syrup, water, cream, …). Open object: optional members such as temperature or note may be added without a reshape.",
+      "properties": {
+        "type": {
+          "type": "string",
+          "minLength": 1,
+          "examples": ["ice", "milk", "sugar", "syrup", "water", "cream"],
+          "description": "What is added — an open registry. Recommended: ice · milk · sugar · syrup · water · cream. `ice` marks the recipe iced; unknown values are handled generically."
+        },
+        "amount": {
+          "$ref": "#/$defs/massMeasurement",
+          "description": "How much is added, by mass. Optional: a source that lists an addition without a quantity has still stated that it is there, and for `ice` that is what marks the recipe iced — requiring the amount would take the flag down with it."
+        },
+        "temperature": {
+          "$ref": "#/$defs/tempMeasurement",
+          "description": "Temperature of the added liquid, where meaningful (e.g. milk)."
+        },
+        "note": {
+          "type": "string",
+          "description": "Free-text detail (brand, prep, sweetener kind)."
+        }
+      }
+    },
+
+    "massMeasurement": {
+      "type": "object",
+      "required": ["unit"],
+      "description": "A mass quantity — a single `value`, or a `min`/`max` window when the source states one. Values strictly positive (a zero mass states nothing). Unit is a canonical semantic identifier, not a display symbol.",
+      "anyOf": [
+        { "required": ["value"] },
+        { "required": ["min"] },
+        { "required": ["max"] }
+      ],
+      "dependentSchemas": {
+        "value": { "properties": { "min": false, "max": false } }
+      },
+      "properties": {
+        "value": { "type": "number", "exclusiveMinimum": 0 },
+        "min": { "type": "number", "exclusiveMinimum": 0 },
+        "max": { "type": "number", "exclusiveMinimum": 0 },
+        "unit": {
+          "type": "string",
+          "enum": ["gram", "ounce"],
+          "description": "Canonical mass unit identifier: gram, or the avoirdupois mass ounce (28.349523125 g) — never a fluid ounce."
+        }
+      }
+    },
+
+    "waterMeasurement": {
+      "type": "object",
+      "required": ["unit"],
+      "description": "A quantity of brew water — the one input publishers state either by mass or by volume, since water is a liquid of known density. Same shape as a mass quantity (a single `value`, or a `min`/`max` window) with one extra unit. Values strictly positive. No conversion between mass and volume is defined: water's density varies with temperature (225 mL at 92 °C is ≈216.8 g, not 225 g), so a consumer that needs the other kind must apply its own model and must not present the result as the author's figure.",
+      "anyOf": [
+        { "required": ["value"] },
+        { "required": ["min"] },
+        { "required": ["max"] }
+      ],
+      "dependentSchemas": {
+        "value": { "properties": { "min": false, "max": false } }
+      },
+      "properties": {
+        "value": { "type": "number", "exclusiveMinimum": 0 },
+        "min": { "type": "number", "exclusiveMinimum": 0 },
+        "max": { "type": "number", "exclusiveMinimum": 0 },
+        "unit": {
+          "type": "string",
+          "enum": ["gram", "ounce", "milliliter"],
+          "description": "Canonical unit identifier: the mass units gram and ounce (avoirdupois — never a fluid ounce), or the volume unit milliliter. Water stated in fluid ounces is a volume: emit it as milliliter, never converted into a mass."
+        }
+      }
+    },
+
+    "tempMeasurement": {
+      "type": "object",
+      "required": ["unit"],
+      "description": "A temperature quantity — a single `value`, or a `min`/`max` window when the source states one. Unit is a canonical semantic identifier, not a display symbol.",
+      "anyOf": [
+        { "required": ["value"] },
+        { "required": ["min"] },
+        { "required": ["max"] }
+      ],
+      "dependentSchemas": {
+        "value": { "properties": { "min": false, "max": false } }
+      },
+      "properties": {
+        "value": { "type": "number" },
+        "min": { "type": "number" },
+        "max": { "type": "number" },
+        "unit": {
+          "type": "string",
+          "enum": ["celsius", "fahrenheit"],
+          "description": "Canonical temperature unit identifier: celsius or fahrenheit."
+        }
+      }
+    },
+
+    "pressureMeasurement": {
+      "type": "object",
+      "required": ["unit"],
+      "description": "A pressure quantity — a single `value`, or a `min`/`max` window when the source states one. Values strictly positive. Unit is a canonical semantic identifier, not a display symbol.",
+      "anyOf": [
+        { "required": ["value"] },
+        { "required": ["min"] },
+        { "required": ["max"] }
+      ],
+      "dependentSchemas": {
+        "value": { "properties": { "min": false, "max": false } }
+      },
+      "properties": {
+        "value": { "type": "number", "exclusiveMinimum": 0 },
+        "min": { "type": "number", "exclusiveMinimum": 0 },
+        "max": { "type": "number", "exclusiveMinimum": 0 },
+        "unit": {
+          "type": "string",
+          "enum": ["bar"],
+          "description": "Canonical pressure unit identifier: bar (v1.0's only pressure unit)."
+        }
+      }
+    },
+
+    "gear": {
+      "type": "object",
+      "required": ["id"],
+      "description": "A piece of equipment (brewer or grinder).",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+          "description": "Canonical registry slug (lowercase kebab-case — schema-enforced), or the literal \"custom\" for off-registry gear. Matching is byte-exact, so the producer gate rejects the case/space/underscore typos that would silently fail every registry match."
+        },
+        "brand": { "type": "string", "description": "Normalized brand name, e.g. Hario." },
+        "model": { "type": "string", "description": "Normalized model name, e.g. V60." },
+        "label": {
+          "type": "string",
+          "description": "Display string / fallback. Required when id is \"custom\"."
+        }
+      },
+      "allOf": [
+        {
+          "$comment": "`custom` names no registry entry, so `label` is the only thing a consumer can show for it. Every other id resolves against the registry, where a missing label is a lookup rather than a blank.",
+          "if": {
+            "properties": { "id": { "const": "custom" } },
+            "required": ["id"]
+          },
+          "then": { "required": ["label"] }
+        }
+      ]
+    },
+
+    "grind": {
+      "type": "object",
+      "description": "Structured grind specification. No cross-grinder conversion is defined.",
+      "properties": {
+        "grinder": { "$ref": "#/$defs/gear" },
+        "setting": {
+          "type": "string",
+          "description": "Setting as expressed on that grinder (free text; never coerced to a number)."
+        },
+        "microns_approx": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "Approximate particle size in microns (strictly positive). Explicitly approximate."
+        },
+        "size": {
+          "type": "string",
+          "enum": ["extra_fine", "fine", "medium_fine", "medium", "medium_coarse", "coarse", "extra_coarse"],
+          "description": "Qualitative coarseness on the standard perceptual scale (ordered). Unknown values: ignore the field, preferring `setting` (the grinder's own dial) / `microns_approx` when present."
+        }
+      }
+    },
+
+    "step": {
+      "type": "object",
+      "description": "One step in an ordered brew sequence. Array order is authoritative.",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["pour", "bloom", "prep", "wait", "stir", "flip", "valve_open", "valve_close", "press", "drawdown", "distribute", "tamp", "pull", "other"],
+          "default": "pour",
+          "description": "Step kind. Absent means \"pour\". Unknown values map to \"other\" at runtime. bloom is a pour-type kind (the initial wetting pour). wait is an interval with no action — a steep or a rest. valve_open/valve_close change the brewer's state without moving water, as flip does. drawdown is the bed draining after the last pour. distribute/tamp/pull are the espresso kinds; the shot's numbers live on the recipe, never the step."
+        },
+        "at_s": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Seconds from brew start to cue this step. Absent = sequential / user-paced."
+        },
+        "to_water": {
+          "$ref": "#/$defs/waterMeasurement",
+          "description": "Cumulative water in the cup by the end of this step (pour-type only): the scale's target reading. Same shape and units as the recipe's `water`, including volume — a source that states its total in millilitres states its pour targets the same way."
+        },
+        "instruction": { "type": "string", "description": "Free-text instruction for this step. Human text; language hinted by the recipe's `lang`." },
+        "label": {
+          "type": "string",
+          "description": "Present only if the author explicitly customized it; derived/default labels are serialized as absent."
+        },
+        "action_duration_s": {
+          "type": "number",
+          "minimum": 0,
+          "description": "How long this step's action takes, in seconds (single value). With per-step pour deltas this yields pour rate (g/s)."
+        }
+      }
+    },
+
+    "method": {
+      "type": "string",
+      "enum": [
+        "pour_over", "immersion", "aeropress", "french_press",
+        "moka", "cold_brew", "siphon", "cezve", "drip", "capsule",
+        "espresso", "other"
+      ],
+      "description": "Brewing technique. Unknown values map to \"other\" at runtime. Descriptive only; the recipe's `basis` carries the structural switch."
+    },
+
+    "process": {
+      "type": "string",
+      "enum": [
+        "washed", "natural", "pulped_natural", "honey",
+        "anaerobic", "carbonic_maceration", "wet_hulled", "other"
+      ],
+      "description": "One post-harvest process. Unknown values map to \"other\" at runtime. Carried in the list-valued `process` field, never on its own — a coffee often underwent more than one."
+    },
+
+    "processList": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/process" },
+      "description": "The set of post-harvest processes present in this coffee or component. A single element is the common case. Two or more mean either that one coffee underwent both (a \"Double Anaerobic Honey\" is an anaerobic fermentation and a honey drying) or, on a blend stated at bag level, that the bag contains coffee of each — both are true readings of the same claim, and which applies is answered by the origin, not by this field. Order is the source's and carries no meaning: publishers state the parts in whichever order they like, and it is rarely the order they happened in."
+    },
+
+    "langTag": {
+      "type": "string",
+      "pattern": "^(?:(?:[A-Za-z]{2,3}(?:-[A-Za-z]{3}){0,3})(?:-[A-Za-z]{4})?(?:-(?:[A-Za-z]{2}|[0-9]{3}))?(?:-(?:[A-Za-z0-9]{5,8}|[0-9][A-Za-z0-9]{3}))*(?:-[0-9A-WY-Za-wy-z](?:-[A-Za-z0-9]{2,8})+)*(?:-[Xx](?:-[A-Za-z0-9]{1,8})+)?|[Xx](?:-[A-Za-z0-9]{1,8})+)$",
+      "description": "A well-formed BCP-47 (RFC 5646) language tag. Structural well-formedness only, not IANA-registry validity: a primary language of 2-3 ALPHA (the ISO 639 range) with optional script (ISO 15924), region (ISO 3166-1 alpha-2 or UN M.49 three-digit), variant, extension, and private-use subtags; or a private-use \"x-...\" tag. Matched case-insensitively; canonical casing (RFC 5646 §2.1.1 — lowercase language, Titlecase script, UPPERCASE region) is RECOMMENDED. \"-\" is the only separator, so \"en_US\" is invalid; a full word like \"english\" is invalid."
+    },
+
+    "bean": {
+      "type": "object",
+      "description": "The coffee's identity. All fields optional. No inventory/personal state.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Document-scoped identifier so a recipe can reference this bean via bean_ref. A local label (unique within beans, case-sensitive), never a global identity. Uniqueness is a semantic rule JSON Schema cannot express; validators should surface violations as warnings."
+        },
+        "name": { "type": "string", "description": "The coffee's product name, as the roaster sells it." },
+        "roaster": {
+          "$ref": "#/$defs/party",
+          "description": "The roaster — the company that roasted and sells this coffee — as a party (`{ name, url?, type? }`). An organizational credit: absent `type` defaults to organization by role."
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Roaster's canonical product page. Reference metadata, not a claim about the coffee."
+        },
+        "images": {
+          "$ref": "#/$defs/images",
+          "description": "Images of this coffee — typically the roaster's product photography. Reference metadata, like `url`."
+        },
+        "origin": { "$ref": "#/$defs/origin" },
+        "process": { "$ref": "#/$defs/processList" },
+        "drying_method": {
+          "type": "string",
+          "examples": ["raised_bed", "patio", "covered_patio", "mechanical"],
+          "description": "Post-harvest drying method (free string, reserved for a future registry), distinct from process. e.g. raised_bed, patio, mechanical."
+        },
+        "varietals": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Canonical varietal names or slugs as the roaster claims them (e.g. Bourbon, Gesha, SL28). Open registry: a consumer passes unrecognized values through verbatim."
+        },
+        "roast_level": {
+          "type": "string",
+          "enum": ["light", "light_medium", "medium", "medium_dark", "dark", "extra_dark"],
+          "description": "Ordered six-point retail roast scale. Unknown values: ignore the field."
+        },
+        "roast_agtron": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Agtron Gourmet number, 0–100 (the scale runs light-high: ~95 very light … ~25 very dark)."
+        },
+        "rest_days": {
+          "type": "object",
+          "description": "The window, in days from the roast date, during which the roaster recommends brewing this coffee — degassing time at the near end, freshness at the far one. Bare day counts, like every other duration in the format. At least one bound; a roaster who says only \"at least 14 days\" states `min` alone. Distinct from `roast_date`, which is when it was roasted rather than when to drink it.",
+          "anyOf": [
+            { "required": ["min"] },
+            { "required": ["max"] }
+          ],
+          "properties": {
+            "min": { "type": "number", "minimum": 0, "description": "Days from roast before the roaster recommends brewing — the rest / degassing period." },
+            "max": { "type": "number", "minimum": 0, "description": "Days from roast beyond which the roaster no longer recommends it." }
+          }
+        },
+        "roast_date": {
+          "type": "string",
+          "format": "date",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "ISO 8601 calendar date, e.g. 2026-06-20. The pattern pins the yyyy-mm-dd day form so validators that treat `format` as annotation-only (the JSON Schema default) still reject malformed dates."
+        },
+        "production_roaster": {
+          "type": "string",
+          "description": "The roasting machine the coffee is produced on, as printed (e.g. Diedrich CR-70). Free string; distinct from roaster (the company)."
+        },
+        "decaf": {
+          "type": "boolean",
+          "description": "Whether the coffee is decaffeinated, as declared by the roaster. Absent means unstated; false is the explicit claim that it is not decaf."
+        },
+        "form": {
+          "type": "string",
+          "enum": ["bean", "ground", "pod", "drip_bag", "instant", "other"],
+          "description": "Physical form the coffee is sold/prepared in. Unknown values map to \"other\" at runtime."
+        },
+        "preferred_extraction": {
+          "type": "string",
+          "enum": ["espresso", "filter", "omni"],
+          "description": "The extraction style the roaster developed the roast for. A declared claim, never a restriction. Unknown values: ignore the field."
+        },
+        "certifications": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "examples": ["organic", "fair_trade", "rainforest_alliance", "kosher", "biodynamic"]
+          },
+          "description": "Roaster-declared certifications / production claims (free strings, reserved for a future registry). e.g. organic, fair_trade."
+        },
+        "roaster_notes": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Tasting descriptors as claimed by the roaster (attributed, not asserted)."
+        },
+        "description": {
+          "type": "string",
+          "description": "The roaster's own prose about the coffee, as written — attributed text, like roaster_notes."
+        },
+        "lang": {
+          "$ref": "#/$defs/langTag",
+          "description": "BCP-47 language tag hinting the language of the Bean's human text fields."
+        },
+        "localizations": {
+          "type": "object",
+          "description": "The roaster's OWN translations of this coffee's human text, keyed by BCP-47 tag — the bilingual bag, where a roaster prints the same coffee in two languages. Only wording varies: origin, process, roast level and every other structured claim stay the base bean's. Requires `lang`, which names the language the base fields are in.",
+          "propertyNames": { "$ref": "#/$defs/langTag" },
+          "additionalProperties": { "$ref": "#/$defs/beanLocalization" }
+        }
+      },
+      "dependentRequired": {
+        "localizations": ["lang"]
+      }
+    },
+
+    "beanLocalization": {
+      "type": "object",
+      "description": "One locale's wording for a coffee. Every member is optional; a field absent here falls back to the base bean's. Carries no origin, process, roast or date — a coffee's identity does not change with the language it is described in.",
+      "properties": {
+        "name": { "type": "string", "description": "The coffee's product name in this locale, as the roaster sells it there." },
+        "description": { "type": "string", "description": "The roaster's own prose in this locale, as they wrote it." },
+        "roaster_notes": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "The tasting descriptors in this locale, as the roaster published them. A whole replacement for the base list, not a positional overlay: descriptor lists are rewritten in translation, not mapped one-to-one, and a roaster who prints four notes in Japanese and three in English has published exactly that."
+        }
+      }
+    },
+
+    "origin": {
+      "type": "object",
+      "description": "Where the coffee comes from: one item for a single origin, several for a blend (a blend is still ONE bean). Omit items when the components are not published — common for blends — and state type instead; an absent items means unknown, never none.",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["single", "blend"],
+          "description": "Defaults to single for one item, blend for several. State it explicitly when items is absent, where it carries the only origin fact known."
+        },
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/originItem" }
+        }
+      }
+    },
+
+    "originItem": {
+      "type": "object",
+      "description": "One origin. Should carry at least a country — unless the source names none, in which case record what it does state rather than inferring a code or dropping the component.",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The component coffee / lot as the roaster labels it. Useful in blends whose components are named coffees."
+        },
+        "country": {
+          "type": "string",
+          "pattern": "^[A-Z]{2}$",
+          "description": "ISO 3166-1 alpha-2 country code."
+        },
+        "region": { "type": "string", "description": "Growing region as the roaster states it (free string), at whatever granularity that is — usually within a country (Guji, Huila), sometimes broader than one (East Africa). May appear without a country when the source names none." },
+        "producers": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/party" },
+          "description": "The parties credited with producing this component, each with an optional `role`. An array because sources routinely name more than one — a farmer and their farm, a cooperative and its washing station — and a single field would force a choice the source did not make. Order is the source's."
+        },
+        "altitude": { "$ref": "#/$defs/altitude" },
+        "varietals": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "This component's coffee varieties, as the roaster names them — the per-component counterpart of `bean.varietals`, for blends whose components differ. Same open registry, so unrecognized values pass through verbatim."
+        },
+        "process": {
+          "$ref": "#/$defs/processList",
+          "description": "This component's post-harvest processes — for blends whose components are processed differently, and for a component that underwent more than one."
+        },
+        "harvest_time": {
+          "type": "string",
+          "description": "Harvest period as stated by the roaster (free string). e.g. 2025, Oct–Dec 2024."
+        },
+        "percentage": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "This component's share of a blend, 0–100. Meaningful only for multi-item origins."
+        }
+      }
+    },
+
+    "altitude": {
+      "type": "object",
+      "required": ["unit"],
+      "description": "Altitude above sea level as a unit-bearing value or range.",
+      "anyOf": [
+        { "required": ["value"] },
+        { "required": ["min"] },
+        { "required": ["max"] }
+      ],
+      "dependentSchemas": {
+        "value": { "properties": { "min": false, "max": false } }
+      },
+      "properties": {
+        "value": { "type": "number" },
+        "min": { "type": "number" },
+        "max": { "type": "number" },
+        "unit": {
+          "type": "string",
+          "enum": ["meter", "foot"],
+          "description": "Canonical length unit identifier: meter or foot."
+        }
+      }
+    }
+  }
+}

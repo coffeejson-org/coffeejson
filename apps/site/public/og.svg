@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630"
+     font-family="Helvetica Neue, Helvetica, Arial, sans-serif">
+  <rect width="1200" height="630" fill="#fdfdfc"/>
+  <defs>
+    <mask id="m">
+      <rect x="-1" y="-1" width="102" height="124" fill="#fff"/>
+      <path fill="#000" d="M 50 0 C 47.6 26 46.5 44 46.5 61 C 46.5 78 47.6 96 50 122
+               C 52.4 96 53.5 78 53.5 61 C 53.5 44 52.4 26 50 0 Z"/>
+      <path id="b" fill="none" stroke="#000" stroke-width="8.4" stroke-linecap="butt"
+            stroke-linejoin="miter" stroke-miterlimit="6"
+            d="M 40.0 26.2 C 34.0 26.2 25.0 26.8 25.0 33.5 L 25.0 52.5
+               L 17.7 61.0 L 25.0 69.5 L 25.0 88.5
+               C 25.0 95.2 34.0 95.8 40.0 95.8"/>
+      <use href="#b" transform="translate(100,0) scale(-1,1)"/>
+    </mask>
+  </defs>
+
+  <!-- mark, espresso, optically centered on the text block -->
+  <g color="#241813" transform="translate(96,181) scale(2.2)">
+    <ellipse cx="50" cy="61" rx="50" ry="61" fill="currentColor" mask="url(#m)"/>
+  </g>
+
+  <text x="368" y="288" font-size="86" font-weight="700" fill="#1a1a1a" letter-spacing="-1.5">CoffeeJSON</text>
+  <text x="368" y="352" font-size="35" fill="#5b5b5b">The interchange format for coffee</text>
+  <rect x="370" y="392" width="72" height="5" fill="#0c5964"/>
+  <text x="368" y="452" font-size="27" fill="#0c5964" letter-spacing="0.5">coffeejson.org</text>
+
+  <text x="96" y="566" font-size="23" fill="#5b5b5b">Open · CC0 · small enough to ride inside a QR code</text>
+</svg>

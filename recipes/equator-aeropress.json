@@ -1,0 +1,30 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "Equator Coffees — AeroPress",
+      "description": "Equator Coffees' AeroPress guide for one small 6 oz cup of strong coffee: 18 g at 1:11, a sealed bloom, then a stir and a slow plunge at two minutes.",
+      "method": "aeropress",
+      "brewer": { "id": "aeropress", "brand": "AeroPress" },
+      "coffee": { "value": 18, "unit": "gram" },
+      "water": { "value": 200, "unit": "gram" },
+      "ratio": 11,
+      "water_temp": { "value": 205, "unit": "fahrenheit" },
+      "grind": { "size": "medium_fine" },
+      "filter": { "material": "paper", "label": "Aeropress filters" },
+      "steps": [
+        { "kind": "prep", "instruction": "place the AeroPress filter in the base and lock it onto the brewer" },
+        { "kind": "prep", "instruction": "rinse the brewer with hot water to wet the filter and remove any paper taste; discard this water before moving forward" },
+        { "kind": "prep", "instruction": "grind 18 g of coffee on a medium-fine setting and pour it into the brewer; place the brewer on a cup or carafe, set both on a scale and tare to 0" },
+        { "kind": "bloom", "at_s": 0, "to_water": { "value": 50, "unit": "gram" }, "instruction": "start the timer and pour 50 g of hot water quickly into the AeroPress to start the bloom; place the plunger into the AeroPress just enough to seal the top so the coffee does not drip out of the bottom" },
+        { "to_water": { "value": 200, "unit": "gram" }, "instruction": "at 0:30–0:45, remove the plunger and quickly pour the remaining 150 g of water, then place the plunger back in the top to prevent dripping; the coffee continues to brew inside the AeroPress" },
+        { "kind": "stir", "at_s": 120, "instruction": "remove everything from the scale, remove the plunger and give everything a five-second stir" },
+        { "kind": "press", "at_s": 120, "instruction": "push the plunger down slowly, aiming for 30 seconds, until you hear a hissing sound" }
+      ],
+      "notes": "Equator call for an AeroPress filter, rinsed in the brewer with hot water and the rinse water discarded. The guide writes its water temperature as \"just off boil at 205°\" without naming a scale; Fahrenheit is the only reading the value admits. The second pour's cue is stated as a 0:30–0:45 window rather than a point, so that step carries no time. The brew is deliberately strong — Equator expect it to be diluted with hot water or milk to taste.",
+      "lang": "en",
+      "author": { "name": "Equator Coffees", "url": "https://www.equatorcoffees.com", "type": "organization" },
+      "based_on": "https://www.equatorcoffees.com/blogs/guides/aeropress"
+    }
+  ]
+}

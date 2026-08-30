@@ -1,0 +1,11 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "id": "",
+      "title": "Empty recipe id",
+      "coffee": { "value": 15, "unit": "gram" },
+      "water": { "value": 250, "unit": "gram" }
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "Base 1:15",
+      "method": "pour_over",
+      "coffee": { "value": 20, "unit": "gram" },
+      "ratio": 15,
+      "water_temp": { "value": 94, "unit": "celsius" }
+    }
+  ]
+}

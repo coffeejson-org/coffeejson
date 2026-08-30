@@ -1,0 +1,13 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "Zero-bar shot",
+      "method": "espresso",
+      "basis": "yield",
+      "coffee": { "value": 18, "unit": "gram" },
+      "yield": { "value": 45, "unit": "gram" },
+      "pressure": { "value": 0, "unit": "bar" }
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "id": "the-answer",
+      "name": "The Answer",
+      "roaster": { "name": "Cat & Cloud Coffee", "url": "https://catandcloud.com" },
+      "origin": { "items": [{ "country": "GT", "region": "Huehuetenango" }] },
+      "roast_level": "medium"
+    }
+  ],
+  "recipes": [
+    {
+      "title": "The Answer — espresso",
+      "method": "espresso",
+      "basis": "yield",
+      "bean_ref": "the-answer",
+      "coffee": { "min": 18.5, "max": 19, "unit": "gram" },
+      "yield": { "min": 32, "max": 34, "unit": "gram" },
+      "water_temp": { "min": 92, "max": 94, "unit": "celsius" },
+      "notes": "The roaster states each quantity as its own window; the pairing of a particular dose with a particular yield is the barista's, not the roaster's."
+    },
+    {
+      "title": "French press, scaled to your press",
+      "method": "french_press",
+      "brewer": { "id": "french-press" },
+      "coffee": { "min": 25, "max": 45, "unit": "gram" },
+      "water": { "min": 375, "max": 675, "unit": "gram" },
+      "ratio": 15,
+      "notes": "A small press may take 25 g to 375 g of water, a large one 45 g to 675 g. The ratio holds across the window, which is what couples the two ranges."
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "Bare number without a unit",
+      "coffee": { "value": 15, "unit": "gram" },
+      "water": { "value": 250 }
+    }
+  ]
+}

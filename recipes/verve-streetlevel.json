@@ -1,0 +1,53 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "Streetlevel",
+      "roaster": { "name": "Verve Coffee", "url": "https://www.vervecoffee.com", "type": "organization" },
+      "url": "https://www.vervecoffee.com/products/streetlevel",
+      "origin": {
+        "type": "blend",
+        "items": [
+          { "country": "HN" },
+          { "country": "GT" },
+          { "country": "CO" }
+        ]
+      },
+      "roast_level": "medium",
+      "form": "bean",
+      "roaster_notes": ["Clementine", "Red Apple", "Honeycomb"],
+      "description": "Our flagship blend, Streetlevel, is built for balance and approachability and is delicious with any brew method, including espresso. Streetlevel's profile of Guatemalan, Colombian, and Honduran coffees anchors the blend and imparts a complex sweetness with honeyed citrus and red apple notes. This would be the first track if we made a greatest hits tape.",
+      "lang": "en"
+    }
+  ],
+  "recipes": [
+    {
+      "title": "Verve Streetlevel Coffee Maker",
+      "description": "Verve's coffee-maker suggestion for Streetlevel: a 54 g batch to 810 g at 1:15 on a medium grind, four minutes.",
+      "method": "drip",
+      "recommended": true,
+      "coffee": { "value": 54, "unit": "gram" },
+      "water": { "value": 810, "unit": "gram" },
+      "ratio": 15,
+      "grind": { "size": "medium" },
+      "finish_s": 240,
+      "lang": "en",
+      "author": { "name": "Verve Coffee", "url": "https://www.vervecoffee.com", "type": "organization" },
+      "based_on": "https://www.vervecoffee.com/products/streetlevel"
+    },
+    {
+      "title": "Verve Streetlevel French Press",
+      "description": "Verve's French press suggestion for Streetlevel: 35 g to 500 g on a medium grind, five minutes.",
+      "method": "french_press",
+      "recommended": true,
+      "brewer": { "id": "french-press", "label": "French press" },
+      "coffee": { "value": 35, "unit": "gram" },
+      "water": { "value": 500, "unit": "gram" },
+      "grind": { "size": "medium" },
+      "finish_s": 300,
+      "lang": "en",
+      "author": { "name": "Verve Coffee", "url": "https://www.vervecoffee.com", "type": "organization" },
+      "based_on": "https://www.vervecoffee.com/products/streetlevel"
+    }
+  ]
+}

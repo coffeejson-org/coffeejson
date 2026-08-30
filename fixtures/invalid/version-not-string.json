@@ -1,0 +1,10 @@
+{
+  "coffeejson": 1,
+  "recipes": [
+    {
+      "title": "Version must be a string",
+      "coffee": { "value": 15, "unit": "gram" },
+      "water": { "value": 250, "unit": "gram" }
+    }
+  ]
+}

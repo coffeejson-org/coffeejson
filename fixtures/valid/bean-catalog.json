@@ -1,0 +1,8 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    { "name": "Nano Challa", "roaster": { "name": "Example Roastery" }, "process": ["washed"] },
+    { "name": "Las Brisas", "roaster": { "name": "Example Roastery" }, "process": ["natural"] },
+    { "name": "House Blend", "roaster": { "name": "Example Roastery" }, "roast_level": "medium_dark" }
+  ]
+}

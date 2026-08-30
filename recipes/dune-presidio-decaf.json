@@ -1,0 +1,22 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "Presidio Decaf",
+      "roaster": { "name": "Dune Coffee Roasters", "url": "https://www.dunecoffee.com", "type": "organization" },
+      "url": "https://www.dunecoffee.com/products/presidio-decaf-2",
+      "origin": {
+        "type": "single",
+        "items": [
+          { "country": "CO", "producers": [{ "name": "Various smallholder producers" }], "altitude": { "min": 1400, "max": 1600, "unit": "meter" } }
+        ]
+      },
+      "process": ["washed"],
+      "varietals": ["Castillo", "Caturra", "Colombia"],
+      "decaf": true,
+      "roaster_notes": ["BROWN SUGAR", "TANGERINE", "RICH"],
+      "description": "Our Presidio Decaf offering is a coffee which comes to us from multiple producers across several municipalities in the Quindío department of Colombia. Comprised of different coffee varieties, farms, and elevations, this lot showcases the flavor profiles of this microregion of the country.\n\nThe ethyl acetate decaffeination process involves taking green (unroasted) coffee to Descafecol, the sole decaffeinating plant in Colombia. The coffee is steamed to open its pores, and submerged in an ethyl acetate bath to remove caffeine. The ethyl acetate solvent is typically created from acetic acid and natural distillates such as sugarcane or fruit. This process yields a flavorful cup that has all of the hallmarks of caffeinated coffees we might expect to taste from this region.\n\nIn the cup, we taste a distinct sweetness (caffeine is naturally bitter, so this coffee is noticeably sweeter and smoother in comparison) that reminds us of brown sugar or candied citrus, with a rich texture.",
+      "lang": "en"
+    }
+  ]
+}

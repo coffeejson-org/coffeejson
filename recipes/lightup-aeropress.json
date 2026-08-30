@@ -1,0 +1,26 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "LIGHT UP COFFEE — AERO PRESS",
+      "description": "LIGHT UP COFFEE のエアロプレスレシピ。逆さまにした本体に粉16gを入れ、92℃のお湯235gを注ぎ、1分で攪拌してからゆっくりプレスする。",
+      "method": "aeropress",
+      "brewer": { "id": "aeropress", "brand": "AeroPress" },
+      "coffee": { "value": 16, "unit": "gram" },
+      "water": { "value": 235, "unit": "gram" },
+      "water_temp": { "value": 92, "unit": "celsius" },
+      "filter": { "material": "paper", "label": "紙フィルター" },
+      "steps": [
+        { "kind": "prep", "instruction": "セット：本体（チャンバーとプランジャー）を2cmほどはめてセットし、逆さまにした状態でコーヒー粉を入れる。" },
+        { "at_s": 0, "to_water": { "value": 235, "unit": "gram" }, "instruction": "お湯を注ぐ：お湯を勢いよく注ぐ。同時にタイマーをスタート。" },
+        { "kind": "stir", "at_s": 60, "instruction": "攪拌：1分経ったらスプーンで攪拌し、キャップをする。" },
+        { "kind": "flip", "at_s": 60, "instruction": "本体を慎重にひっくり返し、サーバーにセットする。" },
+        { "kind": "press", "instruction": "抽出：1分10秒〜1分50秒くらいかけてゆっくりとプレスして、完成。" }
+      ],
+      "notes": "お湯は「92℃目安」。挽き目は「ドリップと同じ挽き目」と指定されている。器具はエアロプレス・紙フィルター・スプーン・電子スケール・タイマー。プレスにかける時間が1分10秒〜1分50秒の幅で示されているため、抽出終了時間は記録していない。",
+      "lang": "ja",
+      "author": { "name": "LIGHT UP COFFEE", "url": "https://lightupcoffee.com", "type": "organization" },
+      "based_on": "https://lightupcoffee.com/blogs/press/aero-press"
+    }
+  ]
+}

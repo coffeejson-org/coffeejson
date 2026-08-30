@@ -1,0 +1,57 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "420 Rwanda Simbi Washed",
+      "roaster": { "name": "PHILOCOFFEA", "url": "https://philocoffea.com", "type": "organization" },
+      "url": "https://philocoffea.com/?pid=191931787",
+      "origin": {
+        "type": "single",
+        "items": [
+          {
+            "country": "RW",
+            "region": "Huye, Southern Province, Rwanda",
+            "producers": [{ "name": "Abdul Rudahunga" }],
+            "altitude": { "value": 1800, "unit": "meter" },
+            "process": ["washed"]
+          }
+        ]
+      },
+      "process": ["washed"],
+      "varietals": ["Bourbon"],
+      "roast_level": "medium_dark",
+      "rest_days": { "min": 14 },
+      "roaster_notes": ["Cocoa", "Dried orange", "Dark cherry", "Roasted almond", "Molasses", "Round"],
+      "description": "黒糖のような甘さと、じんわり果実感。\n\nシンビ コーヒーウォッシングステーションは2013年に運営が始まった新しいウォッシングステーションです。シンビ・コーヒー投資会社がこの地域で初めて建設したウォッシング・ステーションで、オーナーのAbdul氏は、コーヒー農家の祖母から薦められ、コーヒー事業に参入しました。現在、シンビ、マラバ、ソヴ、キゴマの250人のメンバー（女性が60%を占める）で構成される協同組合のブルボンなどを処理しています。\n\nサーバーから立ち上る香りは、どこか黒糖を思わせるような、やわらかく甘い香り。ひと口飲むと、深煎りらしいカカオやローストアーモンドのような香ばしさがじんわりと広がっていきます。そこに重なるのが、ドライオレンジやダークチェリーを思わせる果実感。\n\nエイジング：焙煎日から14日後からがおすすめです。",
+      "lang": "ja"
+    }
+  ],
+  "recipes": [
+    {
+      "title": "PHILOCOFFEA 420 Rwanda Simbi Washed — おすすめの抽出レシピ｜ハリオ スイッチ",
+      "description": "PHILOCOFFEA が420 Rwanda Simbi Washedに添えるハリオ スイッチのレシピ。粉20gに83℃のお湯300gを4投で注ぎ、スイッチはすべて透過（オープン）のまま抽出する。",
+      "method": "pour_over",
+      "recommended": true,
+      "brewer": { "id": "hario-switch", "brand": "HARIO", "model": "スイッチ" },
+      "coffee": { "value": 20, "unit": "gram" },
+      "water": { "value": 300, "unit": "gram" },
+      "water_temp": { "value": 83, "unit": "celsius" },
+      "grind": {
+        "grinder": { "id": "comandante-c40", "brand": "Comandante", "model": "C40 MK4" },
+        "setting": "27-33クリック前後",
+        "size": "medium_coarse"
+      },
+      "steps": [
+        { "kind": "bloom", "at_s": 0, "to_water": { "value": 40, "unit": "gram" }, "instruction": "スイッチはオープン。40g（+40g）まで注ぐ。" },
+        { "at_s": 40, "to_water": { "value": 150, "unit": "gram" }, "instruction": "合計150g（+110g）まで注ぐ。" },
+        { "at_s": 80, "to_water": { "value": 200, "unit": "gram" }, "instruction": "合計200g（+50g）まで注ぐ。" },
+        { "at_s": 120, "to_water": { "value": 300, "unit": "gram" }, "instruction": "合計300g（+100g）まで注ぐ。" }
+      ],
+      "finish_s": 165,
+      "notes": "※すべて透過（オープン）で抽出。2:45に落ち切り。豆は中粗挽き、コマンダンテC40 MK4で27-33クリック前後と指定されている。スイッチの開閉状態はレシピ表の独立した列として示されており、この抽出では全工程を通じてオープンのまま。",
+      "lang": "ja",
+      "author": { "name": "PHILOCOFFEA", "url": "https://philocoffea.com", "type": "organization" },
+      "based_on": "https://philocoffea.com/?pid=191931787"
+    }
+  ]
+}

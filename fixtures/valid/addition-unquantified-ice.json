@@ -1,0 +1,16 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "アイスドリップ",
+      "method": "pour_over",
+      "lang": "ja",
+      "coffee": { "value": 20, "unit": "gram" },
+      "water": { "value": 150, "unit": "gram" },
+      "additions": [
+        { "type": "ice", "note": "氷（分量の記載なし）" }
+      ],
+      "notes": "材料表は氷を挙げるが分量を示さない。量は書けないが、これがアイスのレシピであることは書ける。"
+    }
+  ]
+}

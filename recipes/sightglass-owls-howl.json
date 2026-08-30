@@ -1,0 +1,25 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "Owl's Howl",
+      "roaster": { "name": "Sightglass Coffee", "url": "https://sightglasscoffee.com", "type": "organization" },
+      "url": "https://sightglasscoffee.com/products/owls-howl-organic-espresso-blend",
+      "origin": {
+        "type": "blend",
+        "items": [
+          { "region": "Central America" },
+          { "region": "East Africa" }
+        ]
+      },
+      "process": ["washed"],
+      "varietals": ["Various"],
+      "roast_level": "medium",
+      "preferred_extraction": "espresso",
+      "certifications": ["organic"],
+      "roaster_notes": ["Cacao Nib", "Stone Fruit", "Candied Orange Peel"],
+      "description": "Our flagship espresso blend delivers consistent balance and depth, crafted from seasonal coffees sourced for optimal freshness. It’s the coffee we use in all our espresso beverages at Sightglass cafes, trusted daily for its structure and reliability.",
+      "lang": "en"
+    }
+  ]
+}

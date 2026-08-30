@@ -1,0 +1,27 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "ONIBUS COFFEE — スイッチドリッパー　ホットコーヒーの淹れ方",
+      "description": "ONIBUS COFFEE の浸漬式ドリッパー スイッチ（HARIO）によるホットコーヒーのレシピ。スイッチを閉じた状態で中挽きの粉13gに92℃のお湯を50cc注いで1分蒸らし、165ccを追加してからスイッチを開けて落としきる。",
+      "method": "immersion",
+      "brewer": { "id": "hario-switch", "brand": "HARIO", "model": "浸漬式ドリッパー スイッチ" },
+      "coffee": { "value": 13, "unit": "gram" },
+      "water": { "value": 215, "unit": "milliliter" },
+      "water_temp": { "value": 92, "unit": "celsius" },
+      "grind": { "size": "medium" },
+      "filter": { "material": "paper", "label": "ペーパーフィルター" },
+      "steps": [
+        { "kind": "prep", "instruction": "ペーパーフィルターを湯通しをします。ペーパーフィルターのにおいを取り除きます。" },
+        { "kind": "valve_close", "instruction": "ドリッパーのスイッチを閉じた状態かを確認して、ドリッパーにコーヒー豆13gを入れ、平らにならします。" },
+        { "kind": "bloom", "at_s": 0, "to_water": { "value": 50, "unit": "milliliter" }, "instruction": "50ccのお湯を注ぎながらスプーンで粉をかき混ぜ、1分蒸らします。" },
+        { "at_s": 60, "to_water": { "value": 215, "unit": "milliliter" }, "instruction": "1分経過後、165ccのお湯を中心から外側へ、外側から内側へと円を描くように注ぎます。" },
+        { "kind": "valve_open", "instruction": "1分経過後、スイッチドリッパーのスイッチを開け、コーヒーをサーバーまたはカップに落とし切り完成です。" }
+      ],
+      "notes": "出典の「所要時間 : 00分」はプレースホルダー（0分）と判断し、抽出終了時間としては記録していない。ガイドは別途「2:30-3:00の間でお湯を落とし切るのがベスト」としている。出典では4番目の手順の時間表示が「1:00 - 1:00」（開始と終了が同一）となっており、5番目の手順は「1:00 - 2:00」と表示されながら本文は「1分経過後」と述べるため、スイッチを開ける手順には時間を記録せず順送りとしている。お湯の量は出典どおり体積（cc）で記録している。",
+      "lang": "ja",
+      "author": { "name": "ONIBUS COFFEE", "url": "https://onibuscoffee.com", "type": "organization" },
+      "based_on": "https://onibuscoffee.com/pages/brewing_guide/brewing_switch"
+    }
+  ]
+}

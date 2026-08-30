@@ -1,0 +1,4 @@
+{
+  "$comment": "The CoffeeJSON addition-type registry — the recommended values for `recipe.additions[].type` (docs/spec/06-vocabularies.md § Addition type). Curated DATA, not spec: adding a token bumps nothing (docs/spec/07-versioning.md § Registry governance), and the set is open by design — any non-empty string is valid, so a consumer MUST accept and show a token that is not here rather than reject it. These exist so two producers describing the same addition use the same word. `ice` is the one token with an effect beyond its plain meaning: it marks the whole recipe iced. Served at https://coffeejson.org/registries/addition-types.json.",
+  "addition_types": ["ice", "milk", "sugar", "syrup", "water", "cream"]
+}

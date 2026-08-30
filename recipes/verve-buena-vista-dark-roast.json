@@ -1,0 +1,52 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "Buena Vista Dark Roast",
+      "roaster": { "name": "Verve Coffee", "url": "https://www.vervecoffee.com", "type": "organization" },
+      "url": "https://www.vervecoffee.com/products/buena-vista-dark-roast",
+      "origin": {
+        "items": [
+          { "country": "CO" }
+        ]
+      },
+      "roast_level": "dark",
+      "form": "bean",
+      "roaster_notes": ["Chocolate", "Red Apple", "Maple"],
+      "description": "Characterized by its deep structure and full body, Buena Vista's Latin American roots yield a dark chocolate savor with a caramelized sweetness. Selected for their balance and dense flavor characteristics, these Southern Colombian coffees stand up to a deeper roast, lending a smooth and adaptable flavor profile. If you like waking up to a dark, rich flavor, look no further.",
+      "lang": "en"
+    }
+  ],
+  "recipes": [
+    {
+      "title": "Verve Buena Vista Dark Roast Dwell",
+      "description": "Verve's Dwell Dripper suggestion for Buena Vista: 20 g to 300 g at 1:15 on a medium grind, drawn down at 2:15.",
+      "method": "pour_over",
+      "recommended": true,
+      "brewer": { "id": "verve-dwell", "brand": "Verve Coffee", "model": "Dwell Dripper", "label": "Verve Dwell Dripper" },
+      "coffee": { "value": 20, "unit": "gram" },
+      "water": { "value": 300, "unit": "gram" },
+      "ratio": 15,
+      "grind": { "size": "medium" },
+      "finish_s": 135,
+      "lang": "en",
+      "author": { "name": "Verve Coffee", "url": "https://www.vervecoffee.com", "type": "organization" },
+      "based_on": "https://www.vervecoffee.com/products/buena-vista-dark-roast"
+    },
+    {
+      "title": "Verve Buena Vista Dark Roast French Press",
+      "description": "Verve's French press suggestion for Buena Vista: 35 g to 525 g at 1:15 on a medium grind, four and a half minutes.",
+      "method": "french_press",
+      "recommended": true,
+      "brewer": { "id": "french-press", "label": "French press" },
+      "coffee": { "value": 35, "unit": "gram" },
+      "water": { "value": 525, "unit": "gram" },
+      "ratio": 15,
+      "grind": { "size": "medium" },
+      "finish_s": 270,
+      "lang": "en",
+      "author": { "name": "Verve Coffee", "url": "https://www.vervecoffee.com", "type": "organization" },
+      "based_on": "https://www.vervecoffee.com/products/buena-vista-dark-roast"
+    }
+  ]
+}

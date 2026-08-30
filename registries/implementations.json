@@ -1,0 +1,15 @@
+{
+  "$comment": "The CoffeeJSON implementations registry — self-declared listings, one object per implementation (docs/integration-guide.md § List your implementation). Curated DATA, not spec: adding an entry bumps nothing. Shape: `id` (kebab-case slug, stable once published) · `name` (display name) · `kind` (what the thing is: `app`, `service`, `library`, `hardware`; open — a new kind names itself) · `platforms` (array — ios, watchos, android, web, macos, …) · `url` (its home) · `reads` and `writes` (arrays of transport surfaces it consumes and produces: `query-binding` = the ?d= share-URL binding of docs/transport.md, `coffeejson-file` = a .json document via file open/import; future values may name other transports). The consumer and producer roles are independent, so either array may be empty — a site that only publishes documents is an implementation too. `note` optional, one line · `icon` optional — a square PNG or SVG of at least 128 px, added by the implementer to the site at `apps/site/public/showcase/<id>.<ext>` in the same pull request and referenced as `/showcase/<id>.<ext>`; the site never sources a mark itself. Shown at 56 px beside the name on coffeejson.org/showcase. Listing is a claim by the implementer, not a certification. Served at https://coffeejson.org/registries/implementations.json. Names and icons appear nominatively; their inclusion claims and waives no trademark rights.",
+  "implementations": [
+    {
+      "id": "brewsmart",
+      "name": "BrewSmart",
+      "kind": "app",
+      "platforms": ["ios", "watchos"],
+      "url": "https://brewsmart.app",
+      "icon": "/showcase/brewsmart.png",
+      "reads": ["query-binding", "coffeejson-file"],
+      "writes": ["query-binding"]
+    }
+  ]
+}

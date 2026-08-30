@@ -1,0 +1,13 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "Batch brew with stated beverage out",
+      "method": "drip",
+      "coffee": { "value": 60, "unit": "gram" },
+      "water": { "value": 1000, "unit": "gram" },
+      "yield": { "value": 880, "unit": "gram" },
+      "water_temp": { "value": 94, "unit": "celsius" }
+    }
+  ]
+}

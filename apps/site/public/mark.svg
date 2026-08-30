@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 122" color="#241813" role="img" aria-label="CoffeeJSON">
+  <!-- Ink: espresso #241813. Its dark-mode counterpart is cream #F0E6E0.
+       The color is bound three ways, deliberately:
+         1. color="#241813" presentation attribute — the floor. Survives tools
+            that strip <style>, and loses to any CSS rule.
+         2. the media query below — applies only when this file is used
+            STANDALONE (as a favicon or in an <img>), because :root then
+            resolves to this <svg>. Gives an adaptive favicon from one file.
+         3. inlined in a page, :root is the HTML root, so the query does not
+            fire and the page's own `color` drives the fill. Intended. -->
+  <style>@media (prefers-color-scheme: dark) { :root { color: #F0E6E0 } }</style>
+  <!-- CoffeeJSON mark — v2 DISPLAY cut. Lens seam.
+       Bean      : ellipse, W:H = 1 : 1.22
+       Seam      : lens, pointed at both ends, 7.0% W at the waist
+       Brace     : monoline 8.4% W, ink spans 18%-82% H (64% H tall)
+       Cusp      : mitred point, outer edge reaches 13.5% W
+       Terminals : butt caps, flat vertical ends at 40.0% W
+       Derived from the measured spec in
+       docs/prompts/logo-favicon-image-gen.md section 6, with the three
+       craft fixes that section calls for applied.
+       For use at 32 px and below, use mark-small.svg instead. -->
+  <defs>
+    <mask id="cj-k">
+      <rect x="-1" y="-1" width="102" height="124" fill="#fff"/>
+      <path fill="#000" d="M 50 0
+               C 47.6 26 46.5 44 46.5 61
+               C 46.5 78 47.6 96 50 122
+               C 52.4 96 53.5 78 53.5 61
+               C 53.5 44 52.4 26 50 0 Z"/>
+      <path id="cj-b" fill="none" stroke="#000" stroke-width="8.4"
+            stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="6"
+            d="M 40.0 26.2
+               C 34.0 26.2 25.0 26.8 25.0 33.5
+               L 25.0 52.5
+               L 17.7 61.0
+               L 25.0 69.5
+               L 25.0 88.5
+               C 25.0 95.2 34.0 95.8 40.0 95.8"/>
+      <use href="#cj-b" transform="translate(100,0) scale(-1,1)"/>
+    </mask>
+  </defs>
+  <ellipse cx="50" cy="61" rx="50" ry="61" fill="currentColor" mask="url(#cj-k)"/>
+</svg>

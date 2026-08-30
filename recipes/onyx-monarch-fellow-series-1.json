@@ -1,0 +1,85 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "Monarch",
+      "roaster": {
+        "name": "Onyx Coffee Lab",
+        "url": "https://onyxcoffeelab.com",
+        "type": "organization"
+      },
+      "origin": {
+        "type": "blend",
+        "items": [
+          {
+            "country": "ET"
+          },
+          {
+            "country": "CO"
+          }
+        ]
+      },
+      "roaster_notes": [
+        "Dark Chocolate",
+        "Molasses",
+        "Red Wine",
+        "Dried Berries",
+        "Thick & Syrupy"
+      ],
+      "description": "A decadent blend of Ethiopian and Colombian coffees, intentionally designed by Onyx to work with milk. We tasted a slab of rich dark chocolate studded with dried berries.",
+      "lang": "en"
+    }
+  ],
+  "recipes": [
+    {
+      "title": "Monarch Espresso — Fellow Series 1 Profile",
+      "description": "Fellow's machine adaptation of Onyx's Monarch espresso for the Espresso Series 1: 18 g in, 45 g out in 30 seconds, with a 4-second pre-infusion.",
+      "method": "espresso",
+      "basis": "yield",
+      "brewer": {
+        "id": "fellow-espresso-series-1",
+        "brand": "Fellow",
+        "model": "Espresso Series 1"
+      },
+      "coffee": {
+        "value": 18,
+        "unit": "gram"
+      },
+      "yield": {
+        "value": 45,
+        "unit": "gram"
+      },
+      "water_temp": {
+        "value": 93,
+        "unit": "celsius"
+      },
+      "pressure": {
+        "value": 9,
+        "unit": "bar"
+      },
+      "preinfusion_s": 4,
+      "grind": {
+        "grinder": {
+          "id": "fellow-espresso-series-1",
+          "brand": "Fellow",
+          "model": "Espresso Series 1"
+        },
+        "setting": "#2"
+      },
+      "steps": [
+        {
+          "kind": "pull",
+          "instruction": "Series 1 profile: 4-second pre-infusion at 3 bar (4.5 ml/s fill), then 21 seconds of infusion at 9 bar. Smooth transition, declining temperature off."
+        }
+      ],
+      "finish_s": 30,
+      "lang": "en",
+      "author": {
+        "name": "Onyx Coffee Lab",
+        "url": "https://onyxcoffeelab.com",
+        "type": "organization"
+      },
+      "based_on": "https://brew.link/p/W3GQ/espresso"
+    }
+  ]
+}

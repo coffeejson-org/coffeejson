@@ -1,0 +1,25 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "House espresso",
+      "method": "espresso",
+      "basis": "yield",
+      "brewer": { "id": "profitec-pro-600", "brand": "Profitec", "model": "Pro 600", "label": "Profitec Pro 600" },
+      "basket": { "id": "vst-precision-18g", "brand": "VST", "label": "VST 18 g precision" },
+      "coffee": { "value": 18, "unit": "gram" },
+      "yield": { "value": 45, "unit": "gram" },
+      "water_temp": { "value": 93, "unit": "celsius" },
+      "pressure": { "value": 9, "unit": "bar" },
+      "preinfusion_s": 4,
+      "grind": { "grinder": { "id": "df64", "label": "DF64" }, "setting": "12" },
+      "steps": [
+        { "kind": "distribute", "instruction": "WDT, level the bed" },
+        { "kind": "tamp", "instruction": "firm, level tamp" },
+        { "kind": "pull", "instruction": "4 s low-pressure pre-infusion, then 9 bar to 45 g" }
+      ],
+      "finish_s": 30,
+      "lang": "en"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "Tetsu Kasuya 4:6 Method (iced)",
+      "description": "The 4:6 method flash-brewed: half the water, poured hot straight onto ice so the coffee chills instantly without going flat.",
+      "method": "pour_over",
+      "brewer": { "id": "hario-v60", "brand": "Hario", "model": "V60 02", "label": "Hario V60" },
+      "coffee": { "value": 20, "unit": "gram" },
+      "water": { "value": 150, "unit": "gram" },
+      "ratio": 7.5,
+      "water_temp": { "value": 90, "unit": "celsius" },
+      "grind": { "size": "medium" },
+      "additions": [
+        { "type": "ice", "amount": { "value": 80, "unit": "gram" } }
+      ],
+      "steps": [
+        { "at_s": 0, "to_water": { "value": 30, "unit": "gram" }, "instruction": "first pour — sweetness phase" },
+        { "at_s": 40, "to_water": { "value": 60, "unit": "gram" }, "instruction": "second pour" },
+        { "at_s": 70, "to_water": { "value": 90, "unit": "gram" }, "instruction": "third pour — strength phase" },
+        { "at_s": 100, "to_water": { "value": 120, "unit": "gram" }, "instruction": "fourth pour" },
+        { "at_s": 130, "to_water": { "value": 150, "unit": "gram" }, "instruction": "fifth pour" }
+      ],
+      "finish_s": 180,
+      "lang": "en",
+      "notes": "Japanese-style flash brew: brew hot over 80 g ice in the server so the coffee chills instantly and keeps its aromatics. Half the water of the hot 4:6 (1:7.5 concentrate); the ice melts to roughly a 1:11.5 drink. First pour trades sweetness (less) for brightness (more).",
+      "author": { "name": "Tetsu Kasuya", "type": "person" },
+      "based_on": "https://www.youtube.com/watch?v=TfSBzFeoL4s",
+      "date_published": "2022-05-28"
+    }
+  ]
+}

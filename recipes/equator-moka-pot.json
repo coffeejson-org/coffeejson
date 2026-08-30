@@ -1,0 +1,29 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "Equator Coffees — Moka Pot",
+      "description": "Equator Coffees' moka pot guide, scaled to your pot at 1:10: 15–30 g of finely ground coffee to 150–300 g of water, brewed over a medium flame until it sputters.",
+      "method": "moka",
+      "brewer": { "id": "moka-pot" },
+      "coffee": { "min": 15, "max": 30, "unit": "gram" },
+      "water": { "min": 150, "max": 300, "unit": "gram" },
+      "ratio": 10,
+      "grind": { "size": "fine" },
+      "steps": [
+        { "kind": "prep", "instruction": "Grind the coffee of your choice on a fine setting. This is the second to finest setting on most grinders: finer than medium, but not quite ground for espresso. Use the 1:10 coffee to water ratio and determine appropriate amounts for the size of your moka pot. For example, a 3-cup moka pot will use 15g of coffee and 150g of water for every brew, while a 6-Cup moka pot will use 30g of coffee to 300g of water." },
+        { "kind": "prep", "instruction": "Disassemble your moka pot to separate the three chambers from one another: bottom chamber, brew basket, and top chamber." },
+        { "kind": "prep", "instruction": "Add filtered water to the bottom chamber, filling to just below the bottom of the release valve. Many moka pots will include a line that indicates where to stop your pour. Before any coffee is added, place the bottom chamber on the stovetop, turn on the burner, and allow your water to pre-heat." },
+        { "kind": "distribute", "instruction": "As your water is heating up, fill your brew basket to the top without packing the coffee grounds down. Fill this basket, or the \"puck,\" entirely and give the side of your brew basket a little tap to ensure that the coffee grounds are evenly distributed." },
+        { "kind": "prep", "instruction": "Once you begin to see some bubbles and movement from your water, but still short of a rolling boil, take your heat pad and securely remove the bottom chamber from the stovetop. With hot water ready to go, it's now time to re-assemble your moka pot." },
+        { "kind": "prep", "instruction": "Very carefully drop your filled brew basket into place above the bottom chamber. Then reattach the top chamber, screwing it on tightly. Using the handle, safely place the reassembled moka pot back onto your stove. Turn your stove down to a medium flame to allow for a steady brew." },
+        { "instruction": "The moka pot will begin to brew on its own, pushing hot water up through the brew basket, saturating the coffee grounds, and then dispensing brewed coffee into the brew chamber. You will be able to hear the brewing in action." },
+        { "kind": "wait", "instruction": "When you hear a change in sound to a sputtering noise from the top chamber, your brew is complete. Safely remove your moka pot from the stove and turn off the burner. Wait at least 10-15 seconds before your pour to allow the coffee to settle." }
+      ],
+      "notes": "Equator size this recipe to the reader's pot, so the dose and water are stated as windows held together by the 1:10 ratio: a 3-cup pot takes 15 g to 150 g, a 6-cup pot 30 g to 300 g. No water temperature is stated — the water is heated in the pot's own bottom chamber — and no total brew time, since the pot signals its own finish by sputtering. Their pro tips note that most moka pots are already built to a ~1:10 ratio, so filling the basket to the brim and the chamber to its max line hits it without weighing.",
+      "lang": "en",
+      "author": { "name": "Equator Coffees", "url": "https://www.equatorcoffees.com", "type": "organization" },
+      "based_on": "https://www.equatorcoffees.com/blogs/guides/moka-pot"
+    }
+  ]
+}

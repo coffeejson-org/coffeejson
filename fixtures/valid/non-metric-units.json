@@ -1,0 +1,23 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "Huila Reserve",
+      "roaster": { "name": "Example Roastery" },
+      "origin": {
+        "type": "single",
+        "items": [
+          { "country": "CO", "region": "Huila", "altitude": { "min": 5600, "max": 6200, "unit": "foot" } }
+        ]
+      }
+    }
+  ],
+  "recipes": [
+    {
+      "title": "Scale-in-ounces brew",
+      "coffee": { "value": 0.6, "unit": "ounce" },
+      "water": { "value": 10, "unit": "ounce" },
+      "water_temp": { "value": 200, "unit": "fahrenheit" }
+    }
+  ]
+}

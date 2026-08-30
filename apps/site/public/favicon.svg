@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" color="#241813" role="img" aria-label="CoffeeJSON">
+  <!-- The CoffeeJSON mark: a coffee bean whose two lobes are divided by a
+       lens-shaped crease, with a brace pair knocked out of them. It reads as a
+       bean first and as JSON on a second look.
+
+       This is the small optical cut — heavier strokes and a shallower cusp
+       than the display cut, so the counters stay open at 16 px.
+
+       The braces and the crease are real knockouts: they take whatever is
+       behind the mark rather than being painted, so the file works on any
+       ground. The ink is a presentation attribute with a prefers-color-scheme
+       override, so this single file adapts to the browser's scheme on its own. -->
+  <style>@media (prefers-color-scheme: dark) { :root { color: #F0E6E0 } }</style>
+  <defs>
+    <mask id="cj">
+      <rect x="-1" y="-1" width="102" height="102" fill="#fff"/>
+      <g transform="translate(9.02,0) scale(0.8197)">
+        <path fill="#000" d="M 50 0 C 47.2 26 46.0 44 46.0 61 C 46.0 78 47.2 96 50 122
+                 C 52.8 96 54.0 78 54.0 61 C 54.0 44 52.8 26 50 0 Z"/>
+        <path id="cj-brace" fill="none" stroke="#000" stroke-width="10.5"
+              stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="6"
+              d="M 38.0 29.7 C 33.0 29.7 26.0 30.3 26.0 36.5 L 26.0 54.0
+                 L 19.5 61.0 L 26.0 68.0 L 26.0 85.5
+                 C 26.0 91.7 33.0 92.3 38.0 92.3"/>
+        <use href="#cj-brace" transform="translate(100,0) scale(-1,1)"/>
+      </g>
+    </mask>
+  </defs>
+  <ellipse cx="50" cy="50" rx="40.98" ry="50" fill="currentColor" mask="url(#cj)"/>
+</svg>

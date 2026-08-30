@@ -1,0 +1,23 @@
+name: Spec ambiguity or error
+description: Two reasonable implementers could read the spec differently — that is a bug
+body:
+  - type: input
+    id: where
+    attributes:
+      label: Where
+      description: "Document and section (for example: docs/spec/03-recipe.md § Steps)."
+    validations:
+      required: true
+  - type: textarea
+    id: readings
+    attributes:
+      label: The sentence and its readings
+      description: Quote the passage, then state the readings that diverge — what implementer A does, what implementer B does.
+    validations:
+      required: true
+  - type: textarea
+    id: fixture
+    attributes:
+      label: A document that would settle it
+      description: If you can, paste a document the two readings handle differently — the fixture corpus exists so disagreements are settled by a test rather than an argument.
+      render: json

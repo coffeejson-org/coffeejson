@@ -1,0 +1,13 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "Espresso must not carry water (total brew water is not a shot quantity)",
+      "method": "espresso",
+      "basis": "yield",
+      "coffee": { "value": 18, "unit": "gram" },
+      "yield": { "value": 36, "unit": "gram" },
+      "water": { "value": 36, "unit": "gram" }
+    }
+  ]
+}

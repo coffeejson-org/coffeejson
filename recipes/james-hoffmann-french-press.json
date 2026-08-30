@@ -1,0 +1,25 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "James Hoffmann French Press",
+      "description": "James Hoffmann's no-plunge French press: steep, stir the crust, skim, rest, then pour off the settled brew for a clean, sludge-free cup.",
+      "method": "french_press",
+      "brewer": { "id": "french-press", "label": "French press" },
+      "coffee": { "value": 30, "unit": "gram" },
+      "water": { "value": 500, "unit": "gram" },
+      "water_temp": { "value": 100, "unit": "celsius" },
+      "grind": { "size": "medium_coarse" },
+      "steps": [
+        { "at_s": 0, "to_water": { "value": 500, "unit": "gram" }, "instruction": "pour all the water onto the grounds" },
+        { "kind": "stir", "at_s": 240, "instruction": "stir the crust, then scoop off the foam and floating grounds" },
+        { "kind": "wait", "instruction": "rest 5–8 more minutes — longer is fine, the brew only settles" },
+        { "kind": "press", "instruction": "press the plunger just to the surface of the liquid, no further" },
+        { "kind": "other", "instruction": "pour gently, leaving the last sips (and the sediment) behind" }
+      ],
+      "lang": "en",
+      "author": { "name": "James Hoffmann", "url": "https://www.jameshoffmann.co.uk", "type": "person" },
+      "based_on": "https://www.youtube.com/watch?v=st571DYYTR8"
+    }
+  ]
+}

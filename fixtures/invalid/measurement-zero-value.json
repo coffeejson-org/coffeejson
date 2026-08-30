@@ -1,0 +1,10 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "Zero-gram dose",
+      "coffee": { "value": 0, "unit": "gram" },
+      "water": { "value": 250, "unit": "gram" }
+    }
+  ]
+}

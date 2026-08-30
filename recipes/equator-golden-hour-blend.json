@@ -1,0 +1,43 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "Golden Hour Blend",
+      "roaster": { "name": "Equator Coffees", "url": "https://www.equatorcoffees.com", "type": "organization" },
+      "url": "https://www.equatorcoffees.com/products/golden-hour-blend",
+      "origin": {
+        "type": "blend",
+        "items": [
+          {
+            "country": "BR",
+            "region": "Norte Pioneiro, Paraná",
+            "producers": [{ "name": "Luiz Saldanha" }],
+            "altitude": { "min": 3000, "max": 3600, "unit": "foot" },
+            "process": ["natural"],
+            "varietals": ["Bourbon", "Mundo Novo", "Catuaí", "Tupi"]
+          },
+          {
+            "country": "PG",
+            "region": "Arufa, Jiwaka Province",
+            "producers": [{ "name": "600 producers organized around Kagamuga Dry Mill" }],
+            "altitude": { "min": 4900, "max": 5800, "unit": "foot" },
+            "process": ["natural"],
+            "varietals": ["Blue Mountain", "Arusha", "Mundo Novo", "Bourbon"]
+          },
+          {
+            "country": "CO",
+            "region": "Buesaco, Nariño",
+            "producers": [{ "name": "Small Holder Farmers" }],
+            "altitude": { "value": 6800, "unit": "foot" },
+            "process": ["washed"],
+            "varietals": ["Castillo", "Caturra", "Colombia"]
+          }
+        ]
+      },
+      "roast_level": "light_medium",
+      "roaster_notes": ["Orange creamsicle", "rainier cherry", "caramel"],
+      "description": "Evoking the warmth of sun-drenched moments, Golden Hour captures the energy of long summer days and the beauty of everyday life in motion. 5% of every bag sold will go to our producer partners at Fazenda California in Brazil.",
+      "lang": "en"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "id": "morning-v60",
+      "title": "Morning V60",
+      "coffee": { "value": 18, "unit": "gram" },
+      "water": { "value": 300, "unit": "gram" }
+    }
+  ],
+  "tastings": [
+    { "id": "", "recipe_ref": "morning-v60", "rating": 4 }
+  ]
+}

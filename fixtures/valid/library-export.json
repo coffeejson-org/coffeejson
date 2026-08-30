@@ -1,0 +1,19 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "Everyday V60",
+      "method": "pour_over",
+      "coffee": { "value": 15, "unit": "gram" },
+      "water": { "value": 250, "unit": "gram" }
+    },
+    {
+      "title": "Big French Press",
+      "method": "french_press",
+      "brewer": { "id": "french-press", "label": "French Press" },
+      "coffee": { "value": 55, "unit": "gram" },
+      "water": { "value": 850, "unit": "gram" },
+      "water_temp": { "value": 96, "unit": "celsius" }
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "Linea Caffe — Chemex",
+      "description": "Linea Caffe's Chemex method: 29 g ground on the coarsest setting, a 150 g bloom, and the rest of 450 g poured at 1:20 to finish at 4:20.",
+      "method": "pour_over",
+      "brewer": { "id": "chemex", "brand": "Chemex" },
+      "coffee": { "value": 29, "unit": "gram" },
+      "water": { "value": 450, "unit": "gram" },
+      "water_temp": { "min": 195, "max": 205, "unit": "fahrenheit" },
+      "grind": { "size": "extra_coarse" },
+      "filter": { "material": "paper", "label": "Chemex paper filter cone, 3-ply on one side and single-ply on the other" },
+      "steps": [
+        { "kind": "prep", "instruction": "always start with a clean Chemex coffee maker" },
+        { "kind": "prep", "instruction": "open a Chemex paper filter cone so that it is 3-ply on one side and single-ply on the other, and place it in the Chemex with the 3-ply side aligned with the spout" },
+        { "kind": "prep", "instruction": "pre-rinse the filter with heated water to rinse away any paper taste; dump the rinse water out carefully and reinsert the rinsed paper filter" },
+        { "kind": "prep", "instruction": "weigh out 29 grams of coffee and grind it on the coarsest setting" },
+        { "kind": "prep", "instruction": "place the Chemex on a gram scale and tare; add the coffee to the bottom of the filter cone, double-check the amount is 29 g, level out the bed of coffee and re-zero the scale" },
+        { "kind": "bloom", "at_s": 0, "to_water": { "value": 150, "unit": "gram" }, "instruction": "pour 150 grams of heated water over the coffee in concentric circles to wet the entire bed of coffee; the pouring part of the bloom phase should take no longer than 30 seconds" },
+        { "at_s": 80, "to_water": { "value": 450, "unit": "gram" }, "instruction": "pour the remaining water, using the force of the pour to create a slight bit of circular agitation and distributing it evenly; stop pouring at a total of 450 g" },
+        { "kind": "drawdown", "instruction": "once the water level has depleted halfway, lift out the filter and reintegrate any coffee left up on the sides of the filter, then return the filter to the Chemex" }
+      ],
+      "finish_s": 260,
+      "notes": "Linea call for a Chemex paper filter opened 3-ply to the spout and pre-rinsed with heated water, the rinse water dumped out.",
+      "lang": "en",
+      "author": { "name": "Linea Caffe", "url": "https://lineacaffe.com", "type": "organization" },
+      "based_on": "https://lineacaffe.com/brew-guides/"
+    },
+    {
+      "title": "Linea Caffe — Drip",
+      "description": "Linea Caffe's drip recommendation: a 15.5:1 water-to-coffee ratio by weight, worked as 29 g to 450 g.",
+      "method": "drip",
+      "coffee": { "value": 29, "unit": "gram" },
+      "water": { "value": 450, "unit": "gram" },
+      "water_temp": { "min": 195, "max": 205, "unit": "fahrenheit" },
+      "ratio": 15.5,
+      "notes": "Linea state this as a ratio recommendation for their coffees — 15.5:1 by weight — and give 29 g of ground coffee to 450 g of water as their worked example. No brewer, grind or pour schedule is stated.",
+      "lang": "en",
+      "author": { "name": "Linea Caffe", "url": "https://lineacaffe.com", "type": "organization" },
+      "based_on": "https://lineacaffe.com/brew-guides/"
+    },
+    {
+      "title": "Linea Caffe — Espresso",
+      "description": "Linea Caffe's house espresso parameters: 19 g in a double basket for a ristretto-style 24–26 g out at 8.75 bar.",
+      "method": "espresso",
+      "basis": "yield",
+      "coffee": { "value": 19, "unit": "gram" },
+      "yield": { "min": 24, "max": 26, "unit": "gram" },
+      "water_temp": { "min": 200.4, "max": 201, "unit": "fahrenheit" },
+      "pressure": { "value": 8.75, "unit": "bar" },
+      "basket": { "id": "custom", "label": "double basket" },
+      "notes": "Linea recommend these parameters for their Linea Reserve, Little Wing, Brazil Camocim Biodynamic Espresso, A4 Espresso, Big Calm Decaf and Ethiopia Suke Decaf. Total brew time is given as 24–26 seconds — a window, and durations in this format are bare numbers, so it is not recorded. Their instruction with the yield: \"Going ristretto is important. Not super ristretto —but very ristretto compared to current norms\". Linea's espresso product pages state different parameters from this guide (199.7–200.1 °F, and 24–25 g or 27–28 g yield); neither surface is authoritative on this domain, and this document carries the guide's block.",
+      "lang": "en",
+      "author": { "name": "Linea Caffe", "url": "https://lineacaffe.com", "type": "organization" },
+      "based_on": "https://lineacaffe.com/brew-guides/"
+    }
+  ]
+}

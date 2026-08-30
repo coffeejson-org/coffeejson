@@ -1,0 +1,11 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "Producers may not invent method ids",
+      "method": "hyper_percolation",
+      "coffee": { "value": 15, "unit": "gram" },
+      "water": { "value": 250, "unit": "gram" }
+    }
+  ]
+}

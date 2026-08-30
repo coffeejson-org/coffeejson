@@ -1,0 +1,60 @@
+name: Field proposal
+description: Propose a new field, object, or vocabulary value for the format
+title: "field: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The strongest proposal is one already running under the vendor-extension
+        member `ext` — see
+        [Contributing § Proposing a field](../../CONTRIBUTING.md#proposing-a-field).
+
+        The bar for the core schema: real use in at least one shipping consumer
+        and interest from two independent parties; generalizes beyond one
+        application's model and duplicates no existing field; fits the format's
+        discipline (checked below). "When in doubt, leave it out" is the default,
+        so the proposal's job is to remove the doubt.
+  - type: textarea
+    id: meaning
+    attributes:
+      label: What the field means
+      description: The concept, in a sentence or two. What real-world thing does it capture, and for which entity (recipe, bean, step…)?
+    validations:
+      required: true
+  - type: textarea
+    id: shape
+    attributes:
+      label: JSON shape and example document
+      description: The proposed shape, inside a complete document that would validate. Paste JSON.
+      render: json
+    validations:
+      required: true
+  - type: input
+    id: consumer
+    attributes:
+      label: Which consumer needs it
+      description: The shipping (or in-development) application that would emit or read this field.
+    validations:
+      required: true
+  - type: textarea
+    id: gap
+    attributes:
+      label: Why existing fields cannot express it
+      description: What you tried with the current format, and where it fell short. Include the nearest existing field and why it is not this.
+    validations:
+      required: true
+  - type: input
+    id: vocabulary
+    attributes:
+      label: Proposed vocabulary or units
+      description: If enumerable — the value set and its unknown-value fallback. If a quantity — the unit(s), as canonical identifiers.
+  - type: checkboxes
+    id: discipline
+    attributes:
+      label: Format discipline
+      description: The bar every core field clears — see the Contributing guide.
+      options:
+        - label: Optional only — nothing new is required within a major version
+        - label: Locale-neutral on the wire — machine ids, never display strings
+        - label: No personal or inventory state — identity and parameters only
+        - label: Provenance-honest — fact, claim, and opinion stay distinct

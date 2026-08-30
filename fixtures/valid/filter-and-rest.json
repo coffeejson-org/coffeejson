@@ -1,0 +1,44 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "id": "rudder",
+      "name": "012 RUDDER BLEND",
+      "roaster": { "name": "PHILOCOFFEA", "url": "https://philocoffea.com" },
+      "roast_date": "2026-07-01",
+      "rest_days": { "min": 14 },
+      "lang": "ja",
+      "description": "エイジング：焙煎日から14日後からがおすすめです。"
+    },
+    {
+      "id": "acacia-hills",
+      "name": "Acacia Hills",
+      "roaster": { "name": "LIGHT UP COFFEE", "url": "https://lightupcoffee.com" },
+      "rest_days": { "min": 14, "max": 60 }
+    }
+  ],
+  "recipes": [
+    {
+      "title": "Chemex",
+      "method": "pour_over",
+      "bean_ref": "rudder",
+      "brewer": { "id": "chemex" },
+      "coffee": { "value": 45, "unit": "gram" },
+      "water": { "value": 720, "unit": "gram" },
+      "filter": { "material": "paper", "label": "Chemex bonded — 3-ply on one side" },
+      "steps": [
+        { "kind": "prep", "instruction": "Rinse the filter with hot water and discard the rinse water." }
+      ]
+    },
+    {
+      "title": "French press",
+      "method": "french_press",
+      "bean_ref": "acacia-hills",
+      "brewer": { "id": "french-press" },
+      "coffee": { "value": 30, "unit": "gram" },
+      "water": { "value": 450, "unit": "gram" },
+      "filter": { "material": "metal", "label": "the plunger mesh" },
+      "notes": "No paper, so the oils stay in the cup."
+    }
+  ]
+}

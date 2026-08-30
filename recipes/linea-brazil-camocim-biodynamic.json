@@ -1,0 +1,27 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "Brazil Camocim Biodynamic",
+      "roaster": { "name": "Linea Caffe", "url": "https://lineacaffe.com", "type": "organization" },
+      "url": "https://lineacaffe.com/product/brazil-camocim-biodynamic/",
+      "origin": {
+        "type": "single",
+        "items": [
+          {
+            "country": "BR",
+            "region": "Espírito Santo",
+            "producers": [{ "name": "Henrique Leivas Sloper De Araujo" }],
+            "altitude": { "min": 1250, "max": 1300, "unit": "meter" }
+          }
+        ]
+      },
+      "process": ["honey"],
+      "drying_method": "Sun-dried on raised beds for 14-20 days.",
+      "varietals": ["Yellow Bourbon"],
+      "certifications": ["biodynamic", "regenerative_organic_agriculture"],
+      "description": "Butterscotch, vanilla, Key lime. Lingering caramel-drop finish.\n\nHenrique Leivas Sloper De Araujo’s Fazenda Camocim is at the forefront of Brazil’s organic and biodynamic farming movement. Henrique and Camocim are internationally renowned for their beautiful coffees. In 2017, Fazenda Camocim was awarded 1st place in Brazil’s prestigious Cup of Excellence coffee competition. Linea’s thrilled to share this delicious gem with you from our longtime friend Henrique Sloper!",
+      "lang": "en"
+    }
+  ]
+}

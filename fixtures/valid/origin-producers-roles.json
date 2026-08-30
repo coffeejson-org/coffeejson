@@ -1,0 +1,50 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "Honduras Pino de Oro",
+      "roaster": { "name": "ONIBUS COFFEE", "url": "https://onibuscoffee.com" },
+      "origin": {
+        "items": [
+          {
+            "country": "HN",
+            "region": "Santa Bárbara",
+            "producers": [
+              { "name": "Edgardo Tinoco", "role": "producer", "type": "person" },
+              { "name": "Pino de Oro", "role": "farm" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "Kenya Gatomboya",
+      "roaster": { "name": "ONIBUS COFFEE", "url": "https://onibuscoffee.com" },
+      "origin": {
+        "items": [
+          {
+            "country": "KE",
+            "region": "Nyeri",
+            "producers": [
+              { "name": "Barichu Farmers Cooperative Society", "role": "cooperative" },
+              { "name": "Gatomboya Coffee Factory", "role": "washing_station" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "An unlabeled source",
+      "roaster": { "name": "Example Roasters", "url": "https://example.com" },
+      "origin": {
+        "items": [
+          {
+            "country": "CO",
+            "region": "Huila",
+            "producers": [{ "name": "Finca Las Brisas" }]
+          }
+        ]
+      }
+    }
+  ]
+}

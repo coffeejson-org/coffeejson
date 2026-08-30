@@ -1,0 +1,13 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "Altitude needs its unit",
+      "origin": {
+        "items": [
+          { "country": "ET", "altitude": { "value": 1900 } }
+        ]
+      }
+    }
+  ]
+}

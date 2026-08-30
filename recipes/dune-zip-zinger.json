@@ -1,0 +1,24 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "Zip Zinger",
+      "roaster": { "name": "Dune Coffee Roasters", "url": "https://www.dunecoffee.com", "type": "organization" },
+      "url": "https://www.dunecoffee.com/products/zip-zinger",
+      "origin": {
+        "type": "blend",
+        "items": [
+          { "country": "CO", "producers": [{ "name": "Various smallholder producers" }], "altitude": { "min": 1200, "max": 2000, "unit": "meter" } },
+          { "country": "ET", "producers": [{ "name": "Various smallholder producers" }], "altitude": { "min": 1200, "max": 2000, "unit": "meter" } },
+          { "country": "HN", "producers": [{ "name": "Various smallholder producers" }], "altitude": { "min": 1200, "max": 2000, "unit": "meter" } }
+        ]
+      },
+      "process": ["washed", "natural"],
+      "varietals": ["Various"],
+      "preferred_extraction": "omni",
+      "roaster_notes": ["DARK CHOCOLATE", "STONE FRUITS", "RICH"],
+      "description": "Zip Zinger is our flagship blend – built for versatility and meant to be enjoyed however you brew. Designed to shine both as espresso and as a filter coffee, this is the blend you’ll always find on bar in our shops.\n\nIn the cup, it balances bright, juicy notes of stone fruit with rich layers of caramel and chocolate. As a filter coffee, it’s sweet and lively; as espresso, it pulls rich and chocolate-forward, making it especially at home in milk-based drinks.\n\nWe named this coffee for the iconic skateboard designed by Mark Gonzalez, who inspires us to be creative and have fun each day.",
+      "lang": "en"
+    }
+  ]
+}

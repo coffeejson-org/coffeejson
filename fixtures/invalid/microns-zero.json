@@ -1,0 +1,11 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "Zero-micron grind",
+      "coffee": { "value": 15, "unit": "gram" },
+      "water": { "value": 250, "unit": "gram" },
+      "grind": { "microns_approx": 0 }
+    }
+  ]
+}

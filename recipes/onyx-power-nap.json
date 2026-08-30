@@ -1,0 +1,185 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "Power Nap",
+      "roaster": {
+        "name": "Onyx Coffee Lab",
+        "url": "https://onyxcoffeelab.com",
+        "type": "organization"
+      },
+      "url": "https://onyxcoffeelab.com/products/power-nap",
+      "origin": {
+        "type": "blend",
+        "items": [
+          {
+            "name": "Worka",
+            "country": "ET",
+            "process": [
+              "washed"
+            ],
+            "altitude": {
+              "value": 1950,
+              "unit": "meter"
+            },
+            "harvest_time": "Rotating Microlots",
+            "percentage": 50
+          },
+          {
+            "name": "Decaf Colombia Huila",
+            "country": "CO",
+            "altitude": {
+              "value": 1950,
+              "unit": "meter"
+            },
+            "harvest_time": "Rotating Microlots",
+            "percentage": 50
+          }
+        ]
+      },
+      "process": [
+        "washed"
+      ],
+      "drying_method": "raised_bed",
+      "varietals": [
+        "Mixed"
+      ],
+      "roast_level": "medium",
+      "production_roaster": "Loring S70 Peregrine",
+      "form": "bean",
+      "preferred_extraction": "filter",
+      "roaster_notes": [
+        "Brown Sugar",
+        "Cocoa",
+        "Silky",
+        "Floral",
+        "Peach"
+      ],
+      "description": "OK, so you need a quick burst of energy, but your bedtime is in three hours. You, my friend, need a POWER NAP. You already love our floral washed Worka from Ethiopia. Well, we blended it with a natural sugar cane process Colombia creating Power Nap. We created this \"half-caf\" blend just for you, a pre-roast blend of 50% of our beloved Ethiopia Worka and 50% of our Decaf Colombia Huila. The resulting cup is silky sweet and reminiscent of ripe peach and cocoa, with a sweet finish of brown sugar. It's so tasty; you might just have two cups and stay up past your bedtime...",
+      "lang": "en"
+    }
+  ],
+  "recipes": [
+    {
+      "title": "Onyx Power Nap Kalita Wave",
+      "description": "Onyx's Kalita Wave brew guide for Power Nap: a bloom and five spiral pours at 1:16 and 205 °F — the half-caf blend as a filter cup.",
+      "method": "pour_over",
+      "recommended": true,
+      "brewer": {
+        "id": "kalita-wave",
+        "brand": "Kalita",
+        "model": "Wave 185",
+        "label": "Kalita Wave 185"
+      },
+      "coffee": {
+        "value": 25,
+        "unit": "gram"
+      },
+      "water": {
+        "value": 400,
+        "unit": "gram"
+      },
+      "ratio": 16,
+      "water_temp": {
+        "value": 205,
+        "unit": "fahrenheit"
+      },
+      "grind": {
+        "microns_approx": 750
+      },
+      "steps": [
+        {
+          "kind": "bloom",
+          "at_s": 0,
+          "to_water": {
+            "value": 50,
+            "unit": "gram"
+          },
+          "instruction": "bloom"
+        },
+        {
+          "at_s": 30,
+          "to_water": {
+            "value": 160,
+            "unit": "gram"
+          },
+          "instruction": "heavy spiral pour"
+        },
+        {
+          "at_s": 45,
+          "to_water": {
+            "value": 220,
+            "unit": "gram"
+          },
+          "instruction": "spiral pour"
+        },
+        {
+          "at_s": 80,
+          "to_water": {
+            "value": 280,
+            "unit": "gram"
+          },
+          "instruction": "spiral pour"
+        },
+        {
+          "at_s": 107,
+          "to_water": {
+            "value": 340,
+            "unit": "gram"
+          },
+          "instruction": "spiral pour"
+        },
+        {
+          "at_s": 140,
+          "to_water": {
+            "value": 400,
+            "unit": "gram"
+          },
+          "instruction": "spiral pour"
+        }
+      ],
+      "finish_s": 270,
+      "lang": "en",
+      "author": {
+        "name": "Onyx Coffee Lab",
+        "url": "https://onyxcoffeelab.com",
+        "type": "organization"
+      },
+      "based_on": "https://onyxcoffeelab.com/products/power-nap"
+    },
+    {
+      "title": "Onyx Power Nap Espresso",
+      "description": "Onyx Coffee Lab's espresso for Power Nap, the half-caf blend: 19 g in, 45 g out on a Series 1 profile — line pressure, then 9 bar for 25 seconds.",
+      "method": "espresso",
+      "basis": "yield",
+      "recommended": true,
+      "coffee": {
+        "value": 19,
+        "unit": "gram"
+      },
+      "yield": {
+        "value": 45,
+        "unit": "gram"
+      },
+      "pressure": {
+        "value": 9,
+        "unit": "bar"
+      },
+      "preinfusion_s": 3.5,
+      "steps": [
+        {
+          "kind": "pull",
+          "instruction": "Series 1 profile: line pressure for 0–3.5 seconds, then extract at 9 bar for 25 seconds."
+        }
+      ],
+      "finish_s": 28.5,
+      "lang": "en",
+      "author": {
+        "name": "Onyx Coffee Lab",
+        "url": "https://onyxcoffeelab.com",
+        "type": "organization"
+      },
+      "based_on": "https://onyxcoffeelab.com/products/power-nap"
+    }
+  ]
+}

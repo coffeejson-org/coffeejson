@@ -1,0 +1,26 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "Ethiopia Yirgacheffe Koke",
+      "roaster": { "name": "GLITCH COFFEE & ROASTERS", "url": "https://shop.glitchcoffee.com", "type": "organization" },
+      "url": "https://shop.glitchcoffee.com/products/new-ethiopia-yirgacheffe-koke",
+      "origin": {
+        "type": "single",
+        "items": [
+          {
+            "country": "ET",
+            "region": "Yirgacheffe",
+            "altitude": { "value": 2150, "unit": "meter" },
+            "process": ["natural"]
+          }
+        ]
+      },
+      "process": ["natural"],
+      "varietals": ["Heirloom"],
+      "roaster_notes": ["Almond", "Oolong Tea", "Barley", "Tea Like", "Balanced"],
+      "description": "NEW in Feb 2026\n\nEthiopia から新しいコーヒーが届きました。",
+      "lang": "ja"
+    }
+  ]
+}

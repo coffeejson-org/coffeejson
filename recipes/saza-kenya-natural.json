@@ -1,0 +1,23 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "ケニア ナチュラル",
+      "roaster": { "name": "サザコーヒー", "url": "https://saza.coffee", "type": "organization" },
+      "url": "https://saza.coffee/Form/Product/ProductDetail.aspx?pid=104841&cat=030150",
+      "origin": {
+        "type": "single",
+        "items": [
+          {
+            "country": "KE",
+            "process": ["natural"]
+          }
+        ]
+      },
+      "process": ["natural"],
+      "roast_level": "medium",
+      "description": "ケニアでは珍しいナチュラル製法。\n\nカシスやグレープのような芳醇な香りと甘み。冷めるとオレンジのようにみずみずしくすっきりとした味わいへ変化します。標高の高さ、水はけの良い火山性の土壌が、力強くも上品なフレーバーを生み出します。",
+      "lang": "ja"
+    }
+  ]
+}

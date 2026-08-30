@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 122" color="#241813" role="img" aria-label="CoffeeJSON">
+  <!-- Ink: espresso #241813 · dark-mode counterpart cream #F0E6E0.
+       See mark.svg for why the color is bound both as an attribute and as a
+       standalone-only media query. -->
+  <style>@media (prefers-color-scheme: dark) { :root { color: #F0E6E0 } }</style>
+  <!-- CoffeeJSON mark — v2 SMALL cut, for use at 32 px and below.
+       Same mark, same construction, opened up so it survives the raster:
+         brace stroke 8.4% -> 10.5% W        (counters stay open)
+         cusp excursion  7.3% -> 6.5% W      (cusp stops merging with the seam)
+         terminal tips  40.0% -> 38.0% W     (more clearance to the seam)
+         brace ink      64% -> 60% H         (keeps the lobe margins solid)
+         seam waist      7.0% -> 8.0% W      (seam survives at 16 px)
+       Not a second logo — the small cut of one mark. See mark.svg. -->
+  <defs>
+    <mask id="cj-ks">
+      <rect x="-1" y="-1" width="102" height="124" fill="#fff"/>
+      <path fill="#000" d="M 50 0
+               C 47.2 26 46.0 44 46.0 61
+               C 46.0 78 47.2 96 50 122
+               C 52.8 96 54.0 78 54.0 61
+               C 54.0 44 52.8 26 50 0 Z"/>
+      <path id="cj-bs" fill="none" stroke="#000" stroke-width="10.5"
+            stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="6"
+            d="M 38.0 29.7
+               C 33.0 29.7 26.0 30.3 26.0 36.5
+               L 26.0 54.0
+               L 19.5 61.0
+               L 26.0 68.0
+               L 26.0 85.5
+               C 26.0 91.7 33.0 92.3 38.0 92.3"/>
+      <use href="#cj-bs" transform="translate(100,0) scale(-1,1)"/>
+    </mask>
+  </defs>
+  <ellipse cx="50" cy="61" rx="50" ry="61" fill="currentColor" mask="url(#cj-ks)"/>
+</svg>

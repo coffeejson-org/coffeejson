@@ -1,0 +1,13 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "Sunday V60",
+      "coffee": { "value": 15, "unit": "gram" },
+      "water": { "value": 250, "unit": "gram" },
+      "author": { "name": "Example Roastery", "url": "https://example.com" },
+      "based_on": "https://example.com/brew-guides/sunday-v60",
+      "date_published": "2026-06-01"
+    }
+  ]
+}

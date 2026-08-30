@@ -1,0 +1,10 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "A dose stated by volume",
+      "coffee": { "value": 30, "unit": "milliliter" },
+      "water": { "value": 500, "unit": "milliliter" }
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "ドリップ（ホット）",
+      "method": "pour_over",
+      "lang": "ja",
+      "brewer": { "id": "hario-v60" },
+      "coffee": { "value": 13, "unit": "gram" },
+      "water": { "value": 225, "unit": "milliliter" },
+      "water_temp": { "value": 92, "unit": "celsius" },
+      "finish_s": 165,
+      "notes": "湯量は cc で表記されている。92 ℃ の湯 225 cc は約 216.8 g にあたるが、出典が示したのは体積なのでそのまま記録する。"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "Step times start at zero",
+      "coffee": { "value": 15, "unit": "gram" },
+      "water": { "value": 250, "unit": "gram" },
+      "steps": [
+        { "at_s": -5, "to_water": { "value": 30, "unit": "gram" } }
+      ]
+    }
+  ]
+}

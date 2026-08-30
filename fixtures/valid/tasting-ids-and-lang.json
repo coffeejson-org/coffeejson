@@ -1,0 +1,32 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "id": "morning-v60",
+      "title": "モーニング V60",
+      "lang": "ja",
+      "method": "pour_over",
+      "coffee": { "value": 18, "unit": "gram" },
+      "water": { "value": 300, "unit": "gram" }
+    }
+  ],
+  "tastings": [
+    {
+      "id": "monday",
+      "recipe_ref": "morning-v60",
+      "rating": 3,
+      "perceived": { "extraction": -0.4 },
+      "note": "少し酸っぱい。挽き目を細かく。",
+      "lang": "ja"
+    },
+    {
+      "id": "tuesday",
+      "recipe_ref": "morning-v60",
+      "rating": 5,
+      "perceived": { "extraction": 0 },
+      "descriptors": ["ダークチョコレート"],
+      "note": "今週いちばん。",
+      "lang": "ja"
+    }
+  ]
+}

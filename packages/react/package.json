@@ -1,0 +1,67 @@
+{
+  "name": "@coffeejson/react",
+  "version": "1.0.0",
+  "license": "Apache-2.0",
+  "description": "React components for rendering CoffeeJSON documents.",
+  "type": "module",
+  "sideEffects": [
+    "*.css"
+  ],
+  "keywords": [
+    "coffee",
+    "coffeejson",
+    "recipe",
+    "react",
+    "components",
+    "brewing",
+    "json"
+  ],
+  "homepage": "https://coffeejson.org",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coffeejson-org/coffeejson.git",
+    "directory": "packages/react"
+  },
+  "bugs": {
+    "url": "https://github.com/coffeejson-org/coffeejson/issues"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./styles.css": "./styles.css"
+  },
+  "files": [
+    "dist",
+    "styles.css"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "prepack": "pnpm run build",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.build.json --noEmit",
+    "test": "pnpm run typecheck && vitest run"
+  },
+  "dependencies": {
+    "@coffeejson/core": "workspace:^"
+  },
+  "peerDependencies": {
+    "react": "^19"
+  },
+  "devDependencies": {
+    "@types/node": "^26.2.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.5",
+    "jsdom": "^30.0.1",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.11"
+  }
+}

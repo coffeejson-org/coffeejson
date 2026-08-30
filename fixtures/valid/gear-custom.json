@@ -1,0 +1,17 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "Cloth-filter nel drip",
+      "method": "pour_over",
+      "brewer": { "id": "custom", "label": "Hand-sewn nel dripper" },
+      "coffee": { "value": 24, "unit": "gram" },
+      "water": { "value": 280, "unit": "gram" },
+      "water_temp": { "value": 82, "unit": "celsius" },
+      "grind": {
+        "grinder": { "id": "custom", "label": "Vintage hand mill" },
+        "size": "coarse"
+      }
+    }
+  ]
+}

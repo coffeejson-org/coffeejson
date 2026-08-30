@@ -1,0 +1,21 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "Inverted AeroPress",
+      "method": "aeropress",
+      "brewer": { "id": "aeropress", "label": "AeroPress" },
+      "coffee": { "value": 14, "unit": "gram" },
+      "water": { "value": 220, "unit": "gram" },
+      "water_temp": { "value": 85, "unit": "celsius" },
+      "steps": [
+        { "kind": "prep", "instruction": "assemble inverted, rinse filter" },
+        { "kind": "pour", "at_s": 0, "to_water": { "value": 220, "unit": "gram" }, "instruction": "add all water" },
+        { "kind": "stir", "at_s": 10, "instruction": "stir 3x gently" },
+        { "kind": "flip", "instruction": "cap, flip onto cup" },
+        { "kind": "press", "at_s": 30, "action_duration_s": 25, "instruction": "press slowly" }
+      ],
+      "finish_s": 115
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+#!/usr/bin/env node
+// The runtime schema is deliberately open (forward compatibility); this variant
+// closes every object and flags empty optional arrays so producer pipelines catch
+// typo'd field names. A producer lint only — never a conformance or import gate.
+import { readFileSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const root = fileURLToPath(new URL("..", import.meta.url));
+const runtimePath = join(root, "docs", "schema", "coffeejson-1.0.schema.json");
+const authoringPath = join(root, "docs", "schema", "coffeejson-1.0.authoring.schema.json");
+
+export function buildAuthoringSchema(runtime) {
+  const schema = structuredClone(runtime);
+  // A variant is `/schema/<variant>/<version>`, variant FIRST because
+  // `/schema/1.0` is served as a file and a path cannot be both file and
+  // directory. Version last keeps a variant's addresses parallel to the runtime's.
+  schema.$id = "https://coffeejson.org/schema/authoring/1.0";
+  schema.title = "CoffeeJSON Document (authoring)";
+  schema.description =
+    "Strict authoring/lint variant of the CoffeeJSON 1.0 schema, GENERATED from it by tools/gen-authoring-schema.mjs — do not edit by hand. Every object is closed (unknown members rejected, catching producer typos), every optional array requires at least one element (emit content or omit the key), and a document carrying several beans requires bean_ref on every recipe (co-location associates nothing once there is more than one coffee, so an unreferenced recipe is silently unlinked). A producer lint only: the open runtime schema at https://coffeejson.org/schema/1.0 is the conformance schema, and consumers never gate imports on either.";
+  walk(schema);
+  // An authoring RULE, not a transform. Co-location associates on
+  // `beans.length == 1`, so adding a second bean to a bag-to-brew document
+  // silently unlinks every recipe: still valid, now meaning something else. NOT a
+  // runtime rule — an unreferenced recipe in a multi-bean document is legal.
+  // Added after `walk` so the transform never sees it.
+  schema.allOf = [...(schema.allOf ?? []), {
+    $comment: "Authoring lint: once a document carries several beans, co-location associates nothing, so each recipe must name the coffee it is for.",
+    if: { required: ["beans"], properties: { beans: { type: "array", minItems: 2 } } },
+    then: { properties: { recipes: { items: { required: ["bean_ref"] } } } },
+  }];
+  return schema;
+}
+
+function walk(node) {
+  if (Array.isArray(node)) {
+    node.forEach(walk);
+    return;
+  }
+  if (node === null || typeof node !== "object") return;
+  // Only real object schemas: the envelope anyOf branches and the basis if/then
+  // fragments carry partial `properties` without a `type`, and closing those would
+  // reject the members the main schema defines.
+  if (node.type === "object" && node.properties) node.additionalProperties = false;
+  // Empty optional arrays are valid on the wire, and a should-omit here.
+  if (node.type === "array" && node.minItems === undefined) node.minItems = 1;
+  for (const value of Object.values(node)) walk(value);
+}
+
+export function renderAuthoringSchema(runtime) {
+  return JSON.stringify(buildAuthoringSchema(runtime), null, 2) + "\n";
+}
+
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  const runtime = JSON.parse(readFileSync(runtimePath, "utf8"));
+  writeFileSync(authoringPath, renderAuthoringSchema(runtime));
+  console.log(`wrote ${authoringPath}`);
+}

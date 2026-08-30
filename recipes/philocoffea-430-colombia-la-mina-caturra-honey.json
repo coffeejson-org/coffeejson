@@ -1,0 +1,28 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "430 Colombia La Mina Caturra Honey",
+      "roaster": { "name": "PHILOCOFFEA", "url": "https://philocoffea.com", "type": "organization" },
+      "url": "https://philocoffea.com/?pid=191976355",
+      "origin": {
+        "type": "single",
+        "items": [
+          {
+            "country": "CO",
+            "region": "Buesaco, Narino,Colombia",
+            "producers": [{ "name": "Franco Lopez & Jheison Lopez" }],
+            "altitude": { "value": 2100, "unit": "meter" }
+          }
+        ]
+      },
+      "process": ["anaerobic", "honey"],
+      "varietals": ["Caturra"],
+      "roast_level": "light_medium",
+      "rest_days": { "min": 14 },
+      "roaster_notes": ["Cassis", "Red cherry", "Apple brandy", "Cacao nibs", "Raisins", "Juicy"],
+      "description": "祖父から孫へ。受け継がれてきた知識と、新しい世代の挑戦。\n\nコロンビア南西部、ナリーニョ県ブエサコ地区。今回ご紹介するLa Mina農園は、平均標高2,100m。肥沃な土壌と豊富な水資源、年間を通して15℃から20℃の冷涼な気候の中でコーヒーが育てられています。La Minaという名前は、農園の敷地内に存在する鉱山に由来しているそうです。\n\nこの農園を切り拓いたのは、フランコ・ロペスさん。1985年、当時この地域では牧畜が主流だったなか、「この土地はコーヒーに向いている」と信じ、いち早くコーヒー栽培に取り組み始めました。2025年に他界されましたが、その知識や経験、情熱は今も農園に息づいています。現在、生産と精製を担っているのは孫のヘイソン・ロペスさん。\n\n生産処理は Double Anaerobic Honey。エイジング：焙煎日から14日後からがおすすめです。",
+      "lang": "ja"
+    }
+  ]
+}

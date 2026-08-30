@@ -1,0 +1,43 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "430 Colombia La Mina",
+      "roaster": { "name": "PHILOCOFFEA", "url": "https://philocoffea.com" },
+      "process": ["anaerobic", "honey"],
+      "origin": {
+        "items": [
+          { "country": "CO", "region": "Huila", "process": ["anaerobic", "honey"] }
+        ]
+      },
+      "description": "The bag states its process as \"Double Anaerobic Honey\": an anaerobic fermentation followed by honey drying. Both parts are stated, so both are carried; the array is the set of processes this coffee underwent, not an ordering of them."
+    },
+    {
+      "name": "Zip Zinger",
+      "roaster": { "name": "Dune Coffee Roasters", "url": "https://dunecoffee.com" },
+      "process": ["washed", "natural"],
+      "origin": {
+        "type": "blend",
+        "items": [
+          { "country": "CO" },
+          { "country": "ET" },
+          { "country": "HN" }
+        ]
+      },
+      "description": "The roaster states \"Process / Washed, Natural\" for a three-origin blend without saying which component takes which. The bag-level set is exactly that claim; the items stay silent rather than inventing the assignment."
+    },
+    {
+      "name": "Jaguar Espresso",
+      "roaster": { "name": "Equator Coffees", "url": "https://equatorcoffees.com" },
+      "origin": {
+        "type": "blend",
+        "items": [
+          { "country": "HN", "process": ["washed"] },
+          { "country": "ET", "process": ["natural"] },
+          { "region": "Sumatra, Aceh", "process": ["wet_hulled"] }
+        ]
+      },
+      "description": "Wet-hulled — giling basah — is the standard post-harvest method across Sumatra, and the roaster labels it \"Milling: Wet Hulled\"."
+    }
+  ]
+}

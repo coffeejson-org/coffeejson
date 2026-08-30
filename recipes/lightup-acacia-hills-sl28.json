@@ -1,0 +1,26 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "ACACIA HILLS SL28 - TANZANIA",
+      "roaster": { "name": "LIGHT UP COFFEE", "url": "https://lightupcoffee.com", "type": "organization" },
+      "url": "https://lightupcoffee.com/products/acacia-hills-sl28-tanzania",
+      "origin": {
+        "type": "single",
+        "items": [
+          {
+            "country": "TZ",
+            "region": "Oldeani",
+            "producers": [{ "name": "Leon Christianakis" }],
+            "altitude": { "min": 1750, "max": 1950, "unit": "meter" }
+          }
+        ]
+      },
+      "process": ["washed"],
+      "varietals": ["SL28"],
+      "rest_days": { "min": 14, "max": 60 },
+      "description": "チェリーとグレープフルーツのジューシーな果実味。蜂蜜のような優しい甘さが重なり、ダージリンを思わせる華やかな紅茶の余韻が心地よく続く。\n\nレオンの祖父母は、1900年頃にギリシャからタンザニアに来た移民で、コーヒー生産を生業とした。レオンはその三代目にあたる。キリマンジャロ国際空港のほど近く、アルーシャという街の郊外に一家の邸宅がある。先代はその周辺の農園でコーヒーを栽培していたが、その土地は標高が低く高品質のコーヒーを生産するには不向きであった。レオンは2000年代にスペシャルティコーヒーという概念を知り、より高品質のコーヒーを生産できる土地を探し始めた。",
+      "lang": "ja"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "LIGHT UP COFFEE — FRENCH PRESS",
+      "description": "LIGHT UP COFFEE のフレンチプレスレシピ。粉15gに100℃のお湯250g（粉の16.5倍）を勢いよく注ぎ、4分浸してから網を押し下げる。",
+      "method": "french_press",
+      "brewer": { "id": "french-press", "label": "フレンチプレス" },
+      "coffee": { "value": 15, "unit": "gram" },
+      "water": { "value": 250, "unit": "gram" },
+      "ratio": 16.5,
+      "water_temp": { "value": 100, "unit": "celsius" },
+      "grind": { "size": "medium_coarse" },
+      "filter": { "material": "metal", "label": "蓋の網" },
+      "steps": [
+        { "kind": "prep", "instruction": "セット：フレンチプレスにコーヒー粉を入れる。" },
+        { "at_s": 0, "to_water": { "value": 250, "unit": "gram" }, "instruction": "お湯を注ぐ：お湯を勢いよく注ぐ。" },
+        { "kind": "wait", "instruction": "浸水：4分間待つ。" },
+        { "kind": "press", "at_s": 240, "instruction": "抽出：4分経ったら蓋をして網を押し下げ、完成。" }
+      ],
+      "notes": "挽き目は「ドリップより少し粗めの挽き目」と指定されている。お湯の量は「250g（粉の16.5倍）」として比率が明記されている（250 ÷ 15 は16.67のため、記載の16.5とわずかに異なる）。紙のフィルターは使わず、蓋の網で濾す。",
+      "lang": "ja",
+      "author": { "name": "LIGHT UP COFFEE", "url": "https://lightupcoffee.com", "type": "organization" },
+      "based_on": "https://lightupcoffee.com/blogs/press/french-press"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "ホンジュラス / エドガルド・ティノコ",
+      "roaster": { "name": "ONIBUS COFFEE", "url": "https://onibuscoffee.com", "type": "organization" },
+      "url": "https://onibuscoffee.com/products/honduras-edgardo-tinoco",
+      "origin": {
+        "type": "single",
+        "items": [
+          {
+            "country": "HN",
+            "region": "Pino de Oro, Santa Barbara",
+            "producers": [{ "name": "Edgardo Tinoco" }],
+            "altitude": { "value": 1640, "unit": "meter" },
+            "process": ["washed"]
+          }
+        ]
+      },
+      "process": ["washed"],
+      "varietals": ["SL28"],
+      "roaster_notes": ["ストーンフルーツ", "プラム", "プルーン", "スイート", "紅茶のような飲みごごち", "長く続く余韻"],
+      "description": "プラムやプルーンを思わせる熟した果実の甘さに、ストーンフルーツのやわらかな果実味が重なるロット。紅茶のような飲み心地に、長く続く甘い余韻が印象的な一杯に仕上がっています。\n\n農園：Pino de Oro（ピノ・デ・オーロ）",
+      "lang": "ja"
+    }
+  ]
+}

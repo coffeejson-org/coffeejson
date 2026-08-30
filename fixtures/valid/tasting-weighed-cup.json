@@ -1,0 +1,34 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "id": "kilimbi",
+      "name": "Kilimbi",
+      "roaster": { "name": "Onyx Coffee Lab" },
+      "origin": { "type": "single", "items": [ { "country": "RW", "region": "Nyamasheke" } ] },
+      "process": ["washed"]
+    }
+  ],
+  "recipes": [
+    {
+      "id": "kilimbi-french-press",
+      "title": "Kilimbi French Press",
+      "method": "french_press",
+      "bean_ref": "kilimbi",
+      "coffee": { "value": 30, "unit": "gram" },
+      "water": { "value": 500, "unit": "gram" },
+      "water_temp": { "value": 95, "unit": "celsius" }
+    }
+  ],
+  "tastings": [
+    {
+      "recipe_ref": "kilimbi-french-press",
+      "rating": 4,
+      "perceived": { "extraction": 0.1, "strength": -0.1 },
+      "measured": {
+        "tds": 1.31,
+        "yield": { "value": 431, "unit": "gram" }
+      }
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "Nano Challa",
+      "roaster": { "name": "Example Roastery" },
+      "url": "https://example.com/coffees/nano-challa",
+      "origin": {
+        "type": "single",
+        "items": [
+          {
+            "country": "ET",
+            "region": "Guji",
+            "producers": [{ "name": "Nano Challa cooperative" }],
+            "altitude": { "min": 1900, "max": 2100, "unit": "meter" },
+            "harvest_time": "Oct–Dec 2025"
+          }
+        ]
+      },
+      "process": ["washed"],
+      "roast_level": "light_medium",
+      "form": "drip_bag"
+    }
+  ]
+}

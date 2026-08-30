@@ -1,0 +1,19 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "Equator Blend",
+      "roaster": { "name": "Equator Coffees", "url": "https://equatorcoffees.com" },
+      "origin": {
+        "type": "blend",
+        "items": [
+          { "region": "Sumatra", "varietals": ["Onanganjang", "Sigararutang"], "process": ["wet_hulled"] },
+          { "country": "KE", "varietals": ["SL28", "SL34", "Ruiru 11"], "process": ["washed"] },
+          { "country": "CO", "varietals": ["Caturra", "Castillo"], "process": ["washed"] },
+          { "country": "SV", "varietals": ["Pacamara"], "process": ["natural"] }
+        ]
+      },
+      "description": "The roaster publishes varieties per component. Unioning them onto the bean would assert an eight-variety mixture nobody claimed."
+    }
+  ]
+}

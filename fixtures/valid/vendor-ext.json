@@ -1,0 +1,13 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "Everyday V60",
+      "coffee": { "value": 15, "unit": "gram" },
+      "water": { "value": 250, "unit": "gram" },
+      "ext": {
+        "app.example": { "collection": "favorites", "sync_rev": 4 }
+      }
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "April Sustainable Profile — Modbar Espresso",
+      "description": "April Coffee Roasters' base espresso recipe for their House line: 18 g in for 48 g out at 6 bar, ground on a Mahlkönig E80.",
+      "method": "espresso",
+      "basis": "yield",
+      "coffee": {
+        "value": 18,
+        "unit": "gram"
+      },
+      "yield": {
+        "value": 48,
+        "unit": "gram"
+      },
+      "pressure": {
+        "value": 6,
+        "unit": "bar"
+      },
+      "brewer": {
+        "id": "custom",
+        "brand": "Modbar",
+        "label": "Modbar"
+      },
+      "grind": {
+        "grinder": {
+          "id": "mahlkonig-e80",
+          "brand": "Mahlkönig",
+          "model": "E80"
+        },
+        "setting": "4,2"
+      },
+      "notes": "April publish this as a base recipe on a Modbar at 6 bar. Shot time is stated as 23–25 seconds and target TDS as 6.5–8, both windows rather than points. The grind setting is written on April's own E80 dial, with a comma as the decimal separator. The same page's Selection espresso block states this line's yield as 48–50 g; the House section's own block, transcribed here, states 48 g.",
+      "lang": "en",
+      "author": {
+        "name": "April Coffee Roasters",
+        "url": "https://www.aprilcoffeeroasters.com",
+        "type": "organization"
+      },
+      "based_on": "https://www.aprilcoffeeroasters.com/pages/coffee-inf-recipes"
+    }
+  ]
+}

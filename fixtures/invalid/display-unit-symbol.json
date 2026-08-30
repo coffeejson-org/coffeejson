@@ -1,0 +1,10 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "Display symbol instead of canonical unit id",
+      "coffee": { "value": 15, "unit": "g" },
+      "water": { "value": 250, "unit": "gram" }
+    }
+  ]
+}

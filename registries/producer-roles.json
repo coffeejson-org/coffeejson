@@ -1,0 +1,4 @@
+{
+  "$comment": "The CoffeeJSON producer-role registry — the recommended values for a party's `role`, naming the parts an origin's producers play (docs/spec/06-vocabularies.md § Producer role). Curated DATA, not spec: adding a token bumps nothing (docs/spec/07-versioning.md § Registry governance), and the set is open by design — the supply chain names more parts than any fixed list would hold, so a consumer MUST show an unrecognized role beside the name rather than drop the party. `role` is the part played, not the legal kind of party, which is `type`. Served at https://coffeejson.org/registries/producer-roles.json.",
+  "producer_roles": ["producer", "farm", "cooperative", "washing_station", "mill", "exporter"]
+}

@@ -1,0 +1,52 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "Aster",
+      "roaster": { "name": "Verve Coffee", "url": "https://www.vervecoffee.com", "type": "organization" },
+      "url": "https://www.vervecoffee.com/products/aster",
+      "origin": {
+        "items": [
+          { "country": "ET" }
+        ]
+      },
+      "roast_level": "medium",
+      "form": "bean",
+      "roaster_notes": ["Nectarine", "Key Lime", "Brown Sugar"],
+      "description": "Aster highlights the best of what Ethiopian coffee has to offer. A key lime sweetness and brown sugar complexity come together to inspire adventure in your morning. As our only blend sourced from a single origin and roasted in two different ways, Aster is our star on the map that marks the birthplace of coffee – Ethiopia.",
+      "lang": "en"
+    }
+  ],
+  "recipes": [
+    {
+      "title": "Verve Aster Dwell",
+      "description": "Verve's Dwell Dripper suggestion for Aster: 20 g to 300 g at 1:15 on a medium grind, drawn down at 2:29.",
+      "method": "pour_over",
+      "recommended": true,
+      "brewer": { "id": "verve-dwell", "brand": "Verve Coffee", "model": "Dwell Dripper", "label": "Verve Dwell Dripper" },
+      "coffee": { "value": 20, "unit": "gram" },
+      "water": { "value": 300, "unit": "gram" },
+      "ratio": 15,
+      "grind": { "size": "medium" },
+      "finish_s": 149,
+      "lang": "en",
+      "author": { "name": "Verve Coffee", "url": "https://www.vervecoffee.com", "type": "organization" },
+      "based_on": "https://www.vervecoffee.com/products/aster"
+    },
+    {
+      "title": "Verve Aster Chemex",
+      "description": "Verve's Chemex suggestion for Aster: 45 g to 675 g at 1:15 on a medium grind, drawn down at 6:15.",
+      "method": "pour_over",
+      "recommended": true,
+      "brewer": { "id": "chemex", "brand": "Chemex", "label": "Chemex" },
+      "coffee": { "value": 45, "unit": "gram" },
+      "water": { "value": 675, "unit": "gram" },
+      "ratio": 15,
+      "grind": { "size": "medium" },
+      "finish_s": 375,
+      "lang": "en",
+      "author": { "name": "Verve Coffee", "url": "https://www.vervecoffee.com", "type": "organization" },
+      "based_on": "https://www.vervecoffee.com/products/aster"
+    }
+  ]
+}

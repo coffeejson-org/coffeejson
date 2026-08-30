@@ -1,0 +1,28 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "Tetsu Kasuya 4:6 Method (basic)",
+      "description": "Tetsu Kasuya's World Brewers Cup-winning 4:6 pour-over: five equal pours — the first 40% of the water tunes taste, the last 60% sets strength.",
+      "method": "pour_over",
+      "brewer": { "id": "hario-v60", "brand": "Hario", "model": "V60 02", "label": "Hario V60" },
+      "coffee": { "value": 20, "unit": "gram" },
+      "water": { "value": 300, "unit": "gram" },
+      "ratio": 15,
+      "water_temp": { "value": 93, "unit": "celsius" },
+      "grind": { "size": "medium_coarse" },
+      "steps": [
+        { "at_s": 0, "to_water": { "value": 60, "unit": "gram" }, "instruction": "first pour — sweetness phase" },
+        { "at_s": 45, "to_water": { "value": 120, "unit": "gram" }, "instruction": "second pour" },
+        { "at_s": 90, "to_water": { "value": 180, "unit": "gram" }, "instruction": "third pour — strength phase" },
+        { "at_s": 130, "to_water": { "value": 240, "unit": "gram" }, "instruction": "fourth pour" },
+        { "at_s": 160, "to_water": { "value": 300, "unit": "gram" }, "instruction": "fifth pour" }
+      ],
+      "finish_s": 210,
+      "lang": "en",
+      "notes": "The original specifies a grind between medium-coarse and coarse; size carries the finer end of that range. Philocoffea publishes this method on a Japanese page and an English one, and they disagree on two pours: the Japanese original cues the fourth at 2:10 and the fifth at 2:40, the English translation at 2:15 and 2:45. This document follows the Japanese, which is the language the method was published in first.",
+      "author": { "name": "Tetsu Kasuya", "type": "person" },
+      "based_on": "https://philocoffea.com/?mode=f3"
+    }
+  ]
+}

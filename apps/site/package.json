@@ -1,0 +1,36 @@
+{
+  "name": "coffeejson-site",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "coffeejson.org — landing, validator, /r viewer + brew-along, /recipes directory.",
+  "scripts": {
+    "gen": "node tools/gen.mjs",
+    "predev": "pnpm run gen",
+    "dev": "vite",
+    "prebuild": "pnpm run gen",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "pretest": "pnpm run gen",
+    "test": "tsc --noEmit && vitest run"
+  },
+  "dependencies": {
+    "@coffeejson/core": "workspace:*",
+    "@coffeejson/react": "workspace:*",
+    "posthog-js": "^1.418.10",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@types/qrcode": "^1.5.6",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.5",
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1",
+    "jsdom": "^30.0.1",
+    "qrcode": "^1.5.4",
+    "typescript": "^7.0.2",
+    "vite": "^8.2.2",
+    "vitest": "^4.1.11"
+  }
+}

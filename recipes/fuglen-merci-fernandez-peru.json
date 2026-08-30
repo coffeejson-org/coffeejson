@@ -1,0 +1,28 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "MERCI FERNANDEZ GEISHA / PERU",
+      "roaster": { "name": "FUGLEN COFFEE ROASTERS TOKYO", "url": "https://fuglencoffee.jp", "type": "organization" },
+      "url": "https://fuglencoffee.jp/products/merci-fernandez-peru-2",
+      "origin": {
+        "type": "single",
+        "items": [
+          {
+            "country": "PE",
+            "region": "Cajamarca > Jaen > Colasay > La Higuera",
+            "producers": [{ "name": "Merci Fernandez" }],
+            "altitude": { "value": 1863, "unit": "meter" },
+            "process": ["washed"],
+            "harvest_time": "2025"
+          }
+        ]
+      },
+      "process": ["washed"],
+      "varietals": ["Bourbon de Colasay"],
+      "roaster_notes": ["Nectarine", "Lemongrass", "Elder Flower", "Candy"],
+      "description": "Notes of nectarine fruitiness, lemongrass and elderflower aromatics, with a candy-like sweetness.\n\nWe are excited to offer another Geisha lot from Merci Fernandez, following last year's release! This coffee showcases the elegant floral character typical of Geisha, with distinct notes reminiscent of lemongrass and elderflower. Rather than emphasizing fruit-forward flavors, it expresses a stronger impression of flowers and herbs.\n\nWhile complex and aromatic, it remains beautifully balanced and never overly extravagant. Its gentle sweetness gives the cup a smooth and comforting quality. The result is a coffee that feels both special and approachable, bringing a touch of luxury to everyday life.\n\nFarm: La Pomarrosa.",
+      "lang": "en"
+    }
+  ]
+}

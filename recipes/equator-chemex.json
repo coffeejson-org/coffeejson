@@ -1,0 +1,30 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "Equator Coffees — Chemex",
+      "description": "Equator Coffees' Chemex guide for two 12 oz cups: 45 g at 1:16, a 90 g bloom and three 210 g pours a minute apart.",
+      "method": "pour_over",
+      "brewer": { "id": "chemex", "brand": "Chemex" },
+      "coffee": { "value": 45, "unit": "gram" },
+      "water": { "value": 720, "unit": "gram" },
+      "ratio": 16,
+      "water_temp": { "value": 205, "unit": "fahrenheit" },
+      "grind": { "size": "medium_coarse" },
+      "filter": { "material": "paper", "label": "Chemex filters, folded three layers on the spout side" },
+      "steps": [
+        { "kind": "prep", "instruction": "fold the Chemex filter into a cone and insert it into the brewer with three layers on the spout side; rinse with hot water then discard the water — this removes any paper taste and preheats the brewer" },
+        { "kind": "prep", "instruction": "grind the coffee on a medium-coarse setting, about the centre point on most grinders; place the grounds in the filter, tapping or lightly shaking to level them" },
+        { "kind": "prep", "instruction": "place the brewer on a scale and tare to 0" },
+        { "kind": "bloom", "at_s": 0, "to_water": { "value": 90, "unit": "gram" }, "instruction": "start the timer and pour 90 g of hot water into the centre of the grounds to start the bloom" },
+        { "at_s": 30, "to_water": { "value": 300, "unit": "gram" }, "instruction": "pour 210 g of water starting in the centre of the grounds, circling outward then inward, saturating all of the coffee; do not pour onto the edge of the cone" },
+        { "at_s": 90, "to_water": { "value": 510, "unit": "gram" }, "instruction": "pour 210 g more water" },
+        { "at_s": 150, "to_water": { "value": 720, "unit": "gram" }, "instruction": "pour the remaining 210 g" }
+      ],
+      "notes": "Equator call for a Chemex paper filter folded three layers to the spout, rinsed with hot water and the rinse water discarded. The guide writes its water temperature as \"just off boil at 205°\" without naming a scale; Fahrenheit is the only reading the value admits. Total brew time is given as a 4–5 minute window rather than a point, so no finish time is recorded. Their pro tips scale the bloom to twice the dose and suggest 17:1 for a lighter brew.",
+      "lang": "en",
+      "author": { "name": "Equator Coffees", "url": "https://www.equatorcoffees.com", "type": "organization" },
+      "based_on": "https://www.equatorcoffees.com/blogs/guides/chemex"
+    }
+  ]
+}

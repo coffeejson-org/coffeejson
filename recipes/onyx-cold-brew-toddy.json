@@ -1,0 +1,83 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "Cold Brew",
+      "roaster": {
+        "name": "Onyx Coffee Lab",
+        "url": "https://onyxcoffeelab.com",
+        "type": "organization"
+      },
+      "url": "https://onyxcoffeelab.com/products/cold-brew",
+      "origin": {
+        "type": "blend",
+        "items": [
+          {
+            "country": "CO",
+            "altitude": {
+              "value": 1850,
+              "unit": "meter"
+            },
+            "harvest_time": "Rotating Microlots"
+          }
+        ]
+      },
+      "process": [
+        "washed"
+      ],
+      "drying_method": "raised_bed",
+      "varietals": [
+        "Caturra"
+      ],
+      "roast_level": "dark",
+      "production_roaster": "Diedrich CR-70",
+      "decaf": false,
+      "form": "bean",
+      "roaster_notes": [
+        "Cocoa",
+        "Dates",
+        "Brown Sugar",
+        "Stone Fruit",
+        "Creamy"
+      ],
+      "description": "This coffee is intentionally sourced and roasted to craft the perfect cold brew coffee. Lower in acidity and high in sugar browning, this coffee reacts well with fats in dairy or tastes smooth and sweet on its own. We look for coffees that will take a large amount of heat during the caramelization process and extend the roast times to increase the body and remove acidity. Designed for cold extraction only, expect notes of Cocoa, Dates and a thicken creamy texture.",
+      "lang": "en"
+    }
+  ],
+  "recipes": [
+    {
+      "title": "Onyx Cold Brew Toddy",
+      "description": "Onyx's Toddy guide for their dedicated Cold Brew blend: 283 g of coffee to 1750 g of 80 °F water at a 1050 µm grind.",
+      "method": "cold_brew",
+      "recommended": true,
+      "brewer": {
+        "id": "custom",
+        "brand": "Toddy",
+        "label": "Toddy Gallon"
+      },
+      "coffee": {
+        "value": 283,
+        "unit": "gram"
+      },
+      "water": {
+        "value": 1750,
+        "unit": "gram"
+      },
+      "water_temp": {
+        "value": 80,
+        "unit": "fahrenheit"
+      },
+      "grind": {
+        "microns_approx": 1050
+      },
+      "notes": "Onyx pairs the Toddy Gallon with Toddy paper and mesh filters for this guide.",
+      "lang": "en",
+      "author": {
+        "name": "Onyx Coffee Lab",
+        "url": "https://onyxcoffeelab.com",
+        "type": "organization"
+      },
+      "based_on": "https://onyxcoffeelab.com/products/cold-brew"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "Hario Switch — steep then drain",
+      "method": "immersion",
+      "brewer": { "id": "hario-switch" },
+      "coffee": { "value": 20, "unit": "gram" },
+      "water": { "value": 300, "unit": "gram" },
+      "water_temp": { "value": 83, "unit": "celsius" },
+      "filter": { "material": "paper" },
+      "steps": [
+        { "kind": "valve_close", "at_s": 0, "instruction": "Check the switch is shut." },
+        { "kind": "pour", "at_s": 0, "to_water": { "value": 300, "unit": "gram" }, "instruction": "Pour to 300 g." },
+        { "kind": "wait", "at_s": 30, "action_duration_s": 60, "instruction": "Steep for a minute." },
+        { "kind": "valve_open", "at_s": 90, "instruction": "Open the switch and let it drain." },
+        { "kind": "drawdown", "at_s": 90, "instruction": "Drains by about 2:30." }
+      ],
+      "finish_s": 150
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "Pink Bourbon - Peach - Finca El Paraiso",
+      "roaster": { "name": "Hydrangea Coffee Roasters", "url": "https://hydrangea.coffee", "type": "organization" },
+      "url": "https://hydrangea.coffee/products/el-paraiso-peach",
+      "origin": {
+        "type": "single",
+        "items": [
+          {
+            "country": "CO",
+            "region": "Cauca",
+            "producers": [
+              { "name": "Samuel Diego Bermudez", "role": "producer", "type": "person" },
+              { "name": "Finca El Paraiso", "role": "farm" }
+            ],
+            "altitude": { "value": 1960, "unit": "meter" },
+            "varietals": ["Pink Bourbon"],
+            "process": ["washed"]
+          }
+        ]
+      },
+      "process": ["washed"],
+      "varietals": ["Pink Bourbon"],
+      "roaster_notes": ["Peach Gokuri", "Rhubarb", "Sakura"],
+      "description": "Process: Thermal Shock + Two Stage Fermentation\n\nThis Pink Bourbon lot is the result of double-stage fermentation—first 48 hours whole cherry, then 36 hours pulped with tropical yeast. Finished with a thermal shock wash, the coffee is dried carefully to retain vibrant fruit notes.\n\nIn the cup, expect Peach Gokuri, rhubarb, and sakura, framed by a creamy body and prolonged acidity.\n\nWe selected this coffee for its dynamic, fruit-forward profile and clean, creamy structure.",
+      "lang": "en"
+    }
+  ]
+}

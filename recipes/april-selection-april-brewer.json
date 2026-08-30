@@ -1,0 +1,26 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "April Selection — April Brewer",
+      "description": "April Coffee Roasters' base filter recipe for their Selection, Espresso and Limited beans: 12 g to 200 g at 92 °C in two pours, each a circle then a centre.",
+      "method": "pour_over",
+      "brewer": { "id": "april", "brand": "April", "label": "April Brewer" },
+      "coffee": { "value": 12, "unit": "gram" },
+      "water": { "value": 200, "unit": "gram" },
+      "water_temp": { "value": 92, "unit": "celsius" },
+      "grind": {
+        "grinder": { "id": "mahlkonig-ek43", "brand": "Mahlkönig", "model": "EK43" },
+        "setting": "11.5 - 12.5"
+      },
+      "steps": [
+        { "at_s": 0, "to_water": { "value": 100, "unit": "gram" }, "instruction": "40 g circle pour, then 60 g centre pour" },
+        { "at_s": 30, "to_water": { "value": 200, "unit": "gram" }, "instruction": "40 g circle pour, then 60 g centre pour" }
+      ],
+      "notes": "The recipe is April's stated starting point for the glass, plastic and ceramic April Brewer. April give the brew time as 2:20–3:00 and the target TDS as 1.25–1.35 — windows rather than points, so neither is recorded as a value. The grind setting is April's own EK43 dial, to be adjusted as needed. Before brewing, April recommend resting beans at least 14 days and using reverse-osmosis water at roughly 25–50 ppm.",
+      "lang": "en",
+      "author": { "name": "April Coffee Roasters", "url": "https://www.aprilcoffeeroasters.com", "type": "organization" },
+      "based_on": "https://www.aprilcoffeeroasters.com/pages/coffee-inf-recipes"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "Gear without an id",
+      "method": "pour_over",
+      "brewer": { "brand": "Hario", "model": "V60", "label": "Hario V60" },
+      "coffee": { "value": 15, "unit": "gram" },
+      "water": { "value": 250, "unit": "gram" }
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "April Sustainable Profile — April Brewer",
+      "description": "April Coffee Roasters' one standard filter recipe for their House line and organic beans: 13 g to 200 g at 94 °C in two pours, each a circle then a centre.",
+      "method": "pour_over",
+      "brewer": { "id": "april", "brand": "April", "label": "April Brewer" },
+      "coffee": { "value": 13, "unit": "gram" },
+      "water": { "value": 200, "unit": "gram" },
+      "water_temp": { "value": 94, "unit": "celsius" },
+      "grind": {
+        "grinder": { "id": "mahlkonig-ek43", "brand": "Mahlkönig", "model": "EK43" },
+        "setting": "9"
+      },
+      "steps": [
+        { "at_s": 0, "to_water": { "value": 100, "unit": "gram" }, "instruction": "60 g circle pour, then 40 g centre pour" },
+        { "at_s": 30, "to_water": { "value": 200, "unit": "gram" }, "instruction": "60 g circle pour, then 40 g centre pour" }
+      ],
+      "notes": "April deliberately publish one recipe for the whole House Coffee line — \"we aimed to create a standard, no matter the origin\" — and extend it to their organic beans. Each pour may instead be poured as a single 100 g circle. Brew time is given as 2 to 3 minutes and target TDS as 1.25–1.35, both windows rather than points. April recommend resting these beans at least 14 days and note they can rest longer, being slightly more developed.",
+      "lang": "en",
+      "author": { "name": "April Coffee Roasters", "url": "https://www.aprilcoffeeroasters.com", "type": "organization" },
+      "based_on": "https://www.aprilcoffeeroasters.com/pages/coffee-inf-recipes"
+    }
+  ]
+}

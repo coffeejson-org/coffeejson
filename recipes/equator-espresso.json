@@ -1,0 +1,30 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "Equator Coffees — Espresso",
+      "description": "Equator Coffees' cafe espresso method on a semi-automatic machine: 18 g in a double basket for 30–40 g out in 25–30 seconds.",
+      "method": "espresso",
+      "basis": "yield",
+      "coffee": { "value": 18, "unit": "gram" },
+      "yield": { "min": 30, "max": 40, "unit": "gram" },
+      "basket": { "id": "custom", "label": "double basket" },
+      "grind": { "size": "fine" },
+      "steps": [
+        { "kind": "prep", "instruction": "Have your clean cup ready! The first step of brewing espresso is knowing exactly where it's going. Any espresso glass or ceramic cup will be great— just ensure it is small enough to fit comfortably underneath the portafilter of your espresso machine." },
+        { "kind": "prep", "instruction": "Always start your espresso brew with a clean station and machine. Before dosing out any new coffee, remove your portafilter and set it off to the side." },
+        { "kind": "prep", "instruction": "Flush the the group head of your espresso machine with 2-3 seconds of fresh water so there is no old residual coffee getting into your new shot." },
+        { "kind": "prep", "instruction": "Wipe your portafilter basket clean & dry it to ensure that the fresh coffee you fill it with doesn't stick to the edge. Now we're ready for new coffee!" },
+        { "kind": "distribute", "instruction": "Fill the basket of your portafilter with fresh ground coffee, paying attention to distribute the grounds evenly. Most machines use a \"double\" basket and comfortably hold about 18 grams of coffee (that's what we are using for the reference for this recipe). Pay attention and don't overfill your basket, you want a little space once it's tamped." },
+        { "kind": "tamp", "instruction": "Rest the lip of your portafilter on a flat, durable surface, with the basket facing up towards you. Take your espresso tamper and hold it like you would a doorknob. Tamp (or \"press down\") the ground coffee consistently, level, and ergonomically. Note that the ground coffee should now be packed tight, well below the top of the portafilter basket." },
+        { "kind": "prep", "instruction": "Clean any loose coffee of the sides of the portafilter, especially the \"ears\" (the two metal components on either side of your portafilter). This is to ensure that excess ground coffee does not get into your espresso machine." },
+        { "kind": "prep", "instruction": "Insert the portafilter back into your espresso machine and center your cup or glass directly beneath it. Get your timer ready!" },
+        { "kind": "pull", "instruction": "Now it's brew time. Immediately start the espresso shot by turning the paddle/lever/knob on your espresso machine to the opposite side. Start your timer and observe the flow of espresso into your vessel. For the 18 gram shot a \"perfect\" extraction will be 1.5-2oz (30-40g) of espresso, brewed in 25-30 seconds. If your basket is smaller you should expect less espresso, but try to take the same time to extract it, if it's bigger you can extract more. Generally try to make espresso using a 1:2 ratio, or getting about 1 oz of espresso per 9g of coffee used. It only gets easier with practice!" }
+      ],
+      "notes": "This guide describes how Equator make espresso in their cafes on a semi-automatic machine — the type with a paddle, lever or knob where you start and stop the water flow yourself. They state the yield both ways, as 1.5–2 oz and as 30–40 g; the gram window is recorded. Shot time is given as 25–30 seconds — a window, and durations in this format are bare numbers, so it is not recorded. Their recommended 1:2 coffee-to-water ratio is stated on the page but is not carried here: a yield-basis recipe states dose and beverage out, and the format's ratio field is water to coffee by mass, which is a different quantity. No water temperature or pressure is stated.",
+      "lang": "en",
+      "author": { "name": "Equator Coffees", "url": "https://www.equatorcoffees.com", "type": "organization" },
+      "based_on": "https://www.equatorcoffees.com/blogs/guides/espresso"
+    }
+  ]
+}

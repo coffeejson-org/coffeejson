@@ -1,0 +1,24 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "Julio Madrid - April",
+      "roaster": { "name": "Black & White Coffee Roasters", "url": "https://www.blackwhiteroasters.com", "type": "organization" },
+      "url": "https://www.blackwhiteroasters.com/products/r-julio-madrid-april",
+      "origin": {
+        "type": "single",
+        "items": [
+          {
+            "country": "CO",
+            "region": "La Estrella, Risaralda",
+            "producers": [{ "name": "La Riviera" }],
+            "altitude": { "min": 1600, "max": 1700, "unit": "meter" }
+          }
+        ]
+      },
+      "varietals": ["Geisha", "Sudan Rume"],
+      "description": "MEET THE PRODUCER | Julio Cesar Madrid is a name you've seen on our menu before—he's the director of the joint farms, Finca La Riviera and Finca Milan, which were first cultivated by Julio's ancestors over forty years ago. Together with his business partner, Andres Julio Quinceno, Julio Madrid has made it his life's work to produce incredible coffees and practice innovative and exacting processing methods.\n\nTRUST THE PROCESS | After being picked at peak ripeness, the coffee cherries are sorted for quality and density at the processing center before being placed in a temperature-controlled bioreactor alongside fermented peaches and pineapples, as well as a specially curated starter culture. The fermentation process lasts 36 hours, during which time the temperature is manipulated and the musto is recirculated. The coffee is then dried in a dark, temperature-controlled room outfitted with a dehumidifier, until optimal moisture content is achieved.\n\nTAKE A SIP | This coffee is the belle of the cupping table season after season. Floral like jasmine and fruity like peach tea, it also features notes not often found in a mug, like melon and green grape. Everything about it feels delicate, elegant, and lovely.",
+      "lang": "en"
+    }
+  ]
+}

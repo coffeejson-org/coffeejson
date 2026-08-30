@@ -1,0 +1,45 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "April Selection — Modbar Espresso",
+      "description": "April Coffee Roasters' base espresso recipe for their Selection line: 19 g in for 56–58 g out at 6 bar, ground on a Mahlkönig E80.",
+      "method": "espresso",
+      "basis": "yield",
+      "coffee": {
+        "value": 19,
+        "unit": "gram"
+      },
+      "yield": {
+        "min": 56,
+        "max": 58,
+        "unit": "gram"
+      },
+      "pressure": {
+        "value": 6,
+        "unit": "bar"
+      },
+      "brewer": {
+        "id": "custom",
+        "brand": "Modbar",
+        "label": "Modbar"
+      },
+      "grind": {
+        "grinder": {
+          "id": "mahlkonig-e80",
+          "brand": "Mahlkönig",
+          "model": "E80"
+        },
+        "setting": "0.5 - 0.7"
+      },
+      "notes": "April publish this as a base recipe on a Modbar at 6 bar, stated alongside their House line's figures on the same page; this document carries the April Selection column. Brew time is given as 20–25 seconds and target TDS as 6.5–8, both windows rather than points, and durations in this format are bare numbers, so neither is recorded as a value. The grind setting is a starting point on April's own E80 dial. Before brewing, April recommend resting beans at least 14 days and using reverse-osmosis water at roughly 25–50 ppm.",
+      "lang": "en",
+      "author": {
+        "name": "April Coffee Roasters",
+        "url": "https://www.aprilcoffeeroasters.com",
+        "type": "organization"
+      },
+      "based_on": "https://www.aprilcoffeeroasters.com/pages/coffee-inf-recipes"
+    }
+  ]
+}

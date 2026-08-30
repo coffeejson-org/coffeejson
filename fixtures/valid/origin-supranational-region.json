@@ -1,0 +1,21 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "Continental Blend",
+      "roaster": { "name": "Example Roastery", "type": "organization" },
+      "url": "https://example.com/coffees/continental-blend",
+      "origin": {
+        "type": "blend",
+        "items": [
+          { "country": "CO", "region": "Huila", "process": ["washed"] },
+          { "region": "East Africa", "process": ["natural"] }
+        ]
+      },
+      "roast_level": "medium",
+      "roaster_notes": ["blueberry", "cocoa", "candied pecan"],
+      "description": "A blend whose components are stated at different geographic granularities — one a country and its department, the other a multi-country region the roaster names without naming a country.",
+      "lang": "en"
+    }
+  ]
+}

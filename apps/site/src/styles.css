@@ -1,0 +1,336 @@
+/* Design system: DESIGN.md at this app's root, in the google-labs-code/design.md
+   format — tokens, components, and the do's and don'ts. Edit that file and
+   this sheet together; `npx @google/design.md lint` checks it. */
+:root {
+  --bg: #fdfdfc; --fg: #1a1a1a; --muted: #5b5b5b; --line: #d9d9d9;
+  /* `line` is decorative (rules, separators); `line-strong` is the boundary a
+     control is IDENTIFIED by — inputs, chips, the dropzone. WCAG 1.4.11 wants
+     3:1 there, and `line` is 1.39:1. Measured: 3.39:1 light, 3.61:1 dark. */
+  --line-strong: #8a8a8a;
+  --accent: #0c5964; --accent-fg: #ffffff; --card: #f7f6f4; --error: #a4262c;
+  --mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* The site's one curve. Named so the single transition below isn't left on
+     the browser's default `ease`. */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #141414; --fg: #ececec; --muted: #a3a3a3; --line: #3a3a3a;
+          --line-strong: #6e6e6e;
+          --accent: #4cb6c2; --accent-fg: #10201c; --card: #1e1e1e; --error: #ff8389; }
+}
+* { box-sizing: border-box; }
+html, body { overflow-x: clip; }
+body { margin: 0; background: var(--bg); color: var(--fg);
+  font: 16px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; }
+img { max-width: 100%; height: auto; }
+main { max-width: 52rem; margin: 0 auto; padding: 1.25rem 1rem 4rem; }
+a { color: var(--accent); }
+h1 { font-size: 1.6rem; margin: 0.5rem 0; }
+/* The landing page is the one surface with a voice rather than a job, so it is
+   the one h1 allowed to break the scale. Tool pages stay at 1.6rem. */
+h1.display { font-size: clamp(2.1rem, 6vw, 3rem); line-height: 1.08;
+  letter-spacing: -0.02em; margin: 1rem 0 0.75rem; overflow-wrap: anywhere; }
+/* The sentence the landing h1 hands off to. One step above body so the drop
+   from display size isn't a cliff, and held to a shorter measure than `main`
+   so the first thing on the page is a line rather than a full-width block. */
+p.lede { font-size: 1.12rem; line-height: 1.5; max-width: 42rem; margin: 0 0 1.25rem; }
+h2 { font-size: 1.15rem; margin: 1.4rem 0 0.5rem; }
+/* Sectional rhythm: `pull` opens more space above a heading that starts a new
+   movement, so a page's sections aren't all metrically identical. */
+h2.pull { margin-top: 2.6rem; }
+code, pre { font-family: var(--mono); font-size: 0.9em; }
+pre { background: var(--card); border: 1px solid var(--line); border-radius: 8px;
+  padding: 0.9rem; overflow-x: auto; }
+/* Masthead, not the wordmark-plus-links row every site ships: the rule under it
+   is a 2px ink bar rather than a hairline, and the wordmark carries a size of
+   its own, so the header reads as this site's own furniture. Still one flex row
+   that wraps — five destinations fit on two lines at 320px. */
+.site-header { display: flex; gap: 1rem; align-items: baseline; flex-wrap: wrap;
+  padding-bottom: 0.6rem; border-bottom: 2px solid var(--fg); }
+/* `color` is explicit because the wordmark is a bare <strong> on the landing
+   page and wrapped in <a href="/"> everywhere else, so it inherited `fg` on
+   one page and the link `accent` on the other six — and the mark below paints
+   in currentColor, which would have made the logo change color page to page.
+   The brand reads as the brand in both places; the nav links keep the accent,
+   and a logo that goes home is convention enough without a color cue. */
+.site-header strong { font-size: 1.05rem; letter-spacing: 0.01em;
+  color: var(--fg); position: relative; padding-left: 1.67em; }
+/* The mark, set as decoration on the wordmark rather than as markup. A CSS
+   mask and not an <img>, for two reasons: it paints in `currentColor`, which
+   is the rule the mark follows anywhere it sits beside running text; and it
+   reaches every page — including the 53 generated corpus pages — without
+   touching a single page module. Sized in `em` so it tracks the wordmark.
+   Decorative: the name is carried by the text next to it.
+
+   Absolutely positioned, and that is load-bearing. The header is
+   `align-items: baseline`, and making `strong` a flex container instead
+   handed its baseline to this pseudo-element — which has no text in it, so
+   the browser fell back to its bottom edge and the wordmark floated ~6px
+   above the nav. Out of flow, `strong` stays an ordinary inline box and keeps
+   its own text baseline; `padding-left` (mark 1.17em + 0.5em gap) reserves
+   the space. */
+.site-header strong::before {
+  content: ""; position: absolute; left: 0; top: 50%;
+  transform: translateY(-50%);
+  width: 1.17em; height: 1.43em;
+  background: currentColor;
+  -webkit-mask: url(/mark-small.svg) no-repeat center / contain;
+  mask: url(/mark-small.svg) no-repeat center / contain;
+}
+.site-header a { text-decoration: none; }
+/* Six destinations do not wrap the way four did. Left alone, the header lands
+   in FOUR lines and 119px at 320px and 375px — a third of a phone viewport
+   spent on chrome before the page says anything. Below 34rem the links step
+   down a notch and the row tightens, which puts it back to two.
+   The wordmark is excluded on purpose: it is the one item in the row that is
+   not a destination, and shrinking it with the links makes the masthead read
+   as a nav with a label rather than as a masthead. It is selected by the
+   `strong` it wraps, because on the landing page the wordmark is a bare
+   `<strong>` and everywhere else an `<a>` around one. */
+@media (max-width: 34rem) {
+  .site-header { gap: 0.4rem 0.7rem; }
+  .site-header > :is(a:not(:has(strong)), span) { font-size: 0.92rem; }
+}
+.site-header [aria-current="page"] { font-weight: 600; }
+/* Accent as a hairline all round plus a tinted fill — not a 4px left stripe,
+   which is the same shape as the decorative side-stripe card and reads that way
+   whatever it's marking. The tint carries the signal; the border carries the
+   edge. */
+.banner { background: color-mix(in srgb, var(--accent) 7%, var(--card));
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--line));
+  border-radius: 8px; padding: 0.6rem 0.9rem; margin: 1rem 0; }
+.muted { color: var(--muted); }
+.error { color: var(--error); border: 1px solid var(--error); border-radius: 8px;
+  padding: 0.75rem 1rem; overflow-wrap: anywhere; }
+.cards { display: grid; gap: 0.9rem; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  padding: 0; list-style: none; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+  padding: 0.9rem 1rem; }
+/* A grid that holds one or two cards rather than a corpus. `auto-fill` sizes
+   every track whether or not anything is in it, so a single card lands as a
+   15rem stub against 37rem of nothing; `auto-fit` collapses the empty tracks
+   and the 24rem ceiling stops the survivor stretching the full column. Used by
+   the implementations list on /showcase, so a short list reads as a statement
+   rather than as a gap. */
+.cards--few { grid-template-columns: repeat(auto-fit, minmax(15rem, 24rem)); }
+/* A recipe or bag title is arbitrary transcribed text in a 15rem grid track —
+   let it break inside a word rather than push the card sideways. */
+.card h3 { margin: 0 0 0.3rem; font-size: 1.02rem; overflow-wrap: anywhere; min-width: 0; }
+.card h2 { margin: 0 0 0.5rem; }
+/* An implementer's own icon beside its name on /showcase. 56px is the App
+   Store list size; the 22% radius is the iOS mask, so a square export reads as
+   the icon it is rather than as a tile. */
+.card-head { display: flex; gap: 0.75rem; align-items: center; margin-bottom: 0.5rem; min-width: 0; }
+.card-head h3, .card-head p { margin: 0; }
+.card-icon { flex: none; width: 56px; height: 56px; border-radius: 22%; }
+.btn { display: inline-block; background: var(--accent); color: var(--accent-fg);
+  border: none; border-radius: 8px; padding: 0.5rem 0.9rem; font: inherit; font-size: 0.95rem;
+  cursor: pointer; text-decoration: none; }
+.btn--ghost { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+/* Pointer feedback: instant shades (no transition — the site has no motion system).
+   Mixing toward fg darkens in light mode and brightens in dark mode for free. */
+.btn:hover { background: color-mix(in srgb, var(--accent) 85%, var(--fg) 15%); }
+.btn:active { background: color-mix(in srgb, var(--accent) 72%, var(--fg) 28%); }
+.btn--ghost:hover { background: color-mix(in srgb, var(--accent) 12%, transparent); }
+.btn--ghost:active { background: color-mix(in srgb, var(--accent) 20%, transparent); }
+/* Unavailable and in-flight. A button whose handler is awaiting a file read or
+   the clipboard has to say so, and must not take a second click. */
+.btn:disabled, .btn[aria-disabled="true"] { opacity: 0.5; cursor: not-allowed; }
+.btn:disabled:hover, .btn[aria-disabled="true"]:hover { background: var(--accent); }
+.btn--ghost:disabled:hover, .btn--ghost[aria-disabled="true"]:hover { background: transparent; }
+.btn[aria-busy="true"] { cursor: progress; }
+:is(a, button, input, select, textarea, summary):focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* File-upload buttons are labels wrapping a visually-hidden input — surface its focus. */
+label.btn:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+.row { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; margin: 0.6rem 0; }
+.row h2 { margin: 0; }
+.chip { border: 1px solid var(--line-strong); background: var(--card); color: var(--fg);
+  border-radius: 999px; padding: 0.2rem 0.75rem; font: inherit; font-size: 0.85rem; cursor: pointer; }
+.chip--on { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+.chip:hover { border-color: var(--fg); }
+.chip--on:hover { background: color-mix(in srgb, var(--accent) 85%, var(--fg) 15%);
+  border-color: color-mix(in srgb, var(--accent) 85%, var(--fg) 15%); }
+.field { width: 100%; padding: 0.55rem 0.7rem; border: 1px solid var(--line-strong);
+  border-radius: 8px; background: var(--bg); color: var(--fg); font: inherit; }
+textarea.field { min-height: 12rem; font-family: var(--mono); }
+/* Width modifiers for the short inputs on /generate, so those widths live in
+   the sheet rather than as inline literals scattered through markup. */
+.field--xs { max-width: 4rem; }
+.field--sm { max-width: 6rem; }
+.field--md { max-width: 8rem; }
+.gen-field { display: block; margin: 0.6rem 0; }
+.gen-field > .muted { display: block; margin-bottom: 0.2rem; font-size: 0.85rem; }
+.gen-step { flex-wrap: wrap; }
+.gen-step .field { width: auto; flex: 1 1 8rem; }
+.gen-step :is(.field--xs, .field--sm, .field--md) { flex: 0 1 auto; }
+.steps { padding-left: 0; list-style: none; }
+.steps li { display: flex; gap: 0.75rem; padding: 0.45rem 0; border-bottom: 1px solid var(--line); }
+.steps .t { min-width: 3.2rem; font-variant-numeric: tabular-nums; color: var(--muted); }
+/* The cumulative-water cell on a corpus page's statically-rendered step list.
+   Pushed to the row's end so the numbers read as a column; the /r renderer
+   reaches the same result with subgrid, which needs a component this page
+   deliberately does not load. */
+.steps .to { margin-left: auto; padding-left: 0.75rem; font-variant-numeric: tabular-nums; }
+.clock { font-size: 3rem; font-variant-numeric: tabular-nums; text-align: center; margin: 0.5rem 0; }
+/* Named `panel`, not `modal`: it renders inline, traps nothing, and carries
+   disclosure semantics (aria-expanded / aria-controls) rather than dialog ones. */
+.qr-panel { border: 1px solid var(--line); border-radius: 12px; padding: 1rem;
+  background: var(--bg); color: var(--fg); max-width: 20rem; }
+.qr-panel svg { width: 100%; height: auto; }
+.attribution { font-size: 0.85rem; color: var(--muted); }
+/* The per-card share on a bag-to-brew page: the same buttons as the panel,
+   indented under the card they belong to and set a size down, so a page with
+   four of them reads as four offers rather than four panels. Only rendered
+   when the document holds more than one thing worth taking on its own. */
+.scoped-share { margin: 0.4rem 0 1.2rem; padding-left: 0.9rem;
+  border-left: 1px solid var(--line); }
+.scoped-share > .muted { margin: 0 0 0.4rem; font-size: 0.85rem; }
+.scoped-share .btn { font-size: 0.85rem; padding: 0.35rem 0.7rem; }
+/* The publication's own share on a corpus page: full size and unindented, so
+   the last row on a three-brew page does not read as a fourth brew. */
+.whole-share { margin: 1.6rem 0 1.2rem; padding-top: 1.2rem; border-top: 1px solid var(--line); }
+.whole-share > .muted { margin: 0 0 0.5rem; }
+/* Bean cards on /recipes' bean lens: a bag plus the corpus recipes brewed with
+   it. The member list is the card's payload, so it sits flush under its label
+   with no bullet furniture competing with the recipe titles. */
+.bean-card > p { margin: 0.35rem 0; }
+.bean-recipes { margin: 0.2rem 0 0; padding: 0; list-style: none; font-size: 0.92rem; }
+.bean-recipes li { padding: 0.15rem 0; }
+.qr-figure { max-width: 16rem; margin: 1rem 0; }
+/* The smallest document beside a real one carried in a QR — the landing page's
+   one visual moment, and both halves are genuine artifacts rather than a
+   mockup, so it owes the reader nothing it isn't already showing. Two tracks
+   where there is room and one where there isn't; `minmax(0, 1fr)` on both
+   because the left track holds a `pre`, whose min-content width is a line of
+   JSON and would otherwise refuse to shrink and push the page sideways. The
+   figure drops its own 16rem cap here — inside the pair the grid track is what
+   sizes it. */
+.demo-pair { display: grid; gap: 1.25rem; align-items: start;
+  grid-template-columns: minmax(0, 1fr); margin: 0.75rem 0 0; }
+.demo-pair > * { min-width: 0; }
+/* The QR fills its track instead of sitting at the file's natural 256px: this
+   is a 2 KB payload, so the code is dense, and a dense code wants every pixel
+   it can get in front of a phone camera. */
+.demo-pair .qr-figure { max-width: none; margin: 0; }
+.demo-pair .qr-figure img { width: 100%; }
+@media (min-width: 46rem) {
+  .demo-pair { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); }
+}
+/* Countable facts, and the one place on the page where the eye is meant to
+   stop. Deliberately NOT a stat bar: the figures sit at h1 size rather than
+   display size, over hairlines rather than in filled tiles, and each one is a
+   link to the page that proves it. Every number here is checkable by clicking
+   it, so the design should read as a spec sheet and not as a claim — which is
+   also why the counts are computed from the generated indexes in
+   `pages/landing.ts` rather than typed into the copy. */
+.facts { display: grid; gap: 0 1.5rem; margin: 1rem 0 1.25rem; padding: 0;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  border-top: 1px solid var(--line); }
+.facts > div { padding: 0.7rem 0; border-bottom: 1px solid var(--line); }
+.facts dt { font-size: 1.6rem; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.facts dd { margin: 0.2rem 0 0; color: var(--muted); font-size: 0.9rem; line-height: 1.4; }
+.dropzone { border-style: dashed; border-color: var(--line-strong); text-align: center; }
+/* /generate lays the document out beside the form. It stays inside the site's
+   52rem column to do it: `.site-header` is a child of `main`, so a page-level
+   width override moves the masthead links, and the nav visibly jumped every
+   time this one page was opened. A page is allowed its own layout; it is not
+   allowed its own chrome position.
+   A preview last in the DOM, under a form several screens tall, tells you
+   nothing about whether a pasted document was read correctly until you scroll
+   past every field to find out. So the preview is a sticky second column on a
+   wide screen, and on a narrow one it sits directly
+   under the JSON panel — either way it is on screen at the moment a document
+   lands, which is the moment it answers a question. */
+.gen-layout { display: grid; gap: 1rem; grid-template-areas: "json" "preview" "form"; }
+.gen-json { grid-area: json; }
+.gen-preview { grid-area: preview; }
+.gen-form { grid-area: form; }
+@media (min-width: 62rem) {
+  .gen-layout {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 19rem);
+    grid-template-areas: "json preview" "form preview";
+    align-items: start;
+  }
+  /* Bounded and scrollable in its own right: a long bag-to-brew document renders
+     taller than the viewport, and a sticky box taller than the screen stops
+     being sticky at the bottom of itself. */
+  .gen-preview { position: sticky; top: 1rem; max-height: calc(100vh - 2rem); overflow-y: auto; }
+  /* The step schedule renders four columns — time, instruction, pour, total —
+     and they do not fit a 19rem preview: the flexible instruction track
+     collapsed to 23px and set "second pour" one word per line. The per-pour
+     amount is the column to drop, because it is the only one a reader can
+     recompute from what is left (each total minus the one above it). Hiding it
+     alone is not enough: the subgrid rule keys off `:has(.cj-step-delta)`, and
+     `:has()` still matches an element set to `display: none`, so the track has
+     to go with it or the row keeps an empty gutter where it was. */
+  .gen-preview .cj-step-delta { display: none; }
+  .gen-preview .cj-steps:has(.cj-step-delta) {
+    grid-template-columns: max-content minmax(0, 1fr) max-content;
+    column-gap: 0.75rem;
+  }
+}
+.visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* The site's two tables — the wrong/right/why table on /for-ai-agents and the
+   SDK + registry tables on /implementations — are the same object and share one
+   skin. Both scroll inside their own box on narrow screens rather than forcing
+   the page sideways. The fill is scoped to `thead th` rather than every `th`,
+   because /implementations uses `<th scope="row">` for the package name and a
+   filled first column would read as a second header. */
+:is(.pitfalls, .impl) { width: 100%; border-collapse: collapse; display: block;
+  overflow-x: auto; margin: 0.75rem 0; }
+:is(.pitfalls, .impl) :is(th, td) { border: 1px solid var(--line);
+  padding: 0.45rem 0.6rem; text-align: left; vertical-align: top; }
+:is(.pitfalls, .impl) thead th { background: var(--card); font-weight: 600; }
+.pitfalls code { white-space: pre; }
+
+/* @coffeejson/react cards on /r — re-tint the default skin to the site palette.
+   Aliased to the site's own custom properties (see :root above) so light/dark
+   mode keeps working for free via the existing prefers-color-scheme block. */
+.cj-view { --cj-accent: var(--accent); --cj-fg: var(--fg); --cj-muted: var(--muted); --cj-bg: var(--card); --cj-border: var(--line); --cj-font: inherit; }
+.cj-recipe-block { display: grid; gap: 0.5rem; }
+
+/* /r brew-along: highlight the active step (RecipeCard adds cj-step--active),
+   dim DONE steps (those before the active one) via the general-sibling combinator.
+   (.clock is already styled above — not redeclared here.) */
+.cj-brewing .cj-step { opacity: 0.5; transition: opacity 0.2s var(--ease-out); }
+.cj-brewing .cj-step--active,
+.cj-brewing .cj-step--active ~ .cj-step { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .cj-brewing .cj-step { transition: none; } }
+
+/* Step schedule as aligned Time · Pour · Total columns. For a multi-pour recipe
+   RecipeCard renders sibling spans after the body — the per-pour amount
+   (cj-step-delta) then the running total (cj-step-target). Per-row `auto` tracks
+   can't line those up across rows, so the step list (cj-steps) owns shared tracks
+   and each row (cj-step) is a subgrid spanning all four. Scoped two ways:
+   - to the two places a RecipeCard step list appears — the /r view (.cj-view)
+     and brew-along (.cj-brewing) — so these win over @coffeejson/react's
+     default .cj-steps skin regardless of stylesheet order;
+   - to lists that actually grew a Pour column (:has(.cj-step-delta)) — a
+     recipe without one (espresso, single pour, untargeted) keeps the package
+     skin's layout instead of inheriting two empty guttered tracks.
+   display:grid is declared here on purpose — the shared tracks must not
+   depend on the package skin also making cj-steps a grid. */
+.cj-view .cj-steps:has(.cj-step-delta),
+.cj-brewing .cj-steps:has(.cj-step-delta) {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr) max-content max-content;
+  column-gap: 1rem;
+}
+.cj-view .cj-steps:has(.cj-step-delta) .cj-step,
+.cj-brewing .cj-steps:has(.cj-step-delta) .cj-step {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  align-items: baseline;
+}
+/* Right-align the two numeric columns so Pour and Total read as columns; tabular
+   figures keep the digits aligned row to row. Rows without water spans just leave
+   the trailing tracks empty. */
+.cj-view .cj-step-delta, .cj-view .cj-step-target,
+.cj-brewing .cj-step-delta, .cj-brewing .cj-step-target {
+  justify-self: end;
+  font-variant-numeric: tabular-nums;
+}

@@ -1,0 +1,36 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    { "id": "nano-challa", "name": "Nano Challa", "roaster": { "name": "Example Roastery" }, "process": ["washed"], "roast_level": "light_medium" },
+    { "id": "las-brisas", "name": "Las Brisas", "roaster": { "name": "Example Roastery" }, "process": ["natural"], "roast_level": "medium" }
+  ],
+  "recipes": [
+    {
+      "title": "Nano Challa V60",
+      "bean_ref": "nano-challa",
+      "recommended": true,
+      "method": "pour_over",
+      "brewer": { "id": "hario-v60", "label": "Hario V60" },
+      "coffee": { "value": 15, "unit": "gram" },
+      "water": { "value": 250, "unit": "gram" },
+      "water_temp": { "value": 94, "unit": "celsius" }
+    },
+    {
+      "title": "Nano Challa AeroPress",
+      "bean_ref": "nano-challa",
+      "method": "aeropress",
+      "brewer": { "id": "aeropress", "label": "AeroPress" },
+      "coffee": { "value": 14, "unit": "gram" },
+      "water": { "value": 220, "unit": "gram" }
+    },
+    {
+      "title": "Las Brisas French Press",
+      "bean_ref": "las-brisas",
+      "recommended": true,
+      "method": "french_press",
+      "brewer": { "id": "french-press", "label": "French Press" },
+      "coffee": { "value": 30, "unit": "gram" },
+      "water": { "value": 500, "unit": "gram" }
+    }
+  ]
+}

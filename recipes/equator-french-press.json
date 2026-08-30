@@ -1,0 +1,30 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "Equator Coffees — French Press",
+      "description": "Equator Coffees' French Press guide, scaled to your press at 1:15: 25–45 g of coarse coffee to 375–675 g of water, stirred at 1 minute and plunged at 4.",
+      "method": "french_press",
+      "brewer": { "id": "french-press" },
+      "coffee": { "min": 25, "max": 45, "unit": "gram" },
+      "water": { "min": 375, "max": 675, "unit": "gram" },
+      "ratio": 15,
+      "water_temp": { "value": 205, "unit": "fahrenheit" },
+      "grind": { "size": "coarse" },
+      "filter": { "material": "metal", "label": "the plunger's metal filter" },
+      "steps": [
+        { "kind": "prep", "instruction": "Preheat your French Press by pouring hot water inside the pitcher. Let sit for 30 seconds or while you grind your coffee. Discard the water." },
+        { "kind": "prep", "instruction": "Grind coffee of your choice on a coarse setting. This is the second to coarsest setting on most grinders. Use the 1:15 coffee to water ratio and determine appropriate amounts for the size of your French Press. For example, a small French Press may use 25g of coffee to 375g water or a large may use 45g coffee to 675 water." },
+        { "at_s": 0, "instruction": "Pour the grounds into the French Press. Pour hot water into your French Press, filling almost to the top (it's ok if you don't add all the water in at first). Start your timer." },
+        { "kind": "prep", "instruction": "Insert the plunger so the metal filter is touching the coffee grounds but the plunger remains raised at the top of the brewer." },
+        { "kind": "stir", "at_s": 60, "instruction": "At 1 min, remove the plunger and stir the top layer of the grounds. Add more water if needed (if you aren't using a scale, fill brewer to just below the pour spout). Place the filter back on top of your brewer with the plunger still raised." },
+        { "kind": "press", "at_s": 240, "instruction": "At 4 min, depress the plunger and serve." }
+      ],
+      "finish_s": 240,
+      "notes": "Equator size this recipe to the reader's press, so the dose and water are stated as windows held together by the 1:15 ratio: \"a small French Press may use 25g of coffee to 375g water or a large may use 45g coffee to 675 water.\" The guide writes its water temperature as \"just off boil at 205°\" without naming a scale; Fahrenheit is the only reading the value admits. On the filter they state the absence rather than the part: \"French Press doesn't use a paper filter, so the resulting brew is rich with coffee oils and small particles\" — recorded here positively as the plunger's metal filter, which is what the water passes through. Their pro tips: pour out all the brewed coffee immediately to prevent over-extraction, and prefer a metal or double-walled press.",
+      "lang": "en",
+      "author": { "name": "Equator Coffees", "url": "https://www.equatorcoffees.com", "type": "organization" },
+      "based_on": "https://www.equatorcoffees.com/blogs/guides/french-press"
+    }
+  ]
+}

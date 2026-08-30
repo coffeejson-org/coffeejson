@@ -1,0 +1,20 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "Hell Yeah! Blend",
+      "roaster": { "name": "DRINK COFFEE DO STUFF", "url": "https://drinkcoffeedostuff.com", "type": "organization" },
+      "url": "https://drinkcoffeedostuff.com/products/hell-yeah",
+      "origin": {
+        "type": "blend",
+        "items": [
+          { "name": "Honduras Pacayal Honey", "country": "HN", "percentage": 60 },
+          { "name": "Peru Aproeco", "country": "PE", "percentage": 40 }
+        ]
+      },
+      "roast_level": "medium",
+      "description": "Meet the blend that started it all — the rally cry in a mug, the alpine anthem, the cup that turns “just another morning” into a “Hell Yeah!” morning... raise your mugs to Hell Yeah!\n\nThis flagship beauty delivers decadent waves of Swiss chocolate and macadamia nut, wrapped in the kind of natural sweetness you only find in meticulously sourced, high-altitude coffees. Developed as the ultimate everyday utility brew, it shines in every brewing medium from pour-over to french press, always finishing clean, balanced, and quietly extraordinary. It’s the fuel for first chair, long trail days, and mountaintop sunrises — proof that extraordinary coffee leads to an extraordinary life, one sip at a time. Strap in and send it with customer favorite, Hell Yeah!",
+      "lang": "en"
+    }
+  ]
+}

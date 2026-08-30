@@ -1,0 +1,55 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "エチオピア イルガチェフェ",
+      "lang": "ja",
+      "roaster": { "name": "Example 焙煎所", "url": "https://example.co.jp" },
+      "url": "https://example.co.jp/products/yirgacheffe",
+      "origin": {
+        "items": [
+          { "country": "ET", "region": "Yirgacheffe", "process": ["washed"] }
+        ]
+      },
+      "roast_level": "light",
+      "description": "華やかな香りと、透明感のある甘さ。",
+      "roaster_notes": ["ジャスミン", "ピーチ", "紅茶"],
+      "localizations": {
+        "en": {
+          "name": "Ethiopia Yirgacheffe",
+          "description": "Floral aromatics with a clean, transparent sweetness.",
+          "roaster_notes": ["Jasmine", "Peach", "Black tea"]
+        }
+      }
+    }
+  ],
+  "recipes": [
+    {
+      "title": "4:6メソッド",
+      "lang": "ja",
+      "method": "pour_over",
+      "brewer": { "id": "hario-v60", "brand": "Hario", "model": "V60" },
+      "coffee": { "value": 20, "unit": "gram" },
+      "water": { "value": 300, "unit": "gram" },
+      "water_temp": { "value": 92, "unit": "celsius" },
+      "notes": "前半2投で甘さを、後半3投で濃度を決めます。",
+      "steps": [
+        { "kind": "bloom", "at_s": 0, "to_water": { "value": 60, "unit": "gram" }, "instruction": "1投目 — 甘さを決める" },
+        { "at_s": 45, "to_water": { "value": 120, "unit": "gram" }, "instruction": "2投目" },
+        { "at_s": 90, "to_water": { "value": 300, "unit": "gram" }, "instruction": "3投目 — 濃度を決める" }
+      ],
+      "finish_s": 210,
+      "localizations": {
+        "en": {
+          "title": "4:6 Method",
+          "notes": "The first two pours set sweetness; the rest set strength.",
+          "steps": [
+            { "instruction": "first pour — sets sweetness" },
+            {},
+            { "instruction": "third pour — sets strength" }
+          ]
+        }
+      }
+    }
+  ]
+}

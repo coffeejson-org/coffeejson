@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#fdfdfc" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#141414" media="(prefers-color-scheme: dark)" />
+    <title>CoffeeJSON — the interchange format for coffee</title>
+    <meta name="description" content="A coffee recipe that opens anywhere: write it in one app, open it in the next, print it on a bag, paste it in a message, keep it as a file. Dose, water, temperature and every timed pour arrive as numbers." />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="CoffeeJSON — a coffee recipe that opens anywhere" />
+    <meta property="og:description" content="Write it in one app, open it in the next — or on a bag, in a link, as a file. Open data, reference packages in TypeScript and Swift, a schema and a validator." />
+    <link rel="canonical" href="https://coffeejson.org/" />
+    <meta property="og:url" content="https://coffeejson.org/" />
+    <meta property="og:image" content="https://coffeejson.org/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="The CoffeeJSON mark — a coffee bean with a brace pair knocked out of it — beside the words CoffeeJSON, the interchange format for coffee." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="stylesheet" href="/src/styles.css" />
+    <script type="application/ld+json">[{"@context":"https://schema.org","@type":"Organization","@id":"https://coffeejson.org/#organization","name":"CoffeeJSON","url":"https://coffeejson.org/","logo":"https://coffeejson.org/mark.png","description":"An open, locale-neutral JSON format for coffee recipes and bean identity.","sameAs":["https://github.com/coffeejson-org/coffeejson"]},{"@context":"https://schema.org","@type":"WebSite","@id":"https://coffeejson.org/#website","name":"CoffeeJSON","url":"https://coffeejson.org/","publisher":{"@id":"https://coffeejson.org/#organization"},"inLanguage":"en"},{"@context":"https://schema.org","@type":"TechArticle","@id":"https://coffeejson.org/#spec","name":"CoffeeJSON 1.0 specification","url":"https://coffeejson.org/docs/spec/01-overview.md","about":{"@id":"https://coffeejson.org/#organization"},"abstract":"A JSON document carries a coffee recipe and the bean it was made from: dose, water, temperature, grind, and the timed pour schedule, with every measurement carrying its unit and every category travelling as a machine id.","license":"https://creativecommons.org/publicdomain/zero/1.0/","isAccessibleForFree":true,"learningResourceType":"specification"}]</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","@id":"https://coffeejson.org/#faq","mainEntity":[{"@type":"Question","name":"What is CoffeeJSON?","acceptedAnswer":{"@type":"Answer","text":"CoffeeJSON is an open file format for coffee recipes and bean identity. One JSON document carries the dose, the water, the temperature, the grind and the timed pour schedule, together with the bean the coffee was made from — so an app can read a recipe another app wrote, instead of an importer written per vendor."}},{"@type":"Question","name":"Where can I use a CoffeeJSON document?","acceptedAnswer":{"@type":"Answer","text":"Anywhere a file or a URL goes. A document moves between two apps, rides whole inside a share link, prints on a bag of coffee as a QR code, publishes on a web page as schema.org Recipe, and sits on your own disk as plain JSON. There is no server to call and no account to make."}},{"@type":"Question","name":"How do I add CoffeeJSON to my app?","acceptedAnswer":{"@type":"Answer","text":"Validate documents against the published JSON Schema, then read them with a reference package or with your own code. Packages exist for TypeScript, React and Swift, and a document is plain JSON, so any language can read one. The integration guide carries the consumer and producer checklists."}},{"@type":"Question","name":"Is CoffeeJSON free to use?","acceptedAnswer":{"@type":"Answer","text":"Yes. The specification, schema, fixtures and registries are CC0 — public domain, no attribution required and no conditions attached. The reference packages are Apache-2.0, patent grant included. There is nothing to sign up for and no organization to join: disagree with a decision and you can fork the format."}},{"@type":"Question","name":"Who is using CoffeeJSON today?","acceptedAnswer":{"@type":"Answer","text":"One app on the App Store, and it is the author's own: BrewSmart, which has read and written the format since July 2026. More are wanted. If you build a coffee app, a roaster's site or a brewing service, get in touch — help writing the importer and exporter is yours for the asking, and so is a conversation about what the format gets wrong."}}]}</script>
+  </head>
+  <body>
+    <main id="app"></main>
+    <script type="module" src="/src/lib/analytics.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,26 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "James Hoffmann Ultimate V60",
+      "description": "James Hoffmann's one-cup V60 technique: a generous bloom with a swirl, then two slow spiral pours for an even, sweet extraction.",
+      "method": "pour_over",
+      "brewer": { "id": "hario-v60", "brand": "Hario", "model": "V60", "label": "Hario V60" },
+      "coffee": { "value": 30, "unit": "gram" },
+      "water": { "value": 500, "unit": "gram" },
+      "water_temp": { "value": 95, "unit": "celsius" },
+      "grind": { "size": "medium_fine" },
+      "steps": [
+        { "kind": "bloom", "at_s": 0, "to_water": { "value": 60, "unit": "gram" }, "instruction": "bloom, then swirl the brewer" },
+        { "at_s": 45, "to_water": { "value": 300, "unit": "gram" }, "instruction": "steady spiral pour over 30 seconds" },
+        { "at_s": 75, "to_water": { "value": 500, "unit": "gram" }, "instruction": "slower centre pour over 30 seconds" },
+        { "kind": "stir", "at_s": 105, "instruction": "one gentle stir each way with a spoon, then a final swirl" }
+      ],
+      "finish_s": 210,
+      "lang": "en",
+      "author": { "name": "James Hoffmann", "url": "https://www.jameshoffmann.co.uk", "type": "person" },
+      "based_on": "https://www.youtube.com/watch?v=AI4ynXzkSQo",
+      "date_published": "2019-08-05"
+    }
+  ]
+}

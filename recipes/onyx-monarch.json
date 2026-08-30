@@ -1,0 +1,184 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "Monarch",
+      "roaster": {
+        "name": "Onyx Coffee Lab",
+        "url": "https://onyxcoffeelab.com",
+        "type": "organization"
+      },
+      "url": "https://onyxcoffeelab.com/products/monarch",
+      "origin": {
+        "type": "blend",
+        "items": [
+          {
+            "name": "The Queen",
+            "country": "CO",
+            "altitude": {
+              "value": 1800,
+              "unit": "meter"
+            },
+            "harvest_time": "Rotating Microlots"
+          },
+          {
+            "name": "Alaka G1 Natural",
+            "country": "ET",
+            "process": [
+              "natural"
+            ],
+            "altitude": {
+              "value": 1800,
+              "unit": "meter"
+            },
+            "harvest_time": "Rotating Microlots"
+          }
+        ]
+      },
+      "process": [
+        "washed"
+      ],
+      "drying_method": "raised_bed",
+      "varietals": [
+        "Mixed"
+      ],
+      "roast_level": "dark",
+      "production_roaster": "Diedrich CR-70",
+      "decaf": false,
+      "form": "bean",
+      "preferred_extraction": "espresso",
+      "roaster_notes": [
+        "Dark Chocolate",
+        "Molasses",
+        "Red Wine",
+        "Dried Berries",
+        "Thick & Syrupy"
+      ],
+      "description": "Monarch is our most developed roast that conveys a flavor profile that we intentionally designed to work well with milk. Cream and plant based beverages mix with ease, creating a rich, decadent flavor. It involves a natural, sugar-dense coffee that binds to the fats and creates multiple complex caramelized notes during the roasting process. Look for dark chocolate and undertones of thick winey berries. Enjoy as drip or espresso.",
+      "lang": "en"
+    }
+  ],
+  "recipes": [
+    {
+      "title": "Onyx Monarch Kalita Wave",
+      "description": "Onyx's Kalita Wave brew guide for Monarch: a bloom and five spiral pours at 1:16 for a rich, chocolatey filter cup.",
+      "method": "pour_over",
+      "recommended": true,
+      "brewer": {
+        "id": "kalita-wave",
+        "brand": "Kalita",
+        "model": "Wave 185",
+        "label": "Kalita Wave 185"
+      },
+      "coffee": {
+        "value": 25,
+        "unit": "gram"
+      },
+      "water": {
+        "value": 400,
+        "unit": "gram"
+      },
+      "ratio": 16,
+      "water_temp": {
+        "value": 200,
+        "unit": "fahrenheit"
+      },
+      "grind": {
+        "microns_approx": 600
+      },
+      "steps": [
+        {
+          "kind": "bloom",
+          "at_s": 0,
+          "to_water": {
+            "value": 50,
+            "unit": "gram"
+          },
+          "instruction": "bloom"
+        },
+        {
+          "at_s": 30,
+          "to_water": {
+            "value": 160,
+            "unit": "gram"
+          },
+          "instruction": "heavy spiral pour"
+        },
+        {
+          "at_s": 45,
+          "to_water": {
+            "value": 220,
+            "unit": "gram"
+          },
+          "instruction": "spiral pour"
+        },
+        {
+          "at_s": 65,
+          "to_water": {
+            "value": 280,
+            "unit": "gram"
+          },
+          "instruction": "spiral pour"
+        },
+        {
+          "at_s": 90,
+          "to_water": {
+            "value": 340,
+            "unit": "gram"
+          },
+          "instruction": "spiral pour"
+        },
+        {
+          "at_s": 120,
+          "to_water": {
+            "value": 400,
+            "unit": "gram"
+          },
+          "instruction": "spiral pour"
+        }
+      ],
+      "finish_s": 210,
+      "lang": "en",
+      "author": {
+        "name": "Onyx Coffee Lab",
+        "url": "https://onyxcoffeelab.com",
+        "type": "organization"
+      },
+      "based_on": "https://onyxcoffeelab.com/products/monarch"
+    },
+    {
+      "title": "Onyx Monarch Espresso",
+      "description": "Onyx Coffee Lab's house espresso for Monarch: 19 g in, 47 g out on a Series 1 profile — line pressure, then 9 bar for a syrupy, chocolatey shot.",
+      "method": "espresso",
+      "basis": "yield",
+      "recommended": true,
+      "coffee": {
+        "value": 19,
+        "unit": "gram"
+      },
+      "yield": {
+        "value": 47,
+        "unit": "gram"
+      },
+      "pressure": {
+        "value": 9,
+        "unit": "bar"
+      },
+      "preinfusion_s": 3.5,
+      "steps": [
+        {
+          "kind": "pull",
+          "instruction": "Series 1 profile: line pressure for 0–3.5 seconds, then extract at 9 bar for 23 seconds."
+        }
+      ],
+      "finish_s": 26.5,
+      "lang": "en",
+      "author": {
+        "name": "Onyx Coffee Lab",
+        "url": "https://onyxcoffeelab.com",
+        "type": "organization"
+      },
+      "based_on": "https://onyxcoffeelab.com/products/monarch"
+    }
+  ]
+}

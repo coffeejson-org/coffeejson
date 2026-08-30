@@ -1,0 +1,10 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "A dose with a unit and no magnitude",
+      "coffee": { "unit": "gram" },
+      "water": { "value": 250, "unit": "gram" }
+    }
+  ]
+}

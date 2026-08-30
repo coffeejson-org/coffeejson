@@ -1,0 +1,13 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "夏の贅沢サザアイス",
+      "roaster": { "name": "サザコーヒー", "url": "https://saza.coffee", "type": "organization" },
+      "url": "https://saza.coffee/Form/Product/ProductDetail.aspx?pid=104681&cat=030150",
+      "roast_level": "medium_dark",
+      "description": "夏限定アイスコーヒー用ブレンド。\n\nカラメルのような甘い香り。チェリーのような赤いフルーツ感と上質なカカオのようなほろ苦さを楽しめます。",
+      "lang": "ja"
+    }
+  ]
+}

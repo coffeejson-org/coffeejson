@@ -1,0 +1,28 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "ONIBUS COFFEE — ハンドドリップ　ホットコーヒーの淹れ方",
+      "description": "ONIBUS COFFEE のハンドドリップ（HARIO V60）によるホットコーヒーのレシピ。中挽きの粉13gに92℃のお湯225ccを、40cc・80cc・60cc・45ccと4投で注ぐ。",
+      "method": "pour_over",
+      "brewer": { "id": "hario-v60", "brand": "HARIO", "model": "ドリッパー01（V60）" },
+      "coffee": { "value": 13, "unit": "gram" },
+      "water": { "value": 225, "unit": "milliliter" },
+      "water_temp": { "value": 92, "unit": "celsius" },
+      "grind": { "size": "medium" },
+      "filter": { "material": "paper", "label": "ペーパーフィルター01 ※HARIO V60使用" },
+      "steps": [
+        { "kind": "prep", "instruction": "ペーパーフィルターを湯通しをします。ペーパーフィルターのにおいを取り除きます。" },
+        { "kind": "prep", "instruction": "ペーパーフィルターにコーヒー豆を13g入れ、平らにならします。" },
+        { "kind": "bloom", "at_s": 0, "to_water": { "value": 40, "unit": "milliliter" }, "instruction": "40ccのお湯を注ぎ、スプーンで混ぜて、30秒蒸らします。" },
+        { "at_s": 30, "to_water": { "value": 120, "unit": "milliliter" }, "instruction": "30秒経過したら、80ccのお湯をドリッパーの中心から外側へ、外側から内側へと円を描くように注ぎます。" },
+        { "at_s": 60, "to_water": { "value": 180, "unit": "milliliter" }, "instruction": "さらに60ccのお湯を注ぎます。" },
+        { "at_s": 90, "to_water": { "value": 225, "unit": "milliliter" }, "instruction": "45ccのお湯を注ぎ、落としきります。" }
+      ],
+      "notes": "所要時間は「2分30秒〜3分程」と幅で示されているため、抽出終了時間としては記録していない。ガイドは「2:30-3:00の間で熱湯を落とし切り、粉がフィルターの中でフラットな状態になっているのがベスト」としている。お湯の量は出典どおり体積（cc）で記録している。各ステップの数値は出典の1投ごとの量（40・80・60・45cc）を累計に直したもの。",
+      "lang": "ja",
+      "author": { "name": "ONIBUS COFFEE", "url": "https://onibuscoffee.com", "type": "organization" },
+      "based_on": "https://onibuscoffee.com/pages/brewing_guide/driphot"
+    }
+  ]
+}

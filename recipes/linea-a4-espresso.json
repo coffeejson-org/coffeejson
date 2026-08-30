@@ -1,0 +1,31 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "A4 Espresso",
+      "roaster": { "name": "Linea Caffe", "url": "https://lineacaffe.com", "type": "organization" },
+      "url": "https://lineacaffe.com/product/a4-espresso-blend/",
+      "preferred_extraction": "espresso",
+      "roaster_notes": ["Bittersweet chocolate", "turbinado sugar", "caramel drop"],
+      "description": "Linea’s A4 is a love note to Northern Italy’s vibrant cafe culture and its classic espresso. The Autostrada A4 or Autostrada Serenissima is an Italian motorway connecting Turin, Trieste, Milan and Venice, crossing the region’s scenic Po Valley. We think you’ll find this beautiful espresso blend as vibrant as the Italian landscape!\n\nLinea’s signature Northern Italian roast has been crafted to yield an elegantly sweet, full-bodied, and low acid espresso. A4 has been designed to deliver luscious syrupy crema, and pairs beautifully with steamed milk in caffe lattes, cappuccinos, cortados, and caffe macchiatos, with a lingering caramel-noted finish.\n\nWe find A4 lovely when prepared as a Chemex, Hario or Kalita pour-over, and with other filter brewing methods. A4 is also wonderful when brewed as a French press or Moka Pot!\n\nLinea invites you to discover the beautiful style of espresso Milanese, Triestini, and Venetians have savored for decades.",
+      "lang": "en"
+    }
+  ],
+  "recipes": [
+    {
+      "title": "Linea Caffe — A4 Espresso",
+      "description": "Linea Caffe's espresso parameters for A4: 19 g in a double basket for a ristretto-style 24–25 g out in 24 seconds.",
+      "method": "espresso",
+      "basis": "yield",
+      "coffee": { "value": 19, "unit": "gram" },
+      "yield": { "min": 24, "max": 25, "unit": "gram" },
+      "water_temp": { "min": 199.7, "max": 200.1, "unit": "fahrenheit" },
+      "basket": { "id": "custom", "label": "double basket" },
+      "finish_s": 24,
+      "notes": "Linea state the temperature as 199.7–200.1 °F (93.2–93.4 °C) and the yield as a window; both are recorded as stated. Their instruction with the yield: \"Going ristretto style is important. Not super ristretto – but very ristretto compared to current norms.\" Linea's own brew-guides page states different espresso parameters for A4 (200.4–201 °F, 24–26 g yield, 24–26 s); neither surface is authoritative on this domain, and this document carries the product page's block.",
+      "lang": "en",
+      "author": { "name": "Linea Caffe", "url": "https://lineacaffe.com", "type": "organization" },
+      "based_on": "https://lineacaffe.com/product/a4-espresso-blend/"
+    }
+  ]
+}

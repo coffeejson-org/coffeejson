@@ -1,0 +1,46 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "Ethiopia Suke Espresso",
+      "roaster": { "name": "Linea Caffe", "url": "https://lineacaffe.com", "type": "organization" },
+      "url": "https://lineacaffe.com/product/ethiopia-espresso/",
+      "origin": {
+        "type": "single",
+        "items": [
+          {
+            "country": "ET",
+            "region": "Oromia",
+            "producers": [
+              { "name": "Tesfaye Bekele", "role": "producer", "type": "person" },
+              { "name": "Suke Quto Coffee Farms", "role": "cooperative" }
+            ],
+            "altitude": { "min": 1800, "max": 2200, "unit": "meter" }
+          }
+        ]
+      },
+      "process": ["washed"],
+      "varietals": ["Kurume", "Welicho", "Ethiopia Heirloom"],
+      "preferred_extraction": "espresso",
+      "certifications": ["organic"],
+      "description": "Peach jam, vanilla + papaya. Integrated sweet lime acidity. Honey noted finish. Elegant syrupy body\n\nTesfaye Bekele’s Suke Quto Farm is stretched out over the highlands and valleys of Ethiopia’s Odo Shakisso woreda. Suke Quto is world renowned for its exemplary coffee quality and the meticulous craftsmanship of the Guji region farmers. Since its inception in 2000, Suke Quto Farm has been at the forefront of Ethiopia’s regenerative organic agriculture movement. Linea is thrilled to share Ethiopia Suke Espresso with you, and hope that you love it as much as we do!\n\nEthiopia Suke Espresso is unforgettably sweet, clean and balanced, and is magnificent when blended with steamed milk as a cappuccino or macchiato. Lovely prepared as French Press, Chemex, syphon, AeroPress or pour-over.",
+      "lang": "en"
+    }
+  ],
+  "recipes": [
+    {
+      "title": "Linea Caffe — Ethiopia Suke Espresso",
+      "description": "Linea Caffe's espresso parameters for Ethiopia Suke: 19 g in for a ristretto-style 27–28 g out at 8.75 bar.",
+      "method": "espresso",
+      "basis": "yield",
+      "coffee": { "value": 19, "unit": "gram" },
+      "yield": { "min": 27, "max": 28, "unit": "gram" },
+      "water_temp": { "min": 199.7, "max": 200.1, "unit": "fahrenheit" },
+      "pressure": { "value": 8.75, "unit": "bar" },
+      "notes": "Linea state the temperature as 199.7–200.1 °F (93.2–93.4 °C) and the yield as a window; both are recorded as stated. Shot time is given as 27–28 seconds — a window, and durations in this format are bare numbers, so it is not recorded. Their instruction with the yield: \"Going ristretto style is important. Not super ristretto – but very ristretto compared to current norms.\" Linea's own brew-guides page states different espresso parameters (200.4–201 °F, 24–26 g yield); neither surface is authoritative on this domain, and this document carries the product page's block.",
+      "lang": "en",
+      "author": { "name": "Linea Caffe", "url": "https://lineacaffe.com", "type": "organization" },
+      "based_on": "https://lineacaffe.com/product/ethiopia-espresso/"
+    }
+  ]
+}

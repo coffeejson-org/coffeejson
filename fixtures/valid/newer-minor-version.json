@@ -1,0 +1,11 @@
+{
+  "coffeejson": "1.7",
+  "recipes": [
+    {
+      "title": "From a future minor version",
+      "coffee": { "value": 15, "unit": "gram" },
+      "water": { "value": 250, "unit": "gram" },
+      "hypothetical_1_7_field": "consumers ignore what they do not recognize"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "Las Brisas",
+      "roaster": { "name": "Example Roastery" },
+      "url": "https://example.com/coffees/las-brisas",
+      "origin": {
+        "type": "single",
+        "items": [
+          {
+            "country": "CO",
+            "region": "Huila",
+            "producers": [{ "name": "Finca Las Brisas" }],
+            "altitude": { "min": 1700, "max": 1900, "unit": "meter" },
+            "harvest_time": "2025"
+          }
+        ]
+      },
+      "process": ["natural"],
+      "drying_method": "raised_bed",
+      "roast_level": "medium",
+      "certifications": ["organic"],
+      "roaster_notes": ["red apple", "caramel", "cherry"]
+    }
+  ],
+  "recipes": [
+    {
+      "title": "Roaster's V60",
+      "method": "pour_over",
+      "recommended": true,
+      "brewer": { "id": "hario-v60", "label": "Hario V60" },
+      "coffee": { "value": 15, "unit": "gram" },
+      "water": { "value": 250, "unit": "gram" },
+      "water_temp": { "value": 94, "unit": "celsius" }
+    },
+    {
+      "title": "Roaster's AeroPress",
+      "method": "aeropress",
+      "recommended": true,
+      "brewer": { "id": "aeropress", "label": "AeroPress" },
+      "coffee": { "value": 14, "unit": "gram" },
+      "water": { "value": 220, "unit": "gram" },
+      "water_temp": { "value": 88, "unit": "celsius" }
+    }
+  ]
+}

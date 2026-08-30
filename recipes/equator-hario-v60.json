@@ -1,0 +1,31 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "Equator Coffees — Hario V60",
+      "description": "Equator Coffees' V60 guide for one 10 oz cup: 24 g at 1:15, a 60 g bloom and three even 100 g pours thirty seconds apart.",
+      "method": "pour_over",
+      "brewer": { "id": "hario-v60", "brand": "Hario" },
+      "coffee": { "value": 24, "unit": "gram" },
+      "water": { "value": 360, "unit": "gram" },
+      "ratio": 15,
+      "water_temp": { "value": 205, "unit": "fahrenheit" },
+      "grind": { "size": "medium_fine" },
+      "filter": { "material": "paper", "label": "Hario V60 filters" },
+      "steps": [
+        { "kind": "prep", "instruction": "place the Hario V60 filter in the brewer and rinse it with hot water, then discard the water — this removes any paper taste and preheats the brewer" },
+        { "kind": "prep", "instruction": "grind the coffee on a medium-fine setting, towards the fine side from the centre of the grinder; place the grounds in the filter, tapping or lightly shaking to level them" },
+        { "kind": "prep", "instruction": "place the brewer and cup or carafe on a scale and tare to 0" },
+        { "kind": "bloom", "at_s": 0, "to_water": { "value": 60, "unit": "gram" }, "instruction": "start the timer and pour 60 g of hot water into the centre of the grounds to start the bloom" },
+        { "at_s": 30, "to_water": { "value": 160, "unit": "gram" }, "instruction": "pour 100 g of water starting in the centre of the grounds, slowly circling outward; do not pour onto the very edge of the cone" },
+        { "at_s": 60, "to_water": { "value": 260, "unit": "gram" }, "instruction": "pour 100 g more water in the same fashion" },
+        { "at_s": 90, "to_water": { "value": 360, "unit": "gram" }, "instruction": "pour the remaining 100 g" }
+      ],
+      "finish_s": 210,
+      "notes": "Equator call for Hario V60 filters, rinsed with hot water and the rinse water discarded. The guide writes its water temperature as \"just off boil at 205°\" without naming a scale; Fahrenheit is the only reading the value admits. Serve once the filter stops dripping, which the guide says should happen right around 3:30. Their pro tips suggest 16:1 for a more delicate cup and a coarser grind if the brew runs past 3:00.",
+      "lang": "en",
+      "author": { "name": "Equator Coffees", "url": "https://www.equatorcoffees.com", "type": "organization" },
+      "based_on": "https://www.equatorcoffees.com/blogs/guides/hario-v60"
+    }
+  ]
+}

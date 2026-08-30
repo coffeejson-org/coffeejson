@@ -1,0 +1,12 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "Sunday V60",
+      "description": "A relaxed 15 g weekend pour-over — bright, sweet, and forgiving.",
+      "coffee": { "value": 15, "unit": "gram" },
+      "water": { "value": 250, "unit": "gram" },
+      "notes": "If the drawdown crawls past 3:00, grind one step coarser."
+    }
+  ]
+}

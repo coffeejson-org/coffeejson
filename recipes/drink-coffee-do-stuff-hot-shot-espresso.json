@@ -1,0 +1,21 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "Hot Shot Espresso",
+      "roaster": { "name": "DRINK COFFEE DO STUFF", "url": "https://drinkcoffeedostuff.com", "type": "organization" },
+      "url": "https://drinkcoffeedostuff.com/products/hot-shot-espresso",
+      "origin": {
+        "type": "blend",
+        "items": [
+          { "name": "Honduras Pacayal Honey", "country": "HN", "percentage": 50 },
+          { "name": "Colombia Las Mercedes", "country": "CO", "percentage": 30 },
+          { "name": "Peru Aproeco", "country": "PE", "percentage": 20 }
+        ]
+      },
+      "preferred_extraction": "espresso",
+      "description": "Our best-selling coffee year over year — and for good reason. Hot Shot Espresso is the engine behind thousands of lattes poured daily across Tahoe, the secret handshake between baristas and crema obsessives alike. From first sip, it delivers rich chocolate-fudge sweetness and candied almond depth, settling into a velvety, creamy mouthfeel that shines in milk or stands boldly on its own. It's roast style can best be described as developed, bringing out every ounce of natural sweetness. Built for perfect extraction and sky-high reliability, it’s the espresso that keeps the lifts spinning and the locals loyal.",
+      "lang": "en"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "Sightglass V60",
+      "description": "Sightglass Coffee's café V60 method: rinse the paper, bloom 30 g for 45 seconds, then one slow centre pour to 320 g.",
+      "method": "pour_over",
+      "brewer": { "id": "hario-v60", "brand": "Hario", "model": "V60-02" },
+      "coffee": { "value": 20, "unit": "gram" },
+      "water": { "value": 320, "unit": "gram" },
+      "grind": { "size": "medium_fine" },
+      "filter": { "material": "paper", "label": "V60-02 Filters" },
+      "steps": [
+        { "kind": "prep", "instruction": "unfold the filter and insert it into the dripper; set the cone on a mug, rinse the filter with hot water, then discard the water in the mug" },
+        { "kind": "prep", "instruction": "pour the ground coffee into the filter, shake gently to settle the grounds, and tare the scale to zero" },
+        { "kind": "bloom", "at_s": 0, "to_water": { "value": 30, "unit": "gram" }, "instruction": "bring the water to a boil and wait 45–60 seconds; pour 30 g into the centre of the bed and let it stand for 45 seconds" },
+        { "at_s": 45, "to_water": { "value": 320, "unit": "gram" }, "instruction": "pour a steady, even stream in a circular motion, aiming at the centre and keeping the cone about two-thirds full, until the scale reads 320 g" }
+      ],
+      "notes": "Sightglass call for a Hario V60-02 paper filter, rinsed with hot water before brewing. The guide states a total brew time of 3:30–4:15 and expects the bed to finish draining 2–2:30 after the last pour; both are windows rather than points, so neither is recorded as a time. No water temperature is given beyond boiling and then waiting 45–60 seconds. The guide's shopping list says 11 liquid ounces of water while its steps instruct pouring to 320 g on the scale — the scale readings are what this document carries.",
+      "lang": "en",
+      "author": { "name": "Sightglass Coffee", "url": "https://sightglasscoffee.com", "type": "organization" },
+      "based_on": "https://sightglasscoffee.com/pages/sightglass-brewing-guides-v60"
+    }
+  ]
+}

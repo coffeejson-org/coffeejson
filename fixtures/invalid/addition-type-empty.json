@@ -1,0 +1,13 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "Iced 4:6",
+      "coffee": { "value": 20, "unit": "gram" },
+      "water": { "value": 150, "unit": "gram" },
+      "additions": [
+        { "type": "", "amount": { "value": 80, "unit": "gram" } }
+      ]
+    }
+  ]
+}

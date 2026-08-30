@@ -1,0 +1,21 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "Nano Challa",
+      "roaster": { "name": "Example Roastery" },
+      "images": ["https://example.com/img/nano-challa-bag.jpg"]
+    }
+  ],
+  "recipes": [
+    {
+      "title": "Sunday V60",
+      "coffee": { "value": 15, "unit": "gram" },
+      "water": { "value": 250, "unit": "gram" },
+      "images": [
+        "https://example.com/img/sunday-v60-16x9.jpg",
+        "https://example.com/img/sunday-v60-1x1.jpg"
+      ]
+    }
+  ]
+}

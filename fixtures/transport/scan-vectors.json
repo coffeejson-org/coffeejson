@@ -1,0 +1,445 @@
+{
+  "$comment": "Scan-input test vectors for the share-URL binding (docs/transport.md § Accepting links from any host). Each vector is a URL exactly as a QR scanner or link handler would receive it. expect \"document\": extraction succeeds and yields precisely `document`. expect \"reject\": extraction fails; `kind` names the failure in the error vocabulary docs/integration-guide.md tabulates, and `reason` says the same thing in the words of transport.md § Encoding. `kind` is what an implementation asserts against — `reason` is prose, and an implementation is free to word its own differently. The algorithm under test: parse the URL, require http(s), read the d query parameter, base64url-decode UTF-8-aware (translate -_ to +/, re-pad), then dispatch on the first decoded byte — '{' (0x7B) is JSON; a low nibble of 8 that passes zlib's (b0<<8|b1) % 31 header check is a zlib stream, inflated with the output bounded at 8192 bytes and rejected on overrun, never inflated first and measured after; any other byte is an unrecognized encoding. Never try one form and fall back to the other on error. Then enforce the 8192-byte cap on the JSON document, JSON.parse, require a JSON object carrying a coffeejson member, gate on the major component of that version, and require the envelope to carry a non-empty beans or recipes collection. Both payload forms appear below deliberately, so an implementation supporting only one fails this corpus. Consumed by tools/validate-fixtures.mjs; other implementations are encouraged to run the same corpus.",
+  "vectors": [
+    {
+      "name": "own-host",
+      "input": "https://coffeejson.org/r?d=eyJjb2ZmZWVqc29uIjoiMS4wIiwicmVjaXBlcyI6W3sidGl0bGUiOiJFdmVyeWRheSBWNjAiLCJjb2ZmZWUiOnsidmFsdWUiOjE1LCJ1bml0IjoiZ3JhbSJ9LCJ3YXRlciI6eyJ2YWx1ZSI6MjUwLCJ1bml0IjoiZ3JhbSJ9fV19",
+      "expect": "document",
+      "document": {
+        "coffeejson": "1.0",
+        "recipes": [
+          {
+            "title": "Everyday V60",
+            "coffee": {
+              "value": 15,
+              "unit": "gram"
+            },
+            "water": {
+              "value": 250,
+              "unit": "gram"
+            }
+          }
+        ]
+      },
+      "note": "The canonical form, on the format host."
+    },
+    {
+      "name": "foreign-host",
+      "input": "https://apps.example/r?d=eyJjb2ZmZWVqc29uIjoiMS4wIiwicmVjaXBlcyI6W3sidGl0bGUiOiJFdmVyeWRheSBWNjAiLCJjb2ZmZWUiOnsidmFsdWUiOjE1LCJ1bml0IjoiZ3JhbSJ9LCJ3YXRlciI6eyJ2YWx1ZSI6MjUwLCJ1bml0IjoiZ3JhbSJ9fV19",
+      "expect": "document",
+      "document": {
+        "coffeejson": "1.0",
+        "recipes": [
+          {
+            "title": "Everyday V60",
+            "coffee": {
+              "value": 15,
+              "unit": "gram"
+            },
+            "water": {
+              "value": 250,
+              "unit": "gram"
+            }
+          }
+        ]
+      },
+      "note": "The vector the rule exists for: the host names who serves the fallback page, never who may read the payload."
+    },
+    {
+      "name": "foreign-path",
+      "input": "https://roastery.example/qr/bag-123?d=eyJjb2ZmZWVqc29uIjoiMS4wIiwiYmVhbnMiOlt7Im5hbWUiOiJOYW5vIENoYWxsYSIsInJvYXN0ZXIiOnsibmFtZSI6IkV4YW1wbGUgUm9hc3RlcnkifSwicHJvY2VzcyI6WyJ3YXNoZWQiXX1dLCJyZWNpcGVzIjpbeyJ0aXRsZSI6IlJvYXN0ZXIncyBWNjAiLCJtZXRob2QiOiJwb3VyX292ZXIiLCJjb2ZmZWUiOnsidmFsdWUiOjE1LCJ1bml0IjoiZ3JhbSJ9LCJ3YXRlciI6eyJ2YWx1ZSI6MjUwLCJ1bml0IjoiZ3JhbSJ9fV19",
+      "expect": "document",
+      "document": {
+        "coffeejson": "1.0",
+        "beans": [
+          {
+            "name": "Nano Challa",
+            "roaster": {
+              "name": "Example Roastery"
+            },
+            "process": [
+              "washed"
+            ]
+          }
+        ],
+        "recipes": [
+          {
+            "title": "Roaster's V60",
+            "method": "pour_over",
+            "coffee": {
+              "value": 15,
+              "unit": "gram"
+            },
+            "water": {
+              "value": 250,
+              "unit": "gram"
+            }
+          }
+        ]
+      },
+      "note": "Extraction keys on the d parameter, not the path — a producer may bind any route."
+    },
+    {
+      "name": "trailing-slash",
+      "input": "https://coffeejson.org/r/?d=eyJjb2ZmZWVqc29uIjoiMS4wIiwicmVjaXBlcyI6W3sidGl0bGUiOiJFdmVyeWRheSBWNjAiLCJjb2ZmZWUiOnsidmFsdWUiOjE1LCJ1bml0IjoiZ3JhbSJ9LCJ3YXRlciI6eyJ2YWx1ZSI6MjUwLCJ1bml0IjoiZ3JhbSJ9fV19",
+      "expect": "document",
+      "document": {
+        "coffeejson": "1.0",
+        "recipes": [
+          {
+            "title": "Everyday V60",
+            "coffee": {
+              "value": 15,
+              "unit": "gram"
+            },
+            "water": {
+              "value": 250,
+              "unit": "gram"
+            }
+          }
+        ]
+      },
+      "note": "Static hosts commonly serve the directory form; both path shapes carry the same query."
+    },
+    {
+      "name": "extra-query-params",
+      "input": "https://apps.example/r?utm_source=qr&d=eyJjb2ZmZWVqc29uIjoiMS4wIiwicmVjaXBlcyI6W3sidGl0bGUiOiJFdmVyeWRheSBWNjAiLCJjb2ZmZWUiOnsidmFsdWUiOjE1LCJ1bml0IjoiZ3JhbSJ9LCJ3YXRlciI6eyJ2YWx1ZSI6MjUwLCJ1bml0IjoiZ3JhbSJ9fV19&v=2",
+      "expect": "document",
+      "document": {
+        "coffeejson": "1.0",
+        "recipes": [
+          {
+            "title": "Everyday V60",
+            "coffee": {
+              "value": 15,
+              "unit": "gram"
+            },
+            "water": {
+              "value": 250,
+              "unit": "gram"
+            }
+          }
+        ]
+      },
+      "note": "d is read by name; unrelated parameters are ignored."
+    },
+    {
+      "name": "http-scheme",
+      "input": "http://legacy.example/r?d=eyJjb2ZmZWVqc29uIjoiMS4wIiwicmVjaXBlcyI6W3sidGl0bGUiOiJFdmVyeWRheSBWNjAiLCJjb2ZmZWUiOnsidmFsdWUiOjE1LCJ1bml0IjoiZ3JhbSJ9LCJ3YXRlciI6eyJ2YWx1ZSI6MjUwLCJ1bml0IjoiZ3JhbSJ9fV19",
+      "expect": "document",
+      "document": {
+        "coffeejson": "1.0",
+        "recipes": [
+          {
+            "title": "Everyday V60",
+            "coffee": {
+              "value": 15,
+              "unit": "gram"
+            },
+            "water": {
+              "value": 250,
+              "unit": "gram"
+            }
+          }
+        ]
+      },
+      "note": "The rule covers any http(s) URL."
+    },
+    {
+      "name": "utf8-title",
+      "input": "https://apps.example/r?d=eyJjb2ZmZWVqc29uIjoiMS4wIiwicmVjaXBlcyI6W3sidGl0bGUiOiLjgb_jgpPjgarjga4gVjYwIiwibGFuZyI6ImphIiwiY29mZmVlIjp7InZhbHVlIjoxNSwidW5pdCI6ImdyYW0ifSwid2F0ZXIiOnsidmFsdWUiOjI1MCwidW5pdCI6ImdyYW0ifX1dfQ",
+      "expect": "document",
+      "document": {
+        "coffeejson": "1.0",
+        "recipes": [
+          {
+            "title": "みんなの V60",
+            "lang": "ja",
+            "coffee": {
+              "value": 15,
+              "unit": "gram"
+            },
+            "water": {
+              "value": 250,
+              "unit": "gram"
+            }
+          }
+        ]
+      },
+      "note": "Decoding MUST be UTF-8-aware — interpreting atob output directly as text mangles this title."
+    },
+    {
+      "name": "padded-payload",
+      "input": "https://apps.example/r?d=eyJjb2ZmZWVqc29uIjoiMS4wIiwicmVjaXBlcyI6W3sidGl0bGUiOiJFdmVyeWRheSBWNjAhIiwiY29mZmVlIjp7InZhbHVlIjoxNSwidW5pdCI6ImdyYW0ifSwid2F0ZXIiOnsidmFsdWUiOjI1MCwidW5pdCI6ImdyYW0ifX1dfQ==",
+      "expect": "document",
+      "document": {
+        "coffeejson": "1.0",
+        "recipes": [
+          {
+            "title": "Everyday V60!",
+            "coffee": {
+              "value": 15,
+              "unit": "gram"
+            },
+            "water": {
+              "value": 250,
+              "unit": "gram"
+            }
+          }
+        ]
+      },
+      "note": "Producers omit padding; a decoder that re-pads to a multiple of four accepts a padded payload unchanged."
+    },
+    {
+      "name": "newer-minor",
+      "input": "https://apps.example/r?d=eyJjb2ZmZWVqc29uIjoiMS45IiwicmVjaXBlcyI6W3sidGl0bGUiOiJGdXR1cmUtbWlub3IgcmVjaXBlIiwiY29mZmVlIjp7InZhbHVlIjoxNSwidW5pdCI6ImdyYW0ifSwid2F0ZXIiOnsidmFsdWUiOjI1MCwidW5pdCI6ImdyYW0ifX1dfQ",
+      "expect": "document",
+      "document": {
+        "coffeejson": "1.9",
+        "recipes": [
+          {
+            "title": "Future-minor recipe",
+            "coffee": {
+              "value": 15,
+              "unit": "gram"
+            },
+            "water": {
+              "value": 250,
+              "unit": "gram"
+            }
+          }
+        ]
+      },
+      "note": "A newer minor of the same major MUST be accepted (forward-compatibility contract)."
+    },
+    {
+      "name": "compressed-payload",
+      "input": "https://coffeejson.org/r?d=eNpdy7EKgzAUQNFfkTuHooId3t5fcJEOwT5LilWJUQkh_16kS-l-TqKfh0H1tc4TQnUpMXjt3aIr0iWCC6Mi3Hb18WFj0V5P8l1IYrfjpkjVGLbJBYSnt2-y4bBB_Q-pm_LP5Hv-AICJKWY",
+      "expect": "document",
+      "document": {
+        "coffeejson": "1.0",
+        "recipes": [
+          {
+            "title": "Everyday V60",
+            "coffee": {
+              "value": 15,
+              "unit": "gram"
+            },
+            "water": {
+              "value": 250,
+              "unit": "gram"
+            }
+          }
+        ]
+      },
+      "note": "The compressed form: the same document as own-host, zlib-compressed before Base64. A consumer that reads only plain JSON fails here."
+    },
+    {
+      "name": "compressed-small-window",
+      "input": "https://apps.example/r?d=GNNdy7EKgzAUQNFfkTuHooId3t5fcJEOwT5LilWJUQkh_16kS-l-TqKfh0H1tc4TQnUpMXjt3aIr0iWCC6Mi3Hb18WFj0V5P8l1IYrfjpkjVGLbJBYSnt2-y4bBB_Q-pm_LP5Hv-AICJKWY",
+      "expect": "document",
+      "document": {
+        "coffeejson": "1.0",
+        "recipes": [
+          {
+            "title": "Everyday V60",
+            "coffee": {
+              "value": 15,
+              "unit": "gram"
+            },
+            "water": {
+              "value": 250,
+              "unit": "gram"
+            }
+          }
+        ]
+      },
+      "note": "The vector the dispatch rule exists for: this stream begins 0x18, not 0x78, because the producer used a smaller window. Dispatch on the low nibble (CM == 8) plus the header check — a consumer that tests for 0x78 exactly rejects a valid payload."
+    },
+    {
+      "name": "no-payload",
+      "input": "https://coffeejson.org/r",
+      "expect": "reject",
+      "kind": "no_payload",
+      "reason": "no d parameter"
+    },
+    {
+      "name": "empty-payload",
+      "input": "https://coffeejson.org/r?d=",
+      "expect": "reject",
+      "kind": "no_payload",
+      "reason": "empty d parameter"
+    },
+    {
+      "name": "malformed-base64url",
+      "input": "https://apps.example/r?d=!!!not-base64url",
+      "expect": "reject",
+      "kind": "malformed_base64",
+      "reason": "characters outside the base64url alphabet"
+    },
+    {
+      "name": "not-json",
+      "input": "https://apps.example/r?d=eyJjb2ZmZWVqc29uIjogMS4wLCBvb3Bz",
+      "expect": "reject",
+      "kind": "not_json",
+      "reason": "payload decodes but is not JSON",
+      "note": "Begins '{', so the discriminator sends it to the JSON branch; it fails at the parser, which is the point of the vector."
+    },
+    {
+      "name": "not-utf8",
+      "input": "https://apps.example/r?d=eyJhIjoi__4ifQ",
+      "expect": "reject",
+      "kind": "not_utf8",
+      "reason": "payload bytes are not valid UTF-8",
+      "note": "Also begins '{'. The bytes FF FE inside the string are not valid UTF-8, and decoding MUST be strict rather than substituting replacement characters."
+    },
+    {
+      "name": "not-a-document",
+      "input": "https://apps.example/r?d=eyJoZWxsbyI6IndvcmxkIn0",
+      "expect": "reject",
+      "kind": "not_a_document",
+      "reason": "JSON object without a coffeejson member"
+    },
+    {
+      "name": "unsupported-major",
+      "input": "https://apps.example/r?d=eyJjb2ZmZWVqc29uIjoiMC45IiwicmVjaXBlcyI6W3sidGl0bGUiOiJPbGRlci1tYWpvciByZWNpcGUiLCJjb2ZmZWUiOnsidmFsdWUiOjE1LCJ1bml0IjoiZ3JhbSJ9LCJ3YXRlciI6eyJ2YWx1ZSI6MjUwLCJ1bml0IjoiZ3JhbSJ9fV19",
+      "expect": "reject",
+      "kind": "unsupported_version",
+      "reason": "a coffeejson major version this consumer does not support",
+      "note": "An envelope that would decode on every other rule, so the vector isolates the gate. The gate reads the major component alone (docs/spec/07-versioning.md § The version gate), and it sits between the coffeejson-member check and the beans-or-recipes check: a major nobody reads is not a major whose collections are ours to judge."
+    },
+    {
+      "name": "newer-major",
+      "input": "https://apps.example/r?d=eyJjb2ZmZWVqc29uIjoiMi4wIiwicmVjaXBlcyI6W3sidGl0bGUiOiJOZXdlci1tYWpvciByZWNpcGUiLCJjb2ZmZWUiOnsidmFsdWUiOjE1LCJ1bml0IjoiZ3JhbSJ9LCJ3YXRlciI6eyJ2YWx1ZSI6MjUwLCJ1bml0IjoiZ3JhbSJ9fV19",
+      "expect": "reject",
+      "kind": "unsupported_version",
+      "reason": "a coffeejson major version this consumer does not support",
+      "note": "The other side of the gate, and the one carrying a MUST NOT: a build reading major 1 must not read a major-2 document as if it were its own (docs/spec/07-versioning.md § The version gate). This corpus is written for a build of major 1, so the vector rejects."
+    },
+    {
+      "name": "later-minor",
+      "input": "https://apps.example/r?d=eyJjb2ZmZWVqc29uIjoiMS4xMCIsInJlY2lwZXMiOlt7InRpdGxlIjoiTGF0ZXItbWlub3IgcmVjaXBlIiwiY29mZmVlIjp7InZhbHVlIjoxNSwidW5pdCI6ImdyYW0ifSwid2F0ZXIiOnsidmFsdWUiOjI1MCwidW5pdCI6ImdyYW0ifX1dfQ",
+      "expect": "document",
+      "document": {
+        "coffeejson": "1.10",
+        "recipes": [
+          {
+            "title": "Later-minor recipe",
+            "coffee": {
+              "value": 15,
+              "unit": "gram"
+            },
+            "water": {
+              "value": 250,
+              "unit": "gram"
+            }
+          }
+        ]
+      },
+      "note": "The minor is two digits, which a gate comparing the version string rather than parsing its components gets wrong. Same major, so it is accepted on the forward-compatibility contract."
+    },
+    {
+      "name": "bare-major",
+      "input": "https://apps.example/r?d=eyJjb2ZmZWVqc29uIjoiMSIsInJlY2lwZXMiOlt7InRpdGxlIjoiQmFyZS1tYWpvciByZWNpcGUiLCJjb2ZmZWUiOnsidmFsdWUiOjE1LCJ1bml0IjoiZ3JhbSJ9LCJ3YXRlciI6eyJ2YWx1ZSI6MjUwLCJ1bml0IjoiZ3JhbSJ9fV19",
+      "expect": "reject",
+      "kind": "unsupported_version",
+      "reason": "a coffeejson major version this consumer does not support",
+      "note": "The version is MAJOR.MINOR (docs/spec/07-versioning.md § Versioning). A bare major states no version, so there is no major to gate on — a gate splitting on the first '.' and comparing the head accepts it."
+    },
+    {
+      "name": "leading-zero-major",
+      "input": "https://apps.example/r?d=eyJjb2ZmZWVqc29uIjoiMDEuMCIsInJlY2lwZXMiOlt7InRpdGxlIjoiTGVhZGluZy16ZXJvLW1ham9yIHJlY2lwZSIsImNvZmZlZSI6eyJ2YWx1ZSI6MTUsInVuaXQiOiJncmFtIn0sIndhdGVyIjp7InZhbHVlIjoyNTAsInVuaXQiOiJncmFtIn19XX0",
+      "expect": "reject",
+      "kind": "unsupported_version",
+      "reason": "a coffeejson major version this consumer does not support",
+      "note": "A leading zero is not a semantic version's major, and the schema's `^1\\.\\d+$` forbids it. The vector settles the axis before publication: a gate parsing the major to an integer accepts it, a gate comparing strings refuses it, and the two disagree on a link neither would ever emit."
+    },
+    {
+      "name": "patch-component",
+      "input": "https://apps.example/r?d=eyJjb2ZmZWVqc29uIjoiMS4wLjAiLCJyZWNpcGVzIjpbeyJ0aXRsZSI6IlBhdGNoLWNvbXBvbmVudCByZWNpcGUiLCJjb2ZmZWUiOnsidmFsdWUiOjE1LCJ1bml0IjoiZ3JhbSJ9LCJ3YXRlciI6eyJ2YWx1ZSI6MjUwLCJ1bml0IjoiZ3JhbSJ9fV19",
+      "expect": "reject",
+      "kind": "unsupported_version",
+      "reason": "a coffeejson major version this consumer does not support",
+      "note": "There is no patch component on the wire (docs/spec/07-versioning.md § Versioning). A three-component spelling is outside the grammar, so it names no major."
+    },
+    {
+      "name": "empty-document",
+      "input": "https://apps.example/r?d=eyJjb2ZmZWVqc29uIjoiMS4wIiwiYmVhbnMiOltdLCJyZWNpcGVzIjpbXX0",
+      "expect": "reject",
+      "kind": "empty_document",
+      "reason": "neither a non-empty beans nor a non-empty recipes collection",
+      "note": "A well-formed envelope of a supported major that carries nothing to act on. The envelope requires at least one of beans or recipes, present and non-empty (docs/spec/02-envelope.md), so a decoder meets this straight after the version gate and before any rule about what a recipe or a bean holds. A document that omits both keys is the same rejection: absent and empty are one claim here."
+    },
+    {
+      "name": "json-array",
+      "input": "https://apps.example/r?d=WzEsMiwzXQ",
+      "expect": "reject",
+      "kind": "unrecognized_encoding",
+      "reason": "decoded payload begins neither '{' nor a zlib header — unrecognized encoding",
+      "note": "A document is a JSON object, so a payload beginning '[' is turned away by the discriminator before any parse — the array never reaches the parser at all."
+    },
+    {
+      "name": "unrecognized-encoding",
+      "input": "https://apps.example/r?d=H4sIAAAAAAAAE13LsQqDMBRA0V-RO4eigh3e3l9wkQ7BPkuKVYlRCSH_XqRL6X5Oop-HQfW1zhNCdSkxeO3doivSJYILoyLcdvXxYWPRXk_yXUhit-OmSNUYtskFhKe3b7LhsEH9D6mb8s_ke_4AoPwK2YEAAAA",
+      "expect": "reject",
+      "kind": "unrecognized_encoding",
+      "reason": "decoded payload begins neither '{' nor a zlib header — unrecognized encoding",
+      "note": "This is the same document gzipped, so it begins 0x1F. gzip is a valid compression format and a wrong answer here: v1 defines exactly two payload forms, and a third is rejected on the first byte rather than guessed at."
+    },
+    {
+      "name": "compressed-empty",
+      "input": "https://apps.example/r?d=eJwDAAAAAAE",
+      "expect": "reject",
+      "kind": "not_json",
+      "reason": "payload decodes but is not JSON",
+      "note": "A well-formed zlib stream that inflates to zero bytes. The dispatch succeeds and so does the inflate; the payload still fails, one step later, at the parser. A consumer must not read 'the discriminator matched' as 'the payload is good'."
+    },
+    {
+      "name": "compressed-corrupt",
+      "input": "https://apps.example/r?d=eNpdy7EKgzAUQNFfkTuHooId3t5fcJEOwT5LilWJUQkh_16kS-l-TqKfh0H1tc4TQnUpMXjt3aIr0iWCC6Mi3Hb18WFj0V5P8l1IYrfjpkjVGLbJBYSnt2-y4bBB_Q-pm_LP5Hv-AICJKZk",
+      "expect": "reject",
+      "kind": "damaged_compression",
+      "reason": "compressed payload is damaged — not a well-formed zlib stream",
+      "note": "compressed-payload with its last checksum byte flipped — a link mangled in transit. The deflate data is untouched, so an implementation that skips the Adler-32 check inflates the correct document and wrongly accepts this vector. The checksum is part of the frame and is not optional."
+    },
+    {
+      "name": "compressed-oversized",
+      "input": "https://apps.example/r?d=eNrtzcEKgkAYReFXibuW0MAWs-8V2kSLwX7DMI1xtETm3UPaBD1C51ufy11U9XVtdhv6Tk7FNlemYFXzsEHutCg2sTU5HSYL88XPm-N-TT4ruUWTb0eTK8pMY9dEOV2Dvytlevpo4SvZlflP0_VxPdILAAAAAAAAAAAAAAAA-ANK5_QG0aOoLQ",
+      "expect": "reject",
+      "kind": "too_large",
+      "reason": "payload inflates past the 8192-byte cap",
+      "note": "182 encoded characters that inflate to 9140 bytes. The encoded length no longer bounds the document, which is why the cap moves inside the inflate: stop at 8192 output bytes and reject, rather than inflating fully and measuring after."
+    },
+    {
+      "name": "oversized-payload",
+      "input": "https://apps.example/r?d=eyJjb2ZmZWVqc29uIjoiMS4wIiwicmVjaXBlcyI6W3sidGl0bGUiOiJFdmVyeWRheSBWNjAiLCJjb2ZmZWUiOnsidmFsdWUiOjE1LCJ1bml0IjoiZ3JhbSJ9LCJ3YXRlciI6eyJ2YWx1ZSI6MjUwLCJ1bml0IjoiZ3JhbSJ9LCJub3RlcyI6Inh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4In1dfQ",
+      "expect": "reject",
+      "kind": "too_large",
+      "reason": "decoded payload exceeds the 8192-byte cap"
+    },
+    {
+      "name": "not-a-url",
+      "input": "Everyday V60 — 15 g / 250 g",
+      "expect": "reject",
+      "kind": "not_a_url",
+      "reason": "not a URL",
+      "note": "A QR can carry any text at all. Plain text is the common case, and it must be refused as such rather than searched for a `d=` substring."
+    },
+    {
+      "name": "javascript-scheme",
+      "input": "javascript:alert(1)?d=eyJjb2ZmZWVqc29uIjoiMS4wIiwicmVjaXBlcyI6W3sidGl0bGUiOiJFdmVyeWRheSBWNjAiLCJjb2ZmZWUiOnsidmFsdWUiOjE1LCJ1bml0IjoiZ3JhbSJ9LCJ3YXRlciI6eyJ2YWx1ZSI6MjUwLCJ1bml0IjoiZ3JhbSJ9fV19",
+      "expect": "reject",
+      "kind": "not_http",
+      "reason": "not an http(s) URL",
+      "note": "A well-formed URL carrying a VALID payload on a scheme the binding does not define. It must be refused for its scheme, before the payload is read — an implementation that skips the scheme check decodes this happily, and a consumer that then navigates to the scanned URL has executed it."
+    },
+    {
+      "name": "data-scheme",
+      "input": "data:text/html,<b>x</b>?d=eyJjb2ZmZWVqc29uIjoiMS4wIiwicmVjaXBlcyI6W3sidGl0bGUiOiJFdmVyeWRheSBWNjAiLCJjb2ZmZWUiOnsidmFsdWUiOjE1LCJ1bml0IjoiZ3JhbSJ9LCJ3YXRlciI6eyJ2YWx1ZSI6MjUwLCJ1bml0IjoiZ3JhbSJ9fV19",
+      "expect": "reject",
+      "kind": "not_http",
+      "reason": "not an http(s) URL",
+      "note": "The same rule, on the other scheme a scanner realistically meets."
+    }
+  ]
+}

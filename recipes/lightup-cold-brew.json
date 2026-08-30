@@ -1,0 +1,23 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "LIGHT UP COFFEE — COLD BREW",
+      "description": "LIGHT UP COFFEE の水出しレシピ。お茶パックに入れた粉36gを水450g（1:12.5）に浸し、冷蔵庫で12時間抽出する。",
+      "method": "cold_brew",
+      "coffee": { "value": 36, "unit": "gram" },
+      "water": { "value": 450, "unit": "gram" },
+      "ratio": 12.5,
+      "filter": { "material": "paper", "label": "お茶パック" },
+      "steps": [
+        { "kind": "prep", "instruction": "コーヒーパックを作る：コーヒー粉をお茶パックなどに入れ、容器に入れる。" },
+        { "at_s": 0, "to_water": { "value": 450, "unit": "gram" }, "instruction": "水を注ぐ：ボトルに水を注いで、密閉する。" },
+        { "kind": "wait", "instruction": "冷蔵庫で抽出：冷蔵庫で12時間寝かせれば完成。" }
+      ],
+      "notes": "粉:水 は 1:12.5の比率がおすすめ→粉の重さの12.5倍の重さの水を使う。最初にパックが浸るくらいまでお湯を注ぎ、3分ほど蒸らすとより良い（このお湯の量は記載されていない）。器具はボトルなどの容器と電子スケールのみ。",
+      "lang": "ja",
+      "author": { "name": "LIGHT UP COFFEE", "url": "https://lightupcoffee.com", "type": "organization" },
+      "based_on": "https://lightupcoffee.com/blogs/brew-guide/cold-brew"
+    }
+  ]
+}

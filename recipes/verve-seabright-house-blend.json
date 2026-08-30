@@ -1,0 +1,67 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "Seabright House Blend",
+      "roaster": { "name": "Verve Coffee", "url": "https://www.vervecoffee.com", "type": "organization" },
+      "url": "https://www.vervecoffee.com/products/seabright-house-blend",
+      "origin": {
+        "type": "blend",
+        "items": [
+          { "country": "SV" },
+          { "country": "GT" }
+        ]
+      },
+      "roast_level": "medium",
+      "form": "bean",
+      "roaster_notes": ["Honeydew", "Apricot", "Hazelnut"],
+      "description": "From our house to yours, Seabright House Blend is undeniably inviting. Seabright showcases apricot and honeydew flavor notes composed of direct trade coffees from El Salvador and Guatemala. A balanced mouthfeel. And aromatics of toasted hazelnuts. Set yourself up for a winning day with one of our easiest drinking blends.",
+      "lang": "en"
+    }
+  ],
+  "recipes": [
+    {
+      "title": "Verve Seabright House Blend Dwell",
+      "description": "Verve's Dwell Dripper suggestion for Seabright: 20 g to 300 g at 1:15 on a medium grind, drawn down at 2:20.",
+      "method": "pour_over",
+      "recommended": true,
+      "brewer": { "id": "verve-dwell", "brand": "Verve Coffee", "model": "Dwell Dripper", "label": "Verve Dwell Dripper" },
+      "coffee": { "value": 20, "unit": "gram" },
+      "water": { "value": 300, "unit": "gram" },
+      "ratio": 15,
+      "grind": { "size": "medium" },
+      "finish_s": 140,
+      "lang": "en",
+      "author": { "name": "Verve Coffee", "url": "https://www.vervecoffee.com", "type": "organization" },
+      "based_on": "https://www.vervecoffee.com/products/seabright-house-blend"
+    },
+    {
+      "title": "Verve Seabright House Blend Aeropress",
+      "description": "Verve's AeroPress suggestion for Seabright: 17 g to 255 g at 1:15 on a medium-fine grind, 2:14.",
+      "method": "aeropress",
+      "recommended": true,
+      "brewer": { "id": "aeropress", "brand": "AeroPress", "label": "AeroPress" },
+      "coffee": { "value": 17, "unit": "gram" },
+      "water": { "value": 255, "unit": "gram" },
+      "ratio": 15,
+      "grind": { "size": "medium_fine" },
+      "finish_s": 134,
+      "lang": "en",
+      "author": { "name": "Verve Coffee", "url": "https://www.vervecoffee.com", "type": "organization" },
+      "based_on": "https://www.vervecoffee.com/products/seabright-house-blend"
+    },
+    {
+      "title": "Verve Seabright House Blend Coffee Maker",
+      "description": "Verve's coffee-maker suggestion for Seabright: a 30 g batch to 900 g on a medium grind, five minutes.",
+      "method": "drip",
+      "recommended": true,
+      "coffee": { "value": 30, "unit": "gram" },
+      "water": { "value": 900, "unit": "gram" },
+      "grind": { "size": "medium" },
+      "finish_s": 300,
+      "lang": "en",
+      "author": { "name": "Verve Coffee", "url": "https://www.vervecoffee.com", "type": "organization" },
+      "based_on": "https://www.vervecoffee.com/products/seabright-house-blend"
+    }
+  ]
+}

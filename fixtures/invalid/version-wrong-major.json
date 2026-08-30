@@ -1,0 +1,10 @@
+{
+  "coffeejson": "2.0",
+  "recipes": [
+    {
+      "title": "Future Brew",
+      "coffee": { "value": 15, "unit": "gram" },
+      "water": { "value": 250, "unit": "gram" }
+    }
+  ]
+}

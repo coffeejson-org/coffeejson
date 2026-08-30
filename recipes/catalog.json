@@ -1,0 +1,571 @@
+{
+  "recipes": [
+    {
+      "slug": "tetsu-kasuya-4-6-basic",
+      "attribution": {
+        "source_label": "World Brewers Cup 2016 winning method (Philocoffea)",
+        "transcribed": "2026-07-01"
+      }
+    },
+    {
+      "slug": "tetsu-kasuya-4-6-iced",
+      "attribution": {
+        "source_label": "Flash-chill iced coffee, 4:6 method — Tetsu Kasuya (YouTube)",
+        "transcribed": "2026-07-07"
+      }
+    },
+    {
+      "slug": "james-hoffmann-ultimate-v60",
+      "attribution": {
+        "source_label": "The Ultimate V60 Technique (YouTube)",
+        "transcribed": "2026-07-01"
+      }
+    },
+    {
+      "slug": "james-hoffmann-french-press",
+      "attribution": {
+        "source_label": "The Ultimate French Press Technique (YouTube)",
+        "transcribed": "2026-07-01"
+      }
+    },
+    {
+      "slug": "onyx-monarch",
+      "attribution": {
+        "source_label": "Onyx Coffee Lab — Monarch brew + espresso guides",
+        "transcribed": "2026-07-01"
+      }
+    },
+    {
+      "slug": "onyx-monarch-fellow-series-1",
+      "attribution": {
+        "source_label": "Fellow brew.link profile — Onyx Monarch (Espresso Series 1)",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "onyx-geometry",
+      "attribution": {
+        "source_label": "Onyx Coffee Lab — Geometry brew + espresso guides",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "onyx-southern-weather",
+      "attribution": {
+        "source_label": "Onyx Coffee Lab — Southern Weather brew + espresso guides",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "onyx-tropical-weather",
+      "attribution": {
+        "source_label": "Onyx Coffee Lab — Tropical Weather brew + espresso guides",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "onyx-power-nap",
+      "attribution": {
+        "source_label": "Onyx Coffee Lab — Power Nap brew + espresso guides",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "onyx-cold-brew-toddy",
+      "attribution": {
+        "source_label": "Onyx Coffee Lab — Cold Brew guide",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "verve-sermon",
+      "attribution": {
+        "source_label": "Verve Coffee — Sermon product page, Brewing Suggestions",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "verve-streetlevel",
+      "attribution": {
+        "source_label": "Verve Coffee — Streetlevel product page, Brewing Suggestions",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "verve-vancouver-swiss-water-decaf",
+      "attribution": {
+        "source_label": "Verve Coffee — Vancouver Swiss Water Decaf product page, Brewing Suggestions",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "verve-aster",
+      "attribution": {
+        "source_label": "Verve Coffee — Aster product page, Brewing Suggestions",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "verve-buena-vista-dark-roast",
+      "attribution": {
+        "source_label": "Verve Coffee — Buena Vista Dark Roast product page, Brewing Suggestions",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "verve-bronson-french-roast",
+      "attribution": {
+        "source_label": "Verve Coffee — Bronson French Roast product page, Brewing Suggestions",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "verve-seabright-house-blend",
+      "attribution": {
+        "source_label": "Verve Coffee — Seabright House Blend product page, Brewing Suggestions",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "sightglass-owls-howl",
+      "attribution": {
+        "source_label": "Sightglass Coffee — Owl's Howl product page",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "sightglass-v60",
+      "attribution": {
+        "source_label": "Sightglass Coffee — V60 brewing guide",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "april-selection-april-brewer",
+      "attribution": {
+        "source_label": "April Coffee Roasters — Info & Recipes, April Selection filter recipe",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "april-selection-hybrid-brewer",
+      "attribution": {
+        "source_label": "April Coffee Roasters — Info & Recipes, April Hybrid Brewer recipe",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "april-selection-espresso",
+      "attribution": {
+        "source_label": "April Coffee Roasters — Information & Recipes page, april Selection espresso",
+        "transcribed": "2026-07-25"
+      }
+    },
+    {
+      "slug": "april-house-april-brewer",
+      "attribution": {
+        "source_label": "April Coffee Roasters — Info & Recipes, Sustainable Profile filter recipe",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "april-house-espresso",
+      "attribution": {
+        "source_label": "April Coffee Roasters — Info & Recipes, Sustainable Profile espresso recipe",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "tim-wendelboe-finca-tamana-caturron",
+      "attribution": {
+        "source_label": "Tim Wendelboe — Finca Tamana Caturron product page",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "cat-cloud-the-answer",
+      "attribution": {
+        "source_label": "Cat & Cloud — The Answer product page",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "black-white-julio-madrid-april",
+      "attribution": {
+        "source_label": "Black & White Coffee Roasters — Julio Madrid April product page",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "stumptown-hair-bender",
+      "attribution": {
+        "source_label": "Stumptown Coffee Roasters — Hair Bender product page",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "dune-zip-zinger",
+      "attribution": {
+        "source_label": "Dune Coffee Roasters — Zip Zinger product page",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "dune-santarossa-blend",
+      "attribution": {
+        "source_label": "Dune Coffee Roasters — Santarossa Blend product page",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "dune-presidio-decaf",
+      "attribution": {
+        "source_label": "Dune Coffee Roasters — Presidio Decaf product page",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "drink-coffee-do-stuff-hell-yeah",
+      "attribution": {
+        "source_label": "DRINK COFFEE DO STUFF — Hell Yeah! Blend product page",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "drink-coffee-do-stuff-hot-shot-espresso",
+      "attribution": {
+        "source_label": "DRINK COFFEE DO STUFF — Hot Shot Espresso product page",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "drink-coffee-do-stuff-ethiopia-banko-chelchele",
+      "attribution": {
+        "source_label": "DRINK COFFEE DO STUFF — Roaster's Reserve Ethiopia Yirgacheffe Banko Chelchele Supernatural product page",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "linea-ethiopia-suke-espresso",
+      "attribution": {
+        "source_label": "Linea Caffe — Ethiopia Suke Espresso product page",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "linea-a4-espresso",
+      "attribution": {
+        "source_label": "Linea Caffe — A4 Espresso product page",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "linea-brazil-camocim-biodynamic",
+      "attribution": {
+        "source_label": "Linea Caffe — Brazil Camocim Biodynamic product page",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "linea-brew-guides",
+      "attribution": {
+        "source_label": "Linea Caffe — Brew Guides",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "equator-jaguar-espresso",
+      "attribution": {
+        "source_label": "Equator Coffees — Jaguar Espresso product page",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "equator-golden-hour-blend",
+      "attribution": {
+        "source_label": "Equator Coffees — Golden Hour Blend product page",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "equator-blend",
+      "attribution": {
+        "source_label": "Equator Coffees — Equator Blend product page",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "equator-hario-v60",
+      "attribution": {
+        "source_label": "Equator Coffees — Hario V60 brew guide",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "equator-chemex",
+      "attribution": {
+        "source_label": "Equator Coffees — Chemex brew guide",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "equator-origami",
+      "attribution": {
+        "source_label": "Equator Coffees — Origami brew guide",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "equator-aeropress",
+      "attribution": {
+        "source_label": "Equator Coffees — AeroPress brew guide",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "equator-drip-brewer",
+      "attribution": {
+        "source_label": "Equator Coffees — Drip Brewer brew guide",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "equator-french-press",
+      "attribution": {
+        "source_label": "Equator Coffees — French Press brew guide",
+        "transcribed": "2026-07-25"
+      }
+    },
+    {
+      "slug": "equator-espresso",
+      "attribution": {
+        "source_label": "Equator Coffees — Espresso brew guide",
+        "transcribed": "2026-07-25"
+      }
+    },
+    {
+      "slug": "equator-moka-pot",
+      "attribution": {
+        "source_label": "Equator Coffees — Moka Pot brew guide",
+        "transcribed": "2026-07-25"
+      }
+    },
+    {
+      "slug": "glitch-ethiopia-yirgacheffe-koke",
+      "attribution": {
+        "source_label": "GLITCH COFFEE & ROASTERS — Ethiopia Yirgacheffe Koke product page",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "glitch-ethiopia-guji-uraga-bele",
+      "attribution": {
+        "source_label": "GLITCH COFFEE & ROASTERS — Ethiopia Guji Uraga Bele product page",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "onibus-kenya-gatomboya",
+      "attribution": {
+        "source_label": "ONIBUS COFFEE — ケニア / ガトンボヤ product page",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "onibus-honduras-edgardo-tinoco",
+      "attribution": {
+        "source_label": "ONIBUS COFFEE — ホンジュラス / エドガルド・ティノコ product page",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "onibus-drip-hot",
+      "attribution": {
+        "source_label": "ONIBUS COFFEE — ハンドドリップ　ホットコーヒーの淹れ方 brew guide",
+        "transcribed": "2026-07-25"
+      }
+    },
+    {
+      "slug": "onibus-drip-iced",
+      "attribution": {
+        "source_label": "ONIBUS COFFEE — ハンドドリップ　アイスコーヒーの淹れ方 brew guide",
+        "transcribed": "2026-07-25"
+      }
+    },
+    {
+      "slug": "onibus-switch",
+      "attribution": {
+        "source_label": "ONIBUS COFFEE — スイッチドリッパー　ホットコーヒーの淹れ方 brew guide",
+        "transcribed": "2026-07-25"
+      }
+    },
+    {
+      "slug": "onibus-aeropress",
+      "attribution": {
+        "source_label": "ONIBUS COFFEE — エアロプレス　ホットコーヒーの淹れ方 brew guide",
+        "transcribed": "2026-07-25"
+      }
+    },
+    {
+      "slug": "fuglen-merci-fernandez-peru",
+      "attribution": {
+        "source_label": "FUGLEN COFFEE ROASTERS TOKYO — MERCI FERNANDEZ GEISHA / PERU product page",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "fuglen-familia-fernandez-espresso-peru",
+      "attribution": {
+        "source_label": "FUGLEN COFFEE ROASTERS TOKYO — FAMILIA FERNANDEZ ESPRESSO / PERU product page",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "lightup-acacia-hills-sl28",
+      "attribution": {
+        "source_label": "LIGHT UP COFFEE — ACACIA HILLS SL28 - TANZANIA product page",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "lightup-drip-kalita-wave",
+      "attribution": {
+        "source_label": "LIGHT UP COFFEE — DRIP COFFEE [KALITA WAVE] brew guide",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "lightup-iced-drip-kalita-wave",
+      "attribution": {
+        "source_label": "LIGHT UP COFFEE — ICED DRIP COFFEE [KALITA WAVE] brew guide",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "lightup-aeropress",
+      "attribution": {
+        "source_label": "LIGHT UP COFFEE — AERO PRESS brew guide",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "lightup-french-press",
+      "attribution": {
+        "source_label": "LIGHT UP COFFEE — FRENCH PRESS brew guide",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "lightup-cold-brew",
+      "attribution": {
+        "source_label": "LIGHT UP COFFEE — COLD BREW brew guide",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "philocoffea-012-rudder-blend-medium",
+      "attribution": {
+        "source_label": "PHILOCOFFEA — 012 RUDDER BLEND Medium product page (bag + its recommended V60 recipe)",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "philocoffea-013-rudder-blend-medium-dark",
+      "attribution": {
+        "source_label": "PHILOCOFFEA — 013 RUDDER BLEND Medium Dark product page (bag + its recommended V60 recipe)",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "philocoffea-420-rwanda-simbi-washed",
+      "attribution": {
+        "source_label": "PHILOCOFFEA — 420 Rwanda Simbi Washed product page (bag + its recommended Hario Switch recipe)",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "philocoffea-430-colombia-la-mina-caturra-honey",
+      "attribution": {
+        "source_label": "PHILOCOFFEA — 430 Colombia La Mina Caturra Honey product page",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "horiguchi-costa-rica-divino-nino-geisha",
+      "attribution": {
+        "source_label": "HORIGUCHI COFFEE — コスタリカ ディビーノ・ニーニョ ゲイシャ ハイロースト product page",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "horiguchi-brazil-macauba-de-cima-washed",
+      "attribution": {
+        "source_label": "HORIGUCHI COFFEE — ブラジル マカウバ・デ・シーマ農園 ウォッシュト フルシティロースト product page",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "horiguchi-colombia-la-cumbre-typica",
+      "attribution": {
+        "source_label": "HORIGUCHI COFFEE — コロンビア ラ・クンブレ農園 ティピカ シティロースト product page",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "saza-golden-mocha",
+      "attribution": {
+        "source_label": "サザコーヒー — ゴールデンモカ product page",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "saza-kenya-natural",
+      "attribution": {
+        "source_label": "サザコーヒー — ケニア ナチュラル product page",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "saza-natsu-no-zeitaku",
+      "attribution": {
+        "source_label": "サザコーヒー — 夏の贅沢サザアイス product page",
+        "transcribed": "2026-07-24"
+      }
+    },
+    {
+      "slug": "dak-orange-county-costa-rica",
+      "attribution": {
+        "source_label": "Dak Coffee Roasters — Orange County - Costa Rica product page",
+        "transcribed": "2026-07-26"
+      }
+    },
+    {
+      "slug": "dak-juice-box-colombia",
+      "attribution": {
+        "source_label": "Dak Coffee Roasters — Juice Box - Colombia product page",
+        "transcribed": "2026-07-26"
+      }
+    },
+    {
+      "slug": "hydrangea-gesha-salma-bermudez",
+      "attribution": {
+        "source_label": "Hydrangea Coffee Roasters — Gesha - Salma Bermudez - Finca El Paraiso product page",
+        "transcribed": "2026-07-26"
+      }
+    },
+    {
+      "slug": "hydrangea-pink-bourbon-peach",
+      "attribution": {
+        "source_label": "Hydrangea Coffee Roasters — Pink Bourbon - Peach - Finca El Paraiso product page",
+        "transcribed": "2026-07-26"
+      }
+    },
+    {
+      "slug": "hydrangea-castillo-elixir-washed",
+      "attribution": {
+        "source_label": "Hydrangea Coffee Roasters — Castillo - Elixir Washed - Finca Santa Monica product page",
+        "transcribed": "2026-07-26"
+      }
+    }
+  ]
+}

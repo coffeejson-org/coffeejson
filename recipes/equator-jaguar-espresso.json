@@ -1,0 +1,44 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "Jaguar Espresso Fair Trade Organic",
+      "roaster": { "name": "Equator Coffees", "url": "https://www.equatorcoffees.com", "type": "organization" },
+      "url": "https://www.equatorcoffees.com/products/jaguar-espresso",
+      "origin": {
+        "type": "blend",
+        "items": [
+          {
+            "country": "HN",
+            "region": "Marcala, La Paz",
+            "producers": [{ "name": "APROCOMSA" }],
+            "altitude": { "min": 4200, "max": 5500, "unit": "foot" },
+            "process": ["washed"],
+            "varietals": ["Various"]
+          },
+          {
+            "country": "ET",
+            "region": "Odo Shakisso, Guji",
+            "producers": [{ "name": "Ismael Hassen Aredo" }],
+            "altitude": { "min": 6400, "max": 7380, "unit": "foot" },
+            "process": ["natural"],
+            "varietals": ["Local Heirloom"]
+          },
+          {
+            "region": "Sumatra, Aceh",
+            "producers": [{ "name": "Koperasi Ketiara" }],
+            "altitude": { "min": 4000, "max": 5000, "unit": "foot" },
+            "process": ["wet_hulled"],
+            "varietals": ["Various"]
+          }
+        ]
+      },
+      "roast_level": "dark",
+      "preferred_extraction": "espresso",
+      "certifications": ["fair_trade", "organic"],
+      "roaster_notes": ["Bittersweet chocolate", "baking spices", "apricot", "hazelnut"],
+      "description": "Jaguar is a new world approach to a traditional-style espresso This all-time bestseller is sweet enough to taste great on its own, while maintaining enough richness and intensity to stand up to milk.",
+      "lang": "en"
+    }
+  ]
+}

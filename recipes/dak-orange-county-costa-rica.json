@@ -1,0 +1,71 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "Orange County - Costa Rica",
+      "roaster": {
+        "name": "Dak Coffee Roasters",
+        "url": "https://www.dakcoffeeroasters.com",
+        "type": "organization"
+      },
+      "url": "https://www.dakcoffeeroasters.com/shop/coffee/orange-county-2026?roast=filter",
+      "origin": {
+        "type": "single",
+        "items": [
+          {
+            "name": "Lot No. 1",
+            "country": "CR",
+            "region": "Tarrazú",
+            "producers": [
+              {
+                "name": "Ivan Solis",
+                "role": "producer",
+                "type": "person"
+              },
+              {
+                "name": "Leandra Cordero",
+                "role": "producer",
+                "type": "person"
+              },
+              {
+                "name": "Finca Voo",
+                "role": "farm"
+              },
+              {
+                "name": "Beneficio Santa Fe",
+                "role": "mill"
+              }
+            ],
+            "altitude": {
+              "value": 1900,
+              "unit": "meter"
+            },
+            "varietals": [
+              "Red Catuaí"
+            ],
+            "process": [
+              "anaerobic",
+              "natural"
+            ]
+          }
+        ]
+      },
+      "process": [
+        "anaerobic",
+        "natural"
+      ],
+      "drying_method": "raised_bed",
+      "varietals": [
+        "Red Catuaí"
+      ],
+      "preferred_extraction": "filter",
+      "roaster_notes": [
+        "Orange",
+        "Tropical Fruits",
+        "Caramel"
+      ],
+      "description": "A delicious Red Catuaí anaerobic natural from one of the most prestigious farms in Costa Rica, Finca Voo. This lot has a nice body, lots of sweetness and tasting notes of orange, tropical fruits & caramel.\n\nFinca Voo sits in Copey, in the Tarrazú region of Costa Rica's Central Valley. The farm covers 40 hectares between 1960 and 2000 meters above sea level. Ivan Solis runs it with his family. Voo means \"to fly\" in Portuguese. In 2024, the farm placed first in the Experimental category at the Cup of Excellence and sixteenth in Traditional Honey & Natural. Ivan and his wife Leandra Cordero also own Beneficio Santa Fe, where all their coffees are processed. Their work centers on fermentation and post-harvest experimentation. Lot No. 1 is Red Catuai, processed as a natural. Cherries arrive at the mill and ferment for 48 hours in sealed black plastic bags. From there they go directly onto raised African beds for around 19 days, drying down to 10% moisture. During the hottest hours, the beds are covered with plastic nets, a method borrowed from Ethiopian practice.",
+      "lang": "en"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "coffeejson": "1.0",
+  "beans": [
+    {
+      "name": "ゴールデンモカ",
+      "roaster": { "name": "サザコーヒー", "url": "https://saza.coffee", "type": "organization" },
+      "url": "https://saza.coffee/Form/Product/ProductDetail.aspx?pid=104016&cat=030150",
+      "origin": {
+        "type": "single",
+        "items": [
+          {
+            "country": "ET",
+            "region": "イルガチェフェ アリーチャ グジ（エチオピア南西部）",
+            "altitude": { "min": 1850, "max": 2200, "unit": "meter" },
+            "process": ["natural", "anaerobic"]
+          }
+        ]
+      },
+      "process": ["natural", "anaerobic"],
+      "roast_level": "medium",
+      "description": "一言で云うと『上等なモカ』です！！\n\nフローラルな香り、ブルーベリーのような爽やかな甘み。ピーチやマンゴーのような甘さ。冷めても甘い透明感のコーヒー。\n\nゴールデンモカは2005年頃にも販売していました。エチオピアで出会ったモカコーヒーで、甘く切ない初恋の味だったが、未だ再会を果たしていない。粉にした時、粉にお湯が触れた時、飲んだ時の香りと甘さにインパクトがあり、そのときの記憶が忘れられず、今回それに近いコーヒーを再現してみました。",
+      "lang": "ja"
+    }
+  ]
+}

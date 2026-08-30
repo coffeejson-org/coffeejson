@@ -1,0 +1,26 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "Equator Coffees — Drip Brewer",
+      "description": "Equator Coffees' guide for any drip coffee machine: one litre of filtered water to 66 g of medium-fine coffee, a 1:15 ratio.",
+      "method": "drip",
+      "coffee": { "value": 66, "unit": "gram" },
+      "water": { "value": 1000, "unit": "gram" },
+      "ratio": 15,
+      "water_temp": { "min": 204, "max": 205, "unit": "fahrenheit" },
+      "grind": { "size": "medium_fine" },
+      "steps": [
+        { "kind": "prep", "instruction": "clean any loose coffee grounds off the exterior and interior of the machine" },
+        { "kind": "prep", "instruction": "review the machine's water-temperature setting — any temperature above 200° is workable and 204–205° is ideal — and set the volume to one litre; where the machine offers turbulence or flow settings such as bloom volume or flow rate, select the standard or medium option" },
+        { "kind": "prep", "instruction": "add a wide-bottom coffee filter, either a standard paper filter or the reusable filter that came with the machine, resting snug and flat against the interior of the brewer" },
+        { "kind": "prep", "instruction": "add the freshly ground coffee inside the filter and close the lid" },
+        { "instruction": "pour one litre of filtered water into the water tank, then turn on the machine, wait for preheating to conclude and start the brew; most standard drip brewers stop automatically when the brew is complete" }
+      ],
+      "notes": "Equator specify a flat-bottom cone filter, either paper or mesh, and do not rinse it. Because they state a choice rather than a filter, no filter is recorded — the reader picks one. The guide writes its water temperature as \"204–205°\" without naming a scale; Fahrenheit is the only reading the value admits, and the window is recorded as stated. The guide's own prose calls anything above 200° workable and suggests 208° for a very light single origin. This guide is written for the whole category rather than a named machine, so no brewer is recorded.",
+      "lang": "en",
+      "author": { "name": "Equator Coffees", "url": "https://www.equatorcoffees.com", "type": "organization" },
+      "based_on": "https://www.equatorcoffees.com/blogs/guides/drip-brewer"
+    }
+  ]
+}

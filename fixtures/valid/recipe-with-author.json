@@ -1,0 +1,13 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "4:6 Method",
+      "method": "pour_over",
+      "coffee": { "value": 20, "unit": "gram" },
+      "water": { "value": 300, "unit": "gram" },
+      "author": { "name": "Tetsu Kasuya", "url": "https://en.philocoffea.com", "type": "person" },
+      "based_on": "https://www.youtube.com/watch?v=TfSBzFeoL4s"
+    }
+  ]
+}

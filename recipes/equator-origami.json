@@ -1,0 +1,30 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "Equator Coffees — Origami",
+      "description": "Equator Coffees' Origami Dripper guide for one 10 oz cup: 22 g at 1:17, a 50 g bloom then two slow pours.",
+      "method": "pour_over",
+      "brewer": { "id": "origami", "brand": "Origami", "model": "Origami Dripper" },
+      "coffee": { "value": 22, "unit": "gram" },
+      "water": { "value": 370, "unit": "gram" },
+      "ratio": 17,
+      "water_temp": { "value": 205, "unit": "fahrenheit" },
+      "grind": { "size": "medium_fine" },
+      "filter": { "material": "paper", "label": "Hario V60 filters, or any compatible paper filter" },
+      "steps": [
+        { "kind": "prep", "instruction": "place the filter in the Origami brewer and rinse it with hot water, then discard the water — this removes any paper taste and preheats the brewer" },
+        { "kind": "prep", "instruction": "grind the coffee on a medium-fine setting, towards the fine side from the centre of the grinder; place the grounds in the filter, tapping or lightly shaking to level them" },
+        { "kind": "prep", "instruction": "place the brewer and cup or carafe on a scale and tare to 0" },
+        { "kind": "bloom", "at_s": 0, "to_water": { "value": 50, "unit": "gram" }, "instruction": "start the timer and pour 50 g of hot water into the centre of the grounds to bloom" },
+        { "at_s": 30, "to_water": { "value": 250, "unit": "gram" }, "instruction": "take 45–60 seconds to pour 200 g of water starting in the centre of the grounds, slowly circling outward; do not pour onto the very edge of the cone or the filter will collapse into the folds" },
+        { "at_s": 120, "to_water": { "value": 370, "unit": "gram" }, "instruction": "take 30 seconds to pour 120 g more water in the same fashion" }
+      ],
+      "finish_s": 180,
+      "notes": "Equator specify Hario V60 filters or any compatible paper filter, rinsed with hot water and the rinse water discarded. The guide writes its water temperature as \"just off boil at 205°\" without naming a scale; Fahrenheit is the only reading the value admits. Its shopping list says 360 g of water while its pours total the 370 g the steps themselves call the final weight — the step readings are what this document carries. Serve once the filter stops dripping, right around 3:00.",
+      "lang": "en",
+      "author": { "name": "Equator Coffees", "url": "https://www.equatorcoffees.com", "type": "organization" },
+      "based_on": "https://www.equatorcoffees.com/blogs/guides/origami"
+    }
+  ]
+}
