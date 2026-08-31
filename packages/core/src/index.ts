@@ -10,8 +10,8 @@ export type {
 } from "./types.js";
 export { recipeJsonLd } from "./jsonld.js";
 export {
-  DECODE_ERROR_KINDS, MAX_PAYLOAD_BYTES, checkEnvelope, decodePayload, decodeScanned,
-  encodePayload, payloadFromLocation,
+  DECODE_ERROR_KINDS, MAX_PAYLOAD_BYTES, checkEnvelope, decodeDocumentText, decodePayload,
+  decodeScanned, encodePayload, payloadFromLocation,
 } from "./codec.js";
 export type { DecodeError, DecodeResult, DecodedDocument } from "./codec.js";
 export { FORMAT_VERSION, MEDIA_TYPE, SUPPORTED_MAJOR } from "./version.js";
