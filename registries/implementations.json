@@ -8,7 +8,7 @@
       "platforms": ["ios", "watchos"],
       "url": "https://brewsmart.app",
       "icon": "/showcase/brewsmart.png",
-      "reads": ["query-binding", "coffeejson-file"],
+      "reads": ["query-binding"],
       "writes": ["query-binding"]
     }
   ]
