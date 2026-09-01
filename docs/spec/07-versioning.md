@@ -87,8 +87,10 @@ rules](06-vocabularies.md) govern import.
 An **authoring variant**
 ([`coffeejson-1.0.authoring.schema.json`](../schema/coffeejson-1.0.authoring.schema.json))
 is generated from this schema and published at its own `$id`
-`https://coffeejson.org/schema/authoring/1.0`. It closes every object,
-requires optional arrays to be non-empty, and requires
+`https://coffeejson.org/schema/authoring/1.0`. It closes every object except
+the reserved [`ext`](#reserved-extensions) member, which a
+[localization](03-recipe.md#localizations) refuses too, requires optional
+arrays to be non-empty, and requires
 [`bean_ref`](03-recipe.md#bean_ref) on every recipe once a document carries
 more than one bean. It catches three producer mistakes: a typo'd field name,
 which the open runtime schema accepts silently; an empty emission that a

@@ -3,6 +3,7 @@
   "recipes": [
     {
       "title": "Everyday V60",
+      "brewer": { "id": "custom", "label": "Bench dripper", "ext": { "app.example": { "asset_tag": "D-14" } } },
       "coffee": { "value": 15, "unit": "gram" },
       "water": { "value": 250, "unit": "gram" },
       "ext": {

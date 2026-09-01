@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://coffeejson.org/schema/authoring/1.0",
   "title": "CoffeeJSON Document (authoring)",
-  "description": "Strict authoring/lint variant of the CoffeeJSON 1.0 schema, GENERATED from it by tools/gen-authoring-schema.mjs — do not edit by hand. Every object is closed (unknown members rejected, catching producer typos), every optional array requires at least one element (emit content or omit the key), and a document carrying several beans requires bean_ref on every recipe (co-location associates nothing once there is more than one coffee, so an unreferenced recipe is silently unlinked). A producer lint only: the open runtime schema at https://coffeejson.org/schema/1.0 is the conformance schema, and consumers never gate imports on either.",
+  "description": "Strict authoring/lint variant of the CoffeeJSON 1.0 schema, GENERATED from it by tools/gen-authoring-schema.mjs — do not edit by hand. Every object is closed (unknown members rejected, catching producer typos) except the reserved `ext` member, admitted on every entity but a localization as an object with non-empty keys and its contents unconstrained, every optional array requires at least one element (emit content or omit the key), and a document carrying several beans requires bean_ref on every recipe (co-location associates nothing once there is more than one coffee, so an unreferenced recipe is silently unlinked). A producer lint only: the open runtime schema at https://coffeejson.org/schema/1.0 is the conformance schema, and consumers never gate imports on either.",
   "type": "object",
   "required": [
     "coffeejson"
@@ -57,9 +57,21 @@
           "type": "string",
           "format": "uri",
           "description": "The producing software's own URL (its site or store listing), if any — not where a recipe was published or transcribed from; see a Recipe's `based_on` for that."
+        },
+        "ext": {
+          "type": "object",
+          "propertyNames": {
+            "minLength": 1
+          }
         }
       },
       "additionalProperties": false
+    },
+    "ext": {
+      "type": "object",
+      "propertyNames": {
+        "minLength": 1
+      }
     }
   },
   "$comment": "Envelope rule: a document carries three optional array collections — beans, recipes and tastings — and MUST contain at least one of beans or recipes present and non-empty. tastings does not satisfy that rule: a tasting evaluates something, so a document of tastings alone describes nothing. A single coffee, recipe or tasting is an array of one element; there is no singular key. Association, per recipe: a recipe with bean_ref is associated with the bean whose id matches exactly (case-sensitive); an unresolved bean_ref leaves the recipe unlinked (never an error, no fall-back to co-location). A recipe without bean_ref is associated with the single bean when beans has exactly one element (co-location, the bag-to-brew case); otherwise it is unlinked. Association, per tasting: recipe_ref names the recipe whose id matches exactly (case-sensitive), and an unresolved recipe_ref leaves the tasting unlinked. A tasting resolves its coffee independently of that recipe: its own bean_ref wins whenever present, even when the referenced recipe names a different bean — that is not a conflict but 'I brewed your recipe with my coffee'. A tasting without bean_ref falls back to co-location on the single bean when beans has exactly one element; otherwise it is linked to no bean. Id uniqueness (each id unique within its own collection) is a semantic rule JSON Schema cannot express; validators should surface violations as warnings.",
@@ -270,6 +282,12 @@
           "additionalProperties": {
             "$ref": "#/$defs/recipeLocalization"
           }
+        },
+        "ext": {
+          "type": "object",
+          "propertyNames": {
+            "minLength": 1
+          }
         }
       },
       "dependentRequired": {
@@ -362,6 +380,12 @@
               "minimum": -1,
               "maximum": 1,
               "description": "Perceived strength: -1 weak, watery, thin … 0 about right … 1 strong, heavy, muddy. A judgment, not a measured concentration."
+            },
+            "ext": {
+              "type": "object",
+              "propertyNames": {
+                "minLength": 1
+              }
             }
           },
           "additionalProperties": false
@@ -396,9 +420,21 @@
             "yield": {
               "$ref": "#/$defs/massMeasurement",
               "description": "Beverage mass actually weighed out of this brew — what reached the cup, read off a scale, as much an instrument reading as the tds beside it. Distinct from a recipe's `yield`, which is the mass the brew aimed at. A consumer deriving extraction yield prefers this value over the recipe's."
+            },
+            "ext": {
+              "type": "object",
+              "propertyNames": {
+                "minLength": 1
+              }
             }
           },
           "additionalProperties": false
+        },
+        "ext": {
+          "type": "object",
+          "propertyNames": {
+            "minLength": 1
+          }
         }
       },
       "additionalProperties": false
@@ -440,6 +476,12 @@
             "exporter"
           ],
           "description": "The part this party played, on any credit — an author, a roaster, or an entry of an origin item's `producers`. An open registry; recommended: producer · farm · cooperative · washing_station · mill · exporter, the parts an origin names. Omitted when the source names a party without labeling its part, which is common; an unrecognized role is displayed beside the name, never a reason to drop the party."
+        },
+        "ext": {
+          "type": "object",
+          "propertyNames": {
+            "minLength": 1
+          }
         }
       },
       "additionalProperties": false
@@ -464,6 +506,12 @@
         "label": {
           "type": "string",
           "description": "The filter as the source names it, when that says more than the material — a product (\"V60-02\", \"Chemex bonded, 3-ply on one side\"), a form (a tea bag), or the brewer's own part (a plunger mesh). Human text; language hinted by the recipe's `lang`."
+        },
+        "ext": {
+          "type": "object",
+          "propertyNames": {
+            "minLength": 1
+          }
         }
       },
       "additionalProperties": false
@@ -508,6 +556,12 @@
         "note": {
           "type": "string",
           "description": "Free-text detail (brand, prep, sweetener kind)."
+        },
+        "ext": {
+          "type": "object",
+          "propertyNames": {
+            "minLength": 1
+          }
         }
       },
       "additionalProperties": false
@@ -563,6 +617,12 @@
             "ounce"
           ],
           "description": "Canonical mass unit identifier: gram, or the avoirdupois mass ounce (28.349523125 g) — never a fluid ounce."
+        },
+        "ext": {
+          "type": "object",
+          "propertyNames": {
+            "minLength": 1
+          }
         }
       },
       "additionalProperties": false
@@ -619,6 +679,12 @@
             "milliliter"
           ],
           "description": "Canonical unit identifier: the mass units gram and ounce (avoirdupois — never a fluid ounce), or the volume unit milliliter. Water stated in fluid ounces is a volume: emit it as milliliter, never converted into a mass."
+        },
+        "ext": {
+          "type": "object",
+          "propertyNames": {
+            "minLength": 1
+          }
         }
       },
       "additionalProperties": false
@@ -671,6 +737,12 @@
             "fahrenheit"
           ],
           "description": "Canonical temperature unit identifier: celsius or fahrenheit."
+        },
+        "ext": {
+          "type": "object",
+          "propertyNames": {
+            "minLength": 1
+          }
         }
       },
       "additionalProperties": false
@@ -725,6 +797,12 @@
             "bar"
           ],
           "description": "Canonical pressure unit identifier: bar (v1.0's only pressure unit)."
+        },
+        "ext": {
+          "type": "object",
+          "propertyNames": {
+            "minLength": 1
+          }
         }
       },
       "additionalProperties": false
@@ -753,6 +831,12 @@
         "label": {
           "type": "string",
           "description": "Display string / fallback. Required when id is \"custom\"."
+        },
+        "ext": {
+          "type": "object",
+          "propertyNames": {
+            "minLength": 1
+          }
         }
       },
       "allOf": [
@@ -805,6 +889,12 @@
             "extra_coarse"
           ],
           "description": "Qualitative coarseness on the standard perceptual scale (ordered). Unknown values: ignore the field, preferring `setting` (the grinder's own dial) / `microns_approx` when present."
+        },
+        "ext": {
+          "type": "object",
+          "propertyNames": {
+            "minLength": 1
+          }
         }
       },
       "additionalProperties": false
@@ -855,6 +945,12 @@
           "type": "number",
           "minimum": 0,
           "description": "How long this step's action takes, in seconds (single value). With per-step pour deltas this yields pour rate (g/s)."
+        },
+        "ext": {
+          "type": "object",
+          "propertyNames": {
+            "minLength": 1
+          }
         }
       },
       "additionalProperties": false
@@ -997,6 +1093,12 @@
               "type": "number",
               "minimum": 0,
               "description": "Days from roast beyond which the roaster no longer recommends it."
+            },
+            "ext": {
+              "type": "object",
+              "propertyNames": {
+                "minLength": 1
+              }
             }
           },
           "additionalProperties": false
@@ -1076,6 +1178,12 @@
           "additionalProperties": {
             "$ref": "#/$defs/beanLocalization"
           }
+        },
+        "ext": {
+          "type": "object",
+          "propertyNames": {
+            "minLength": 1
+          }
         }
       },
       "dependentRequired": {
@@ -1125,6 +1233,12 @@
           "minItems": 1,
           "items": {
             "$ref": "#/$defs/originItem"
+          }
+        },
+        "ext": {
+          "type": "object",
+          "propertyNames": {
+            "minLength": 1
           }
         }
       },
@@ -1179,6 +1293,12 @@
           "minimum": 0,
           "maximum": 100,
           "description": "This component's share of a blend, 0–100. Meaningful only for multi-item origins."
+        },
+        "ext": {
+          "type": "object",
+          "propertyNames": {
+            "minLength": 1
+          }
         }
       },
       "additionalProperties": false
@@ -1231,6 +1351,12 @@
             "foot"
           ],
           "description": "Canonical length unit identifier: meter or foot."
+        },
+        "ext": {
+          "type": "object",
+          "propertyNames": {
+            "minLength": 1
+          }
         }
       },
       "additionalProperties": false
@@ -1254,7 +1380,9 @@
       "then": {
         "properties": {
           "recipes": {
+            "type": "array",
             "items": {
+              "type": "object",
               "required": [
                 "bean_ref"
               ]

@@ -149,7 +149,7 @@ export function buildLlmsTxt() {
     "## Machine-readable",
     "",
     link("JSON Schema (v1.0)", `${SITE_URL}/schema/1.0`, "The normative schema, served at its `$id`. Validate any document against this"),
-    link("Authoring schema", `${SITE_URL}/schema/authoring/1.0`, "Stricter variant for generators: rejects unknown keys, so a typo fails loudly instead of being ignored"),
+    link("Authoring schema", `${SITE_URL}/schema/authoring/1.0`, "Stricter variant for generators: rejects unknown keys apart from the reserved `ext`, so a typo fails loudly instead of being ignored"),
     link("Gear registry", `${SITE_URL}/registries/gear.json`, "Canonical equipment slugs (id · label · brand/model) for the Gear id field"),
     link("Varietal registry", `${SITE_URL}/registries/varietals.json`, "Canonical varietal names plus aliases for common synonyms and breeding codes"),
     link("Addition-type registry", `${SITE_URL}/registries/addition-types.json`, "Recommended values for an addition's type — an open set, so any other string is valid"),
@@ -787,8 +787,8 @@ if (isMain) { await (async () => {
 
   // Schema at its $id path — exact bytes, plus a convenience alias. The
   // authoring (strict) variant is what a GENERATING consumer wants: it rejects
-  // unknown keys, so a typo fails loudly instead of being ignored by the open
-  // runtime schema.
+  // unknown keys apart from the reserved `ext`, so a typo fails loudly instead
+  // of being ignored by the open runtime schema.
   mkdirSync(join(site, "public/schema/authoring"), { recursive: true });
   const schemaBytes = readFileSync(join(repo, "docs/schema/coffeejson-1.0.schema.json"));
   writeFileSync(join(site, "public/schema/1.0"), schemaBytes);

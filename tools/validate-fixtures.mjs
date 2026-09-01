@@ -170,7 +170,6 @@ const authoringExempt = new Map([
   ["forward-compat-unknown-fields.json", "unknown members are its purpose"],
   ["newer-minor-version.json", "future-field probe is its purpose"],
   ["images-empty.json", "pins that empty = absent at runtime"],
-  ["vendor-ext.json", "the reserved vendor home is an unknown member to the authoring lint"],
 ]);
 for (const file of [...jsonFiles(join(root, "fixtures", "valid")), ...recipeFiles]) {
   const name = basename(file);
@@ -196,6 +195,26 @@ validateAuthoring(typoProbe)
   ? fail("typo probe rejected by the authoring schema", "validated, but watter_temp must be caught")
   : ok("typo probe rejected by the authoring schema");
 
+// The reserved vendor member is admitted by name at every depth, not only on the
+// top-level entities, because the runtime schema accepts it anywhere and a lint
+// that disagreed would reject a conforming document. Admitting it must not blunt
+// the lint: a typo sitting beside `ext` in the same object is still a typo.
+const vendorTypoProbe = {
+  coffeejson: "1.0",
+  beans: [{
+    name: "Kirinyaga AA",
+    roaster: { name: "Example Roastery" },
+    ext: { "app.example": { shelf: "top" } },
+    roaster_note: "Blackcurrant, cane sugar",
+  }],
+};
+validate(vendorTypoProbe)
+  ? ok("a typo beside the vendor member stays valid at runtime (objects are open)")
+  : fail("a typo beside the vendor member stays valid at runtime (objects are open)", errorText());
+validateAuthoring(vendorTypoProbe)
+  ? fail("authoring still catches a typo beside the vendor member", "validated, but roaster_note must be caught")
+  : ok("authoring still catches a typo beside the vendor member");
+
 // A localization carries wording, never data: a quantity smuggled into one states
 // a different recipe under a language tag. The runtime schema stays open, because
 // a later minor may add a text member.
@@ -213,6 +232,24 @@ validate(localizedDose)
 validateAuthoring(localizedDose)
   ? fail("authoring refuses a quantity inside a localization", "validated, but a per-locale dose is a different recipe")
   : ok("authoring refuses a quantity inside a localization");
+
+// The reserved vendor member is admitted on the entities the specification
+// defines, and an overlay of one is not such an entity. `ext` is not wording,
+// so it is refused here for the same reason a dose is.
+const localizedExt = {
+  coffeejson: "1.0",
+  recipes: [{
+    title: "4:6メソッド", lang: "ja",
+    coffee: { value: 20, unit: "gram" }, water: { value: 300, unit: "gram" },
+    localizations: { en: { title: "4:6 Method", ext: { "app.example": { tone: "casual" } } } },
+  }],
+};
+validate(localizedExt)
+  ? ok("the reserved vendor member inside a localization stays valid at runtime")
+  : fail("the reserved vendor member inside a localization stays valid at runtime", errorText());
+validateAuthoring(localizedExt)
+  ? fail("authoring refuses the reserved vendor member inside a localization", "validated, but a localization carries wording only")
+  : ok("authoring refuses the reserved vendor member inside a localization");
 
 // Adding a second bean silently unlinks every recipe in a working bag-to-brew
 // document — legal at runtime, and almost always a producer mistake.

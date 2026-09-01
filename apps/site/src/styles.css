@@ -103,6 +103,15 @@ pre { background: var(--card); border: 1px solid var(--line); border-radius: 8px
 .muted { color: var(--muted); }
 .error { color: var(--error); border: 1px solid var(--error); border-radius: 8px;
   padding: 0.75rem 1rem; overflow-wrap: anywhere; }
+/* Authoring notes are the third state the format itself does not have: the
+   document is valid and a consumer must ignore what they name. Deliberately not
+   `--error` — colouring a producer lint like a defect is how a reader concludes
+   the document should be rejected, which is the forward-compatibility contract
+   exactly inverted. */
+.notes { border: 1px solid var(--line); border-radius: 8px; margin: 1rem 0;
+  padding: 0.75rem 1rem; overflow-wrap: anywhere; }
+.notes > :first-child { margin-top: 0; }
+.notes > :last-child { margin-bottom: 0; }
 .cards { display: grid; gap: 0.9rem; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
   padding: 0; list-style: none; }
 .card { background: var(--card); border: 1px solid var(--line); border-radius: 10px;

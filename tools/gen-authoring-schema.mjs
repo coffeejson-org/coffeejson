@@ -18,8 +18,16 @@ export function buildAuthoringSchema(runtime) {
   schema.$id = "https://coffeejson.org/schema/authoring/1.0";
   schema.title = "CoffeeJSON Document (authoring)";
   schema.description =
-    "Strict authoring/lint variant of the CoffeeJSON 1.0 schema, GENERATED from it by tools/gen-authoring-schema.mjs — do not edit by hand. Every object is closed (unknown members rejected, catching producer typos), every optional array requires at least one element (emit content or omit the key), and a document carrying several beans requires bean_ref on every recipe (co-location associates nothing once there is more than one coffee, so an unreferenced recipe is silently unlinked). A producer lint only: the open runtime schema at https://coffeejson.org/schema/1.0 is the conformance schema, and consumers never gate imports on either.";
+    "Strict authoring/lint variant of the CoffeeJSON 1.0 schema, GENERATED from it by tools/gen-authoring-schema.mjs — do not edit by hand. Every object is closed (unknown members rejected, catching producer typos) except the reserved `ext` member, admitted on every entity but a localization as an object with non-empty keys and its contents unconstrained, every optional array requires at least one element (emit content or omit the key), and a document carrying several beans requires bean_ref on every recipe (co-location associates nothing once there is more than one coffee, so an unreferenced recipe is silently unlinked). A producer lint only: the open runtime schema at https://coffeejson.org/schema/1.0 is the conformance schema, and consumers never gate imports on either.";
   walk(schema);
+  // A localization carries wording and nothing else: every quantity, unit, enum
+  // and reference belongs to the entity and is the same in every language. `ext`
+  // is not wording, and 07-versioning reserves it on the entities this
+  // specification defines rather than on an overlay of one. 03-recipe.md and
+  // 04-bean.md both state the lint rejects any other member here, and they are
+  // right, so the reserved name is withdrawn from the three overlays.
+  for (const def of ["recipeLocalization", "stepLocalization", "beanLocalization"])
+    delete schema.$defs?.[def]?.properties?.ext;
   // An authoring RULE, not a transform. Co-location associates on
   // `beans.length == 1`, so adding a second bean to a bag-to-brew document
   // silently unlinks every recipe: still valid, now meaning something else. NOT a
@@ -28,7 +36,9 @@ export function buildAuthoringSchema(runtime) {
   schema.allOf = [...(schema.allOf ?? []), {
     $comment: "Authoring lint: once a document carries several beans, co-location associates nothing, so each recipe must name the coffee it is for.",
     if: { required: ["beans"], properties: { beans: { type: "array", minItems: 2 } } },
-    then: { properties: { recipes: { items: { required: ["bean_ref"] } } } },
+    // Types stated so the fragment is well-formed on its own: ajv strict mode
+    // warns on `items` and `required` that do not say what they apply to.
+    then: { properties: { recipes: { type: "array", items: { type: "object", required: ["bean_ref"] } } } },
   }];
   return schema;
 }
@@ -42,7 +52,21 @@ function walk(node) {
   // Only real object schemas: the envelope anyOf branches and the basis if/then
   // fragments carry partial `properties` without a `type`, and closing those would
   // reject the members the main schema defines.
-  if (node.type === "object" && node.properties) node.additionalProperties = false;
+  if (node.type === "object" && node.properties) {
+    node.additionalProperties = false;
+    // `ext` is reserved by NAME in 07-versioning, so admit the name and
+    // constrain no CONTENTS. Closed without it, a conforming vendor member reads
+    // as a typo and the author must strip it to lint at all.
+    // The container is not contents. 07-versioning reserves the shape
+    // `{ <vendor id>: … }`, and admitting the bare `true` schema let the lint
+    // accept `ext: null` — which 01-overview forbids of every member, absence
+    // being the null — along with a string, an array and a bare number. A vendor
+    // id is also never the empty string. Neither says anything about what a
+    // vendor puts inside, which stays undefined until an adopter needs it.
+    // `??=` so a future minor that gives `ext` a real definition keeps it: the
+    // lint defers to the runtime schema rather than overwriting it.
+    node.properties.ext ??= { type: "object", propertyNames: { minLength: 1 } };
+  }
   // Empty optional arrays are valid on the wire, and a should-omit here.
   if (node.type === "array" && node.minItems === undefined) node.minItems = 1;
   for (const value of Object.values(node)) walk(value);

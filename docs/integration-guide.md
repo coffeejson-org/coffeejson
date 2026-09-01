@@ -125,13 +125,14 @@ you can. Emit derived
 step labels as absent. The compact statement of all producer obligations is
 [Versioning § Conformant producer](spec/07-versioning.md#conformant-producer).
 
-**2 · Lint your output with the authoring schema.** The
-[authoring variant](https://coffeejson.org/schema/authoring/1.0) closes every
-object and rejects empty optional arrays. It requires `bean_ref` on every
-recipe once you emit more than one bean. A typo'd field name then fails your
-build loudly instead of being silently ignored by every consumer forever. A
-second coffee cannot quietly unlink the recipes that were associated with the
-first. It is a producer lint only. Never validate *imports* against it.
+**2 · Lint your output with the authoring schema.** The [authoring
+variant](https://coffeejson.org/schema/authoring/1.0) closes every object
+except the reserved `ext` member, and rejects empty optional arrays. It
+requires `bean_ref` on every recipe once you emit more than one bean. A typo'd
+field name then fails your build loudly instead of being silently ignored by
+every consumer forever. A second coffee cannot quietly unlink the recipes that
+were associated with the first. It is a producer lint only. Never validate
+*imports* against it.
 
 **3 · Do not emit reserved names. Put private data under `ext`.** The
 [reserved extensions](spec/07-versioning.md#reserved-extensions) are named

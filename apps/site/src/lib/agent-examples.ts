@@ -15,7 +15,8 @@ Rules:
 - "to_water" is the CUMULATIVE water total at that step, not the amount added.
 - Omit anything you do not know. Do not invent a value to fill a field.
 - Validate against https://coffeejson.org/schema/authoring/1.0
-  and fix what it rejects. That schema refuses unknown keys, so a typo fails loudly.`;
+  and fix what it rejects. That schema refuses unknown keys, so a typo fails loudly.
+- The one key it still accepts is "ext", the reserved home for your own vendor data.`;
 
 export interface Example {
   readonly prompt: string;

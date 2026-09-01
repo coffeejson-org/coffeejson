@@ -29,7 +29,8 @@ export const agentsBody = (): string => `
   deliberately permissive — a consumer must ignore members it does not recognize,
   which means a misspelled key silently disappears instead of failing. The
   authoring schema sets <code>additionalProperties: false</code>, so the same typo
-  is a loud error while you can still fix it. Humans can paste into the
+  is a loud error while you can still fix it. The one exception is the reserved
+  <code>ext</code> member, which it admits anywhere for your own vendor data. Humans can paste into the
   <a href="/validator/">validator</a>, which runs entirely in the browser.</p>
 
   <h2>System prompt</h2>
