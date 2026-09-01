@@ -5,7 +5,8 @@
   "type": "module",
   "description": "coffeejson.org — landing, validator, /r viewer + brew-along, /recipes directory.",
   "scripts": {
-    "gen": "node tools/gen.mjs",
+    "sync-schema": "node ../../packages/core/tools/sync-schema.mjs",
+    "gen": "pnpm run sync-schema && node tools/gen.mjs",
     "predev": "pnpm run gen",
     "dev": "vite",
     "prebuild": "pnpm run gen",

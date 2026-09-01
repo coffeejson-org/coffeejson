@@ -45,6 +45,26 @@ const isMeasurement = (def) =>
   Array.isArray(def.properties?.unit?.enum);
 
 /**
+ * The subschemas that constrain the SAME instance as their parent, so a member
+ * declared inside one is a member of the object that carries them. A number
+ * conditioned on the brew method lives under `allOf[0].then.properties`, and a
+ * walk that only knew `properties` would never see it.
+ */
+const subschemas = (node) => {
+  const out = [];
+  for (const key of ["if", "then", "else", "not", "items", "contains",
+                     "additionalProperties", "unevaluatedItems", "unevaluatedProperties"])
+    if (node[key] && typeof node[key] === "object") out.push(node[key]);
+  for (const key of ["allOf", "anyOf", "oneOf", "prefixItems"])
+    for (const sub of Array.isArray(node[key]) ? node[key] : [])
+      if (sub && typeof sub === "object") out.push(sub);
+  for (const key of ["dependentSchemas", "patternProperties"])
+    for (const sub of Object.values(node[key] ?? {}))
+      if (sub && typeof sub === "object") out.push(sub);
+  return out;
+};
+
+/**
  * Every numeric member of the schema that is not inside a Measurement.
  *
  * @param schema  the parsed runtime schema
@@ -61,13 +81,16 @@ export function bareNumbers(schema) {
       if (numeric && !(inMeasurement && MEASUREMENT_MEMBERS.has(key))) found.push(here);
       walk(def, here, inMeasurement || isMeasurement(def));
     }
+    // An applicator names no member of its own, so the path does not deepen.
+    for (const sub of subschemas(node)) walk(sub, path, inMeasurement);
   };
-  for (const [name, def] of Object.entries(schema.$defs ?? {})) {
-    if (isMeasurement(def)) continue;
-    walk(def, name, false);
-  }
+  // A Measurement def is walked like any other, carrying the flag that spares
+  // its own magnitude members — never skipped, or a bare number beside `value`
+  // would be the one place this check does not look.
+  for (const [name, def] of Object.entries(schema.$defs ?? {}))
+    walk(def, name, isMeasurement(def));
   walk(schema, "", false);
-  return found.sort();
+  return [...new Set(found)].sort();
 }
 
 /**
