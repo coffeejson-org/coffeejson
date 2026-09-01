@@ -447,6 +447,37 @@ catalogFindings(fixturesReadme.replace("| `minimal.json` |", "| `renamed-away.js
   ? ok("catalog probe: a table row naming no file is caught")
   : fail("catalog probe: a table row naming no file is caught", "seeded row produced no finding");
 
+const { consistencyFindings } = await import("./check-consistency.mjs");
+console.log("\ndocuments — no document contradicts itself where the schema cannot look");
+const consistencyDocs = [...jsonFiles(join(root, "fixtures", "valid")), ...recipeFiles];
+for (const f of consistencyDocs)
+  for (const { label, error } of consistencyFindings(relative(root, f), JSON.parse(readFileSync(f, "utf8"))))
+    error ? fail(label, error) : ok(label);
+
+consistencyFindings("probe", { recipes: [{ coffee: { value: 15, unit: "gram" }, water: { value: 250, unit: "gram" }, ratio: 99 }] })
+  .some((f) => f.error?.includes("authoritative"))
+  ? ok("consistency probe: a ratio the measurements refute is caught")
+  : fail("consistency probe: a ratio the measurements refute is caught", "seeded document produced no finding");
+consistencyFindings("probe", { recipes: [{ coffee: { min: 30, max: 15, unit: "gram" } }] })
+  .some((f) => f.error?.includes("empty window"))
+  ? ok("consistency probe: an inverted min/max window is caught")
+  : fail("consistency probe: an inverted min/max window is caught", "seeded document produced no finding");
+// `rest_days` is a window with no unit, so a unit-gated sweep would walk straight past it.
+consistencyFindings("probe", { beans: [{ name: "x", rest_days: { min: 30, max: 14 } }] })
+  .some((f) => f.error?.includes("empty window"))
+  ? ok("consistency probe: an inverted window carrying no unit is caught")
+  : fail("consistency probe: an inverted window carrying no unit is caught", "seeded document produced no finding");
+// Recipe § Ratio: one ratio holds across a coupled window, so both ends are checkable.
+consistencyFindings("probe", { recipes: [{ coffee: { min: 25, max: 45, unit: "gram" }, water: { min: 657, max: 675, unit: "gram" }, ratio: 15 }] })
+  .some((f) => f.error?.includes("window's min"))
+  ? ok("consistency probe: a coupled window whose low end misses the ratio is caught")
+  : fail("consistency probe: a coupled window whose low end misses the ratio is caught", "seeded document produced no finding");
+// Ounce is a mass, so it compares against grams; only the volume unit declines.
+consistencyFindings("probe", { recipes: [{ coffee: { value: 1, unit: "ounce" }, water: { value: 250, unit: "gram" }, ratio: 99 }] })
+  .some((f) => f.error?.includes("authoritative"))
+  ? ok("consistency probe: a cross-unit mass ratio is still compared")
+  : fail("consistency probe: a cross-unit mass ratio is still compared", "seeded document produced no finding");
+
 console.log("\ntransport scan vectors — the § Accepting-links-from-any-host contract, executed");
 // transport.md § Encoding, kept literal: parse URL → require http(s) → read d →
 // enforce the base64url alphabet (Node's decoder silently skips illegal
