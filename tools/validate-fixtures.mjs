@@ -2,16 +2,21 @@
 // Validates the CoffeeJSON schema and everything that claims to conform to it:
 //   1. the schema itself compiles (JSON Schema draft 2020-12);
 //   2. every fixtures/valid/*.json document validates;
-//   3. every fixtures/invalid/*.json document is rejected;
+//   3. every fixtures/invalid/*.json document is rejected, and for the reason
+//      its fixtures/README.md row states;
 //   4. every fenced ```json block in README.md and docs/**/*.md that is a
 //      complete document (parses, and carries a "coffeejson" member)
-//      validates. Fragments and pseudo-JSON blocks are skipped.
+//      validates. Fragments and pseudo-JSON blocks are skipped;
+//   5. every bare number in the schema is on the roster that says what its
+//      magnitude means.
 // Exits non-zero on any unexpected result.
 
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { basename, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { inflateSync } from "node:zlib";
+import { bareNumberFindings } from "./check-bare-numbers.mjs";
+import { declaredReasons, leafOf, reasonMatches } from "./check-fixture-reasons.mjs";
 import { AUTHORING_SCHEMA_PATH, SCHEMA_PATH, schemaCompiler } from "./compile-schema.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
@@ -49,12 +54,26 @@ for (const file of jsonFiles(join(root, "fixtures", "valid"))) {
   validate(doc) ? ok(relative(root, file)) : fail(relative(root, file), errorText());
 }
 
-console.log("\nfixtures/invalid — every document must be rejected");
+console.log("\nfixtures/invalid — every document must be rejected, for its stated reason");
+const declaredReason = declaredReasons(readFileSync(join(root, "fixtures", "README.md"), "utf8"));
 for (const file of jsonFiles(join(root, "fixtures", "invalid"))) {
+  const name = relative(root, file);
   const doc = JSON.parse(readFileSync(file, "utf8"));
-  validate(doc)
-    ? fail(relative(root, file), "validated, but this fixture must be rejected")
-    : ok(relative(root, file));
+  if (validate(doc)) {
+    fail(name, "validated, but this fixture must be rejected");
+    continue;
+  }
+  // Rejected is half the claim. A fixture that some other rule now catches
+  // first has stopped exercising its subject, and nothing else here would say so.
+  const declared = declaredReason.get(basename(file));
+  if (declared === undefined) {
+    fail(name, "no `Fails on` cell in the fixtures/README.md invalid table");
+  } else if (reasonMatches(declared, validate.errors)) {
+    ok(`${name} — ${declared}`);
+  } else {
+    const got = [...new Set(validate.errors.map((e) => `${e.keyword}:${leafOf(e)}`))];
+    fail(name, `rejected, but not on \`${declared}\` — got ${got.join(", ")}`);
+  }
 }
 
 console.log("\nrecipes/ — every corpus document must validate");
@@ -366,6 +385,10 @@ registryFindings(gearRegistry, varietalRegistry, proseDocs.vocabularies, [], dri
   : fail("registry probe: a token the prose does not recommend is caught", "seeded token produced no finding");
 
 console.log("\nfixtures/README.md — the tables and the directories describe each other");
+console.log("\nschema — every bare number is on the roster");
+for (const { label, error } of bareNumberFindings(JSON.parse(readFileSync(SCHEMA_PATH, "utf8"))))
+  error ? fail(label, error) : ok(label);
+
 const { catalogFindings } = await import("./check-fixture-catalog.mjs");
 const fixtureNames = (dir) => jsonFiles(join(root, "fixtures", dir)).map((f) => basename(f));
 const fixturesReadme = readFileSync(join(root, "fixtures", "README.md"), "utf8");

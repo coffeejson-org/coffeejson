@@ -92,68 +92,68 @@ They belong to a future semantic validator's warning set, not to this corpus.
 
 ## invalid/
 
-| Fixture | Violates |
-| --- | --- |
-| `missing-version.json` | `coffeejson` is required. |
-| `version-not-string.json` | `coffeejson` must be a semver string. |
-| `no-collections.json` | At least one of `beans` / `recipes` must be present. |
-| `empty-collections.json` | …and non-empty. |
-| `recipe-missing-water.json` | A water-basis recipe (`basis:"water"`, or absent) must state its brew water as either `water` or `ratio`; this one states neither. |
-| `recipe-missing-title.json` | `title` is required on every recipe. |
-| `display-unit-symbol.json` | Units are canonical ids (`gram`), never symbols (`g`). |
-| `measurement-missing-unit.json` | A measurement always carries `unit`. |
-| `unknown-method.json` | Producers may not invent method ids (consumer leniency is a runtime rule, not a schema rule). |
-| `espresso-missing-yield.json` | A yield-basis recipe REQUIRES `yield` ([Recipe § Espresso](../docs/spec/03-recipe.md#espresso-dose--yield)). |
-| `espresso-with-water.json` | A yield-basis recipe MUST NOT carry `water`. |
-| `espresso-with-ratio.json` | A yield-basis recipe MUST NOT carry `ratio`. |
-| `bad-country-code.json` | `country` is ISO 3166-1 alpha-2. |
-| `bad-lang-tag.json` | `lang` is a BCP-47 tag; `en_US` (POSIX locale, underscore) is rejected. |
-| `dose-by-volume.json` | `milliliter` is brew water only — a dose is always a mass. |
-| `measurement-no-magnitude.json` | A Measurement needs `value`, `min`, or `max` — a unit alone states no quantity. |
-| `altitude-without-bounds.json` | Altitude needs `value`, `min`, or `max`. |
-| `altitude-missing-unit.json` | Altitude always carries `unit` (`meter` or `foot`) — bounds alone are unit-less noise. |
-| `origin-items-empty.json` | An `items` array, once present, carries at least one component — an empty one states nothing. |
-| `measurement-value-and-window.json` | A Measurement states a point (`value`) or a window (`min`/`max`), never both at once. |
-| `recipe-id-empty.json` | A recipe `id`, once present, is non-empty — an empty string addresses nothing. |
-| `negative-step-time.json` | `at_s` starts at zero. |
-| `ratio-zero.json` | `ratio` is strictly positive. |
-| `author-missing-name.json` | An `author` party requires `name`. |
-| `based-on-not-uri.json` | `based_on` must be a well-formed URI. |
-| `grind-size-unknown.json` | `grind.size` is a closed enum; producers may not invent values. |
-| `action-duration-negative.json` | `action_duration_s` starts at zero. |
-| `bean-url-not-uri.json` | `bean.url` must be a well-formed URI. |
-| `generator-url-not-uri.json` | `generator.url` must be a well-formed URI. |
-| `generator-missing-name.json` | `generator` names the software or states nothing: `name` is required. |
-| `localizations-without-lang.json` | `localizations` requires `lang` — an overlay needs a base language to override. |
-| `localizations-bad-locale-key.json` | Locale keys are well-formed BCP-47 tags; `english` is not one. |
-| `author-url-not-uri.json` | A party's `url` (here recipe `author`) must be a well-formed URI. |
-| `images-single-string.json` | `images` is always an array — a bare string is rejected (a single image is an array of one). |
-| `date-published-not-date.json` | `date_published` is an ISO 8601 calendar date, not free-text. |
-| `party-type-unknown.json` | A party's `type` is the closed enum `person` · `organization`. |
-| `roaster-bare-string.json` | `bean.roaster` is a party object, not a bare string. |
-| `roaster-missing-name.json` | A `roaster` party requires `name`, like every party. |
-| `title-empty.json` | The required `title` is never the empty string. |
-| `author-name-empty.json` | A party's required `name` is never the empty string. |
-| `author-role-empty.json` | A party's `role` is never the empty string, wherever the party sits. |
-| `agtron-above-scale.json` | `roast_agtron` stays on the 0–100 Gourmet scale. |
-| `version-wrong-major.json` | The 1.0 schema validates major version 1 only — a `2.0` document is out of its scope (the consumer [version gate](../docs/spec/07-versioning.md#the-version-gate), not this schema, governs import). |
-| `version-prefixed.json` | `coffeejson` is the bare semver string — `v1.0` (prefixed) is rejected. |
-| `percentage-above-100.json` | A blend component's `percentage` stays within 0–100. |
-| `tasting-tds-not-a-percentage.json` | A tasting's measured `tds` is strictly positive — zero percent dissolved solids is water, not coffee. |
-| `tasting-tds-above-100.json` | `tds` is a percentage by mass, so 101 is not a surprising reading but an impossible one — the upper bound the schema states. |
-| `tasting-rating-off-scale.json` | A tasting `rating` is 1–5; a 9 is off the scale the field defines. |
-| `tasting-axis-out-of-range.json` | A perceived-dial-in axis runs -1 to 1; 2.5 is off the compass. |
-| `tasting-id-empty.json` | A tasting `id` names something; an empty string names nothing, the same rule a recipe's `id` follows. |
-| `measurement-negative-value.json` | A mass measurement's `value` is never negative. |
-| `addition-type-empty.json` | An addition's required `type` is never the empty string. |
-| `roast-date-malformed.json` | `roast_date` is an ISO 8601 calendar date — `20/06/2026` is rejected. |
-| `gear-id-malformed.json` | A gear `id` is a lowercase kebab-case slug (or `custom`) — a mis-cased id would silently fail byte-exact registry matching. |
-| `gear-missing-id.json` | Gear always carries `id` — a registry slug or the literal `custom`; brand/model/label alone do not identify it. |
-| `gear-custom-without-label.json` | `id: "custom"` names no registry entry, so `label` is what a consumer has to show — the one id that requires it. |
-| `measurement-zero-value.json` | A mass measurement's `value` is strictly positive — a zero-gram dose states nothing. |
-| `pressure-zero.json` | `pressure` is strictly positive — zero bar is not a brew pressure. |
-| `microns-zero.json` | `microns_approx` is strictly positive. |
-| `recipes-element-not-an-object.json` | A collection element that is not an object — a slot claiming an entity and holding a number. The schema refuses it; what an importer does with it is [Envelope § Fields](../docs/spec/02-envelope.md#fields) prose. |
+| Fixture | Fails on | Violates |
+| --- | --- | --- |
+| `missing-version.json` | `required:coffeejson` | `coffeejson` is required. |
+| `version-not-string.json` | `type:coffeejson` | `coffeejson` must be a semver string. |
+| `no-collections.json` | `anyOf` | At least one of `beans` / `recipes` must be present. |
+| `empty-collections.json` | `minItems:beans` | …and non-empty. |
+| `recipe-missing-water.json` | `anyOf:recipes` | A water-basis recipe (`basis:"water"`, or absent) must state its brew water as either `water` or `ratio`; this one states neither. |
+| `recipe-missing-title.json` | `required:recipes.title` | `title` is required on every recipe. |
+| `display-unit-symbol.json` | `enum:coffee.unit` | Units are canonical ids (`gram`), never symbols (`g`). |
+| `measurement-missing-unit.json` | `required:water.unit` | A measurement always carries `unit`. |
+| `unknown-method.json` | `enum:method` | Producers may not invent method ids (consumer leniency is a runtime rule, not a schema rule). |
+| `espresso-missing-yield.json` | `required:yield` | A yield-basis recipe REQUIRES `yield` ([Recipe § Espresso](../docs/spec/03-recipe.md#espresso-dose--yield)). |
+| `espresso-with-water.json` | `false schema:water` | A yield-basis recipe MUST NOT carry `water`. |
+| `espresso-with-ratio.json` | `false schema:ratio` | A yield-basis recipe MUST NOT carry `ratio`. |
+| `bad-country-code.json` | `pattern:country` | `country` is ISO 3166-1 alpha-2. |
+| `bad-lang-tag.json` | `pattern:lang` | `lang` is a BCP-47 tag; `en_US` (POSIX locale, underscore) is rejected. |
+| `dose-by-volume.json` | `enum:coffee.unit` | `milliliter` is brew water only — a dose is always a mass. |
+| `measurement-no-magnitude.json` | `anyOf:coffee` | A Measurement needs `value`, `min`, or `max` — a unit alone states no quantity. |
+| `altitude-without-bounds.json` | `anyOf:altitude` | Altitude needs `value`, `min`, or `max`. |
+| `altitude-missing-unit.json` | `required:altitude.unit` | Altitude always carries `unit` (`meter` or `foot`) — bounds alone are unit-less noise. |
+| `origin-items-empty.json` | `minItems:items` | An `items` array, once present, carries at least one component — an empty one states nothing. |
+| `measurement-value-and-window.json` | `false schema:coffee.min` | A Measurement states a point (`value`) or a window (`min`/`max`), never both at once. |
+| `recipe-id-empty.json` | `minLength:recipes.id` | A recipe `id`, once present, is non-empty — an empty string addresses nothing. |
+| `negative-step-time.json` | `minimum:at_s` | `at_s` starts at zero. |
+| `ratio-zero.json` | `exclusiveMinimum:ratio` | `ratio` is strictly positive. |
+| `author-missing-name.json` | `required:author.name` | An `author` party requires `name`. |
+| `based-on-not-uri.json` | `format:based_on` | `based_on` must be a well-formed URI. |
+| `grind-size-unknown.json` | `enum:size` | `grind.size` is a closed enum; producers may not invent values. |
+| `action-duration-negative.json` | `minimum:action_duration_s` | `action_duration_s` starts at zero. |
+| `bean-url-not-uri.json` | `format:beans.url` | `bean.url` must be a well-formed URI. |
+| `generator-url-not-uri.json` | `format:generator.url` | `generator.url` must be a well-formed URI. |
+| `generator-missing-name.json` | `required:generator.name` | `generator` names the software or states nothing: `name` is required. |
+| `localizations-without-lang.json` | `dependentRequired:lang` | `localizations` requires `lang` — an overlay needs a base language to override. |
+| `localizations-bad-locale-key.json` | `pattern:localizations` | Locale keys are well-formed BCP-47 tags; `english` is not one. |
+| `author-url-not-uri.json` | `format:author.url` | A party's `url` (here recipe `author`) must be a well-formed URI. |
+| `images-single-string.json` | `type:images` | `images` is always an array — a bare string is rejected (a single image is an array of one). |
+| `date-published-not-date.json` | `pattern:date_published` | `date_published` is an ISO 8601 calendar date, not free-text. |
+| `party-type-unknown.json` | `enum:author.type` | A party's `type` is the closed enum `person` · `organization`. |
+| `roaster-bare-string.json` | `type:roaster` | `bean.roaster` is a party object, not a bare string. |
+| `roaster-missing-name.json` | `required:roaster.name` | A `roaster` party requires `name`, like every party. |
+| `title-empty.json` | `minLength:recipes.title` | The required `title` is never the empty string. |
+| `author-name-empty.json` | `minLength:author.name` | A party's required `name` is never the empty string. |
+| `author-role-empty.json` | `minLength:author.role` | A party's `role` is never the empty string, wherever the party sits. |
+| `agtron-above-scale.json` | `maximum:roast_agtron` | `roast_agtron` stays on the 0–100 Gourmet scale. |
+| `version-wrong-major.json` | `pattern:coffeejson` | The 1.0 schema validates major version 1 only — a `2.0` document is out of its scope (the consumer [version gate](../docs/spec/07-versioning.md#the-version-gate), not this schema, governs import). |
+| `version-prefixed.json` | `pattern:coffeejson` | `coffeejson` is the bare semver string — `v1.0` (prefixed) is rejected. |
+| `percentage-above-100.json` | `maximum:percentage` | A blend component's `percentage` stays within 0–100. |
+| `tasting-tds-not-a-percentage.json` | `exclusiveMinimum:tds` | A tasting's measured `tds` is strictly positive — zero percent dissolved solids is water, not coffee. |
+| `tasting-tds-above-100.json` | `maximum:tds` | `tds` is a percentage by mass, so 101 is not a surprising reading but an impossible one — the upper bound the schema states. |
+| `tasting-rating-off-scale.json` | `maximum:rating` | A tasting `rating` is 1–5; a 9 is off the scale the field defines. |
+| `tasting-axis-out-of-range.json` | `maximum:extraction` | A perceived-dial-in axis runs -1 to 1; 2.5 is off the compass. |
+| `tasting-id-empty.json` | `minLength:tastings.id` | A tasting `id` names something; an empty string names nothing, the same rule a recipe's `id` follows. |
+| `measurement-negative-value.json` | `exclusiveMinimum:coffee.value` | A mass measurement's `value` is never negative. |
+| `addition-type-empty.json` | `minLength:additions.type` | An addition's required `type` is never the empty string. |
+| `roast-date-malformed.json` | `pattern:roast_date` | `roast_date` is an ISO 8601 calendar date — `20/06/2026` is rejected. |
+| `gear-id-malformed.json` | `pattern:brewer.id` | A gear `id` is a lowercase kebab-case slug (or `custom`) — a mis-cased id would silently fail byte-exact registry matching. |
+| `gear-missing-id.json` | `required:brewer.id` | Gear always carries `id` — a registry slug or the literal `custom`; brand/model/label alone do not identify it. |
+| `gear-custom-without-label.json` | `required:brewer.label` | `id: "custom"` names no registry entry, so `label` is what a consumer has to show — the one id that requires it. |
+| `measurement-zero-value.json` | `exclusiveMinimum:coffee.value` | A mass measurement's `value` is strictly positive — a zero-gram dose states nothing. |
+| `pressure-zero.json` | `exclusiveMinimum:pressure.value` | `pressure` is strictly positive — zero bar is not a brew pressure. |
+| `microns-zero.json` | `exclusiveMinimum:microns_approx` | `microns_approx` is strictly positive. |
+| `recipes-element-not-an-object.json` | `type:recipes` | A collection element that is not an object — a slot claiming an entity and holding a number. The schema refuses it; what an importer does with it is [Envelope § Fields](../docs/spec/02-envelope.md#fields) prose. |
 
 ## transport/
 
