@@ -50,6 +50,10 @@ declared **claim**, and attributed **opinion** apart
 `pnpm test` validates every fixture, every corpus document, and every complete
 JSON example in the docs against the schema.
 
+Agent skills — one for changing the format, one for adding it to a product, one
+for turning a published source into a document — live in
+[`coffeejson-org/skills`](https://github.com/coffeejson-org/skills).
+
 ## Contributing
 
 Field proposals, registry entries, spec-ambiguity reports, and the checks that

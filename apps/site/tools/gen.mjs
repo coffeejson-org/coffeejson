@@ -104,6 +104,16 @@ const docUrl = (p) => `${SITE_URL}/${p}`;
 // file target renders; GitHub redirects a directory hit to /tree/ itself.
 export const GITHUB_BLOB = "https://github.com/coffeejson-org/coffeejson/blob/main";
 
+// The agent skills live in a sibling repository, not on this host — the one
+// place llms.txt points off-site. `tests/llms.test.ts` allows exactly these.
+const SKILLS_REPO = "https://github.com/coffeejson-org/skills";
+export const SKILLS_LINKS = [
+  ["Agent skills", SKILLS_REPO, "Three skills, one per relationship to the format, for a coding agent that reads `SKILL.md`. Install with `npx skills add coffeejson-org/skills`, or as a Claude Code plugin"],
+  ["coffeejson-schema", `${SKILLS_REPO}/tree/main/skills/coffeejson-schema`, "Changing the format: validating the schema and its corpora, designing a field, rename or reshape, and landing it fixture-first"],
+  ["coffeejson-integration", `${SKILLS_REPO}/tree/main/skills/coffeejson-integration`, "Adding CoffeeJSON to an app, service, site or script: intake and export checklists, the failure vocabulary, the version gate, the transport bindings, and proving conformance"],
+  ["coffeejson-author", `${SKILLS_REPO}/tree/main/skills/coffeejson-author`, "Turning one published source into a document: faithful transcription, where each fact lands, the vocabularies and registries, and the authoring lint"],
+];
+
 // Every markdown file the site serves under /docs/ — the two llms lists plus
 // the docs index, which other docs link as their directory map.
 export const SERVED_MD = [...SPEC_DOCS.map(([, p]) => p), ...GUIDE_DOCS.map(([, p]) => p), "docs/README.md"];
@@ -165,6 +175,10 @@ export function buildLlmsTxt() {
     link("For AI agents", `${SITE_URL}/for-ai-agents/`, "How to emit valid CoffeeJSON: a system-prompt snippet, worked examples, the mistakes models make, and the validate-and-fix loop"),
     link("Implementations", `${SITE_URL}/implementations/`, "The reference SDKs for TypeScript and Swift, the conformance corpus any implementation can run against its own code, and the self-declared registry of apps that read and write the format"),
     link("Showcase", `${SITE_URL}/showcase/`, "The five places a CoffeeJSON document goes — between two apps, on a bag of coffee as a QR code, inside a share link, on a web page as schema.org Recipe, and as a plain file you keep — plus the software that reads and writes the format today"),
+    "",
+    "## Agent skills",
+    "",
+    ...SKILLS_LINKS.map(([t, u, d]) => link(t, u, d)),
     "",
     "## Notes",
     "",

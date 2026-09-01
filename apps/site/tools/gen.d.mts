@@ -71,6 +71,8 @@ export declare function buildBeanPages(beans?: readonly BeanEntry[]): CorpusPage
 
 /** Blob-URL base for repo paths the site does not serve. */
 export declare const GITHUB_BLOB: string;
+/** The off-host links llms.txt carries: the skills repository and its three skills. */
+export declare const SKILLS_LINKS: readonly (readonly [string, string, string])[];
 /** Every markdown path served under /docs/ — the set link rewriting keeps relative-free. */
 export declare const SERVED_MD: readonly string[];
 export declare function rewriteDocLinks(markdown: string, docPath: string): string;

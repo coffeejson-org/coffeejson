@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import { INDEXABLE_PATHS, SITE_URL, buildLlmsFullTxt, buildLlmsTxt } from "../tools/gen.mjs";
+import { INDEXABLE_PATHS, SITE_URL, SKILLS_LINKS, buildLlmsFullTxt, buildLlmsTxt } from "../tools/gen.mjs";
 
 const site = fileURLToPath(new URL("..", import.meta.url));
 const llms = buildLlmsTxt();
@@ -34,7 +34,11 @@ describe("llms.txt", () => {
   // in. A front door for machines that 404s is worse than no front door.
   it("has no dead links — every target is a file gen emits or a real page", () => {
     const dead: string[] = [];
+    const offsite = new Set(SKILLS_LINKS.map(([, u]) => u));
     for (const { url } of links) {
+      // The skills repository is the one resource that does not live here. It is
+      // listed explicitly so a typo cannot smuggle another off-host link in.
+      if (offsite.has(url)) continue;
       expect(url.startsWith(SITE_URL), `${url} is not on the canonical host`).toBe(true);
       const path = url.slice(SITE_URL.length);
       if (INDEXABLE_PATHS.includes(path)) continue;

@@ -18,6 +18,12 @@ export const agentsBody = (): string => `
     <a href="/llms.txt">/llms.txt</a> is the link index and
     <a href="/llms-full.txt">/llms-full.txt</a> is every chapter concatenated.</p>
 
+  <p class="muted">Working inside a coding agent?
+    <a href="https://github.com/coffeejson-org/skills">coffeejson-org/skills</a>
+    packages the format as three agent skills — changing it, adding it to a
+    product, and turning a published source into a document —
+    installable with <code>npx skills add coffeejson-org/skills</code>.</p>
+
   <h2>The loop that matters</h2>
   <ol>
     <li>Emit a document.</li>
