@@ -1,0 +1,40 @@
+{
+  "coffeejson": "1.1",
+  "recipes": [
+    {
+      "title": "Unknown registry values from a later minor",
+      "coffee": { "value": 20, "unit": "gram" },
+      "water": { "value": 320, "unit": "gram" },
+      "brew_soundtrack": "unknown member at the recipe level",
+      "steps": [
+        {
+          "kind": "pour",
+          "at_s": 0,
+          "to_water": { "value": 60, "unit": "gram" },
+          "agitation_pattern": "unknown member inside a step"
+        }
+      ],
+      "additions": [
+        { "type": "oat_milk", "note": "an addition type no 1.0 registry lists" }
+      ]
+    }
+  ],
+  "beans": [
+    {
+      "name": "Later Minor Lot",
+      "roaster": { "name": "Example Roastery" },
+      "origin": {
+        "type": "single",
+        "items": [
+          {
+            "country": "ET",
+            "producers": [
+              { "name": "Example Washing Station", "role": "drying_yard_operator" }
+            ],
+            "terroir_index": "unknown member inside an origin item"
+          }
+        ]
+      }
+    }
+  ]
+}

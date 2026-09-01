@@ -379,9 +379,21 @@
         "value": { "properties": { "min": false, "max": false } }
       },
       "properties": {
-        "value": { "type": "number", "exclusiveMinimum": 0 },
-        "min": { "type": "number", "exclusiveMinimum": 0 },
-        "max": { "type": "number", "exclusiveMinimum": 0 },
+        "value": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "The exact figure the source states. Excludes `min` and `max`: a quantity is either a point or a window, never both."
+        },
+        "min": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "The low end of a stated window. Legal without `max` — an open-ended floor (\"at least this\") is a real thing a source says, not half of a broken range."
+        },
+        "max": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "The high end of a stated window. Legal without `min` — an open-ended ceiling (\"up to this\") is a real thing a source says, not half of a broken range."
+        },
         "unit": {
           "type": "string",
           "enum": ["gram", "ounce"],
@@ -403,9 +415,21 @@
         "value": { "properties": { "min": false, "max": false } }
       },
       "properties": {
-        "value": { "type": "number", "exclusiveMinimum": 0 },
-        "min": { "type": "number", "exclusiveMinimum": 0 },
-        "max": { "type": "number", "exclusiveMinimum": 0 },
+        "value": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "The exact figure the source states. Excludes `min` and `max`: a quantity is either a point or a window, never both."
+        },
+        "min": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "The low end of a stated window. Legal without `max` — an open-ended floor (\"at least this\") is a real thing a source says, not half of a broken range."
+        },
+        "max": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "The high end of a stated window. Legal without `min` — an open-ended ceiling (\"up to this\") is a real thing a source says, not half of a broken range."
+        },
         "unit": {
           "type": "string",
           "enum": ["gram", "ounce", "milliliter"],
@@ -427,9 +451,18 @@
         "value": { "properties": { "min": false, "max": false } }
       },
       "properties": {
-        "value": { "type": "number" },
-        "min": { "type": "number" },
-        "max": { "type": "number" },
+        "value": {
+          "type": "number",
+          "description": "The exact figure the source states. Excludes `min` and `max`: a quantity is either a point or a window, never both."
+        },
+        "min": {
+          "type": "number",
+          "description": "The low end of a stated window. Legal without `max` — an open-ended floor (\"at least this\") is a real thing a source says, not half of a broken range."
+        },
+        "max": {
+          "type": "number",
+          "description": "The high end of a stated window. Legal without `min` — an open-ended ceiling (\"up to this\") is a real thing a source says, not half of a broken range."
+        },
         "unit": {
           "type": "string",
           "enum": ["celsius", "fahrenheit"],
@@ -451,9 +484,21 @@
         "value": { "properties": { "min": false, "max": false } }
       },
       "properties": {
-        "value": { "type": "number", "exclusiveMinimum": 0 },
-        "min": { "type": "number", "exclusiveMinimum": 0 },
-        "max": { "type": "number", "exclusiveMinimum": 0 },
+        "value": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "The exact figure the source states. Excludes `min` and `max`: a quantity is either a point or a window, never both."
+        },
+        "min": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "The low end of a stated window. Legal without `max` — an open-ended floor (\"at least this\") is a real thing a source says, not half of a broken range."
+        },
+        "max": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "The high end of a stated window. Legal without `min` — an open-ended ceiling (\"up to this\") is a real thing a source says, not half of a broken range."
+        },
         "unit": {
           "type": "string",
           "enum": ["bar"],
@@ -719,7 +764,8 @@
         "items": {
           "type": "array",
           "minItems": 1,
-          "items": { "$ref": "#/$defs/originItem" }
+          "items": { "$ref": "#/$defs/originItem" },
+          "description": "The component coffees, at least one. Never an empty array: absence is how \"not published\" is stated, so `[]` would assert a coffee that came from nowhere."
         }
       }
     },
@@ -779,9 +825,18 @@
         "value": { "properties": { "min": false, "max": false } }
       },
       "properties": {
-        "value": { "type": "number" },
-        "min": { "type": "number" },
-        "max": { "type": "number" },
+        "value": {
+          "type": "number",
+          "description": "The exact figure the source states. Excludes `min` and `max`: a quantity is either a point or a window, never both."
+        },
+        "min": {
+          "type": "number",
+          "description": "The low end of a stated window. Legal without `max` — an open-ended floor (\"at least this\") is a real thing a source says, not half of a broken range."
+        },
+        "max": {
+          "type": "number",
+          "description": "The high end of a stated window. Legal without `min` — an open-ended ceiling (\"up to this\") is a real thing a source says, not half of a broken range."
+        },
         "unit": {
           "type": "string",
           "enum": ["meter", "foot"],

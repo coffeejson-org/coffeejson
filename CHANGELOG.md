@@ -9,6 +9,26 @@ place ([Versioning](docs/spec/07-versioning.md)); layout follows
 
 ## [Unreleased]
 
+### Added
+
+- Every measurement's `value`, `min` and `max` — and an origin's `items` —
+  carries a `description` in the published schema. They state what the
+  [Measurement object](docs/spec/03-recipe.md#measurement-object)'s own
+  description does not: that `value` **excludes** `min` and `max` rather than
+  merely differing from them, which until now was legible only from a
+  `dependentSchemas` clause; that either bound stands alone, because an
+  open-ended window is a thing a source really states and not half of a broken
+  range; and that `items` is never an empty array, because absence is how "not
+  published" is said. Annotation only — no keyword changed, and every document
+  valid before is valid after.
+- A conformance fixture for an **unknown value in an open registry**, carried
+  by a document from a later minor. The corpus already covered unknown
+  *members* and a later *version* separately; an unrecognized registry value is
+  neither, and it is the case the
+  [fallback rules](docs/spec/06-vocabularies.md) exist for — an unknown member
+  is ignored, an unknown value in a closed enum is invalid, and an unknown
+  value in an open registry is displayed.
+
 ### Fixed
 
 - The **authoring schema** admits the reserved

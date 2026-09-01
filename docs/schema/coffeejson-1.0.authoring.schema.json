@@ -600,15 +600,18 @@
       "properties": {
         "value": {
           "type": "number",
-          "exclusiveMinimum": 0
+          "exclusiveMinimum": 0,
+          "description": "The exact figure the source states. Excludes `min` and `max`: a quantity is either a point or a window, never both."
         },
         "min": {
           "type": "number",
-          "exclusiveMinimum": 0
+          "exclusiveMinimum": 0,
+          "description": "The low end of a stated window. Legal without `max` — an open-ended floor (\"at least this\") is a real thing a source says, not half of a broken range."
         },
         "max": {
           "type": "number",
-          "exclusiveMinimum": 0
+          "exclusiveMinimum": 0,
+          "description": "The high end of a stated window. Legal without `min` — an open-ended ceiling (\"up to this\") is a real thing a source says, not half of a broken range."
         },
         "unit": {
           "type": "string",
@@ -661,15 +664,18 @@
       "properties": {
         "value": {
           "type": "number",
-          "exclusiveMinimum": 0
+          "exclusiveMinimum": 0,
+          "description": "The exact figure the source states. Excludes `min` and `max`: a quantity is either a point or a window, never both."
         },
         "min": {
           "type": "number",
-          "exclusiveMinimum": 0
+          "exclusiveMinimum": 0,
+          "description": "The low end of a stated window. Legal without `max` — an open-ended floor (\"at least this\") is a real thing a source says, not half of a broken range."
         },
         "max": {
           "type": "number",
-          "exclusiveMinimum": 0
+          "exclusiveMinimum": 0,
+          "description": "The high end of a stated window. Legal without `min` — an open-ended ceiling (\"up to this\") is a real thing a source says, not half of a broken range."
         },
         "unit": {
           "type": "string",
@@ -722,13 +728,16 @@
       },
       "properties": {
         "value": {
-          "type": "number"
+          "type": "number",
+          "description": "The exact figure the source states. Excludes `min` and `max`: a quantity is either a point or a window, never both."
         },
         "min": {
-          "type": "number"
+          "type": "number",
+          "description": "The low end of a stated window. Legal without `max` — an open-ended floor (\"at least this\") is a real thing a source says, not half of a broken range."
         },
         "max": {
-          "type": "number"
+          "type": "number",
+          "description": "The high end of a stated window. Legal without `min` — an open-ended ceiling (\"up to this\") is a real thing a source says, not half of a broken range."
         },
         "unit": {
           "type": "string",
@@ -781,15 +790,18 @@
       "properties": {
         "value": {
           "type": "number",
-          "exclusiveMinimum": 0
+          "exclusiveMinimum": 0,
+          "description": "The exact figure the source states. Excludes `min` and `max`: a quantity is either a point or a window, never both."
         },
         "min": {
           "type": "number",
-          "exclusiveMinimum": 0
+          "exclusiveMinimum": 0,
+          "description": "The low end of a stated window. Legal without `max` — an open-ended floor (\"at least this\") is a real thing a source says, not half of a broken range."
         },
         "max": {
           "type": "number",
-          "exclusiveMinimum": 0
+          "exclusiveMinimum": 0,
+          "description": "The high end of a stated window. Legal without `min` — an open-ended ceiling (\"up to this\") is a real thing a source says, not half of a broken range."
         },
         "unit": {
           "type": "string",
@@ -1233,7 +1245,8 @@
           "minItems": 1,
           "items": {
             "$ref": "#/$defs/originItem"
-          }
+          },
+          "description": "The component coffees, at least one. Never an empty array: absence is how \"not published\" is stated, so `[]` would assert a coffee that came from nowhere."
         },
         "ext": {
           "type": "object",
@@ -1336,13 +1349,16 @@
       },
       "properties": {
         "value": {
-          "type": "number"
+          "type": "number",
+          "description": "The exact figure the source states. Excludes `min` and `max`: a quantity is either a point or a window, never both."
         },
         "min": {
-          "type": "number"
+          "type": "number",
+          "description": "The low end of a stated window. Legal without `max` — an open-ended floor (\"at least this\") is a real thing a source says, not half of a broken range."
         },
         "max": {
-          "type": "number"
+          "type": "number",
+          "description": "The high end of a stated window. Legal without `min` — an open-ended ceiling (\"up to this\") is a real thing a source says, not half of a broken range."
         },
         "unit": {
           "type": "string",

@@ -169,6 +169,7 @@ const validateAuthoring = ajv.compile(buildAuthoringSchema(runtime));
 const authoringExempt = new Map([
   ["forward-compat-unknown-fields.json", "unknown members are its purpose"],
   ["newer-minor-version.json", "future-field probe is its purpose"],
+  ["forward-compat-unknown-registry-values.json", "unknown registry values and unknown members are its purpose"],
   ["images-empty.json", "pins that empty = absent at runtime"],
 ]);
 for (const file of [...jsonFiles(join(root, "fixtures", "valid")), ...recipeFiles]) {
@@ -391,7 +392,11 @@ const TOKEN_REGISTRIES = [
   { file: "addition-types.json", key: "addition_types", section: "Addition type" },
   { file: "producer-roles.json", key: "producer_roles", section: "Producer role" },
 ].map((r) => ({ ...r, data: JSON.parse(readFileSync(join(root, "registries", r.file), "utf8")) }));
-const registryDocs = [...jsonFiles(join(root, "fixtures", "valid")), ...recipeFiles]
+// One fixture carries deliberately off-registry tokens (that is its whole subject), so it is
+// not a document this sweep can hold to the registries. Excluded by name rather than by luck:
+// only gear ids are checked against documents today, and the obvious next step is not.
+const offRegistryByDesign = new Set(["forward-compat-unknown-registry-values.json"]);
+const registryDocs = [...jsonFiles(join(root, "fixtures", "valid")).filter((f) => !offRegistryByDesign.has(basename(f))), ...recipeFiles]
   .map((f) => ({ label: relative(root, f), doc: JSON.parse(readFileSync(f, "utf8")) }));
 for (const { label, error } of registryFindings(gearRegistry, varietalRegistry, proseDocs.vocabularies, registryDocs, TOKEN_REGISTRIES))
   error ? fail(`registry ${label}`, error) : ok(`registry ${label}`);

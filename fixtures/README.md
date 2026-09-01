@@ -57,6 +57,7 @@ They belong to a future semantic validator's warning set, not to this corpus.
 | `library-export.json` | Multiple recipes in one document. |
 | `forward-compat-unknown-fields.json` | Unknown members at several depths still validate. |
 | `newer-minor-version.json` | `"coffeejson": "1.7"` accepted by the 1.x schema. |
+| `forward-compat-unknown-registry-values.json` | The half the other two leave out: unknown values in the **open registries** — an `addition.type` and a producer `role` no 1.0 registry lists — carried by a later minor alongside unknown members at three depths. `forward-compat-unknown-fields.json` covers unknown *members*, `newer-minor-version.json` covers the *version*; an unrecognized registry value is neither, and the vocabularies' stated fallbacks are the runtime half of the same contract. |
 | `bag-to-brew.json` | One bean + recipes by co-location, `recommended` picks. |
 | `catalog-with-refs.json` | Multi-bean catalog: `id`, `bean_ref`, `recommended`. |
 | `bean-only.json` | A coffee's identity with no recipe. |
