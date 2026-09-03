@@ -2,7 +2,13 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import { INDEXABLE_PATHS, SITE_URL, SKILLS_LINKS, buildLlmsFullTxt, buildLlmsTxt } from "../tools/gen.mjs";
+import {
+  buildLlmsFullTxt,
+  buildLlmsTxt,
+  INDEXABLE_PATHS,
+  SITE_URL,
+  SKILLS_LINKS,
+} from "../tools/gen.mjs";
 
 const site = fileURLToPath(new URL("..", import.meta.url));
 const llms = buildLlmsTxt();
@@ -24,7 +30,14 @@ describe("llms.txt", () => {
 
   it("links every spec chapter and guide", () => {
     expect(links.length).toBeGreaterThanOrEqual(13);
-    for (const t of ["Overview", "Document envelope", "Recipe", "Bean", "Vocabularies & registries", "Versioning & conformance"]) {
+    for (const t of [
+      "Overview",
+      "Document envelope",
+      "Recipe",
+      "Bean",
+      "Vocabularies & registries",
+      "Versioning & conformance",
+    ]) {
       expect(links.map((l) => l.title)).toContain(t);
     }
   });
@@ -39,12 +52,18 @@ describe("llms.txt", () => {
       // The skills repository is the one resource that does not live here. It is
       // listed explicitly so a typo cannot smuggle another off-host link in.
       if (offsite.has(url)) continue;
-      expect(url.startsWith(SITE_URL), `${url} is not on the canonical host`).toBe(true);
+      expect(
+        url.startsWith(SITE_URL),
+        `${url} is not on the canonical host`,
+      ).toBe(true);
       const path = url.slice(SITE_URL.length);
       if (INDEXABLE_PATHS.includes(path)) continue;
       if (!existsSync(join(site, "public", path))) dead.push(path);
     }
-    expect(dead, `dead llms.txt links (run \`pnpm gen\`): ${dead.join(", ")}`).toEqual([]);
+    expect(
+      dead,
+      `dead llms.txt links (run \`pnpm gen\`): ${dead.join(", ")}`,
+    ).toEqual([]);
   });
 
   it("states the CC0 license without implying conditions", () => {

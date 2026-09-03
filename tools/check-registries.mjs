@@ -13,8 +13,13 @@ const ROLES = new Set(["brewer", "grinder", "basket"]);
 // `dripper` is the vessel you pour into, `pour-over-machine` the motor that
 // pours for you, `drip` the batch filter with one shower head over a flat bed.
 const CATEGORIES = new Set([
-  "dripper", "pour-over-machine", "drip", "immersion", "stovetop",
-  "espresso-machine", "capsule",
+  "dripper",
+  "pour-over-machine",
+  "drip",
+  "immersion",
+  "stovetop",
+  "espresso-machine",
+  "capsule",
 ]);
 // What kind of name a varietal entry carries. Both members are optional: a row
 // whose parentage is genuinely disputed omits the key rather than guessing, and a
@@ -22,8 +27,13 @@ const CATEGORIES = new Set([
 // because a present-but-null member is the thing the null rule forbids — and
 // `SPECIES_EPITHET.test(null)` would otherwise pass, null stringifying to "null".
 const VARIETAL_KINDS = new Set([
-  "cultivar", "group", "landrace", "species", "botanical_variety",
-  "interspecific_hybrid", "f1_hybrid",
+  "cultivar",
+  "group",
+  "landrace",
+  "species",
+  "botanical_variety",
+  "interspecific_hybrid",
+  "f1_hybrid",
 ]);
 // The botanical epithet the name is sold as; `a-x-b` for a true interspecific cross.
 const SPECIES_EPITHET = /^[a-z]+(-x-[a-z]+)?$/;
@@ -50,7 +60,9 @@ function canonicalExamples(section) {
 /** The recommended-values line of an open-registry section: backticked tokens
  *  joined by " · " and nothing else. */
 function recommendedTokens(section) {
-  const lines = section.split("\n").filter((l) => /^`[^`]+`( · `[^`]+`)+$/.test(l.trim()));
+  const lines = section
+    .split("\n")
+    .filter((l) => /^`[^`]+`( · `[^`]+`)+$/.test(l.trim()));
   if (lines.length !== 1) return null;
   return [...lines[0].matchAll(/`([^`]+)`/g)].map((m) => m[1]);
 }
@@ -62,7 +74,9 @@ function aliasRows(section) {
     const m = line.match(/^\| (`.+?`(?:, `.+?`)*) \| (`[^`]+`)/);
     if (!m) continue;
     const canonical = m[2].replaceAll("`", "");
-    const aliases = [...m[1].matchAll(/`([^`]+)`/g)].map((x) => x[1]).filter((a) => a !== canonical);
+    const aliases = [...m[1].matchAll(/`([^`]+)`/g)]
+      .map((x) => x[1])
+      .filter((a) => a !== canonical);
     rows.push({ aliases, canonical });
   }
   return rows;
@@ -103,7 +117,13 @@ export function gearSlotsInDocument(doc) {
  * @param tokenRegistries   [{file, key, section}] — a registry that mirrors a prose list
  * @returns [{ label, error }] — error null on pass
  */
-export function registryFindings(gearRegistry, varietalRegistry, vocabulariesMd, documents, tokenRegistries = []) {
+export function registryFindings(
+  gearRegistry,
+  varietalRegistry,
+  vocabulariesMd,
+  documents,
+  tokenRegistries = [],
+) {
   const findings = [];
   const add = (label, error) => findings.push({ label, error: error ?? null });
 
@@ -112,27 +132,50 @@ export function registryFindings(gearRegistry, varietalRegistry, vocabulariesMd,
   const gearAliases = new Set();
   for (const entry of gear) {
     const problems = [];
-    if (!GEAR_ID.test(entry.id ?? "")) problems.push("id is not a kebab-case slug");
-    if (entry.id === "custom") problems.push('"custom" is the reserved escape hatch, never a registry entry');
-    if (gearIds.has(entry.id) || gearAliases.has(entry.id)) problems.push("duplicate id");
-    if (!entry.label) problems.push("label is required — it is the display fallback the spec names");
+    if (!GEAR_ID.test(entry.id ?? ""))
+      problems.push("id is not a kebab-case slug");
+    if (entry.id === "custom")
+      problems.push(
+        '"custom" is the reserved escape hatch, never a registry entry',
+      );
+    if (gearIds.has(entry.id) || gearAliases.has(entry.id))
+      problems.push("duplicate id");
+    if (!entry.label)
+      problems.push(
+        "label is required — it is the display fallback the spec names",
+      );
     const roles = entry.roles ?? [];
-    if (!Array.isArray(roles) || !roles.length) problems.push("roles is required and non-empty");
-    else for (const role of roles) if (!ROLES.has(role)) problems.push(`unknown role "${role}"`);
+    if (!Array.isArray(roles) || !roles.length)
+      problems.push("roles is required and non-empty");
+    else
+      for (const role of roles)
+        if (!ROLES.has(role)) problems.push(`unknown role "${role}"`);
     if (Array.isArray(roles) && roles.includes("brewer")) {
-      if (!CATEGORIES.has(entry.category)) problems.push(`unknown category "${entry.category}"`);
+      if (!CATEGORIES.has(entry.category))
+        problems.push(`unknown category "${entry.category}"`);
     } else if (Array.isArray(roles) && "category" in entry) {
-      problems.push(`category "${entry.category}" on an entry that is not a brewer — only a brewer brews`);
+      problems.push(
+        `category "${entry.category}" on an entry that is not a brewer — only a brewer brews`,
+      );
     }
     gearIds.add(entry.id);
     for (const alias of entry.aliases ?? []) {
-      if (!GEAR_ID.test(alias)) problems.push(`alias "${alias}" is not a kebab-case slug`);
-      if (alias === "custom") problems.push('"custom" is the reserved escape hatch, never a registry alias');
-      if (alias === entry.id) problems.push(`alias "${alias}" duplicates its canonical id`);
-      if (gearIds.has(alias) || gearAliases.has(alias)) problems.push(`duplicate alias "${alias}"`);
+      if (!GEAR_ID.test(alias))
+        problems.push(`alias "${alias}" is not a kebab-case slug`);
+      if (alias === "custom")
+        problems.push(
+          '"custom" is the reserved escape hatch, never a registry alias',
+        );
+      if (alias === entry.id)
+        problems.push(`alias "${alias}" duplicates its canonical id`);
+      if (gearIds.has(alias) || gearAliases.has(alias))
+        problems.push(`duplicate alias "${alias}"`);
       gearAliases.add(alias);
     }
-    add(`gear ${entry.id ?? "<no id>"}`, problems.length ? problems.join("; ") : null);
+    add(
+      `gear ${entry.id ?? "<no id>"}`,
+      problems.length ? problems.join("; ") : null,
+    );
   }
 
   const varietals = varietalRegistry.varietals ?? [];
@@ -144,15 +187,29 @@ export function registryFindings(gearRegistry, varietalRegistry, vocabulariesMd,
     if (names.has(entry.name)) problems.push("duplicate name");
     names.add(entry.name);
     if ("kind" in entry && !VARIETAL_KINDS.has(entry.kind))
-      problems.push(`unknown kind "${entry.kind}" — one of ${[...VARIETAL_KINDS].join(", ")}, or omit the key`);
-    if ("species" in entry && !(typeof entry.species === "string" && SPECIES_EPITHET.test(entry.species)))
-      problems.push(`species "${entry.species}" is not a lowercase epithet — or omit the key`);
+      problems.push(
+        `unknown kind "${entry.kind}" — one of ${[...VARIETAL_KINDS].join(", ")}, or omit the key`,
+      );
+    if (
+      "species" in entry &&
+      !(
+        typeof entry.species === "string" && SPECIES_EPITHET.test(entry.species)
+      )
+    )
+      problems.push(
+        `species "${entry.species}" is not a lowercase epithet — or omit the key`,
+      );
     for (const alias of entry.aliases ?? []) {
-      if (alias === entry.name) problems.push(`alias "${alias}" duplicates its canonical name`);
-      if (allAliases.has(alias)) problems.push(`alias "${alias}" appears twice`);
+      if (alias === entry.name)
+        problems.push(`alias "${alias}" duplicates its canonical name`);
+      if (allAliases.has(alias))
+        problems.push(`alias "${alias}" appears twice`);
       allAliases.add(alias);
     }
-    add(`varietal ${entry.name ?? "<no name>"}`, problems.length ? problems.join("; ") : null);
+    add(
+      `varietal ${entry.name ?? "<no name>"}`,
+      problems.length ? problems.join("; ") : null,
+    );
   }
   // The chapter spells both sets out inline, so an edit there must not leave these
   // constants stale — the failure mode `registry parity` exists to prevent.
@@ -165,58 +222,101 @@ export function registryFindings(gearRegistry, varietalRegistry, vocabulariesMd,
   })();
   for (const [what, set, re] of [
     ["roles", ROLES, /A `brewer` attaches at[^]*?a `basket` at/],
-    ["categories", CATEGORIES, /Only a brewer has a `category`:([^]*?)\. It overlaps/],
+    [
+      "categories",
+      CATEGORIES,
+      /Only a brewer has a `category`:([^]*?)\. It overlaps/,
+    ],
   ]) {
     const m = gearChapter?.match(re);
-    const named = new Set([...(m?.[1] ?? m?.[0] ?? "").matchAll(/`([a-z][a-z-]*)`/g)].map((x) => x[1]));
+    const named = new Set(
+      [...(m?.[1] ?? m?.[0] ?? "").matchAll(/`([a-z][a-z-]*)`/g)].map(
+        (x) => x[1],
+      ),
+    );
     const missing = [...set].filter((v) => !named.has(v));
     const extra = [...named].filter((v) => !set.has(v));
-    add(`prose gear ${what}`,
-      !m ? `the paragraph naming the ${what} was not found — re-point the extractor`
-      : missing.length || extra.length
-        ? `prose and checker disagree — only in the checker: ${missing.join(", ") || "none"}; only in the prose: ${extra.join(", ") || "none"}`
-        : null);
+    add(
+      `prose gear ${what}`,
+      !m
+        ? `the paragraph naming the ${what} was not found — re-point the extractor`
+        : missing.length || extra.length
+          ? `prose and checker disagree — only in the checker: ${missing.join(", ") || "none"}; only in the prose: ${extra.join(", ") || "none"}`
+          : null,
+    );
   }
 
   const collisions = [...allAliases].filter((a) => names.has(a));
-  add("varietal aliases distinct from canonical names",
-    collisions.length ? `alias and canonical at once: ${collisions.join(", ")}` : null);
+  add(
+    "varietal aliases distinct from canonical names",
+    collisions.length
+      ? `alias and canonical at once: ${collisions.join(", ")}`
+      : null,
+  );
 
   // The spec's examples must exist in the data.
   const sectionOf = (title) => {
     const lines = vocabulariesMd.split("\n");
-    const start = lines.findIndex((l) => l.replaceAll("`", "").trim() === `### ${title}`);
+    const start = lines.findIndex(
+      (l) => l.replaceAll("`", "").trim() === `### ${title}`,
+    );
     if (start === -1) return null;
     const end = lines.findIndex((l, i) => i > start && /^#{1,3} /.test(l));
     return lines.slice(start + 1, end === -1 ? lines.length : end).join("\n");
   };
 
   const gearSection = sectionOf("Gear registry");
-  if (!gearSection) add("prose gear seeds", 'section "Gear registry" not found — re-point the extractor');
+  if (!gearSection)
+    add(
+      "prose gear seeds",
+      'section "Gear registry" not found — re-point the extractor',
+    );
   else {
     const seeds = seedSlugs(gearSection);
     if (!seeds.length) add("prose gear seeds", "no seed slugs extracted");
     else {
       const missing = seeds.filter((s) => !gearIds.has(s));
-      add("prose gear seeds", missing.length ? `named in the spec but not in gear.json: ${missing.join(", ")}` : null);
+      add(
+        "prose gear seeds",
+        missing.length
+          ? `named in the spec but not in gear.json: ${missing.join(", ")}`
+          : null,
+      );
     }
   }
 
   const varietalSection = sectionOf("Varietal registry");
-  if (!varietalSection) add("prose varietal examples", 'section "Varietal registry" not found — re-point the extractor');
+  if (!varietalSection)
+    add(
+      "prose varietal examples",
+      'section "Varietal registry" not found — re-point the extractor',
+    );
   else {
     const canon = canonicalExamples(varietalSection);
-    if (!canon.length) add("prose varietal examples", "no canonical examples extracted");
+    if (!canon.length)
+      add("prose varietal examples", "no canonical examples extracted");
     else {
       const missing = canon.filter((n) => !names.has(n));
-      add("prose varietal examples", missing.length ? `named in the spec but not in varietals.json: ${missing.join(", ")}` : null);
+      add(
+        "prose varietal examples",
+        missing.length
+          ? `named in the spec but not in varietals.json: ${missing.join(", ")}`
+          : null,
+      );
     }
     for (const { aliases, canonical } of aliasRows(varietalSection)) {
       const entry = varietals.find((v) => v.name === canonical);
-      const missing = entry ? aliases.filter((a) => !(entry.aliases ?? []).includes(a)) : aliases;
-      add(`prose alias ${canonical}`,
-        !entry ? `canonical "${canonical}" not in varietals.json`
-          : missing.length ? `aliases the spec shows but the data lacks: ${missing.join(", ")}` : null);
+      const missing = entry
+        ? aliases.filter((a) => !(entry.aliases ?? []).includes(a))
+        : aliases;
+      add(
+        `prose alias ${canonical}`,
+        !entry
+          ? `canonical "${canonical}" not in varietals.json`
+          : missing.length
+            ? `aliases the spec shows but the data lacks: ${missing.join(", ")}`
+            : null,
+      );
     }
   }
 
@@ -227,24 +327,39 @@ export function registryFindings(gearRegistry, varietalRegistry, vocabulariesMd,
     const prose = sectionOf(section);
     const tokens = data?.[key];
     const problems = [];
-    if (!Array.isArray(tokens)) problems.push(`${file} states no "${key}" array`);
-    if (!prose) problems.push(`section "${section}" not found — re-point the extractor`);
+    if (!Array.isArray(tokens))
+      problems.push(`${file} states no "${key}" array`);
+    if (!prose)
+      problems.push(`section "${section}" not found — re-point the extractor`);
     else {
       const recommended = recommendedTokens(prose);
-      if (!recommended) problems.push(`no single recommended-values line in "${section}"`);
-      else if (Array.isArray(tokens) && recommended.join(" ") !== tokens.join(" "))
-        problems.push(`prose lists ${recommended.join(", ")}; ${file} holds ${tokens.join(", ")}`);
+      if (!recommended)
+        problems.push(`no single recommended-values line in "${section}"`);
+      else if (
+        Array.isArray(tokens) &&
+        recommended.join(" ") !== tokens.join(" ")
+      )
+        problems.push(
+          `prose lists ${recommended.join(", ")}; ${file} holds ${tokens.join(", ")}`,
+        );
     }
-    add(`registry parity ${file}`, problems.length ? problems.join("; ") : null);
+    add(
+      `registry parity ${file}`,
+      problems.length ? problems.join("; ") : null,
+    );
   }
 
   // This repo's own documents stay on-registry.
   for (const { label, doc } of documents) {
-    const offRegistry = gearIdsInDocument(doc).filter((id) => id !== "custom" && !gearIds.has(id));
-    add(`document gear ${label}`,
+    const offRegistry = gearIdsInDocument(doc).filter(
+      (id) => id !== "custom" && !gearIds.has(id),
+    );
+    add(
+      `document gear ${label}`,
       offRegistry.length
         ? `non-canonical gear id(s): ${offRegistry.join(", ")} — use the canonical slug, register a new one, or use "custom"`
-        : null);
+        : null,
+    );
 
     // A slot must hold a thing that plays that part. JSON Schema cannot say so:
     // the Gear object is one shape everywhere, and only the registry knows that
@@ -253,11 +368,17 @@ export function registryFindings(gearRegistry, varietalRegistry, vocabulariesMd,
     for (const [role, id] of gearSlotsInDocument(doc)) {
       const entry = gear.find((e) => e.id === id);
       if (entry && !(entry.roles ?? []).includes(role)) {
-        misplaced.push(`${id} in ${role} (its roles are ${(entry.roles ?? []).join(", ") || "none"})`);
+        misplaced.push(
+          `${id} in ${role} (its roles are ${(entry.roles ?? []).join(", ") || "none"})`,
+        );
       }
     }
-    add(`document gear roles ${label}`,
-      misplaced.length ? `gear used in a slot it does not play: ${misplaced.join("; ")}` : null);
+    add(
+      `document gear roles ${label}`,
+      misplaced.length
+        ? `gear used in a slot it does not play: ${misplaced.join("; ")}`
+        : null,
+    );
   }
 
   return findings;

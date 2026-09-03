@@ -8,8 +8,14 @@ import { esc } from "./text.mjs";
 export async function qrSvg(url: string): Promise<string | null> {
   for (const errorCorrectionLevel of ["M", "L"] as const) {
     try {
-      return await QRCode.toString(url, { type: "svg", errorCorrectionLevel, margin: 1 });
-    } catch { /* too dense at this level — try the next, then give up */ }
+      return await QRCode.toString(url, {
+        type: "svg",
+        errorCorrectionLevel,
+        margin: 1,
+      });
+    } catch {
+      /* too dense at this level — try the next, then give up */
+    }
   }
   return null;
 }
@@ -21,7 +27,11 @@ export async function qrSvg(url: string): Promise<string | null> {
  */
 export const qrPanel = (
   svg: string | null,
-  { fileName, caption, tooLargeNoun }: { fileName: string; caption: string; tooLargeNoun: string },
+  {
+    fileName,
+    caption,
+    tooLargeNoun,
+  }: { fileName: string; caption: string; tooLargeNoun: string },
 ): string =>
   svg === null
     ? `<p class="muted">This ${esc(tooLargeNoun)} is too large to fit in a QR code — use Copy link instead.</p>`

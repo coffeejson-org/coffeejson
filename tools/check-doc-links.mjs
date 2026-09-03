@@ -20,7 +20,10 @@ export function anchorsOf(markdown) {
   const found = new Set();
   let inFence = false;
   for (const line of markdown.split("\n")) {
-    if (/^\s*```/.test(line)) { inFence = !inFence; continue; }
+    if (/^\s*```/.test(line)) {
+      inFence = !inFence;
+      continue;
+    }
     if (inFence) continue;
     const m = /^(#{1,6}) (.+)$/.exec(line);
     if (m) found.add(slug(m[2]));
@@ -38,10 +41,14 @@ const SITE_PREFIX = "https://coffeejson.org/";
 export function servedRepoPath(href) {
   if (!href.startsWith(SITE_PREFIX)) return null;
   const [rest, fragment] = href.slice(SITE_PREFIX.length).split("#");
-  const path = rest === "schema/1.0" ? "docs/schema/coffeejson-1.0.schema.json"
-    : rest === "schema/authoring/1.0" ? "docs/schema/coffeejson-1.0.authoring.schema.json"
-    : rest.startsWith("docs/") ? rest
-    : null;
+  const path =
+    rest === "schema/1.0"
+      ? "docs/schema/coffeejson-1.0.schema.json"
+      : rest === "schema/authoring/1.0"
+        ? "docs/schema/coffeejson-1.0.authoring.schema.json"
+        : rest.startsWith("docs/")
+          ? rest
+          : null;
   return path === null ? null : fragment ? `${path}#${fragment}` : path;
 }
 
@@ -59,7 +66,8 @@ export function linkFindings(files, exists = (p) => files.has(p)) {
   // A Markdown file outside the caller's corpus has unknowable anchors here, so
   // the fragment goes unchecked: a crash would report nothing at all.
   const anchorsFor = (path) => {
-    if (!anchors.has(path)) anchors.set(path, files.has(path) ? anchorsOf(files.get(path)) : null);
+    if (!anchors.has(path))
+      anchors.set(path, files.has(path) ? anchorsOf(files.get(path)) : null);
     return anchors.get(path);
   };
   const resolve = (from, href) => {
@@ -84,13 +92,21 @@ export function linkFindings(files, exists = (p) => files.has(p)) {
       const [target, fragment] = (canonical ?? href).split("#");
       // A canonical URL names a path from the repo root; a relative one resolves
       // against the document it is written in.
-      const resolved = canonical !== null ? target : target ? resolve(path, target) : path;
+      const resolved =
+        canonical !== null ? target : target ? resolve(path, target) : path;
       if (target && !files.has(resolved) && !exists(resolved)) {
         findings.push({ label: `${path} -> ${href}`, error: "unknown target" });
         continue;
       }
-      if (fragment && resolved.endsWith(".md") && anchorsFor(resolved)?.has(fragment) === false)
-        findings.push({ label: `${path} -> ${href}`, error: "no heading with that anchor" });
+      if (
+        fragment &&
+        resolved.endsWith(".md") &&
+        anchorsFor(resolved)?.has(fragment) === false
+      )
+        findings.push({
+          label: `${path} -> ${href}`,
+          error: "no heading with that anchor",
+        });
     }
   }
   return findings;

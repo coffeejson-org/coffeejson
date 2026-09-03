@@ -1,12 +1,31 @@
 import { expect, test } from "vitest";
-import { checkEnvelope, normalize } from "../src/index";
-import type { DecodedDocument } from "../src/index";
-import type { Bean, CoffeeJSONDocument, Measurement, Origin, OriginItem, RestWindow, Recipe, Step, Tasting } from "../src/types";
 import type {
-  BeanLocalization, CoffeeJSONDocument as PublicDoc, DocumentGenerator, MeasuredCup, NormalizedDoc,
-  NormalizedFilter, NormalizedGenerator, NormalizedRecipe, PerceivedAxes, RecipeLocalization,
-  StepLocalization, Tasting as PublicTasting,
+  BeanLocalization,
+  DecodedDocument,
+  DocumentGenerator,
+  MeasuredCup,
+  NormalizedDoc,
+  NormalizedFilter,
+  NormalizedGenerator,
+  NormalizedRecipe,
+  PerceivedAxes,
+  CoffeeJSONDocument as PublicDoc,
+  Tasting as PublicTasting,
+  RecipeLocalization,
+  StepLocalization,
 } from "../src/index";
+import { checkEnvelope, normalize } from "../src/index";
+import type {
+  Bean,
+  CoffeeJSONDocument,
+  Measurement,
+  Origin,
+  OriginItem,
+  Recipe,
+  RestWindow,
+  Step,
+  Tasting,
+} from "../src/types";
 
 test("wire types compile and accept a minimal document", () => {
   const r: Recipe = { title: "t", coffee: { value: 15, unit: "gram" } };
@@ -36,34 +55,55 @@ test("wire types name every field the published schema defines", () => {
 // test above imports from ../src/types, the module, so it is blind to what the
 // entry point exposes; this one imports the way a consumer does.
 test("the package entry point exports every type its signatures reach", () => {
-  const stepL: StepLocalization = { instruction: "Verser doucement", label: "Fleurissement" };
-  const recipeL: RecipeLocalization = { title: "V60 du dimanche", steps: [stepL] };
-  const beanL: BeanLocalization = { name: "Nano Challa", roaster_notes: ["jasmin", "pêche"] };
+  const stepL: StepLocalization = {
+    instruction: "Verser doucement",
+    label: "Fleurissement",
+  };
+  const recipeL: RecipeLocalization = {
+    title: "V60 du dimanche",
+    steps: [stepL],
+  };
+  const beanL: BeanLocalization = {
+    name: "Nano Challa",
+    roaster_notes: ["jasmin", "pêche"],
+  };
   const gen: DocumentGenerator = { name: "ExampleBrewApp", version: "2.3.0" };
 
   const doc: PublicDoc = {
     coffeejson: "1.0",
     generator: gen,
     beans: [{ name: "Nano Challa", lang: "en", localizations: { fr: beanL } }],
-    recipes: [{
-      title: "Sunday V60",
-      coffee: { value: 15, unit: "gram" },
-      lang: "en",
-      localizations: { fr: recipeL },
-    }],
+    recipes: [
+      {
+        title: "Sunday V60",
+        coffee: { value: 15, unit: "gram" },
+        lang: "en",
+        localizations: { fr: recipeL },
+      },
+    ],
   };
 
   // The view-model side: both are nameable from outside the package.
   const filter: NormalizedFilter = { material: "paper", label: "Hario tabbed" };
-  const normGen: NormalizedGenerator = { name: "ExampleBrewApp", version: "2.3.0", url: null };
+  const normGen: NormalizedGenerator = {
+    name: "ExampleBrewApp",
+    version: "2.3.0",
+    url: null,
+  };
   // Assigning them into the shapes that reference them proves the types line up,
   // not merely that the names resolve.
   const takesFilter = (f: NormalizedRecipe["filter"]) => f?.material ?? "";
-  const takesGenerator = (d: Pick<NormalizedDoc, "generator">) => d.generator?.name ?? "";
+  const takesGenerator = (d: Pick<NormalizedDoc, "generator">) =>
+    d.generator?.name ?? "";
 
   expect(doc.generator!.name).toBe("ExampleBrewApp");
-  expect(doc.recipes![0]!.localizations!["fr"]!.steps![0]!.label).toBe("Fleurissement");
-  expect(doc.beans![0]!.localizations!["fr"]!.roaster_notes).toEqual(["jasmin", "pêche"]);
+  expect(doc.recipes![0]!.localizations!["fr"]!.steps![0]!.label).toBe(
+    "Fleurissement",
+  );
+  expect(doc.beans![0]!.localizations!["fr"]!.roaster_notes).toEqual([
+    "jasmin",
+    "pêche",
+  ]);
   expect(takesFilter(filter)).toBe("paper");
   expect(takesGenerator({ generator: normGen })).toBe("ExampleBrewApp");
 });
@@ -84,7 +124,13 @@ test("wire types name every field a tasting declares", () => {
   };
   const doc: CoffeeJSONDocument = {
     coffeejson: "1.0",
-    recipes: [{ id: "morning-v60", title: "Morning V60", coffee: { value: 18, unit: "gram" } }],
+    recipes: [
+      {
+        id: "morning-v60",
+        title: "Morning V60",
+        coffee: { value: 18, unit: "gram" },
+      },
+    ],
     tastings: [t],
   };
   expect(doc.tastings![0]!.measured!.yield!.value).toBe(258);
@@ -112,7 +158,10 @@ test("a decoded envelope types its collections as unread", () => {
   const first: unknown = r.document.recipes![0];
   expect(first).toBe(17);
   // A producer-authored document is one of these; the check does not prove the reverse.
-  const authored: CoffeeJSONDocument = { coffeejson: "1.0", recipes: [{ title: "t", coffee: { value: 15, unit: "gram" } }] };
+  const authored: CoffeeJSONDocument = {
+    coffeejson: "1.0",
+    recipes: [{ title: "t", coffee: { value: 15, unit: "gram" } }],
+  };
   const decoded: DecodedDocument = authored;
   expect(decoded.coffeejson).toBe("1.0");
   // The typed read is `normalize`'s, which takes an unchecked value — and drops the slot.
@@ -123,7 +172,12 @@ test("a decoded envelope types its collections as unread", () => {
 // indexed access. A bean's origin and rest window are values a consumer holds.
 test("a bean's nested wire shapes have names of their own", () => {
   const altitude: Measurement = { min: 1600, max: 1900, unit: "meter" };
-  const item: OriginItem = { name: "Kochere", country: "ET", altitude, varietals: ["Kurume"] };
+  const item: OriginItem = {
+    name: "Kochere",
+    country: "ET",
+    altitude,
+    varietals: ["Kurume"],
+  };
   const origin: Origin = { type: "single", items: [item] };
   const rest: RestWindow = { min: 7, max: 60 };
   const bean: Bean = { name: "Nano Challa", origin, rest_days: rest };

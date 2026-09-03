@@ -1,8 +1,12 @@
-import { describe, expect, test } from "vitest";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
+import { describe, expect, test } from "vitest";
+import {
+  buildDocument,
+  collectDroppedPaths,
+  documentToState,
+} from "../src/lib/builder";
 import { SAMPLE_DOC, SAMPLE_TEXT } from "../src/lib/sample";
-import { buildDocument, documentToState, collectDroppedPaths } from "../src/lib/builder";
 import { validateDocument } from "../src/lib/validate";
 
 const root = fileURLToPath(new URL("../../..", import.meta.url));
@@ -35,19 +39,29 @@ describe("the site's one example document", () => {
     const r = SAMPLE_DOC.recipes![0]!;
     // `value` is optional on a measurement — a stated window carries min/max
     // instead — so the sample being two point masses is part of what is asserted.
-    const coffee = r.coffee.value, water = r.water?.value;
+    const coffee = r.coffee.value,
+      water = r.water?.value;
     expect([r.coffee.unit, r.water?.unit]).toEqual(["gram", "gram"]);
     expect([coffee, water]).toEqual([15, 250]);
     expect(r.ratio).toBe(Math.round((water! / coffee!) * 10) / 10);
-    expect(read("fixtures/valid/typical-pour-over.json")).toContain(`"ratio": ${r.ratio}`);
+    expect(read("fixtures/valid/typical-pour-over.json")).toContain(
+      `"ratio": ${r.ratio}`,
+    );
   });
 
   test("both pages take the document from here rather than keeping a copy", () => {
-    for (const f of ["apps/site/src/pages/landing.ts", "apps/site/src/pages/generate.tsx"]) {
-      expect(read(f), `${f} does not import the shared sample`).toMatch(/from "\.\.\/lib\/sample"/);
+    for (const f of [
+      "apps/site/src/pages/landing.ts",
+      "apps/site/src/pages/generate.tsx",
+    ]) {
+      expect(read(f), `${f} does not import the shared sample`).toMatch(
+        /from "\.\.\/lib\/sample"/,
+      );
       // The placeholder text in /generate legitimately shows an envelope, so the
       // check is for the sample's own content, which only sample.ts should hold.
-      expect(read(f), `${f} keeps a second copy of the sample`).not.toContain("Everyday V60");
+      expect(read(f), `${f} keeps a second copy of the sample`).not.toContain(
+        "Everyday V60",
+      );
     }
   });
 });

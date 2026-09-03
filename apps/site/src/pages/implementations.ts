@@ -2,7 +2,7 @@
 // implement this. Where the format is used is `/showcase`. A page headed "built
 // with" listing one app reads as a claim.
 
-import { LICENSE_SITE, PACKAGES, licenseLine } from "../lib/footer.mjs";
+import { LICENSE_SITE, licenseLine, PACKAGES } from "../lib/footer.mjs";
 import { siteHeader } from "../lib/site-header.mjs";
 
 // The site serves the docs only as raw Markdown at their exact paths, so a page
@@ -10,7 +10,6 @@ import { siteHeader } from "../lib/site-header.mjs";
 const REPO = "https://github.com/coffeejson-org/coffeejson";
 const GUIDE = `${REPO}/blob/main/docs/integration-guide.md`;
 const SPEC = `${REPO}/blob/main/docs/README.md`;
-
 
 /** The implementations body. Prerendered — see the note on `landingBody`. */
 export const implementationsBody = (): string => `

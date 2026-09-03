@@ -1,10 +1,14 @@
-import { useEffect, useRef } from "react";
-import { fmtClock } from "@coffeejson/core";
 import type { DecodedDocument, NormalizedRecipe } from "@coffeejson/core";
+import { fmtClock } from "@coffeejson/core";
 import { BrewControls, RecipeCard, useBrewAlong } from "@coffeejson/react";
+import { useEffect, useRef } from "react";
 import { SaveCta } from "./r-shared";
 
-export function Brew({ doc, recipe, onBack }: {
+export function Brew({
+  doc,
+  recipe,
+  onBack,
+}: {
   doc: DecodedDocument;
   recipe: NormalizedRecipe;
   onBack: () => void;
@@ -13,7 +17,11 @@ export function Brew({ doc, recipe, onBack }: {
   const wakeLock = useRef<WakeLockSentinel | null>(null);
 
   const requestWakeLock = async () => {
-    try { wakeLock.current = (await navigator.wakeLock?.request("screen")) ?? null; } catch { /* unsupported */ }
+    try {
+      wakeLock.current = (await navigator.wakeLock?.request("screen")) ?? null;
+    } catch {
+      /* unsupported */
+    }
   };
 
   // Once the brew finishes, hold NEITHER — otherwise it keeps nagging "leave
@@ -21,8 +29,13 @@ export function Brew({ doc, recipe, onBack }: {
   useEffect(() => {
     if (brew.state.finished) return;
     if (brew.running) void requestWakeLock();
-    const onVis = () => { if (document.visibilityState === "visible" && brew.running) void requestWakeLock(); };
-    const guard = (e: BeforeUnloadEvent) => { e.preventDefault(); };
+    const onVis = () => {
+      if (document.visibilityState === "visible" && brew.running)
+        void requestWakeLock();
+    };
+    const guard = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+    };
     document.addEventListener("visibilitychange", onVis);
     window.addEventListener("beforeunload", guard);
     return () => {
@@ -44,31 +57,51 @@ export function Brew({ doc, recipe, onBack }: {
   // The haptic cue says "something happened", not what to do, so the STEP is
   // announced. The clock stays aria-live="off": a per-second ticker read aloud is
   // unusable.
-  const step = brew.state.currentIndex !== null ? recipe.steps[brew.state.currentIndex] : null;
+  const step =
+    brew.state.currentIndex !== null
+      ? recipe.steps[brew.state.currentIndex]
+      : null;
   const announcement = brew.state.finished
     ? "Brew finished."
     : step
       ? [
           `Step ${brew.state.currentIndex! + 1} of ${recipe.steps.length}.`,
           step.text,
-          step.toWater ? `Pour to ${step.toWater.value} ${step.toWater.unit}.` : "",
+          step.toWater
+            ? `Pour to ${step.toWater.value} ${step.toWater.unit}.`
+            : "",
           brew.state.awaitingTap ? "Tap done when finished." : "",
-        ].filter(Boolean).join(" ")
+        ]
+          .filter(Boolean)
+          .join(" ")
       : "";
 
   return (
     <>
-      <header className="site-header"><a href="/"><strong>CoffeeJSON</strong></a></header>
+      <header className="site-header">
+        <a href="/">
+          <strong>CoffeeJSON</strong>
+        </a>
+      </header>
       <h1>{recipe.title}</h1>
-      <div className="clock" aria-live="off">{fmtClock(brew.elapsedS)}</div>
-      <p className="visually-hidden" role="status" aria-live="polite">{announcement}</p>
+      <div className="clock" aria-live="off">
+        {fmtClock(brew.elapsedS)}
+      </div>
+      <p className="visually-hidden" role="status" aria-live="polite">
+        {announcement}
+      </p>
       <div className="row">
         <BrewControls brew={brew} variant="text" />
-        <button className="btn btn--ghost" data-brew="back" onClick={onBack}>Back</button>
+        <button className="btn btn--ghost" data-brew="back" onClick={onBack}>
+          Back
+        </button>
       </div>
       <div className="muted">
-        {recipe.finishS !== null ? `Finish at ${fmtClock(recipe.finishS)}`
-          : brew.state.nextTimedIndex !== null ? `Next cue at ${fmtClock(recipe.steps[brew.state.nextTimedIndex]!.atS!)}` : ""}
+        {recipe.finishS !== null
+          ? `Finish at ${fmtClock(recipe.finishS)}`
+          : brew.state.nextTimedIndex !== null
+            ? `Next cue at ${fmtClock(recipe.steps[brew.state.nextTimedIndex]!.atS!)}`
+            : ""}
       </div>
       <div className="cj-brewing">
         <RecipeCard recipe={recipe} activeStepIndex={brew.state.currentIndex} />

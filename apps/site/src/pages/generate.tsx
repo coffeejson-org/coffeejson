@@ -1,21 +1,35 @@
-import { useEffect, useRef } from "react";
-import { createRoot, type Root } from "react-dom/client";
+import type { CoffeeJSONDocument } from "@coffeejson/core";
 import {
-  buildBean, buildDocument, collectDroppedPaths, documentToState, emptyBeanForm, emptyOriginItemForm,
-  emptyRecipeForm, emptyStepForm, num, perPourAmounts, stepsNonDecreasing,
-} from "../lib/builder";
-import type { BeanFormState, RecipeFormState } from "../lib/builder";
-import { documentFromInput } from "../lib/input-document";
-import { validateDocument } from "../lib/validate";
-import type { ValidationIssue } from "../lib/validate";
-import { esc, plural } from "../lib/text.mjs";
-import { saveCta, wireSaveCta } from "../lib/save";
-import {
-  BREW_METHODS, FILTER_MATERIALS, FORMAT_VERSION, defaultLabels, encodePayload, methodLabel,
+  BREW_METHODS,
+  defaultLabels,
+  encodePayload,
+  FILTER_MATERIALS,
+  FORMAT_VERSION,
+  methodLabel,
   vocabularyLabel,
 } from "@coffeejson/core";
-import type { CoffeeJSONDocument } from "@coffeejson/core";
 import { CoffeeJSONView } from "@coffeejson/react";
+import { useEffect, useRef } from "react";
+import { createRoot, type Root } from "react-dom/client";
+import type { BeanFormState, RecipeFormState } from "../lib/builder";
+import {
+  buildBean,
+  buildDocument,
+  collectDroppedPaths,
+  documentToState,
+  emptyBeanForm,
+  emptyOriginItemForm,
+  emptyRecipeForm,
+  emptyStepForm,
+  num,
+  perPourAmounts,
+  stepsNonDecreasing,
+} from "../lib/builder";
+import { documentFromInput } from "../lib/input-document";
+import { saveCta, wireSaveCta } from "../lib/save";
+import { esc, plural } from "../lib/text.mjs";
+import type { ValidationIssue } from "../lib/validate";
+import { validateDocument } from "../lib/validate";
 import "@coffeejson/react/styles.css";
 import { SAMPLE_DOC } from "../lib/sample";
 import { siteHeader } from "../lib/site-header.mjs";
@@ -38,9 +52,16 @@ let beanOpen = false; // <details> open/closed, remembered across structural re-
 // do?" and an empty one does not; `Clear the form` makes the prefill safe. The
 // sample states no steps, but the form shows one blank row — dropped by
 // buildSteps — to keep the timed-pour schedule visible.
-const blankRecipe = (): RecipeFormState => ({ ...emptyRecipeForm(), method: "pour_over", steps: [emptyStepForm()] });
+const blankRecipe = (): RecipeFormState => ({
+  ...emptyRecipeForm(),
+  method: "pour_over",
+  steps: [emptyStepForm()],
+});
 const sampleRecipes = (): RecipeFormState[] =>
-  documentToState(SAMPLE_DOC).recipeForms.map((r) => ({ ...r, steps: r.steps.length ? r.steps : [emptyStepForm()] }));
+  documentToState(SAMPLE_DOC).recipeForms.map((r) => ({
+    ...r,
+    steps: r.steps.length ? r.steps : [emptyStepForm()],
+  }));
 
 const recipes: RecipeFormState[] = sampleRecipes();
 
@@ -64,7 +85,12 @@ const prettyDoc = (doc: unknown): string => JSON.stringify(doc, null, 2);
 // once, because `app` outlives re-renders. Only the TRANSITION matters, and it must
 // redraw: a non-parsing keystroke never reaches refreshFeedback().
 let touched = true; // the page opens pre-filled, so the empty state would be a lie
-const markTouched = () => { if (!touched) { touched = true; renderPreview(); } };
+const markTouched = () => {
+  if (!touched) {
+    touched = true;
+    renderPreview();
+  }
+};
 app.addEventListener("input", markTouched, true);
 app.addEventListener("change", markTouched, true);
 
@@ -75,7 +101,10 @@ const issuesHtml = (issues: ValidationIssue[]): string =>
 // In place, because `bean`/`recipes` are `const` bindings wireForm()'s closures
 // already hold. Only one bean panel exists, so a multi-bean document keeps the
 // first — data loss on re-share, which the drop-warning below names.
-function loadDocumentIntoForm(doc: CoffeeJSONDocument, opts: { fromJson?: boolean } = {}): void {
+function loadDocumentIntoForm(
+  doc: CoffeeJSONDocument,
+  opts: { fromJson?: boolean } = {},
+): void {
   const state = documentToState(doc);
   Object.assign(bean, state.beanForms[0] ?? emptyBeanForm());
   recipes.splice(0, recipes.length, ...state.recipeForms);
@@ -83,10 +112,16 @@ function loadDocumentIntoForm(doc: CoffeeJSONDocument, opts: { fromJson?: boolea
   touched = true;
   // The spec's re-authoring honesty rule, applied to our own builder: editing here
   // re-authors the document without whatever the form cannot carry.
-  const rebuilt = buildDocument({ beanForms: state.beanForms.slice(0, 1), recipeForms: state.recipeForms });
+  const rebuilt = buildDocument({
+    beanForms: state.beanForms.slice(0, 1),
+    recipeForms: state.recipeForms,
+  });
   const dropped = collectDroppedPaths(doc, rebuilt);
   if (dropped.length) {
-    const shown = dropped.slice(0, 12).map((p) => `<code>${esc(p)}</code>`).join(", ");
+    const shown = dropped
+      .slice(0, 12)
+      .map((p) => `<code>${esc(p)}</code>`)
+      .join(", ");
     const more = dropped.length > 12 ? ` and ${dropped.length - 12} more` : "";
     jsonNotice = `<div class="banner"><strong>Loaded, with fields left behind.</strong>
       This form can’t carry ${shown}${more} — sharing from here re-authors the document without
@@ -96,7 +131,12 @@ function loadDocumentIntoForm(doc: CoffeeJSONDocument, opts: { fromJson?: boolea
   }
   // A load driven by TYPING must not rebuild the textarea — that is the field
   // the caret is in. Only the form and the notice are redrawn.
-  if (opts.fromJson) { renderForm(); paintJsonNotice(); } else { renderAll(); }
+  if (opts.fromJson) {
+    renderForm();
+    paintJsonNotice();
+  } else {
+    renderAll();
+  }
 }
 
 // Only ever populates the form on a clean pass; `validateDocument` is the only
@@ -106,7 +146,8 @@ function tryLoad(text: string, fromJson: boolean): void {
   const { doc, error } = documentFromInput(text, "Nothing to import yet.");
   const fail = (html: string) => {
     jsonNotice = html;
-    if (fromJson) paintJsonNotice(); else renderAll();
+    if (fromJson) paintJsonNotice();
+    else renderAll();
   };
   if (error) return fail(`<div class="error">${esc(error)}</div>`);
   const issues = validateDocument(doc);
@@ -120,7 +161,8 @@ function tryLoad(text: string, fromJson: boolean): void {
 function loadFromSource(text: string): void {
   jsonText = text;
   const { doc } = documentFromInput(text, "Nothing to import yet.");
-  if (doc !== undefined && !validateDocument(doc).length) jsonText = prettyDoc(doc);
+  if (doc !== undefined && !validateDocument(doc).length)
+    jsonText = prettyDoc(doc);
   tryLoad(text, false);
   revealPreview();
 }
@@ -167,15 +209,24 @@ function jsonPanelHtml(): string {
 
 function wireJsonPanel(): void {
   const input = app.querySelector<HTMLTextAreaElement>("#jsoninput")!;
-  input.addEventListener("focus", () => { jsonFocused = true; });
-  input.addEventListener("blur", () => { jsonFocused = false; syncJsonFromForm(); });
+  input.addEventListener("focus", () => {
+    jsonFocused = true;
+  });
+  input.addEventListener("blur", () => {
+    jsonFocused = false;
+    syncJsonFromForm();
+  });
   // Debounced: rebuilding the form on every keystroke would fight a half-typed
   // number, and every intermediate state of a hand-edited document is invalid.
   input.addEventListener("input", () => {
     jsonText = input.value;
     if (jsonTimer) clearTimeout(jsonTimer);
     jsonTimer = setTimeout(() => {
-      if (!input.value.trim()) { jsonNotice = ""; paintJsonNotice(); return; }
+      if (!input.value.trim()) {
+        jsonNotice = "";
+        paintJsonNotice();
+        return;
+      }
       tryLoad(input.value, true);
     }, 400);
   });
@@ -183,14 +234,24 @@ function wireJsonPanel(): void {
   // pasted share URL or minified blob comes back pretty-printed and editable.
   input.addEventListener("paste", (e) => {
     const text = e.clipboardData?.getData("text") ?? "";
-    if (!text.trim() || input.selectionStart !== 0 || input.selectionEnd !== input.value.length) return;
+    if (
+      !text.trim() ||
+      input.selectionStart !== 0 ||
+      input.selectionEnd !== input.value.length
+    )
+      return;
     e.preventDefault();
     if (jsonTimer) clearTimeout(jsonTimer);
     loadFromSource(text);
   });
   const drop = app.querySelector<HTMLElement>("#jsondrop")!;
-  drop.addEventListener("dragover", (e) => { e.preventDefault(); drop.style.borderColor = "var(--accent)"; });
-  drop.addEventListener("dragleave", () => { drop.style.borderColor = ""; });
+  drop.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    drop.style.borderColor = "var(--accent)";
+  });
+  drop.addEventListener("dragleave", () => {
+    drop.style.borderColor = "";
+  });
   drop.addEventListener("drop", async (e) => {
     e.preventDefault();
     drop.style.borderColor = "";
@@ -198,11 +259,13 @@ function wireJsonPanel(): void {
     if (!file) return;
     loadFromSource(await file.text());
   });
-  app.querySelector<HTMLInputElement>("#jsonfile")!.addEventListener("change", async (e) => {
-    const file = (e.currentTarget as HTMLInputElement).files?.[0];
-    if (!file) return;
-    loadFromSource(await file.text());
-  });
+  app
+    .querySelector<HTMLInputElement>("#jsonfile")!
+    .addEventListener("change", async (e) => {
+      const file = (e.currentTarget as HTMLInputElement).files?.[0];
+      if (!file) return;
+      loadFromSource(await file.text());
+    });
 }
 
 function currentBeanForms(): BeanFormState[] {
@@ -212,12 +275,18 @@ function currentDocument(): CoffeeJSONDocument {
   return buildDocument({ beanForms: currentBeanForms(), recipeForms: recipes });
 }
 
-const beanField = (label: string, key: keyof BeanFormState, extra = ""): string =>
+const beanField = (
+  label: string,
+  key: keyof BeanFormState,
+  extra = "",
+): string =>
   `<label class="gen-field"><span class="muted">${esc(label)}</span>
      <input class="field" data-bk="${String(key)}" value="${esc(String(bean[key] ?? ""))}" ${extra}></label>`;
 
 function originRowsForm(): string {
-  return bean.origin.map((o, i) => `
+  return bean.origin
+    .map(
+      (o, i) => `
     <li class="gen-step" data-i="${i}">
       <input class="field" data-ok="name" data-i="${i}" placeholder="component name" value="${esc(o.name)}">
       <input class="field field--sm" data-ok="country" data-i="${i}" placeholder="country (ISO-2)" value="${esc(o.country)}">
@@ -226,7 +295,9 @@ function originRowsForm(): string {
       <input class="field field--xs" data-ok="percentage" data-i="${i}" placeholder="%" value="${esc(o.percentage)}">
       <button class="btn btn--ghost" data-delorigin="${i}"
         aria-label="Remove origin component ${i + 1}">✕</button>
-    </li>`).join("");
+    </li>`,
+    )
+    .join("");
 }
 
 function beanPanelHtml(): string {
@@ -244,14 +315,20 @@ function beanPanelHtml(): string {
   </details>`;
 }
 
-const recipeField = (ri: number, label: string, key: keyof RecipeFormState, extra = ""): string => {
+const recipeField = (
+  ri: number,
+  label: string,
+  key: keyof RecipeFormState,
+  extra = "",
+): string => {
   const r = recipes[ri]!;
   return `<label class="gen-field"><span class="muted">${esc(label)}</span>
      <input class="field" data-rk="${String(key)}" data-r="${ri}" value="${esc(String(r[key] ?? ""))}" ${extra}></label>`;
 };
 
 function stepRowsForm(ri: number): string {
-  return recipes[ri]!.steps.map((s, i) => `
+  return recipes[ri]!.steps.map(
+    (s, i) => `
     <li class="gen-step" data-r="${ri}" data-i="${i}">
       <input class="field field--sm" data-sk="at_s" data-r="${ri}" data-i="${i}" placeholder="time s" value="${esc(s.at_s)}">
       <input class="field field--md" data-sk="cumulative" data-r="${ri}" data-i="${i}" placeholder="cumulative g" value="${esc(s.cumulative)}">
@@ -259,7 +336,8 @@ function stepRowsForm(ri: number): string {
       <span class="muted" data-perpour data-r="${ri}" data-i="${i}"></span>
       <button class="btn btn--ghost" data-delstep data-r="${ri}" data-i="${i}"
         aria-label="Remove step ${i + 1} of recipe ${ri + 1}">✕</button>
-    </li>`).join("");
+    </li>`,
+  ).join("");
 }
 
 // The FORM is rendered once and left stable, so typing never loses focus. Only the
@@ -275,20 +353,28 @@ function recipeHtml(ri: number): string {
       </div>
       ${recipeField(ri, "Title", "title")}
       <label class="gen-field"><span class="muted">Method</span>
-        <select class="field" data-rk="method" data-r="${ri}">${METHOD_OPTS.map((m) =>
-          `<option value="${m}"${r.method === m ? " selected" : ""}>${m ? methodLabel(m) : "—"}</option>`).join("")}</select></label>
+        <select class="field" data-rk="method" data-r="${ri}">${METHOD_OPTS.map(
+          (m) =>
+            `<option value="${m}"${r.method === m ? " selected" : ""}>${m ? methodLabel(m) : "—"}</option>`,
+        ).join("")}</select></label>
       ${recipeField(ri, "Brewer", "brewerLabel")}
       ${recipeField(ri, "Coffee (g)", "coffee")}
-      ${espresso
-        ? recipeField(ri, "Yield (g)", "yield") + recipeField(ri, "Pressure (bar)", "pressure") + recipeField(ri, "Pre-infusion (s)", "preinfusion_s") + recipeField(ri, "Basket", "basketLabel")
-        : recipeField(ri, "Water (g)", "water") + recipeField(ri, "Ratio (1:n)", "ratio")}
+      ${
+        espresso
+          ? recipeField(ri, "Yield (g)", "yield") +
+            recipeField(ri, "Pressure (bar)", "pressure") +
+            recipeField(ri, "Pre-infusion (s)", "preinfusion_s") +
+            recipeField(ri, "Basket", "basketLabel")
+          : recipeField(ri, "Water (g)", "water") +
+            recipeField(ri, "Ratio (1:n)", "ratio")
+      }
       ${recipeField(ri, "Water temp (°C)", "waterTempC")}
       ${recipeField(ri, "Grind", "grindSetting")}
       <label class="gen-field"><span class="muted">Filter</span>
-        <select class="field" data-rk="filterMaterial" data-r="${ri}">${
-          FILTER_OPTS.map((m) =>
-            `<option value="${m}"${r.filterMaterial === m ? " selected" : ""}>${m ? vocabularyLabel(defaultLabels.filterMaterials, m) : "—"}</option>`).join("")
-        }</select></label>
+        <select class="field" data-rk="filterMaterial" data-r="${ri}">${FILTER_OPTS.map(
+          (m) =>
+            `<option value="${m}"${r.filterMaterial === m ? " selected" : ""}>${m ? vocabularyLabel(defaultLabels.filterMaterials, m) : "—"}</option>`,
+        ).join("")}</select></label>
       ${r.filterMaterial ? recipeField(ri, "Filter label", "filterLabel") : ""}
       ${recipeField(ri, "Originally published at", "basedOn")}
       ${recipeField(ri, espresso ? "Shot time (s)" : "Finish (s)", "finish_s")}
@@ -320,33 +406,62 @@ type PreviewState =
 function previewState(): PreviewState {
   const doc = currentDocument();
   const issues = validateDocument(doc);
-  if (issues.length) return touched ? { kind: "issues", issues } : { kind: "empty" };
+  if (issues.length)
+    return touched ? { kind: "issues", issues } : { kind: "empty" };
   return { kind: "valid", doc };
 }
 
 // Safe for the reason r-shared.tsx's SaveCta gives, which this mirrors.
 function SaveCtaBlock({ doc }: { doc: CoffeeJSONDocument }) {
   const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => { if (ref.current) wireSaveCta(ref.current, doc); }, [doc]);
-  return <div ref={ref} dangerouslySetInnerHTML={{ __html: saveCta(doc, { prominent: false }) }} />;
+  useEffect(() => {
+    if (ref.current) wireSaveCta(ref.current, doc);
+  }, [doc]);
+  return (
+    <div
+      ref={ref}
+      dangerouslySetInnerHTML={{ __html: saveCta(doc, { prominent: false }) }}
+    />
+  );
 }
 
 function Preview({ state }: { state: PreviewState }) {
   if (state.kind === "empty")
-    return <p className="muted">Fill in the form, or paste a document, and it renders here.</p>;
+    return (
+      <p className="muted">
+        Fill in the form, or paste a document, and it renders here.
+      </p>
+    );
   if (state.kind === "issues")
     return (
       <div className="error">
-        <p><strong>{plural(state.issues.length, "thing")} to fix</strong></p>
-        <ul>{state.issues.map((i, k) => <li key={k}><code>{i.path}</code> {i.message}</li>)}</ul>
+        <p>
+          <strong>{plural(state.issues.length, "thing")} to fix</strong>
+        </p>
+        <ul>
+          {state.issues.map((i, k) => (
+            <li key={k}>
+              <code>{i.path}</code> {i.message}
+            </li>
+          ))}
+        </ul>
       </div>
     );
   const { doc } = state;
   return (
     <>
       <div className="banner">Valid CoffeeJSON 1.0.</div>
-      <CoffeeJSONView doc={doc} renderEmpty={() => <p className="muted">Fill in the form to see a preview.</p>} />
-      <p><a className="btn" href={`/r/?d=${encodePayload(doc)}`}>Open in /r (brew-along preview)</a></p>
+      <CoffeeJSONView
+        doc={doc}
+        renderEmpty={() => (
+          <p className="muted">Fill in the form to see a preview.</p>
+        )}
+      />
+      <p>
+        <a className="btn" href={`/r/?d=${encodePayload(doc)}`}>
+          Open in /r (brew-along preview)
+        </a>
+      </p>
       <SaveCtaBlock doc={doc} />
     </>
   );
@@ -357,10 +472,13 @@ function renderPreview(): void {
 }
 
 function refreshFeedback(): void {
-  const cumsByRecipe = recipes.map((r) => r.steps.map((s) => num(s.cumulative)));
+  const cumsByRecipe = recipes.map((r) =>
+    r.steps.map((s) => num(s.cumulative)),
+  );
   const perPourByRecipe = cumsByRecipe.map((cums) => perPourAmounts(cums));
   app.querySelectorAll<HTMLElement>("[data-perpour]").forEach((el) => {
-    const ri = Number(el.dataset["r"]); const i = Number(el.dataset["i"]);
+    const ri = Number(el.dataset["r"]);
+    const i = Number(el.dataset["i"]);
     const v = perPourByRecipe[ri]?.[i];
     el.textContent = v !== undefined ? `+${v} g` : "";
   });
@@ -368,7 +486,8 @@ function refreshFeedback(): void {
     const guardEl = app.querySelector<HTMLElement>(`#guard-${ri}`);
     if (guardEl)
       guardEl.innerHTML = stepsNonDecreasing(cumsByRecipe[ri]!)
-        ? "" : `<div class="error">Cumulative water targets must not decrease.</div>`;
+        ? ""
+        : `<div class="error">Cumulative water targets must not decrease.</div>`;
   });
   renderPreview();
   syncJsonFromForm();
@@ -401,7 +520,10 @@ function renderForm(): void {
 
 // `touched` included: an empty form carrying six validation errors is an
 // accusation, not feedback.
-function replaceState(recipeForms: RecipeFormState[], nowTouched: boolean): void {
+function replaceState(
+  recipeForms: RecipeFormState[],
+  nowTouched: boolean,
+): void {
   Object.assign(bean, emptyBeanForm());
   recipes.splice(0, recipes.length, ...recipeForms);
   beanOpen = false;
@@ -411,62 +533,100 @@ function replaceState(recipeForms: RecipeFormState[], nowTouched: boolean): void
 }
 
 function wireForm(): void {
-  app.querySelector("#clearform")!.addEventListener("click", () => replaceState([blankRecipe()], false));
-  app.querySelector("#loadsample")!.addEventListener("click", () => replaceState(sampleRecipes(), true));
+  app
+    .querySelector("#clearform")!
+    .addEventListener("click", () => replaceState([blankRecipe()], false));
+  app
+    .querySelector("#loadsample")!
+    .addEventListener("click", () => replaceState(sampleRecipes(), true));
 
-  app.querySelector<HTMLDetailsElement>("#beanpanel")!.addEventListener("toggle", (e) => {
-    beanOpen = (e.currentTarget as HTMLDetailsElement).open; // bookkeeping only — no re-render
-  });
+  app
+    .querySelector<HTMLDetailsElement>("#beanpanel")!
+    .addEventListener("toggle", (e) => {
+      beanOpen = (e.currentTarget as HTMLDetailsElement).open; // bookkeeping only — no re-render
+    });
   app.querySelectorAll<HTMLInputElement>("[data-bk]").forEach((el) =>
     el.addEventListener("input", () => {
-      (bean as unknown as Record<string, unknown>)[el.dataset["bk"]!] = el.value;
+      (bean as unknown as Record<string, unknown>)[el.dataset["bk"]!] =
+        el.value;
       refreshFeedback();
-    }));
+    }),
+  );
   app.querySelectorAll<HTMLInputElement>("[data-ok]").forEach((el) =>
     el.addEventListener("input", () => {
       const i = Number(el.dataset["i"]);
-      (bean.origin[i]! as unknown as Record<string, string>)[el.dataset["ok"]!] = el.value;
+      (bean.origin[i]! as unknown as Record<string, string>)[
+        el.dataset["ok"]!
+      ] = el.value;
       refreshFeedback();
-    }));
-  app.querySelector("#addorigin")!.addEventListener("click", () => { bean.origin.push(emptyOriginItemForm()); renderAll(); });
+    }),
+  );
+  app.querySelector("#addorigin")!.addEventListener("click", () => {
+    bean.origin.push(emptyOriginItemForm());
+    renderAll();
+  });
   app.querySelectorAll<HTMLButtonElement>("[data-delorigin]").forEach((b) =>
-    b.addEventListener("click", () => { bean.origin.splice(Number(b.dataset["delorigin"]), 1); renderAll(); }));
+    b.addEventListener("click", () => {
+      bean.origin.splice(Number(b.dataset["delorigin"]), 1);
+      renderAll();
+    }),
+  );
 
-  app.querySelectorAll<HTMLInputElement>("[data-rk]:not([data-rk='method'])").forEach((el) =>
-    el.addEventListener("input", () => {
-      const ri = Number(el.dataset["r"]);
-      (recipes[ri]! as unknown as Record<string, unknown>)[el.dataset["rk"]!] = el.value;
-      refreshFeedback(); // inputs stay in the DOM → focus/cursor preserved
-    }));
+  app
+    .querySelectorAll<HTMLInputElement>("[data-rk]:not([data-rk='method'])")
+    .forEach((el) =>
+      el.addEventListener("input", () => {
+        const ri = Number(el.dataset["r"]);
+        (recipes[ri]! as unknown as Record<string, unknown>)[
+          el.dataset["rk"]!
+        ] = el.value;
+        refreshFeedback(); // inputs stay in the DOM → focus/cursor preserved
+      }),
+    );
   app.querySelectorAll<HTMLSelectElement>("[data-rk='method']").forEach((el) =>
     el.addEventListener("change", () => {
       recipes[Number(el.dataset["r"])]!.method = el.value;
       renderAll(); // fields swap → full re-render
-    }));
+    }),
+  );
   app.querySelectorAll<HTMLInputElement>("[data-rcheck]").forEach((el) =>
     el.addEventListener("change", () => {
       recipes[Number(el.dataset["rcheck"])]!.recommended = el.checked;
       refreshFeedback();
-    }));
+    }),
+  );
   app.querySelectorAll<HTMLInputElement>("[data-sk]").forEach((el) =>
     el.addEventListener("input", () => {
-      const ri = Number(el.dataset["r"]); const i = Number(el.dataset["i"]);
-      (recipes[ri]!.steps[i]! as unknown as Record<string, string>)[el.dataset["sk"]!] = el.value;
+      const ri = Number(el.dataset["r"]);
+      const i = Number(el.dataset["i"]);
+      (recipes[ri]!.steps[i]! as unknown as Record<string, string>)[
+        el.dataset["sk"]!
+      ] = el.value;
       refreshFeedback();
-    }));
+    }),
+  );
   app.querySelectorAll<HTMLButtonElement>("[data-addstep]").forEach((b) =>
-    b.addEventListener("click", () => { recipes[Number(b.dataset["addstep"])]!.steps.push(emptyStepForm()); renderAll(); }));
+    b.addEventListener("click", () => {
+      recipes[Number(b.dataset["addstep"])]!.steps.push(emptyStepForm());
+      renderAll();
+    }),
+  );
   app.querySelectorAll<HTMLButtonElement>("[data-delstep]").forEach((b) =>
     b.addEventListener("click", () => {
       recipes[Number(b.dataset["r"])]!.steps.splice(Number(b.dataset["i"]), 1);
       renderAll();
-    }));
+    }),
+  );
   app.querySelector("#addrecipe")!.addEventListener("click", () => {
     recipes.push(blankRecipe());
     renderAll();
   });
   app.querySelectorAll<HTMLButtonElement>("[data-delrecipe]").forEach((b) =>
-    b.addEventListener("click", () => { recipes.splice(Number(b.dataset["delrecipe"]), 1); renderAll(); }));
+    b.addEventListener("click", () => {
+      recipes.splice(Number(b.dataset["delrecipe"]), 1);
+      renderAll();
+    }),
+  );
 }
 
 renderAll();

@@ -21,8 +21,12 @@ describe("share-link path normalization", () => {
     expect(payloadFromLocation(search)).toBe("eyJhIjoxfQ");
     // The parser reads location.search only; the path never enters into it, so
     // /r?d=, /r/?d= and any future prefix all resolve the same payload.
-    expect(payloadFromLocation(new URL(`${SITE_URL}/r?d=eyJhIjoxfQ`).search)).toBe("eyJhIjoxfQ");
-    expect(payloadFromLocation(new URL(`${SITE_URL}/r/?d=eyJhIjoxfQ`).search)).toBe("eyJhIjoxfQ");
+    expect(
+      payloadFromLocation(new URL(`${SITE_URL}/r?d=eyJhIjoxfQ`).search),
+    ).toBe("eyJhIjoxfQ");
+    expect(
+      payloadFromLocation(new URL(`${SITE_URL}/r/?d=eyJhIjoxfQ`).search),
+    ).toBe("eyJhIjoxfQ");
   });
 
   // The transport rejects a fragment binding, and nothing emits one. This pins
@@ -43,7 +47,10 @@ describe("share-link path normalization", () => {
       // Template-literal link construction only — prose and placeholders that
       // illustrate the spec's `…/r?d=…` transport form are deliberately exempt.
       const bare = [...read(f).matchAll(/`[^`]*\/r\?d=\$\{/g)];
-      expect(bare.map(() => f), `${f} builds a bare /r?d= link`).toEqual([]);
+      expect(
+        bare.map(() => f),
+        `${f} builds a bare /r?d= link`,
+      ).toEqual([]);
     }
   });
 

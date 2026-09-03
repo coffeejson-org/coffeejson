@@ -1,11 +1,11 @@
-import { readFileSync, readdirSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import Ajv2020 from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
 import { expect, test } from "vitest";
-import { buildBeansIndex, buildIndex } from "../tools/gen.mjs";
 import type { BeanEntry } from "../src/lib/filter";
+import { buildBeansIndex, buildIndex } from "../tools/gen.mjs";
 
 const REPO = fileURLToPath(new URL("../../..", import.meta.url));
 const RECIPES = join(REPO, "recipes");
@@ -13,7 +13,10 @@ const RECIPES = join(REPO, "recipes");
 const beans = buildBeansIndex() as BeanEntry[];
 const bean = (key: string): BeanEntry => {
   const b = beans.find((x) => x.key === key);
-  if (!b) throw new Error(`no bean entry ${key} (have: ${beans.map((x) => x.key).join(", ")})`);
+  if (!b)
+    throw new Error(
+      `no bean entry ${key} (have: ${beans.map((x) => x.key).join(", ")})`,
+    );
   return b;
 };
 
@@ -37,11 +40,15 @@ test("a bag named in a non-Latin script keeps its own key", () => {
   // halves to stay distinct.
   for (const b of beans) {
     const [roasterSlug, nameSlug] = b.key.split("/");
-    expect(roasterSlug, `empty roaster slug for ${b.roaster.name}`).not.toBe("");
+    expect(roasterSlug, `empty roaster slug for ${b.roaster.name}`).not.toBe(
+      "",
+    );
     expect(nameSlug, `empty name slug for ${b.name}`).not.toBe("");
   }
   expect(bean("サザコーヒー/ゴールデンモカ").name).toBe("ゴールデンモカ");
-  expect(bean("onibus-coffee/ケニア-ガトンボヤ").roaster.name).toBe("ONIBUS COFFEE");
+  expect(bean("onibus-coffee/ケニア-ガトンボヤ").roaster.name).toBe(
+    "ONIBUS COFFEE",
+  );
 });
 
 test("every corpus bean reaches the index — no two bags share a key", () => {
@@ -50,9 +57,13 @@ test("every corpus bean reaches the index — no two bags share a key", () => {
   // Assert instead that distinct roaster+name pairs stay distinct.
   const pairs = new Set<string>();
   // NUL joins the halves: the one byte a name cannot contain, so no two pairs collide.
-  for (const f of readdirSync(RECIPES).filter((n) => n.endsWith(".json") && n !== "catalog.json")) {
+  for (const f of readdirSync(RECIPES).filter(
+    (n) => n.endsWith(".json") && n !== "catalog.json",
+  )) {
     const doc = JSON.parse(readFileSync(join(RECIPES, f), "utf8"));
-    for (const b of doc.beans ?? []) if (b.roaster?.name && b.name) pairs.add(`${b.roaster.name}\u0000${b.name}`);
+    for (const b of doc.beans ?? [])
+      if (b.roaster?.name && b.name)
+        pairs.add(`${b.roaster.name}\u0000${b.name}`);
   }
   expect(beans).toHaveLength(pairs.size);
   expect(new Set(beans.map((b) => b.key)).size).toBe(beans.length);
@@ -69,21 +80,24 @@ test("facts render from the richest instance, never merged across documents", ()
   expect(m.process).toBe("Washed");
   expect(m.roast).toBe("Dark");
   expect(m.origin).toBe(
-    "The Queen · Colombia · 1800 m · Harvest Rotating Microlots"
-    + " + Alaka G1 Natural · Ethiopia · 1800 m · Natural · Harvest Rotating Microlots");
+    "The Queen · Colombia · 1800 m · Harvest Rotating Microlots" +
+      " + Alaka G1 Natural · Ethiopia · 1800 m · Natural · Harvest Rotating Microlots",
+  );
 });
 
 test("a blend distinguished only by per-item process still reads as two coffees", () => {
-  expect(bean("onyx-coffee-lab/tropical-weather").origin)
-    .toBe("Ethiopia · 1900 m · Washed · Harvest Rotating Microlots · 50%"
-      + " + Ethiopia · 1900 m · Natural · Harvest Rotating Microlots · 50%");
+  expect(bean("onyx-coffee-lab/tropical-weather").origin).toBe(
+    "Ethiopia · 1900 m · Washed · Harvest Rotating Microlots · 50%" +
+      " + Ethiopia · 1900 m · Natural · Harvest Rotating Microlots · 50%",
+  );
 });
 
 // The origin line is `BeanCard`'s, fact for fact and separator for separator, so
 // a bag reads the same on a static page as it does in a consumer's card.
 test("an origin item shows its producers, their roles, and its altitude", () => {
-  expect(bean("linea-caffe/ethiopia-suke-espresso").origin)
-    .toBe("Oromia, Ethiopia · Tesfaye Bekele (Producer), Suke Quto Coffee Farms (Cooperative) · 1800–2200 m");
+  expect(bean("linea-caffe/ethiopia-suke-espresso").origin).toBe(
+    "Oromia, Ethiopia · Tesfaye Bekele (Producer), Suke Quto Coffee Farms (Cooperative) · 1800–2200 m",
+  );
 });
 
 test("documents carrying no beans contribute nothing", () => {
@@ -92,10 +106,16 @@ test("documents carrying no beans contribute nothing", () => {
   // a roaster's own brew guide, which names a publisher but no coffee (April's
   // per-line base recipes, Sightglass's V60 guide). Derived from the corpus
   // rather than counted, so a new one of either kind cannot silently pass.
-  const beanless = new Set(readdirSync(RECIPES)
-    .filter((f) => f.endsWith(".json") && f !== "catalog.json")
-    .filter((f) => !(JSON.parse(readFileSync(join(RECIPES, f), "utf8")).beans ?? []).length)
-    .map((f) => f.replace(/\.json$/, "")));
+  const beanless = new Set(
+    readdirSync(RECIPES)
+      .filter((f) => f.endsWith(".json") && f !== "catalog.json")
+      .filter(
+        (f) =>
+          !(JSON.parse(readFileSync(join(RECIPES, f), "utf8")).beans ?? [])
+            .length,
+      )
+      .map((f) => f.replace(/\.json$/, "")),
+  );
   expect(beanless.size).toBeGreaterThan(0);
 
   const linked = new Set(beans.flatMap((b) => b.recipes.map((r) => r.slug)));
@@ -119,7 +139,9 @@ test("every card names and links a roaster — the attribution the lens promises
 // `role` or a `type` in the served index is a wire read that got back in.
 test("a card's roaster is the projected name and link, and nothing more", () => {
   for (const b of beans)
-    expect(Object.keys(b.roaster).sort(), b.key).toEqual(b.roaster.url ? ["name", "url"] : ["name"]);
+    expect(Object.keys(b.roaster).sort(), b.key).toEqual(
+      b.roaster.url ? ["name", "url"] : ["name"],
+    );
   expect(beans.some((b) => b.roaster.url)).toBe(true);
 });
 
@@ -129,11 +151,15 @@ test("each card's payload is the winning bean re-enveloped VERBATIM", () => {
   // page would be publishing a bag no source ever described.
   const corpusBeans = readdirSync(RECIPES)
     .filter((f) => f.endsWith(".json") && f !== "catalog.json")
-    .flatMap((f) => JSON.parse(readFileSync(join(RECIPES, f), "utf8")).beans ?? [])
+    .flatMap(
+      (f) => JSON.parse(readFileSync(join(RECIPES, f), "utf8")).beans ?? [],
+    )
     .map((b: unknown) => JSON.stringify(b));
 
   for (const b of beans) {
-    const doc = JSON.parse(Buffer.from(b.payload, "base64url").toString("utf8"));
+    const doc = JSON.parse(
+      Buffer.from(b.payload, "base64url").toString("utf8"),
+    );
     expect(Object.keys(doc), b.key).toEqual(["coffeejson", "beans"]);
     expect(doc.beans, b.key).toHaveLength(1);
     expect(corpusBeans, b.key).toContain(JSON.stringify(doc.beans[0]));
@@ -144,10 +170,18 @@ test("each card's payload is the winning bean re-enveloped VERBATIM", () => {
 test("every bean payload validates as a CoffeeJSON document", () => {
   const validate = new Ajv2020({ allErrors: true });
   addFormats(validate);
-  const check = validate.compile(JSON.parse(
-    readFileSync(join(REPO, "docs/schema/coffeejson-1.0.schema.json"), "utf8")));
+  const check = validate.compile(
+    JSON.parse(
+      readFileSync(
+        join(REPO, "docs/schema/coffeejson-1.0.schema.json"),
+        "utf8",
+      ),
+    ),
+  );
   for (const b of beans) {
-    const doc = JSON.parse(Buffer.from(b.payload, "base64url").toString("utf8"));
+    const doc = JSON.parse(
+      Buffer.from(b.payload, "base64url").toString("utf8"),
+    );
     expect(check(doc), `${b.key}: ${JSON.stringify(check.errors)}`).toBe(true);
   }
 });
@@ -166,8 +200,10 @@ test("bean payloads stay inside the QR budget, or are on the counted list", () =
   for (const b of beans) {
     const length = `https://coffeejson.org/r/?d=${b.payload}`.length;
     if (OVER_QR_BUDGET.has(b.key)) {
-      expect(length, `${b.key} is listed as over budget but now fits — remove it`)
-        .toBeGreaterThanOrEqual(2500);
+      expect(
+        length,
+        `${b.key} is listed as over budget but now fits — remove it`,
+      ).toBeGreaterThanOrEqual(2500);
     } else {
       expect(length, b.key).toBeLessThan(2500);
     }
@@ -180,12 +216,22 @@ test("bean payloads stay inside the QR budget, or are on the counted list", () =
 // a future transcription happens to hit them.
 
 const ROASTER = { name: "Bench Roasters", url: "https://example.test" };
-const doc = (slug: string, transcribed: string, beansArr: unknown[], recipesArr: unknown[] = []) =>
-  ({ entry: { slug, attribution: { source_label: slug, transcribed } },
-     doc: { beans: beansArr, recipes: recipesArr } });
+const doc = (
+  slug: string,
+  transcribed: string,
+  beansArr: unknown[],
+  recipesArr: unknown[] = [],
+) => ({
+  entry: { slug, attribution: { source_label: slug, transcribed } },
+  doc: { beans: beansArr, recipes: recipesArr },
+});
 
 test("equal richness breaks to the newer transcription, then to catalog order", () => {
-  const bag = (roast: string) => ({ name: "Tie", roaster: ROASTER, roast_level: roast });
+  const bag = (roast: string) => ({
+    name: "Tie",
+    roaster: ROASTER,
+    roast_level: roast,
+  });
   // Same field count in all three; the 2026-02-01 document is the newest.
   const [byDate] = buildBeansIndex([
     doc("older", "2026-01-01", [bag("light")]),
@@ -203,35 +249,68 @@ test("equal richness breaks to the newer transcription, then to catalog order", 
 
 test("richness beats recency — a fuller older transcription still wins", () => {
   const [entry] = buildBeansIndex([
-    doc("full", "2026-01-01", [{ name: "Tie", roaster: ROASTER, roast_level: "light", process: ["washed"] }]),
-    doc("slim", "2026-09-09", [{ name: "Tie", roaster: ROASTER, roast_level: "dark" }]),
+    doc("full", "2026-01-01", [
+      {
+        name: "Tie",
+        roaster: ROASTER,
+        roast_level: "light",
+        process: ["washed"],
+      },
+    ]),
+    doc("slim", "2026-09-09", [
+      { name: "Tie", roaster: ROASTER, roast_level: "dark" },
+    ]),
   ]);
   expect(entry!.roast).toBe("Light");
   expect(entry!.process).toBe("Washed");
 });
 
 test("bean_ref routes a recipe to the one bag it names", () => {
-  const [alpha, beta] = buildBeansIndex([doc("multi", "2026-01-01",
-    [{ id: "a", name: "Alpha", roaster: ROASTER }, { id: "b", name: "Beta", roaster: ROASTER }],
-    [{ title: "For Beta", method: "espresso", bean_ref: "b" }])]);
+  const [alpha, beta] = buildBeansIndex([
+    doc(
+      "multi",
+      "2026-01-01",
+      [
+        { id: "a", name: "Alpha", roaster: ROASTER },
+        { id: "b", name: "Beta", roaster: ROASTER },
+      ],
+      [{ title: "For Beta", method: "espresso", bean_ref: "b" }],
+    ),
+  ]);
   expect(alpha!.recipes).toEqual([]);
-  expect(beta!.recipes).toEqual([{ slug: "multi", title: "For Beta", methodLabel: "Espresso" }]);
+  expect(beta!.recipes).toEqual([
+    { slug: "multi", title: "For Beta", methodLabel: "Espresso" },
+  ]);
 });
 
 test("with no bean_ref a recipe lists under every bag its document carries", () => {
-  const entries = buildBeansIndex([doc("multi", "2026-01-01",
-    [{ name: "Alpha", roaster: ROASTER }, { name: "Beta", roaster: ROASTER }],
-    [{ title: "House brew", method: "pour_over" }])]);
-  for (const e of entries) expect(e.recipes.map((r) => r.title)).toEqual(["House brew"]);
+  const entries = buildBeansIndex([
+    doc(
+      "multi",
+      "2026-01-01",
+      [
+        { name: "Alpha", roaster: ROASTER },
+        { name: "Beta", roaster: ROASTER },
+      ],
+      [{ title: "House brew", method: "pour_over" }],
+    ),
+  ]);
+  for (const e of entries)
+    expect(e.recipes.map((r) => r.title)).toEqual(["House brew"]);
 });
 
 test("an unresolved bean_ref leaves the recipe unlinked, per the spec", () => {
   // 03-recipe: an unresolved reference leaves the recipe unlinked and consumers
   // must not fail. Guessing a bag here would file a recipe under a card its
   // source never associated it with.
-  const [entry] = buildBeansIndex([doc("multi", "2026-01-01",
-    [{ id: "a", name: "Alpha", roaster: ROASTER }],
-    [{ title: "Dangling", method: "espresso", bean_ref: "nope" }])]);
+  const [entry] = buildBeansIndex([
+    doc(
+      "multi",
+      "2026-01-01",
+      [{ id: "a", name: "Alpha", roaster: ROASTER }],
+      [{ title: "Dangling", method: "espresso", bean_ref: "nope" }],
+    ),
+  ]);
   expect(entry!.recipes).toEqual([]);
 });
 
@@ -243,27 +322,52 @@ test("a document carrying several recipes yields a card for each, not just the f
   // happens to carry.
   const bean = { name: "Sample", roaster: { name: "Bench Roasters" } };
   const recipe = (title: string, method: string) => ({
-    title, method, author: { name: "Bench Roasters", type: "organization" },
+    title,
+    method,
+    author: { name: "Bench Roasters", type: "organization" },
     based_on: "https://example.test/products/sample",
-    coffee: { value: 20, unit: "gram" }, water: { value: 300, unit: "gram" },
+    coffee: { value: 20, unit: "gram" },
+    water: { value: 300, unit: "gram" },
   });
-  const entries = buildIndex([{
-    entry: { slug: "sample", attribution: { source_label: "Bench", transcribed: "2026-07-24" } },
-    doc: { coffeejson: "1.0", beans: [bean],
-      recipes: [recipe("Dwell", "pour_over"), recipe("Chemex", "pour_over"), recipe("French Press", "french_press")] },
-  }]);
-  expect(entries.map((e) => e.title)).toEqual(["Dwell", "Chemex", "French Press"]);
+  const entries = buildIndex([
+    {
+      entry: {
+        slug: "sample",
+        attribution: { source_label: "Bench", transcribed: "2026-07-24" },
+      },
+      doc: {
+        coffeejson: "1.0",
+        beans: [bean],
+        recipes: [
+          recipe("Dwell", "pour_over"),
+          recipe("Chemex", "pour_over"),
+          recipe("French Press", "french_press"),
+        ],
+      },
+    },
+  ]);
+  expect(entries.map((e) => e.title)).toEqual([
+    "Dwell",
+    "Chemex",
+    "French Press",
+  ]);
   // Every card keeps the document's slug (the ?s= target and download name)
   // while carrying its own id, and each says how many it is one of.
   expect(entries.map((e) => e.slug)).toEqual(["sample", "sample", "sample"]);
-  expect(entries.map((e) => e.id)).toEqual(["sample#1", "sample#2", "sample#3"]);
+  expect(entries.map((e) => e.id)).toEqual([
+    "sample#1",
+    "sample#2",
+    "sample#3",
+  ]);
   expect(entries.every((e) => e.siblings === 3)).toBe(true);
   // Each card carries ITS OWN document, not the publication: three cards
   // sharing one payload would hand a reader who wanted the French press two
   // brews they never asked for.
   expect(new Set(entries.map((e) => e.payload)).size).toBe(3);
   for (const [i, e] of entries.entries()) {
-    const doc = JSON.parse(Buffer.from(e.payload, "base64url").toString("utf8"));
+    const doc = JSON.parse(
+      Buffer.from(e.payload, "base64url").toString("utf8"),
+    );
     expect(doc.recipes, e.id).toHaveLength(1);
     expect(doc.recipes[0].title, e.id).toBe(entries[i]!.title);
     // The bag travels with each of them: one co-located bean is the association.
@@ -291,6 +395,12 @@ test("a lone recipe's card id stays the bare slug — shipped ids do not move", 
 });
 
 test("a bean with no name or no roaster name contributes no card", () => {
-  expect(buildBeansIndex([doc("x", "2026-01-01",
-    [{ name: "Nameless roaster", roaster: {} }, { roaster: ROASTER }])])).toEqual([]);
+  expect(
+    buildBeansIndex([
+      doc("x", "2026-01-01", [
+        { name: "Nameless roaster", roaster: {} },
+        { roaster: ROASTER },
+      ]),
+    ]),
+  ).toEqual([]);
 });

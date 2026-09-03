@@ -11,8 +11,9 @@ import { FAQ, faqJsonLd } from "../src/lib/faq.mjs";
 const site = fileURLToPath(new URL("..", import.meta.url));
 const index = readFileSync(site + "index.html", "utf8");
 
-const blocks = [...index.matchAll(/<script type="application\/ld\+json">(.*?)<\/script>/gs)]
-  .map((m) => JSON.parse(m[1]!.replace(/\\u003c/g, "<")));
+const blocks = [
+  ...index.matchAll(/<script type="application\/ld\+json">(.*?)<\/script>/gs),
+].map((m) => JSON.parse(m[1]!.replace(/\\u003c/g, "<")));
 
 test("index.html publishes the FAQ the landing page renders", () => {
   const faq = blocks.flat().find((b) => b["@type"] === "FAQPage");
@@ -37,5 +38,6 @@ test("every answer stands alone", () => {
 test("the answers name no pronoun the question supplied", () => {
   // "It is free" only works next to its question. An extracted answer has to
   // carry the subject itself.
-  for (const { q, a } of FAQ) expect(a.slice(0, 12), q).not.toMatch(/^(It|They|That|This) /);
+  for (const { q, a } of FAQ)
+    expect(a.slice(0, 12), q).not.toMatch(/^(It|They|That|This) /);
 });

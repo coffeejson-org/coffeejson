@@ -1,7 +1,7 @@
-import { expect, test } from "vitest";
-import { readFileSync, readdirSync } from "node:fs";
-import { fileURLToPath } from "node:url";
+import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { expect, test } from "vitest";
 
 const srcDir = fileURLToPath(new URL("../src", import.meta.url));
 const sources = readdirSync(srcDir, { recursive: true, encoding: "utf8" })
@@ -12,8 +12,8 @@ test("src/ never uses dangerouslySetInnerHTML, window/document globals, or react
   expect(sources.length).toBeGreaterThan(0);
   for (const [name, code] of sources) {
     expect(code, name).not.toContain("dangerouslySetInnerHTML");
-    expect(code, name).not.toMatch(/\bwindow[.\[]/);
-    expect(code, name).not.toMatch(/\bdocument[.\[]/);
+    expect(code, name).not.toMatch(/\bwindow[.[]/);
+    expect(code, name).not.toMatch(/\bdocument[.[]/);
     expect(code, name).not.toContain("react-dom");
   }
 });

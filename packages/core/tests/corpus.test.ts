@@ -1,16 +1,19 @@
-import { expect, test } from "vitest";
-import { readFileSync, readdirSync } from "node:fs";
-import { fileURLToPath } from "node:url";
+import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { expect, test } from "vitest";
 import { decodePayload, encodePayload } from "../src/codec";
-import { normalize } from "../src/normalize";
 import { summary, unitSymbol } from "../src/format";
+import { normalize } from "../src/normalize";
 
 const root = fileURLToPath(new URL("../../..", import.meta.url));
 const docsIn = (dir: string): [string, unknown][] =>
   readdirSync(join(root, dir))
     .filter((f) => f.endsWith(".json") && f !== "catalog.json")
-    .map((f) => [join(dir, f), JSON.parse(readFileSync(join(root, dir, f), "utf8"))]);
+    .map((f) => [
+      join(dir, f),
+      JSON.parse(readFileSync(join(root, dir, f), "utf8")),
+    ]);
 
 const corpus = [...docsIn("fixtures/valid"), ...docsIn("recipes")];
 
@@ -22,7 +25,8 @@ test("every corpus document round-trips encode→decode byte-identically", () =>
   for (const [name, doc] of corpus) {
     const r = decodePayload(encodePayload(doc));
     expect(r.ok, name).toBe(true);
-    if (r.ok) expect(JSON.stringify(r.document), name).toBe(JSON.stringify(doc));
+    if (r.ok)
+      expect(JSON.stringify(r.document), name).toBe(JSON.stringify(doc));
   }
 });
 
@@ -44,7 +48,10 @@ test("every corpus recipe yields a non-empty summary", () => {
 // tree. Walking the raw JSON, not the view-model: normalize() drops what it
 // cannot read, and the question is what the display layer cannot show.
 function unitsIn(value: unknown, into: Set<string>): Set<string> {
-  if (Array.isArray(value)) { for (const v of value) unitsIn(v, into); return into; }
+  if (Array.isArray(value)) {
+    for (const v of value) unitsIn(v, into);
+    return into;
+  }
   if (typeof value === "object" && value !== null) {
     const o = value as Record<string, unknown>;
     if (typeof o["unit"] === "string") into.add(o["unit"]);

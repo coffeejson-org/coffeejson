@@ -18,7 +18,11 @@ export const NAV = [
  *  (a corpus page, `/beans/`) simply matches nothing. */
 export const siteHeader = (current) =>
   `<header class="site-header">${
-    current === "/" ? "<strong>CoffeeJSON</strong>" : '<a href="/"><strong>CoffeeJSON</strong></a>'
+    current === "/"
+      ? "<strong>CoffeeJSON</strong>"
+      : '<a href="/"><strong>CoffeeJSON</strong></a>'
   }${NAV.map(([href, label]) =>
-    href === current ? `<span aria-current="page">${label}</span>` : `<a href="${href}">${label}</a>`,
+    href === current
+      ? `<span aria-current="page">${label}</span>`
+      : `<a href="${href}">${label}</a>`,
   ).join("")}<a href="${GITHUB_URL}" rel="noopener">GitHub</a></header>`;

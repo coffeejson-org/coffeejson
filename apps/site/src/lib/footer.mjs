@@ -4,7 +4,8 @@
 // the sentence below is then hand-copied into the other half.
 
 /** License line for the hand-written pages, which cover more than the corpus. */
-export const LICENSE_SITE = "Spec, schema and corpus: CC0 1.0 Universal — public domain.";
+export const LICENSE_SITE =
+  "Spec, schema and corpus: CC0 1.0 Universal — public domain.";
 /** License line for the corpus and agent pages, which are the CC0 artifacts themselves. */
 export const LICENSE_CORPUS = "CC0 1.0 Universal — public domain.";
 export const PACKAGES = "Packages: Apache-2.0.";
@@ -27,7 +28,8 @@ export const CORRECTIONS =
  * Every claim in it is a configured option there, so changing that file changes
  * this sentence.
  */
-export const PRIVACY = "Privacy-friendly analytics — no cookies, no cross-site tracking, no ad networks.";
+export const PRIVACY =
+  "Privacy-friendly analytics — no cookies, no cross-site tracking, no ad networks.";
 
 /**
  * For the AI-agents page alone, printed under the robots.txt paragraph: an agent
@@ -53,4 +55,5 @@ export const licenseLine = (...clauses) =>
  * @param {...string} clauses
  * @returns {string}
  */
-export const footerHtml = (...clauses) => `<footer>${licenseLine(...clauses)}</footer>`;
+export const footerHtml = (...clauses) =>
+  `<footer>${licenseLine(...clauses)}</footer>`;

@@ -2,11 +2,15 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import { SITE_URL } from "../tools/gen.mjs";
 import { qrSvg } from "../src/lib/qr";
-import { payloadForShortLink, shortLinkFromSearch, slugFromSearch } from "../src/lib/short-link";
 import type { CorpusEntry, DocumentIndex } from "../src/lib/short-link";
+import {
+  payloadForShortLink,
+  shortLinkFromSearch,
+  slugFromSearch,
+} from "../src/lib/short-link";
 import { failCopy } from "../src/pages/r-shared";
+import { SITE_URL } from "../tools/gen.mjs";
 
 const site = fileURLToPath(new URL("..", import.meta.url));
 const index = JSON.parse(
@@ -19,7 +23,9 @@ const documents = JSON.parse(
 // /recipes cards QR the short `/r/?s=<slug>` form; `?d=` stays canonical.
 describe("short corpus links", () => {
   it("reads the s slug from a search string, and only the s slug", () => {
-    expect(slugFromSearch("?s=tetsu-kasuya-4-6-basic")).toBe("tetsu-kasuya-4-6-basic");
+    expect(slugFromSearch("?s=tetsu-kasuya-4-6-basic")).toBe(
+      "tetsu-kasuya-4-6-basic",
+    );
     expect(slugFromSearch("?d=eyJhIjoxfQ")).toBeNull();
     expect(slugFromSearch("?s=")).toBeNull();
     expect(slugFromSearch("")).toBeNull();
@@ -31,37 +37,63 @@ describe("short corpus links", () => {
     // A typo resolves the publication rather than 404ing something the site
     // can plainly serve.
     for (const bad of ["0", "-1", "abc", "1.5", ""]) {
-      expect(shortLinkFromSearch(`?s=x&i=${bad}`), bad).toEqual({ slug: "x", index: null });
+      expect(shortLinkFromSearch(`?s=x&i=${bad}`), bad).toEqual({
+        slug: "x",
+        index: null,
+      });
     }
     expect(shortLinkFromSearch("?i=2")).toBeNull();
   });
 
   it("resolves a slug to its publication, and a miss to null", () => {
-    const cards: CorpusEntry[] = [{ slug: "a", payload: "A1" }, { slug: "a", payload: "A2" }];
+    const cards: CorpusEntry[] = [
+      { slug: "a", payload: "A1" },
+      { slug: "a", payload: "A2" },
+    ];
     const docs: DocumentIndex = { a: "WHOLE" };
-    expect(payloadForShortLink(cards, docs, { slug: "a", index: null })).toBe("WHOLE");
-    expect(payloadForShortLink(cards, docs, { slug: "a", index: 1 })).toBe("A1");
-    expect(payloadForShortLink(cards, docs, { slug: "a", index: 2 })).toBe("A2");
+    expect(payloadForShortLink(cards, docs, { slug: "a", index: null })).toBe(
+      "WHOLE",
+    );
+    expect(payloadForShortLink(cards, docs, { slug: "a", index: 1 })).toBe(
+      "A1",
+    );
+    expect(payloadForShortLink(cards, docs, { slug: "a", index: 2 })).toBe(
+      "A2",
+    );
     // Past the end resolves to nothing rather than the publication: handing over
     // two recipes to someone who asked for the third is the failure to prevent.
-    expect(payloadForShortLink(cards, docs, { slug: "a", index: 3 })).toBeNull();
-    expect(payloadForShortLink(cards, docs, { slug: "b", index: null })).toBeNull();
+    expect(
+      payloadForShortLink(cards, docs, { slug: "a", index: 3 }),
+    ).toBeNull();
+    expect(
+      payloadForShortLink(cards, docs, { slug: "b", index: null }),
+    ).toBeNull();
   });
 
   it("falls back to the card when the cards already carry the document whole", () => {
     // 35 of the 48 recipe-bearing corpus documents hold one recipe, so the
     // projection is the identity and `documents` holds no entry for them.
     const cards: CorpusEntry[] = [{ slug: "solo", payload: "ONLY" }];
-    expect(payloadForShortLink(cards, {}, { slug: "solo", index: null })).toBe("ONLY");
-    expect(payloadForShortLink(cards, {}, { slug: "solo", index: 1 })).toBe("ONLY");
+    expect(payloadForShortLink(cards, {}, { slug: "solo", index: null })).toBe(
+      "ONLY",
+    );
+    expect(payloadForShortLink(cards, {}, { slug: "solo", index: 1 })).toBe(
+      "ONLY",
+    );
   });
 
   it("every corpus slug resolves both ways, and every short URL stays trivially QR-able", () => {
     expect(index.length).toBeGreaterThan(0);
     for (const [i, e] of index.entries()) {
       const n = index.filter((x) => x.slug === e.slug).indexOf(e) + 1;
-      expect(payloadForShortLink(index, documents, { slug: e.slug, index: n }), e.slug).toBe(e.payload);
-      expect(payloadForShortLink(index, documents, { slug: e.slug, index: null }), e.slug).toBeTruthy();
+      expect(
+        payloadForShortLink(index, documents, { slug: e.slug, index: n }),
+        e.slug,
+      ).toBe(e.payload);
+      expect(
+        payloadForShortLink(index, documents, { slug: e.slug, index: null }),
+        e.slug,
+      ).toBeTruthy();
       // The point of the short form: the printed URL never grows with the
       // document, so level-M capacity is never in question again.
       expect(`${SITE_URL}/r/?s=${e.slug}&i=${i + 1}`.length).toBeLessThan(100);
@@ -70,7 +102,9 @@ describe("short corpus links", () => {
 
   it("a card's scoped payload carries exactly the one recipe it advertises", () => {
     for (const e of index) {
-      const doc = JSON.parse(Buffer.from(e.payload, "base64url").toString("utf8"));
+      const doc = JSON.parse(
+        Buffer.from(e.payload, "base64url").toString("utf8"),
+      );
       expect(doc.recipes, e.slug).toHaveLength(1);
     }
   });
@@ -102,6 +136,8 @@ describe("qrSvg capacity fallback", () => {
   // Rejecting would make "no QR at any level" indistinguishable from a crash, and
   // an uncaught await leaves a dead button. Null is a value a caller must handle.
   it("returns null rather than rejecting when no level can hold the URL", async () => {
-    await expect(qrSvg(`${SITE_URL}/r/?d=${payload(3400)}`)).resolves.toBeNull();
+    await expect(
+      qrSvg(`${SITE_URL}/r/?d=${payload(3400)}`),
+    ).resolves.toBeNull();
   });
 });

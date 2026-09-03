@@ -12,15 +12,37 @@
 
 /** Brewing technique. Unknown value → `other`. */
 export const BREW_METHODS = [
-  "pour_over", "immersion", "aeropress", "french_press", "moka", "cold_brew",
-  "siphon", "cezve", "drip", "capsule", "espresso", "other",
+  "pour_over",
+  "immersion",
+  "aeropress",
+  "french_press",
+  "moka",
+  "cold_brew",
+  "siphon",
+  "cezve",
+  "drip",
+  "capsule",
+  "espresso",
+  "other",
 ] as const;
 export type BrewMethod = (typeof BREW_METHODS)[number];
 
 /** Step kind. **Absent means `pour`** — the schema's own default. Unknown → `other`. */
 export const STEP_KINDS = [
-  "pour", "bloom", "prep", "wait", "stir", "flip", "valve_open", "valve_close",
-  "press", "drawdown", "distribute", "tamp", "pull", "other",
+  "pour",
+  "bloom",
+  "prep",
+  "wait",
+  "stir",
+  "flip",
+  "valve_open",
+  "valve_close",
+  "press",
+  "drawdown",
+  "distribute",
+  "tamp",
+  "pull",
+  "other",
 ] as const;
 export type StepKind = (typeof STEP_KINDS)[number];
 
@@ -28,20 +50,36 @@ export const DEFAULT_STEP_KIND: StepKind = "pour";
 
 /** Post-harvest processing. A list-valued field: a coffee can state several. Unknown → `other`. */
 export const PROCESSES = [
-  "washed", "natural", "pulped_natural", "honey", "anaerobic",
-  "carbonic_maceration", "wet_hulled", "other",
+  "washed",
+  "natural",
+  "pulped_natural",
+  "honey",
+  "anaerobic",
+  "carbonic_maceration",
+  "wet_hulled",
+  "other",
 ] as const;
 export type Process = (typeof PROCESSES)[number];
 
 /** Roast level, an ordered scale. Unknown → ignore the field, preferring `roast_agtron`. */
 export const ROAST_LEVELS = [
-  "light", "light_medium", "medium", "medium_dark", "dark", "extra_dark",
+  "light",
+  "light_medium",
+  "medium",
+  "medium_dark",
+  "dark",
+  "extra_dark",
 ] as const;
 export type RoastLevel = (typeof ROAST_LEVELS)[number];
 
 /** The physical form a coffee is sold in. Unknown → `other`. */
 export const BEAN_FORMS = [
-  "bean", "ground", "pod", "drip_bag", "instant", "other",
+  "bean",
+  "ground",
+  "pod",
+  "drip_bag",
+  "instant",
+  "other",
 ] as const;
 export type BeanForm = (typeof BEAN_FORMS)[number];
 
@@ -54,7 +92,12 @@ export type FilterMaterial = (typeof FILTER_MATERIALS)[number];
  * preferring the grinder's own `setting` or `microns_approx`.
  */
 export const GRIND_SIZES = [
-  "extra_fine", "fine", "medium_fine", "medium", "medium_coarse", "coarse",
+  "extra_fine",
+  "fine",
+  "medium_fine",
+  "medium",
+  "medium_coarse",
+  "coarse",
   "extra_coarse",
 ] as const;
 export type GrindSize = (typeof GRIND_SIZES)[number];
@@ -101,9 +144,20 @@ export const ALTITUDE_UNITS = ["meter", "foot"] as const;
 export type AltitudeUnit = (typeof ALTITUDE_UNITS)[number];
 
 /** Every unit identifier the format defines — derived, never transcribed. */
-export type Unit = MassUnit | WaterUnit | TemperatureUnit | PressureUnit | AltitudeUnit;
+export type Unit =
+  | MassUnit
+  | WaterUnit
+  | TemperatureUnit
+  | PressureUnit
+  | AltitudeUnit;
 export const UNITS: readonly Unit[] = [
-  ...new Set<Unit>([...MASS_UNITS, ...WATER_UNITS, ...TEMPERATURE_UNITS, ...PRESSURE_UNITS, ...ALTITUDE_UNITS]),
+  ...new Set<Unit>([
+    ...MASS_UNITS,
+    ...WATER_UNITS,
+    ...TEMPERATURE_UNITS,
+    ...PRESSURE_UNITS,
+    ...ALTITUDE_UNITS,
+  ]),
 ];
 
 // Open registries: ANY non-empty string is valid in both fields below. These are
@@ -112,12 +166,24 @@ export const UNITS: readonly Unit[] = [
 
 /** Recommended `addition.type` values. `ice` is the one with a defined effect: it marks the recipe iced. */
 export const RECOMMENDED_ADDITION_TYPES = [
-  "ice", "milk", "sugar", "syrup", "water", "cream",
+  "ice",
+  "milk",
+  "sugar",
+  "syrup",
+  "water",
+  "cream",
 ] as const;
-export type RecommendedAdditionType = (typeof RECOMMENDED_ADDITION_TYPES)[number];
+export type RecommendedAdditionType =
+  (typeof RECOMMENDED_ADDITION_TYPES)[number];
 
 /** Recommended `producers[].role` values. A source that labels no part omits `role` rather than guessing. */
 export const RECOMMENDED_PRODUCER_ROLES = [
-  "producer", "farm", "cooperative", "washing_station", "mill", "exporter",
+  "producer",
+  "farm",
+  "cooperative",
+  "washing_station",
+  "mill",
+  "exporter",
 ] as const;
-export type RecommendedProducerRole = (typeof RECOMMENDED_PRODUCER_ROLES)[number];
+export type RecommendedProducerRole =
+  (typeof RECOMMENDED_PRODUCER_ROLES)[number];

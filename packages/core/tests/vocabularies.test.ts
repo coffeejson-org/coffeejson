@@ -1,11 +1,27 @@
-import { describe, expect, test } from "vitest";
 import { readFileSync } from "node:fs";
+import { describe, expect, test } from "vitest";
 import {
-  ALTITUDE_UNITS, BEAN_FORMS, BREW_METHODS, DEFAULT_QUANTITY_BASIS, DEFAULT_STEP_KIND,
-  FILTER_MATERIALS, GRIND_SIZES, MASS_UNITS, ORIGIN_TYPES, PARTY_TYPES,
-  PREFERRED_EXTRACTIONS, PRESSURE_UNITS, PROCESSES, QUANTITY_BASES,
-  RECOMMENDED_ADDITION_TYPES, RECOMMENDED_PRODUCER_ROLES, ROAST_LEVELS, STEP_KINDS,
-  TEMPERATURE_UNITS, UNITS, WATER_UNITS,
+  ALTITUDE_UNITS,
+  BEAN_FORMS,
+  BREW_METHODS,
+  DEFAULT_QUANTITY_BASIS,
+  DEFAULT_STEP_KIND,
+  FILTER_MATERIALS,
+  GRIND_SIZES,
+  MASS_UNITS,
+  ORIGIN_TYPES,
+  PARTY_TYPES,
+  PREFERRED_EXTRACTIONS,
+  PRESSURE_UNITS,
+  PROCESSES,
+  QUANTITY_BASES,
+  RECOMMENDED_ADDITION_TYPES,
+  RECOMMENDED_PRODUCER_ROLES,
+  ROAST_LEVELS,
+  STEP_KINDS,
+  TEMPERATURE_UNITS,
+  UNITS,
+  WATER_UNITS,
 } from "../src/vocabularies";
 
 // The schema is the source, so the test reads it rather than a second copy —
@@ -14,7 +30,10 @@ import {
 // a transcription that degrades silently: a token missed here reads as
 // "unknown" to every consumer, and nothing fails.
 const schema = JSON.parse(
-  readFileSync(new URL("../schema/coffeejson-1.0.schema.json", import.meta.url), "utf8"),
+  readFileSync(
+    new URL("../schema/coffeejson-1.0.schema.json", import.meta.url),
+    "utf8",
+  ),
 ) as Record<string, unknown>;
 
 const at = (path: string[]): Record<string, unknown> => {
@@ -33,19 +52,51 @@ const CLOSED: [name: string, tokens: readonly string[], path: string[]][] = [
   ["method", BREW_METHODS, ["$defs", "method"]],
   ["step.kind", STEP_KINDS, ["$defs", "step", "properties", "kind"]],
   ["process", PROCESSES, ["$defs", "process"]],
-  ["bean.roast_level", ROAST_LEVELS, ["$defs", "bean", "properties", "roast_level"]],
+  [
+    "bean.roast_level",
+    ROAST_LEVELS,
+    ["$defs", "bean", "properties", "roast_level"],
+  ],
   ["bean.form", BEAN_FORMS, ["$defs", "bean", "properties", "form"]],
-  ["filter.material", FILTER_MATERIALS, ["$defs", "filter", "properties", "material"]],
+  [
+    "filter.material",
+    FILTER_MATERIALS,
+    ["$defs", "filter", "properties", "material"],
+  ],
   ["grind.size", GRIND_SIZES, ["$defs", "grind", "properties", "size"]],
   ["recipe.basis", QUANTITY_BASES, ["$defs", "recipe", "properties", "basis"]],
   ["origin.type", ORIGIN_TYPES, ["$defs", "origin", "properties", "type"]],
   ["party.type", PARTY_TYPES, ["$defs", "party", "properties", "type"]],
-  ["bean.preferred_extraction", PREFERRED_EXTRACTIONS, ["$defs", "bean", "properties", "preferred_extraction"]],
-  ["massMeasurement.unit", MASS_UNITS, ["$defs", "massMeasurement", "properties", "unit"]],
-  ["waterMeasurement.unit", WATER_UNITS, ["$defs", "waterMeasurement", "properties", "unit"]],
-  ["tempMeasurement.unit", TEMPERATURE_UNITS, ["$defs", "tempMeasurement", "properties", "unit"]],
-  ["pressureMeasurement.unit", PRESSURE_UNITS, ["$defs", "pressureMeasurement", "properties", "unit"]],
-  ["altitude.unit", ALTITUDE_UNITS, ["$defs", "altitude", "properties", "unit"]],
+  [
+    "bean.preferred_extraction",
+    PREFERRED_EXTRACTIONS,
+    ["$defs", "bean", "properties", "preferred_extraction"],
+  ],
+  [
+    "massMeasurement.unit",
+    MASS_UNITS,
+    ["$defs", "massMeasurement", "properties", "unit"],
+  ],
+  [
+    "waterMeasurement.unit",
+    WATER_UNITS,
+    ["$defs", "waterMeasurement", "properties", "unit"],
+  ],
+  [
+    "tempMeasurement.unit",
+    TEMPERATURE_UNITS,
+    ["$defs", "tempMeasurement", "properties", "unit"],
+  ],
+  [
+    "pressureMeasurement.unit",
+    PRESSURE_UNITS,
+    ["$defs", "pressureMeasurement", "properties", "unit"],
+  ],
+  [
+    "altitude.unit",
+    ALTITUDE_UNITS,
+    ["$defs", "altitude", "properties", "unit"],
+  ],
 ];
 
 describe("every closed set is the schema's enum, in the schema's order", () => {
@@ -61,8 +112,16 @@ describe("every closed set is the schema's enum, in the schema's order", () => {
 // holds against the prose's recommended list.
 describe("every open registry is the schema's recommended set", () => {
   const OPEN: [name: string, tokens: readonly string[], path: string[]][] = [
-    ["addition.type", RECOMMENDED_ADDITION_TYPES, ["$defs", "addition", "properties", "type"]],
-    ["party.role", RECOMMENDED_PRODUCER_ROLES, ["$defs", "party", "properties", "role"]],
+    [
+      "addition.type",
+      RECOMMENDED_ADDITION_TYPES,
+      ["$defs", "addition", "properties", "type"],
+    ],
+    [
+      "party.role",
+      RECOMMENDED_PRODUCER_ROLES,
+      ["$defs", "party", "properties", "role"],
+    ],
   ];
   for (const [name, tokens, path] of OPEN) {
     test(name, () => {
@@ -74,19 +133,29 @@ describe("every open registry is the schema's recommended set", () => {
 });
 
 test("the step kind a document means when it states none is the schema's default", () => {
-  expect(at(["$defs", "step", "properties", "kind"])["default"]).toBe(DEFAULT_STEP_KIND);
+  expect(at(["$defs", "step", "properties", "kind"])["default"]).toBe(
+    DEFAULT_STEP_KIND,
+  );
   expect(STEP_KINDS).toContain(DEFAULT_STEP_KIND);
 });
 
 test("the basis a document means when it states none is the schema's default", () => {
-  expect(at(["$defs", "recipe", "properties", "basis"])["default"]).toBe(DEFAULT_QUANTITY_BASIS);
+  expect(at(["$defs", "recipe", "properties", "basis"])["default"]).toBe(
+    DEFAULT_QUANTITY_BASIS,
+  );
   expect(QUANTITY_BASES).toContain(DEFAULT_QUANTITY_BASIS);
 });
 
 // Derived: the assertion is that nothing is lost or invented, not a second
 // transcription of the five lists.
 test("every unit identifier the five measurement enums define is in UNITS, once", () => {
-  const declared = [...MASS_UNITS, ...WATER_UNITS, ...TEMPERATURE_UNITS, ...PRESSURE_UNITS, ...ALTITUDE_UNITS];
+  const declared = [
+    ...MASS_UNITS,
+    ...WATER_UNITS,
+    ...TEMPERATURE_UNITS,
+    ...PRESSURE_UNITS,
+    ...ALTITUDE_UNITS,
+  ];
   expect([...UNITS].sort()).toEqual([...new Set(declared)].sort());
   expect(UNITS.length).toBe(new Set(UNITS).size);
 });
@@ -95,14 +164,26 @@ test("every unit identifier the five measurement enums define is in UNITS, once"
 // a dose stated in millilitres is invalid, deliberately.
 test("only brew water accepts a volume", () => {
   expect(WATER_UNITS).toContain("milliliter");
-  for (const tokens of [MASS_UNITS, TEMPERATURE_UNITS, PRESSURE_UNITS, ALTITUDE_UNITS])
+  for (const tokens of [
+    MASS_UNITS,
+    TEMPERATURE_UNITS,
+    PRESSURE_UNITS,
+    ALTITUDE_UNITS,
+  ])
     expect(tokens).not.toContain("milliliter");
 });
 
 test("every set whose fallback is `other` carries the token to fall back to", () => {
-  for (const tokens of [BREW_METHODS, STEP_KINDS, PROCESSES, BEAN_FORMS, FILTER_MATERIALS])
+  for (const tokens of [
+    BREW_METHODS,
+    STEP_KINDS,
+    PROCESSES,
+    BEAN_FORMS,
+    FILTER_MATERIALS,
+  ])
     expect(tokens).toContain("other");
   // The two ordered scales have no `other`, and must not grow one: an unknown
   // value there is ignored in favor of a more precise field, never bucketed.
-  for (const tokens of [ROAST_LEVELS, GRIND_SIZES]) expect(tokens).not.toContain("other");
+  for (const tokens of [ROAST_LEVELS, GRIND_SIZES])
+    expect(tokens).not.toContain("other");
 });

@@ -1,9 +1,9 @@
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { expect, test } from "vitest";
-import { HEAD_JSONLD, PRERENDERED, SLOT, fill } from "../tools/prerender";
-import { recipesBody } from "../src/lib/recipes-body";
 import { filtersFromSearch } from "../src/lib/filter";
+import { recipesBody } from "../src/lib/recipes-body";
+import { fill, HEAD_JSONLD, PRERENDERED, SLOT } from "../tools/prerender";
 
 const site = fileURLToPath(new URL("..", import.meta.url));
 const shell = (page: string) => readFileSync(site + page, "utf8");
@@ -12,15 +12,20 @@ const shell = (page: string) => readFileSync(site + page, "utf8");
 // injection no-ops, the page ships blank again, and nothing else notices — the
 // browser still fills it, so every other test and every human passes.
 test("every prerendered shell carries the slot the build fills", () => {
-  for (const page of Object.keys(PRERENDERED)) expect(shell(page), page).toContain(SLOT);
+  for (const page of Object.keys(PRERENDERED))
+    expect(shell(page), page).toContain(SLOT);
 });
 
 test("filling a shell puts the page's own heading inside it", () => {
   for (const page of Object.keys(PRERENDERED)) {
     const filled = fill(shell(page), page);
     expect(filled, page).not.toContain(SLOT);
-    expect(filled, `${page} has no <h1> after filling`).toMatch(/<main id="app">[\s\S]*<h1/);
-    expect(filled.length, `${page} grew by nothing`).toBeGreaterThan(shell(page).length + 1000);
+    expect(filled, `${page} has no <h1> after filling`).toMatch(
+      /<main id="app">[\s\S]*<h1/,
+    );
+    expect(filled.length, `${page} grew by nothing`).toBeGreaterThan(
+      shell(page).length + 1000,
+    );
   }
 });
 
@@ -31,8 +36,12 @@ test("a page with no body is passed through untouched", () => {
 });
 
 test("a shell that lost its slot fails the build rather than shipping blank", () => {
-  expect(() => fill("<html><body><main id=\"app\" data-x></main></body></html>", "index.html"))
-    .toThrow();
+  expect(() =>
+    fill(
+      '<html><body><main id="app" data-x></main></body></html>',
+      "index.html",
+    ),
+  ).toThrow();
 });
 
 test("a prerendered page loads no module that would rebuild what the build wrote", () => {
@@ -43,7 +52,9 @@ test("a prerendered page loads no module that would rebuild what the build wrote
     "recipes/index.html": ["recipes"],
   };
   for (const page of Object.keys(PRERENDERED)) {
-    const scripts = [...shell(page).matchAll(/src="\/src\/pages\/([\w-]+)\.ts"/g)].map((m) => m[1]);
+    const scripts = [
+      ...shell(page).matchAll(/src="\/src\/pages\/([\w-]+)\.ts"/g),
+    ].map((m) => m[1]);
     expect(scripts, page).toEqual(HYDRATES[page] ?? []);
   }
 });
@@ -54,15 +65,19 @@ test("a prerendered page loads no module that would rebuild what the build wrote
 // misbehaves on the first click, which is worse than the blank page it replaced.
 test("the recipe directory's build output is what its module would render", () => {
   const filled = fill(shell("recipes/index.html"), "recipes/index.html");
-  const inMain = filled.slice(filled.indexOf('<main id="app">') + '<main id="app">'.length,
-                              filled.lastIndexOf("</main>"));
+  const inMain = filled.slice(
+    filled.indexOf('<main id="app">') + '<main id="app">'.length,
+    filled.lastIndexOf("</main>"),
+  );
   expect(inMain).toBe(recipesBody(filtersFromSearch("")));
 });
 
 test("the recipe directory carries BOTH its own identity and the corpus, in the static head", () => {
   const filled = fill(shell("recipes/index.html"), "recipes/index.html");
   const head = filled.slice(0, filled.indexOf("</head>"));
-  const blocks = [...head.matchAll(/<script type="application\/ld\+json">(.*?)<\/script>/gs)]
+  const blocks = [
+    ...head.matchAll(/<script type="application\/ld\+json">(.*?)<\/script>/gs),
+  ]
     .map((m) => JSON.parse(m[1]!.replace(/\\u003c/g, "<")))
     .flatMap((v) => (Array.isArray(v) ? v : [v]));
 

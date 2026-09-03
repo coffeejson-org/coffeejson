@@ -1,7 +1,11 @@
 import { EXAMPLES, PITFALLS, SYSTEM_PROMPT } from "../lib/agent-examples";
-import { CRAWLERS_UNCHANGED, LICENSE_CORPUS, footerHtml } from "../lib/footer.mjs";
-import { esc } from "../lib/text.mjs";
+import {
+  CRAWLERS_UNCHANGED,
+  footerHtml,
+  LICENSE_CORPUS,
+} from "../lib/footer.mjs";
 import { siteHeader } from "../lib/site-header.mjs";
+import { esc } from "../lib/text.mjs";
 
 const json = (v: unknown) => esc(JSON.stringify(v, null, 2));
 
@@ -44,19 +48,23 @@ export const agentsBody = (): string => `
   <pre><code>${esc(SYSTEM_PROMPT)}</code></pre>
 
   <h2>Examples</h2>
-  ${EXAMPLES.map((e) => `
+  ${EXAMPLES.map(
+    (e) => `
     <h3>${esc(e.prompt)}</h3>
     <p class="muted">${esc(e.note)}</p>
-    <pre><code>${json(e.doc)}</code></pre>`).join("")}
+    <pre><code>${json(e.doc)}</code></pre>`,
+  ).join("")}
 
   <h2>Mistakes models actually make</h2>
   <table class="pitfalls">
     <thead><tr><th>Wrong</th><th>Right</th><th>Why</th></tr></thead>
     <tbody>
-      ${PITFALLS.map((p) => `<tr>
+      ${PITFALLS.map(
+        (p) => `<tr>
         <td><code>${esc(p.wrong)}</code></td>
         <td><code>${esc(p.right)}</code></td>
-        <td>${esc(p.why)}</td></tr>`).join("")}
+        <td>${esc(p.why)}</td></tr>`,
+      ).join("")}
     </tbody>
   </table>
 

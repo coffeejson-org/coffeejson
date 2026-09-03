@@ -1,8 +1,13 @@
-import { readFileSync, readdirSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import { INDEXABLE_PATHS, SITE_URL, buildSitemap, indexableUrls } from "../tools/gen.mjs";
+import {
+  buildSitemap,
+  INDEXABLE_PATHS,
+  indexableUrls,
+  SITE_URL,
+} from "../tools/gen.mjs";
 
 const site = fileURLToPath(new URL("..", import.meta.url));
 const robots = readFileSync(join(site, "public/robots.txt"), "utf8");
@@ -37,7 +42,9 @@ function disallowedForAll(path: string): boolean {
 describe("robots.txt", () => {
   it("never blocks a URL the sitemap advertises", () => {
     for (const path of INDEXABLE_PATHS) {
-      expect(disallowedForAll(path), `robots blocks sitemap URL ${path}`).toBe(false);
+      expect(disallowedForAll(path), `robots blocks sitemap URL ${path}`).toBe(
+        false,
+      );
     }
   });
 
@@ -53,18 +60,33 @@ describe("robots.txt", () => {
   });
 
   it("disallows the named training crawlers and no others", () => {
-    for (const bot of ["GPTBot", "CCBot", "Bytespider", "Amazonbot", "Applebot-Extended", "meta-externalagent"]) {
+    for (const bot of [
+      "GPTBot",
+      "CCBot",
+      "Bytespider",
+      "Amazonbot",
+      "Applebot-Extended",
+      "meta-externalagent",
+    ]) {
       expect(robots).toContain(`User-agent: ${bot}`);
     }
     // Retrieval bots are allowed by omission — a group of their own would be a
     // block, since every named group here is a full `Disallow: /`.
-    for (const bot of ["ClaudeBot", "Google-Extended", "OAI-SearchBot", "ChatGPT-User", "PerplexityBot"]) {
+    for (const bot of [
+      "ClaudeBot",
+      "Google-Extended",
+      "OAI-SearchBot",
+      "ChatGPT-User",
+      "PerplexityBot",
+    ]) {
       expect(robots).not.toContain(`User-agent: ${bot}`);
     }
   });
 
   it("carries the retrieval-only Content-Signal and points at the sitemap", () => {
-    expect(robots).toContain("Content-Signal: search=yes,ai-input=yes,ai-train=no");
+    expect(robots).toContain(
+      "Content-Signal: search=yes,ai-input=yes,ai-train=no",
+    );
     expect(robots).toContain(`Sitemap: ${SITE_URL}/sitemap.xml`);
   });
 
@@ -80,13 +102,16 @@ describe("sitemap.xml", () => {
   const xml = buildSitemap();
 
   it("lists every indexable URL, absolute and canonical", () => {
-    for (const url of indexableUrls()) expect(xml).toContain(`<loc>${url}</loc>`);
+    for (const url of indexableUrls())
+      expect(xml).toContain(`<loc>${url}</loc>`);
     expect(xml.match(/<loc>/g) ?? []).toHaveLength(INDEXABLE_PATHS.length);
   });
 
   it("emits a well-formed urlset", () => {
     expect(xml.startsWith('<?xml version="1.0" encoding="UTF-8"?>')).toBe(true);
-    expect(xml).toContain('xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"');
+    expect(xml).toContain(
+      'xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"',
+    );
   });
 });
 
@@ -94,41 +119,56 @@ describe("JSON-LD urls", () => {
   // robots.txt disallows the `?d=` payload space and /r/ canonicalizes every
   // payload to bare /r/, so structured data naming a share link points at a
   // forbidden address. Checked at the source: the injection runs on page load.
-  const callers = ["../src/pages", "../src/lib"].flatMap((d) => {
-    const dir = fileURLToPath(new URL(d, import.meta.url));
-    return readdirSync(dir)
-      .filter((f) => f.endsWith(".ts") || f.endsWith(".tsx"))
-      .map((f) => [f, readFileSync(join(dir, f), "utf8")] as const);
-  }).filter(([, src]) => src.includes("docJsonLd("));
+  const callers = ["../src/pages", "../src/lib"]
+    .flatMap((d) => {
+      const dir = fileURLToPath(new URL(d, import.meta.url));
+      return readdirSync(dir)
+        .filter((f) => f.endsWith(".ts") || f.endsWith(".tsx"))
+        .map((f) => [f, readFileSync(join(dir, f), "utf8")] as const);
+    })
+    .filter(([, src]) => src.includes("docJsonLd("));
 
   it("every module calling docJsonLd is accounted for", () => {
     // `jsonld.ts` declares it; the other two call it.
-    expect(callers.map(([f]) => f).sort()).toEqual(["jsonld.ts", "r.tsx", "recipes-body.ts"]);
+    expect(callers.map(([f]) => f).sort()).toEqual([
+      "jsonld.ts",
+      "r.tsx",
+      "recipes-body.ts",
+    ]);
   });
 
-  it.each([["r.tsx"], ["recipes-body.ts"]])("%s passes docJsonLd no url", (file) => {
-    const src = callers.find(([f]) => f === file)![1];
-    // A second argument is a declared url. Until a recipe has a page of its
-    // own, no address here survives both robots.txt and the canonical.
-    for (const call of src.match(/docJsonLd\([^)]*\)/g) ?? []) {
-      expect(call, `${file}: ${call}`).not.toMatch(/,/);
-    }
-  });
+  it.each([["r.tsx"], ["recipes-body.ts"]])(
+    "%s passes docJsonLd no url",
+    (file) => {
+      const src = callers.find(([f]) => f === file)![1];
+      // A second argument is a declared url. Until a recipe has a page of its
+      // own, no address here survives both robots.txt and the canonical.
+      for (const call of src.match(/docJsonLd\([^)]*\)/g) ?? []) {
+        expect(call, `${file}: ${call}`).not.toMatch(/,/);
+      }
+    },
+  );
 });
 
 describe("canonical URLs", () => {
   it.each(PAGES)("%s declares the canonical the sitemap uses", (file, path) => {
-    expect(html(file)).toContain(`<link rel="canonical" href="${SITE_URL}${path}" />`);
+    expect(html(file)).toContain(
+      `<link rel="canonical" href="${SITE_URL}${path}" />`,
+    );
   });
 
   it.each(PAGES)("%s declares a matching og:url", (file, path) => {
-    expect(html(file)).toContain(`<meta property="og:url" content="${SITE_URL}${path}" />`);
+    expect(html(file)).toContain(
+      `<meta property="og:url" content="${SITE_URL}${path}" />`,
+    );
   });
 
   it("gives every page a distinct title and description", () => {
     const grab = (s: string, re: RegExp) => (re.exec(s) ?? [])[1];
     const titles = PAGES.map(([f]) => grab(html(f), /<title>([^<]+)<\/title>/));
-    const descs = PAGES.map(([f]) => grab(html(f), /<meta name="description" content="([^"]+)"/));
+    const descs = PAGES.map(([f]) =>
+      grab(html(f), /<meta name="description" content="([^"]+)"/),
+    );
     expect(titles.every(Boolean)).toBe(true);
     expect(descs.every(Boolean)).toBe(true);
     expect(new Set(titles).size).toBe(PAGES.length);
@@ -155,22 +195,32 @@ describe("social preview", () => {
   });
 
   it.each(PAGES)("%s declares an absolute og:image", (file) => {
-    expect(html(file)).toContain(`<meta property="og:image" content="${SITE_URL}/${OG}" />`);
+    expect(html(file)).toContain(
+      `<meta property="og:image" content="${SITE_URL}/${OG}" />`,
+    );
   });
 
   it.each(PAGES)("%s declares dimensions matching the file", (file) => {
     const [w, h] = pngSize(png);
-    expect(html(file)).toContain(`<meta property="og:image:width" content="${w}" />`);
-    expect(html(file)).toContain(`<meta property="og:image:height" content="${h}" />`);
+    expect(html(file)).toContain(
+      `<meta property="og:image:width" content="${w}" />`,
+    );
+    expect(html(file)).toContain(
+      `<meta property="og:image:height" content="${h}" />`,
+    );
   });
 
   it.each(PAGES)("%s opts into the large card", (file) => {
-    expect(html(file)).toContain('<meta name="twitter:card" content="summary_large_image" />');
+    expect(html(file)).toContain(
+      '<meta name="twitter:card" content="summary_large_image" />',
+    );
   });
 
   it("generated corpus pages carry the same image", () => {
     const gen = readFileSync(join(site, "tools/gen.mjs"), "utf8");
-    expect(gen).toContain('<meta property="og:image" content="${SITE_URL}/og.png" />');
+    expect(gen).toContain(
+      '<meta property="og:image" content="${SITE_URL}/og.png" />',
+    );
     expect(gen).toContain('name="twitter:card" content="summary_large_image"');
   });
 });

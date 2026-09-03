@@ -1,7 +1,12 @@
 import beans from "../generated/beans-index.json";
-import { CORRECTIONS, LICENSE_SITE, QUOTED_PROSE, licenseLine } from "./footer.mjs";
-import { esc, slugify } from "./text.mjs";
+import {
+  CORRECTIONS,
+  LICENSE_SITE,
+  licenseLine,
+  QUOTED_PROSE,
+} from "./footer.mjs";
 import { siteHeader } from "./site-header.mjs";
+import { esc, slugify } from "./text.mjs";
 
 // The roaster filter is VIEW STATE (`?roaster=onyx`), not an indexed path: a
 // subset of an existing page is not a publication, the same call `/recipes/` makes
@@ -9,8 +14,11 @@ import { siteHeader } from "./site-header.mjs";
 
 type Bean = (typeof beans)[number];
 
-const roasters = [...new Map(beans.map((b) => [slugify(b.roaster.name), b.roaster.name])).entries()]
-  .sort((a, b) => a[1].localeCompare(b[1]));
+const roasters = [
+  ...new Map(
+    beans.map((b) => [slugify(b.roaster.name), b.roaster.name]),
+  ).entries(),
+].sort((a, b) => a[1].localeCompare(b[1]));
 
 /**
  * The bags hub. Unlike the other prerendered pages this one has view state — the
@@ -19,29 +27,34 @@ const roasters = [...new Map(beans.map((b) => [slugify(b.roaster.name), b.roaste
  * every bag; a filtered link still filters.
  */
 export const beansBody = (selected: string | null = null): string => {
-const shown: Bean[] = selected ? beans.filter((b) => slugify(b.roaster.name) === selected) : beans;
+  const shown: Bean[] = selected
+    ? beans.filter((b) => slugify(b.roaster.name) === selected)
+    : beans;
 
-const chip = (slug: string | null, label: string) => {
-  const href = slug === null ? "/beans/" : `/beans/?roaster=${encodeURIComponent(slug)}`;
-  const on = slug === selected;
-  return `<a class="chip${on ? " chip--on" : ""}" href="${href}"${on ? ' aria-current="true"' : ""}>${esc(label)}</a>`;
-};
+  const chip = (slug: string | null, label: string) => {
+    const href =
+      slug === null ? "/beans/" : `/beans/?roaster=${encodeURIComponent(slug)}`;
+    const on = slug === selected;
+    return `<a class="chip${on ? " chip--on" : ""}" href="${href}"${on ? ' aria-current="true"' : ""}>${esc(label)}</a>`;
+  };
 
-const card = (b: Bean) => {
-  const facts = [b.origin, b.process, b.roast].filter(Boolean).join(" · ");
-  return `
+  const card = (b: Bean) => {
+    const facts = [b.origin, b.process, b.roast].filter(Boolean).join(" · ");
+    return `
     <article class="card">
       <h2><a href="/beans/${esc(b.slug)}/">${esc(b.name)}</a></h2>
       <p class="muted">${esc(b.roaster.name)}</p>
       ${facts ? `<p>${esc(facts)}</p>` : ""}
       ${b.notes ? `<p class="muted"><em>${esc(b.notes)}</em></p>` : ""}
-      ${b.recipes.length
-        ? `<p class="muted">${b.recipes.length} transcribed brew${b.recipes.length === 1 ? "" : "s"}</p>`
-        : ""}
+      ${
+        b.recipes.length
+          ? `<p class="muted">${b.recipes.length} transcribed brew${b.recipes.length === 1 ? "" : "s"}</p>`
+          : ""
+      }
     </article>`;
-};
+  };
 
-return `
+  return `
   ${siteHeader("/beans/")}
 
   <h1>Bags</h1>
@@ -56,7 +69,10 @@ return `
   </nav>
 
   <p class="muted" role="status">${shown.length} of ${beans.length} bags${
-    selected ? ` from ${esc(roasters.find(([s]) => s === selected)?.[1] ?? selected)}` : ""}</p>
+    selected
+      ? ` from ${esc(roasters.find(([s]) => s === selected)?.[1] ?? selected)}`
+      : ""
+  }</p>
 
   ${shown.length ? shown.map(card).join("") : `<p>No bag matches that roaster.</p>`}
 
@@ -66,4 +82,4 @@ return `
     <a href="https://github.com/coffeejson-org/coffeejson" rel="noopener">GitHub</a>
     ${licenseLine(LICENSE_SITE, QUOTED_PROSE, CORRECTIONS)}
   </footer>`;
-}
+};

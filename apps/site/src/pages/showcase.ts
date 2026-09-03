@@ -1,7 +1,7 @@
 import registry from "../../../../registries/implementations.json";
-import { LICENSE_SITE, PACKAGES, footerHtml } from "../lib/footer.mjs";
-import { esc } from "../lib/text.mjs";
+import { footerHtml, LICENSE_SITE, PACKAGES } from "../lib/footer.mjs";
 import { siteHeader } from "../lib/site-header.mjs";
+import { esc } from "../lib/text.mjs";
 
 // WHERE CoffeeJSON can be used; `/implementations` is HOW to implement it, and the
 // two must not drift into each other. A surface is listed as WORKING only where
@@ -14,15 +14,21 @@ const TRANSPORT = `${REPO}/blob/main/docs/transport.md`;
 const ISSUES = `${REPO}/issues`;
 
 const PLATFORM: Record<string, string> = {
-  ios: "iOS", watchos: "watchOS", macos: "macOS", android: "Android",
-  web: "Web", windows: "Windows", linux: "Linux",
+  ios: "iOS",
+  watchos: "watchOS",
+  macos: "macOS",
+  android: "Android",
+  web: "Web",
+  windows: "Windows",
+  linux: "Linux",
 };
 const SURFACE: Record<string, string> = {
   "query-binding": "share links",
   "coffeejson-file": "document files",
 };
 const label = (map: Record<string, string>, v: string) => map[v] ?? v;
-const joined = (v: string[]) => v.map((x) => esc(label(SURFACE, x))).join(" and ");
+const joined = (v: string[]) =>
+  v.map((x) => esc(label(SURFACE, x))).join(" and ");
 
 // Either role may be empty — a site that only publishes documents reads nothing
 // and is still an implementation — so the sentence takes whichever halves are true.
@@ -37,7 +43,14 @@ const does = (i: { reads: string[]; writes: string[] }) => {
 // The JSON import types `icon` from the one entry that has it, so the card takes
 // the shape the registry's `$comment` promises rather than today's file. The alt is
 // empty because the name is the next thing in the row.
-type Impl = { name: string; url: string; platforms: string[]; reads: string[]; writes: string[]; icon?: string };
+type Impl = {
+  name: string;
+  url: string;
+  platforms: string[];
+  reads: string[];
+  writes: string[];
+  icon?: string;
+};
 
 const implCard = (i: Impl) => `
   <li class="card">

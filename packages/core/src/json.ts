@@ -8,11 +8,13 @@ import type { Measurement } from "./types.js";
 
 export const isObj = (v: unknown): v is Record<string, unknown> =>
   typeof v === "object" && v !== null && !Array.isArray(v);
-export const str = (v: unknown): string | null => (typeof v === "string" ? v : null);
+export const str = (v: unknown): string | null =>
+  typeof v === "string" ? v : null;
 export const num = (v: unknown): number | null =>
   typeof v === "number" && Number.isFinite(v) ? v : null;
 export const arr = (v: unknown): unknown[] => (Array.isArray(v) ? v : []);
-export const objItems = (v: unknown): Record<string, unknown>[] => arr(v).filter(isObj);
+export const objItems = (v: unknown): Record<string, unknown>[] =>
+  arr(v).filter(isObj);
 export const strArr = (v: unknown): string[] =>
   arr(v).filter((x): x is string => typeof x === "string");
 
@@ -28,7 +30,11 @@ export const calendarDay = (v: unknown): string | null => {
   // `setUTCFullYear`, not `Date.UTC`, which reads a two-digit year as 19xx.
   const t = new Date(0);
   t.setUTCFullYear(y, m - 1, d);
-  return t.getUTCFullYear() === y && t.getUTCMonth() === m - 1 && t.getUTCDate() === d ? s : null;
+  return t.getUTCFullYear() === y &&
+    t.getUTCMonth() === m - 1 &&
+    t.getUTCDate() === d
+    ? s
+    : null;
 };
 
 /** A party's display name; whitespace-only counts as absent. */

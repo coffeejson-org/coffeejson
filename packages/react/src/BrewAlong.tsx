@@ -1,12 +1,12 @@
 import type { NormalizedRecipe } from "@coffeejson/core";
 import { fmtClock } from "@coffeejson/core";
+import { BrewControls } from "./BrewControls.js";
+import { Countdown } from "./Countdown.js";
 import type { CoffeeJSONConfig } from "./config.js";
 import { cx, resolveConfig } from "./config.js";
-import type { BrewAlongState } from "./useBrewAlong.js";
 import { StepCard } from "./StepCard.js";
-import { Countdown } from "./Countdown.js";
 import { Timeline } from "./Timeline.js";
-import { BrewControls } from "./BrewControls.js";
+import type { BrewAlongState } from "./useBrewAlong.js";
 
 export interface BrewAlongVariants {
   stepCard?: "full" | "compact";
@@ -35,15 +35,39 @@ export function BrewAlong({ recipe, brew, config, variants }: BrewAlongProps) {
   const rc = resolveConfig(config);
   const { state, elapsedS, running } = brew;
   return (
-    <div className={cx("brew", rc)} data-running={running ? "true" : undefined} data-finished={state.finished ? "true" : undefined}>
+    <div
+      className={cx("brew", rc)}
+      data-running={running ? "true" : undefined}
+      data-finished={state.finished ? "true" : undefined}
+    >
       <div className={cx("brewClock", rc)}>{fmtClock(elapsedS)}</div>
-      <Timeline recipe={recipe} state={state} variant={variants?.timeline} config={config} />
-      <StepCard recipe={recipe} state={state} variant={variants?.stepCard} config={config} />
+      <Timeline
+        recipe={recipe}
+        state={state}
+        variant={variants?.timeline}
+        config={config}
+      />
+      <StepCard
+        recipe={recipe}
+        state={state}
+        variant={variants?.stepCard}
+        config={config}
+      />
       {!state.finished ? (
-        <Countdown recipe={recipe} state={state} elapsedS={elapsedS} config={config}
-          target={variants?.countdown?.target} format={variants?.countdown?.format} />
+        <Countdown
+          recipe={recipe}
+          state={state}
+          elapsedS={elapsedS}
+          config={config}
+          target={variants?.countdown?.target}
+          format={variants?.countdown?.format}
+        />
       ) : null}
-      <BrewControls brew={brew} variant={variants?.controls ?? "text"} config={config} />
+      <BrewControls
+        brew={brew}
+        variant={variants?.controls ?? "text"}
+        config={config}
+      />
     </div>
   );
 }

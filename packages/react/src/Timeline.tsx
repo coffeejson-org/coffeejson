@@ -11,13 +11,23 @@ export interface TimelineProps {
 
 // An ordered list, so it reads correctly to assistive tech; the current marker
 // carries aria-current.
-export function Timeline({ recipe, state, variant = "dots", config }: TimelineProps) {
+export function Timeline({
+  recipe,
+  state,
+  variant = "dots",
+  config,
+}: TimelineProps) {
   const rc = resolveConfig(config);
   const done = new Set(state.doneIndexes);
   return (
     <ol className={`${cx("timeline", rc)} cj-timeline--${variant}`}>
       {recipe.steps.map((_, i) => {
-        const status = i === state.currentIndex ? "current" : done.has(i) ? "done" : "future";
+        const status =
+          i === state.currentIndex
+            ? "current"
+            : done.has(i)
+              ? "done"
+              : "future";
         return (
           <li
             key={i}

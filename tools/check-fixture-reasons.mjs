@@ -21,12 +21,25 @@
 
 /** Leaf names common enough that a bare one would match the wrong fixture. */
 const GENERIC = new Set([
-  "value", "min", "max", "unit", "name", "id", "url", "type", "label", "role", "title",
+  "value",
+  "min",
+  "max",
+  "unit",
+  "name",
+  "id",
+  "url",
+  "type",
+  "label",
+  "role",
+  "title",
 ]);
 
 /** Path segments that name something, i.e. array indices dropped. */
 const named = (instancePath) =>
-  instancePath.split("/").filter(Boolean).filter((s) => !/^\d+$/.test(s));
+  instancePath
+    .split("/")
+    .filter(Boolean)
+    .filter((s) => !/^\d+$/.test(s));
 
 /** The member an error fired on, owner-qualified when the name recurs. */
 export function leafOf(error) {

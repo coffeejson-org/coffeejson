@@ -64,8 +64,10 @@ export type DecodeResult =
   | { ok: true; document: DecodedDocument }
   | { ok: false; error: DecodeError };
 
-const err = (kind: DecodeError["kind"], detail?: string): DecodeResult =>
-  ({ ok: false, error: detail === undefined ? { kind } : { kind, detail } });
+const err = (kind: DecodeError["kind"], detail?: string): DecodeResult => ({
+  ok: false,
+  error: detail === undefined ? { kind } : { kind, detail },
+});
 
 /**
  * The encoding discriminator: one byte, decided once, never retried. A plain
@@ -73,14 +75,29 @@ const err = (kind: DecodeError["kind"], detail?: string): DecodeResult =>
  * modulo-31 header check, which `0x7B` cannot. Testing `0x78` exactly would
  * reject a legal smaller window.
  */
-function payloadBody(bytes: Uint8Array): { bytes: Uint8Array } | { kind: DecodeError["kind"]; detail?: string } {
+function payloadBody(
+  bytes: Uint8Array,
+): { bytes: Uint8Array } | { kind: DecodeError["kind"]; detail?: string } {
   const b0 = bytes[0];
   const b1 = bytes[1];
   if (b0 === 0x7b)
-    return bytes.length > MAX_PAYLOAD_BYTES ? { kind: "too_large", detail: `${bytes.length} bytes` } : { bytes };
+    return bytes.length > MAX_PAYLOAD_BYTES
+      ? { kind: "too_large", detail: `${bytes.length} bytes` }
+      : { bytes };
   const zlib =
-    b0 !== undefined && b1 !== undefined && (b0 & 0x0f) === 8 && ((b0 << 8) | b1) % 31 === 0 && !(b1 & 0x20);
-  if (!zlib) return { kind: "unrecognized_encoding", detail: b0 === undefined ? undefined : `first byte 0x${b0.toString(16).toUpperCase().padStart(2, "0")}` };
+    b0 !== undefined &&
+    b1 !== undefined &&
+    (b0 & 0x0f) === 8 &&
+    ((b0 << 8) | b1) % 31 === 0 &&
+    !(b1 & 0x20);
+  if (!zlib)
+    return {
+      kind: "unrecognized_encoding",
+      detail:
+        b0 === undefined
+          ? undefined
+          : `first byte 0x${b0.toString(16).toUpperCase().padStart(2, "0")}`,
+    };
   // Bounded here: base64 length bounds a plain payload, compression severs that.
   const out = inflateZlib(bytes, MAX_PAYLOAD_BYTES);
   if (out.ok) return { bytes: out.bytes };
@@ -141,7 +158,8 @@ export function decodeDocumentText(text: string): DecodeResult {
  * non-empty `beans` or `recipes`. Nothing past that; see `DecodeError`.
  */
 export function checkEnvelope(value: unknown): DecodeResult {
-  if (typeof value !== "object" || value === null || Array.isArray(value)) return err("not_a_document");
+  if (typeof value !== "object" || value === null || Array.isArray(value))
+    return err("not_a_document");
   const version = (value as Record<string, unknown>)["coffeejson"];
   if (typeof version !== "string") return err("not_a_document");
   // MAJOR.MINOR, no patch component and no leading zero on the major — the wire
@@ -192,7 +210,9 @@ function withNormalizedIds(doc: unknown): unknown {
 }
 
 export function encodePayload(doc: unknown): string {
-  const bytes = new TextEncoder().encode(JSON.stringify(withNormalizedIds(doc)));
+  const bytes = new TextEncoder().encode(
+    JSON.stringify(withNormalizedIds(doc)),
+  );
   let bin = "";
   for (const b of bytes) bin += String.fromCharCode(b);
   return btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
@@ -214,7 +234,10 @@ export function payloadFromLocation(search: string): string | null {
  */
 // Module-local, not in `globals.d.ts`: a declaration this minimal would shadow
 // the real `URL` everywhere it exists.
-type MinimalURL = { readonly protocol: string; readonly searchParams: { get(name: string): string | null } };
+type MinimalURL = {
+  readonly protocol: string;
+  readonly searchParams: { get(name: string): string | null };
+};
 declare const URL: { new (url: string): MinimalURL };
 
 export function decodeScanned(input: string): DecodeResult {
@@ -224,6 +247,7 @@ export function decodeScanned(input: string): DecodeResult {
   } catch {
     return err("not_a_url");
   }
-  if (url.protocol !== "https:" && url.protocol !== "http:") return err("not_http", url.protocol);
+  if (url.protocol !== "https:" && url.protocol !== "http:")
+    return err("not_http", url.protocol);
   return decodePayload(url.searchParams.get("d") ?? "");
 }

@@ -12,7 +12,8 @@ function sectionOf(md, level, title) {
   const hashes = "#".repeat(level);
   const clean = (s) => s.replaceAll("`", "").trim();
   const start = lines.findIndex(
-    (l) => l.startsWith(`${hashes} `) && clean(l.slice(level + 1)) === clean(title),
+    (l) =>
+      l.startsWith(`${hashes} `) && clean(l.slice(level + 1)) === clean(title),
   );
   if (start === -1) return null;
   const isBoundary = (l) => /^#{1,6} /.test(l) && l.indexOf(" ") <= level;
@@ -94,7 +95,8 @@ function compareSets(kind, prose, schema) {
   const extra = setDiff(proseSet, schemaSet);
   if (!missing.length && !extra.length) return null;
   const parts = [];
-  if (missing.length) parts.push(`in schema but not prose: ${missing.join(", ")}`);
+  if (missing.length)
+    parts.push(`in schema but not prose: ${missing.join(", ")}`);
   if (extra.length) parts.push(`in prose but not schema: ${extra.join(", ")}`);
   return `${kind} — ${parts.join("; ")}`;
 }
@@ -111,24 +113,126 @@ export function parityFindings(schema, docs) {
   const defs = schema.$defs;
 
   const objects = [
-    { label: "envelope", md: docs.envelope, level: 2, section: "Fields", props: schema.properties, required: schema.required },
-    { label: "recipe", md: docs.recipe, level: 2, section: "Fields", props: defs.recipe.properties, required: defs.recipe.required },
-    { label: "gear", md: docs.recipe, level: 2, section: "Gear object", props: defs.gear.properties, required: defs.gear.required },
-    { label: "grind", md: docs.recipe, level: 2, section: "Grind object", props: defs.grind.properties, required: defs.grind.required },
-    { label: "step", md: docs.recipe, level: 2, section: "Step object", props: defs.step.properties, required: defs.step.required },
-    { label: "addition", md: docs.recipe, level: 2, section: "Addition object", props: defs.addition.properties, required: defs.addition.required },
-    { label: "party", md: docs.recipe, level: 2, section: "Party object", props: defs.party.properties, required: defs.party.required },
-    { label: "tasting", md: docs.tasting, level: 2, section: "Fields", props: defs.tasting.properties, required: defs.tasting.required },
-    { label: "measured", md: docs.tasting, level: 2, section: "Measured", props: defs.tasting.properties.measured.properties, required: defs.tasting.properties.measured.required },
-    { label: "bean", md: docs.bean, level: 2, section: "Fields", props: defs.bean.properties, required: defs.bean.required },
-    { label: "origin", md: docs.bean, level: 2, section: "Origin object", props: defs.origin.properties, required: defs.origin.required },
-    { label: "originItem", md: docs.bean, level: 2, section: "OriginItem object", props: defs.originItem.properties, required: defs.originItem.required },
-    { label: "altitude", md: docs.bean, level: 2, section: "Altitude object", props: defs.altitude.properties, required: defs.altitude.required },
+    {
+      label: "envelope",
+      md: docs.envelope,
+      level: 2,
+      section: "Fields",
+      props: schema.properties,
+      required: schema.required,
+    },
+    {
+      label: "recipe",
+      md: docs.recipe,
+      level: 2,
+      section: "Fields",
+      props: defs.recipe.properties,
+      required: defs.recipe.required,
+    },
+    {
+      label: "gear",
+      md: docs.recipe,
+      level: 2,
+      section: "Gear object",
+      props: defs.gear.properties,
+      required: defs.gear.required,
+    },
+    {
+      label: "grind",
+      md: docs.recipe,
+      level: 2,
+      section: "Grind object",
+      props: defs.grind.properties,
+      required: defs.grind.required,
+    },
+    {
+      label: "step",
+      md: docs.recipe,
+      level: 2,
+      section: "Step object",
+      props: defs.step.properties,
+      required: defs.step.required,
+    },
+    {
+      label: "addition",
+      md: docs.recipe,
+      level: 2,
+      section: "Addition object",
+      props: defs.addition.properties,
+      required: defs.addition.required,
+    },
+    {
+      label: "party",
+      md: docs.recipe,
+      level: 2,
+      section: "Party object",
+      props: defs.party.properties,
+      required: defs.party.required,
+    },
+    {
+      label: "tasting",
+      md: docs.tasting,
+      level: 2,
+      section: "Fields",
+      props: defs.tasting.properties,
+      required: defs.tasting.required,
+    },
+    {
+      label: "measured",
+      md: docs.tasting,
+      level: 2,
+      section: "Measured",
+      props: defs.tasting.properties.measured.properties,
+      required: defs.tasting.properties.measured.required,
+    },
+    {
+      label: "bean",
+      md: docs.bean,
+      level: 2,
+      section: "Fields",
+      props: defs.bean.properties,
+      required: defs.bean.required,
+    },
+    {
+      label: "origin",
+      md: docs.bean,
+      level: 2,
+      section: "Origin object",
+      props: defs.origin.properties,
+      required: defs.origin.required,
+    },
+    {
+      label: "originItem",
+      md: docs.bean,
+      level: 2,
+      section: "OriginItem object",
+      props: defs.originItem.properties,
+      required: defs.originItem.required,
+    },
+    {
+      label: "altitude",
+      md: docs.bean,
+      level: 2,
+      section: "Altitude object",
+      props: defs.altitude.properties,
+      required: defs.altitude.required,
+    },
   ];
-  for (const { label, md, level, section, props, required, ownTableOnly } of objects) {
+  for (const {
+    label,
+    md,
+    level,
+    section,
+    props,
+    required,
+    ownTableOnly,
+  } of objects) {
     const found = sectionOf(md, level, section);
     if (found === null) {
-      add(`fields ${label}`, `section "${section}" not found — re-point the extractor`);
+      add(
+        `fields ${label}`,
+        `section "${section}" not found — re-point the extractor`,
+      );
       continue;
     }
     const sec = ownTableOnly ? beforeSubsections(found, level) : found;
@@ -137,15 +241,28 @@ export function parityFindings(schema, docs) {
       add(`fields ${label}`, `no field table found in section "${section}"`);
       continue;
     }
-    add(`fields ${label}`, compareSets("field set", rows.map((r) => r.name), Object.keys(props)));
+    add(
+      `fields ${label}`,
+      compareSets(
+        "field set",
+        rows.map((r) => r.name),
+        Object.keys(props),
+      ),
+    );
     // Bare yes/no requiredness only; footnoted or conditional marks are the
     // prose's business (the basis switch, altitude's one-of).
     const requiredSet = new Set(required ?? []);
     for (const { name, req } of rows) {
       if (req === "yes" && !requiredSet.has(name))
-        add(`required ${label}.${name}`, "prose says required, schema does not");
+        add(
+          `required ${label}.${name}`,
+          "prose says required, schema does not",
+        );
       else if (req === "no" && requiredSet.has(name))
-        add(`required ${label}.${name}`, "schema says required, prose says optional");
+        add(
+          `required ${label}.${name}`,
+          "schema says required, prose says optional",
+        );
       else add(`required ${label}.${name}`, null);
     }
     // The Type column is what an adopter transcribes into their own types, and
@@ -157,7 +274,9 @@ export function parityFindings(schema, docs) {
       if (prose === null || schemaType === null) continue;
       add(
         `type ${label}.${name}`,
-        prose === schemaType ? null : `prose Type cell says ${prose}, schema says ${schemaType}`,
+        prose === schemaType
+          ? null
+          : `prose Type cell says ${prose}, schema says ${schemaType}`,
       );
     }
   }
@@ -165,31 +284,61 @@ export function parityFindings(schema, docs) {
   // The perceived axes name themselves in a scale table (-1 / 0 / +1), not a
   // field table, so the field-set check reads their first column instead.
   const perceivedSec = sectionOf(docs.tasting, 2, "Perceived");
-  if (!perceivedSec) add("fields perceived", 'section "Perceived" not found — re-point the extractor');
+  if (!perceivedSec)
+    add(
+      "fields perceived",
+      'section "Perceived" not found — re-point the extractor',
+    );
   else
     add(
       "fields perceived",
-      compareSets("field set", valueTableValues(perceivedSec), Object.keys(defs.tasting.properties.perceived.properties)),
+      compareSets(
+        "field set",
+        valueTableValues(perceivedSec),
+        Object.keys(defs.tasting.properties.perceived.properties),
+      ),
     );
 
   // Measurement: three schema defs share one prose table.
   const measurementSec = sectionOf(docs.recipe, 2, "Measurement object");
-  if (!measurementSec) add("fields measurement", 'section "Measurement object" not found');
+  if (!measurementSec)
+    add("fields measurement", 'section "Measurement object" not found');
   else {
     const names = fieldTableRows(measurementSec).map((r) => r.name);
-    for (const def of ["massMeasurement", "waterMeasurement", "tempMeasurement", "pressureMeasurement"])
-      add(`fields ${def}`, compareSets("field set", names, Object.keys(defs[def].properties)));
+    for (const def of [
+      "massMeasurement",
+      "waterMeasurement",
+      "tempMeasurement",
+      "pressureMeasurement",
+    ])
+      add(
+        `fields ${def}`,
+        compareSets("field set", names, Object.keys(defs[def].properties)),
+      );
   }
 
   const vocab = (level, title, extract, schemaValues, subsetOnly = false) => {
     const sec = sectionOf(docs.vocabularies, level, title);
-    if (!sec) return add(`vocab ${title}`, `section "${title}" not found — re-point the extractor`);
+    if (!sec)
+      return add(
+        `vocab ${title}`,
+        `section "${title}" not found — re-point the extractor`,
+      );
     const values = extract(sec);
-    if (!values.length) return add(`vocab ${title}`, `no values extracted from section "${title}"`);
+    if (!values.length)
+      return add(
+        `vocab ${title}`,
+        `no values extracted from section "${title}"`,
+      );
     if (subsetOnly) {
       const present = new Set(values);
       const missing = schemaValues.filter((v) => !present.has(v));
-      return add(`vocab ${title}`, missing.length ? `schema values not named in prose: ${missing.join(", ")}` : null);
+      return add(
+        `vocab ${title}`,
+        missing.length
+          ? `schema values not named in prose: ${missing.join(", ")}`
+          : null,
+      );
     }
     add(`vocab ${title}`, compareSets("value set", values, schemaValues));
   };
@@ -199,16 +348,37 @@ export function parityFindings(schema, docs) {
   vocab(3, "Step `kind`", valueTableValues, defs.step.properties.kind.enum);
   vocab(3, "Grind `size`", dotListValues, defs.grind.properties.size.enum);
   vocab(3, "`process`", valueTableValues, defs.process.enum);
-  vocab(3, "`roast_level`", dotListValues, defs.bean.properties.roast_level.enum);
+  vocab(
+    3,
+    "`roast_level`",
+    dotListValues,
+    defs.bean.properties.roast_level.enum,
+  );
   vocab(3, "`form`", valueTableValues, defs.bean.properties.form.enum);
-  vocab(3, "`preferred_extraction`", valueTableValues, defs.bean.properties.preferred_extraction.enum);
+  vocab(
+    3,
+    "`preferred_extraction`",
+    valueTableValues,
+    defs.bean.properties.preferred_extraction.enum,
+  );
   vocab(3, "`origin.type`", dotListValues, defs.origin.properties.type.enum);
   // Party `type` names its two values in prose sentences, not a table — the
   // schema's values must at least all appear in the section.
-  vocab(3, "Party `type`", (sec) => [...sec.matchAll(/`([a-z_]+)`/g)].map((m) => m[1]), defs.party.properties.type.enum, true);
+  vocab(
+    3,
+    "Party `type`",
+    (sec) => [...sec.matchAll(/`([a-z_]+)`/g)].map((m) => m[1]),
+    defs.party.properties.type.enum,
+    true,
+  );
   // Addition `type` is an open registry: the schema's `examples` and the
   // prose's recommended list must agree exactly.
-  vocab(3, "Addition `type`", dotListValues, defs.addition.properties.type.examples);
+  vocab(
+    3,
+    "Addition `type`",
+    dotListValues,
+    defs.addition.properties.type.examples,
+  );
 
   // Units: the one prose table covers every measurement def's enum.
   const unitsSec = sectionOf(docs.vocabularies, 3, "Units");

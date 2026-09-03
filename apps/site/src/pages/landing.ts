@@ -1,9 +1,14 @@
 import { encodePayload } from "@coffeejson/core";
-import { SAMPLE_DOC, SAMPLE_TEXT } from "../lib/sample";
 import counts from "../generated/corpus-counts.json";
-import { LICENSE_SITE, PACKAGES, QUOTED_PROSE, footerHtml } from "../lib/footer.mjs";
-import { siteHeader } from "../lib/site-header.mjs";
 import { FAQ } from "../lib/faq.mjs";
+import {
+  footerHtml,
+  LICENSE_SITE,
+  PACKAGES,
+  QUOTED_PROSE,
+} from "../lib/footer.mjs";
+import { SAMPLE_DOC, SAMPLE_TEXT } from "../lib/sample";
+import { siteHeader } from "../lib/site-header.mjs";
 import { esc } from "../lib/text.mjs";
 
 // Every figure in the facts strip is derived by `tools/gen.mjs`, because a
@@ -12,7 +17,8 @@ import { esc } from "../lib/text.mjs";
 
 const tryUrl = `/r/?d=${encodePayload(SAMPLE_DOC)}`;
 
-const GUIDE = "https://github.com/coffeejson-org/coffeejson/blob/main/docs/integration-guide.md";
+const GUIDE =
+  "https://github.com/coffeejson-org/coffeejson/blob/main/docs/integration-guide.md";
 
 /**
  * The landing page body. This page has no event listener and no state — it is a

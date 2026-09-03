@@ -8,7 +8,12 @@ import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const runtimePath = join(root, "docs", "schema", "coffeejson-1.0.schema.json");
-const authoringPath = join(root, "docs", "schema", "coffeejson-1.0.authoring.schema.json");
+const authoringPath = join(
+  root,
+  "docs",
+  "schema",
+  "coffeejson-1.0.authoring.schema.json",
+);
 const gearPath = join(root, "registries", "gear.json");
 
 /** Every id and alias in the gear registry — the ids a document authored HERE may use. */
@@ -17,7 +22,10 @@ function registeredGearIds() {
   return gear.flatMap((e) => [e.id, ...(e.aliases ?? [])]).sort();
 }
 
-export function buildAuthoringSchema(runtime, registeredIds = registeredGearIds()) {
+export function buildAuthoringSchema(
+  runtime,
+  registeredIds = registeredGearIds(),
+) {
   const schema = structuredClone(runtime);
   // A variant is `/schema/<variant>/<version>`, variant FIRST because
   // `/schema/1.0` is served as a file and a path cannot be both file and
@@ -33,7 +41,11 @@ export function buildAuthoringSchema(runtime, registeredIds = registeredGearIds(
   // specification defines rather than on an overlay of one. 03-recipe.md and
   // 04-bean.md both state the lint rejects any other member here, and they are
   // right, so the reserved name is withdrawn from the three overlays.
-  for (const def of ["recipeLocalization", "stepLocalization", "beanLocalization"])
+  for (const def of [
+    "recipeLocalization",
+    "stepLocalization",
+    "beanLocalization",
+  ])
     delete schema.$defs?.[def]?.properties?.ext;
   // An authoring RULE on the Gear object. The registry is authoritative for a
   // known id, so `brand`/`model` on one can only drift from it — measured at 24
@@ -47,24 +59,49 @@ export function buildAuthoringSchema(runtime, registeredIds = registeredGearIds(
   // 03-recipe.md's fallback exists for, and must keep brand/model. The published
   // authoring schema is a lint for documents authored here, not a conformance gate.
   if (schema.$defs?.gear) {
-    schema.$defs.gear.allOf = [...(schema.$defs.gear.allOf ?? []), {
-      $comment: "Authoring lint: brand/model belong to off-registry gear. For an id this registry carries, the registry supplies them and a copy in the document only drifts from it. An unregistered id keeps them — they are the fallback a consumer has left.",
-      if: { type: "object", required: ["id"], properties: { id: { enum: registeredIds } } },
-      then: { type: "object", not: { anyOf: [{ required: ["brand"] }, { required: ["model"] }] } },
-    }];
+    schema.$defs.gear.allOf = [
+      ...(schema.$defs.gear.allOf ?? []),
+      {
+        $comment:
+          "Authoring lint: brand/model belong to off-registry gear. For an id this registry carries, the registry supplies them and a copy in the document only drifts from it. An unregistered id keeps them — they are the fallback a consumer has left.",
+        if: {
+          type: "object",
+          required: ["id"],
+          properties: { id: { enum: registeredIds } },
+        },
+        then: {
+          type: "object",
+          not: { anyOf: [{ required: ["brand"] }, { required: ["model"] }] },
+        },
+      },
+    ];
   }
   // An authoring RULE, not a transform. Co-location associates on
   // `beans.length == 1`, so adding a second bean to a bag-to-brew document
   // silently unlinks every recipe: still valid, now meaning something else. NOT a
   // runtime rule — an unreferenced recipe in a multi-bean document is legal.
   // Added after `walk` so the transform never sees it.
-  schema.allOf = [...(schema.allOf ?? []), {
-    $comment: "Authoring lint: once a document carries several beans, co-location associates nothing, so each recipe must name the coffee it is for.",
-    if: { required: ["beans"], properties: { beans: { type: "array", minItems: 2 } } },
-    // Types stated so the fragment is well-formed on its own: ajv strict mode
-    // warns on `items` and `required` that do not say what they apply to.
-    then: { properties: { recipes: { type: "array", items: { type: "object", required: ["bean_ref"] } } } },
-  }];
+  schema.allOf = [
+    ...(schema.allOf ?? []),
+    {
+      $comment:
+        "Authoring lint: once a document carries several beans, co-location associates nothing, so each recipe must name the coffee it is for.",
+      if: {
+        required: ["beans"],
+        properties: { beans: { type: "array", minItems: 2 } },
+      },
+      // Types stated so the fragment is well-formed on its own: ajv strict mode
+      // warns on `items` and `required` that do not say what they apply to.
+      then: {
+        properties: {
+          recipes: {
+            type: "array",
+            items: { type: "object", required: ["bean_ref"] },
+          },
+        },
+      },
+    },
+  ];
   return schema;
 }
 

@@ -95,28 +95,128 @@
    the same --cj- custom properties as the cards, so a consumer's theme
    carries over. (No asterisks in this comment: a star-slash pair inside a CSS
    comment terminates it.) */
-.cj-brew { display: grid; gap: var(--cj-space); text-align: center; }
-.cj-brew-clock { font-size: 2.5rem; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
-.cj-timeline { display: flex; justify-content: center; align-items: center; gap: 0.5rem; margin: 0; padding: 0; list-style: none; }
-.cj-timeline-marker { width: 0.7rem; height: 0.7rem; border-radius: 999px; border: 2px solid var(--cj-border); color: var(--cj-muted); display: grid; place-items: center; font-size: 0.7rem; }
-.cj-timeline-marker--done { background: var(--cj-muted); border-color: var(--cj-muted); }
-.cj-timeline-marker--current { background: var(--cj-accent); border-color: var(--cj-accent); color: #fff; }
-.cj-timeline--numbered .cj-timeline-marker { width: 1.5rem; height: 1.5rem; }
-.cj-stepcard { display: grid; gap: 0.25rem; background: var(--cj-bg); border: 1px solid var(--cj-border); border-radius: var(--cj-radius); padding: var(--cj-space); }
-.cj-stepcard-head { display: flex; justify-content: space-between; color: var(--cj-muted); font-size: 0.9rem; font-variant-numeric: tabular-nums; }
-.cj-stepcard-text { font-size: 1rem; }
-.cj-stepcard-pour { font-size: 1.75rem; font-weight: 700; color: var(--cj-accent); font-variant-numeric: tabular-nums; }
-.cj-stepcard-total { color: var(--cj-muted); font-variant-numeric: tabular-nums; }
-.cj-stepcard-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; margin-right: 0.35rem; }
-.cj-stepcard-msg { font-size: 1.25rem; font-weight: 600; }
-.cj-countdown { display: grid; gap: 0.1rem; }
-.cj-countdown-label { color: var(--cj-muted); font-size: 0.85rem; }
-.cj-countdown-value { font-size: 2rem; font-weight: 700; font-variant-numeric: tabular-nums; }
-.cj-countdown-pour { color: var(--cj-accent); font-weight: 700; font-variant-numeric: tabular-nums; }
-.cj-brew-controls { display: flex; justify-content: center; gap: 0.5rem; }
-.cj-brew-btn { padding: 0.6rem 1rem; border: 1px solid var(--cj-border); border-radius: var(--cj-radius); background: transparent; color: var(--cj-fg); font: inherit; font-weight: 600; cursor: pointer; }
-.cj-brew-btn--primary { background: var(--cj-accent); border-color: var(--cj-accent); color: #fff; }
-.cj-brew-btn--ghost { color: var(--cj-muted); }
+.cj-brew {
+  display: grid;
+  gap: var(--cj-space);
+  text-align: center;
+}
+.cj-brew-clock {
+  font-size: 2.5rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+.cj-timeline {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.cj-timeline-marker {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 999px;
+  border: 2px solid var(--cj-border);
+  color: var(--cj-muted);
+  display: grid;
+  place-items: center;
+  font-size: 0.7rem;
+}
+.cj-timeline-marker--done {
+  background: var(--cj-muted);
+  border-color: var(--cj-muted);
+}
+.cj-timeline-marker--current {
+  background: var(--cj-accent);
+  border-color: var(--cj-accent);
+  color: #fff;
+}
+.cj-timeline--numbered .cj-timeline-marker {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+.cj-stepcard {
+  display: grid;
+  gap: 0.25rem;
+  background: var(--cj-bg);
+  border: 1px solid var(--cj-border);
+  border-radius: var(--cj-radius);
+  padding: var(--cj-space);
+}
+.cj-stepcard-head {
+  display: flex;
+  justify-content: space-between;
+  color: var(--cj-muted);
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+}
+.cj-stepcard-text {
+  font-size: 1rem;
+}
+.cj-stepcard-pour {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--cj-accent);
+  font-variant-numeric: tabular-nums;
+}
+.cj-stepcard-total {
+  color: var(--cj-muted);
+  font-variant-numeric: tabular-nums;
+}
+.cj-stepcard-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-right: 0.35rem;
+}
+.cj-stepcard-msg {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+.cj-countdown {
+  display: grid;
+  gap: 0.1rem;
+}
+.cj-countdown-label {
+  color: var(--cj-muted);
+  font-size: 0.85rem;
+}
+.cj-countdown-value {
+  font-size: 2rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.cj-countdown-pour {
+  color: var(--cj-accent);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.cj-brew-controls {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.cj-brew-btn {
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--cj-border);
+  border-radius: var(--cj-radius);
+  background: transparent;
+  color: var(--cj-fg);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.cj-brew-btn--primary {
+  background: var(--cj-accent);
+  border-color: var(--cj-accent);
+  color: #fff;
+}
+.cj-brew-btn--ghost {
+  color: var(--cj-muted);
+}
 
 /* Step list — a four-column row (marker, cue time, label, pour) with a vertical
    connector behind the markers. The connector is one pseudo-element per row whose
@@ -124,7 +224,12 @@
    component sets per row, so progress animates with the clock without any JS
    touching styles. Status lives on the row class, so a consumer restyling one
    state overrides one selector. */
-.cj-steplist { margin: 0; padding: 0; list-style: none; display: grid; }
+.cj-steplist {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+}
 .cj-steplist-row {
   position: relative;
   display: grid;
@@ -146,7 +251,9 @@
     var(--cj-border) var(--cj-fill, 0%)
   );
 }
-.cj-steplist-row:last-child::before { display: none; }
+.cj-steplist-row:last-child::before {
+  display: none;
+}
 .cj-steplist-index {
   position: relative;
   z-index: 1;
@@ -176,10 +283,19 @@
   font-size: 0.9rem;
   font-variant-numeric: tabular-nums;
 }
-.cj-steplist-label { font-size: 0.95rem; }
-.cj-steplist-row--future .cj-steplist-label { color: var(--cj-muted); }
-.cj-steplist-row--current .cj-steplist-label { font-weight: 600; color: var(--cj-accent); }
-.cj-steplist-row--finish .cj-steplist-label { font-weight: 600; }
+.cj-steplist-label {
+  font-size: 0.95rem;
+}
+.cj-steplist-row--future .cj-steplist-label {
+  color: var(--cj-muted);
+}
+.cj-steplist-row--current .cj-steplist-label {
+  font-weight: 600;
+  color: var(--cj-accent);
+}
+.cj-steplist-row--finish .cj-steplist-label {
+  font-weight: 600;
+}
 .cj-steplist-delta {
   color: var(--cj-muted);
   font-size: 0.9rem;

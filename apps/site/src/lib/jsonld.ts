@@ -1,5 +1,5 @@
-import { beanJsonLd, recipeJsonLd } from "@coffeejson/core";
 import type { DecodedDocument } from "@coffeejson/core";
+import { beanJsonLd, recipeJsonLd } from "@coffeejson/core";
 
 /**
  * A document's JSON-LD: every exportable recipe as schema.org Recipe, and — only
@@ -26,7 +26,10 @@ export function docJsonLd(doc: DecodedDocument, url?: string): unknown[] {
 
 /** Serialize for a <script> body: `<` escaped so no string member can close the tag. */
 export const jsonLdJson = (objects: unknown[]): string =>
-  JSON.stringify(objects.length === 1 ? objects[0] : objects).replace(/</g, "\\u003c");
+  JSON.stringify(objects.length === 1 ? objects[0] : objects).replace(
+    /</g,
+    "\\u003c",
+  );
 
 /** Put the page's JSON-LD in <head> (replacing any previous injection). */
 export function injectJsonLd(objects: unknown[]): void {

@@ -1,9 +1,15 @@
 import { expect, test } from "vitest";
-import { defaultLabels, mergeLabels } from "../src/labels";
-import { methodLabel, vocabularyLabel } from "../src/format";
 import { DECODE_ERROR_KINDS } from "../src/codec";
+import { methodLabel, vocabularyLabel } from "../src/format";
+import { defaultLabels, mergeLabels } from "../src/labels";
 import {
-  BEAN_FORMS, BREW_METHODS, FILTER_MATERIALS, GRIND_SIZES, PROCESSES, ROAST_LEVELS, STEP_KINDS,
+  BEAN_FORMS,
+  BREW_METHODS,
+  FILTER_MATERIALS,
+  GRIND_SIZES,
+  PROCESSES,
+  ROAST_LEVELS,
+  STEP_KINDS,
 } from "../src/vocabularies";
 
 test("mergeLabels() with no overrides is the English defaults", () => {
@@ -12,16 +18,18 @@ test("mergeLabels() with no overrides is the English defaults", () => {
   expect(defaultLabels.badge).toBe("Recommended");
 });
 test("overrides deep-merge; unspecified keys keep defaults (consumer re-wording)", () => {
-  const l = mergeLabels({ facts: { dose: "Coffee", waterTemp: "Temperature" } });
+  const l = mergeLabels({
+    facts: { dose: "Coffee", waterTemp: "Temperature" },
+  });
   expect(l.facts.dose).toBe("Coffee");
   expect(l.facts.waterTemp).toBe("Temperature");
-  expect(l.facts.ratio).toBe("Ratio");            // untouched
-  expect(l.badge).toBe("Recommended");            // untouched
+  expect(l.facts.ratio).toBe("Ratio"); // untouched
+  expect(l.badge).toBe("Recommended"); // untouched
 });
 test("methods merge by slug without dropping the default table", () => {
   const l = mergeLabels({ methods: { pour_over: "Filter" } });
   expect(l.methods.pour_over).toBe("Filter");
-  expect(l.methods.espresso).toBe("Espresso");    // default kept
+  expect(l.methods.espresso).toBe("Espresso"); // default kept
 });
 
 test("addition labels default to English and merge key-by-key", () => {
@@ -29,11 +37,13 @@ test("addition labels default to English and merge key-by-key", () => {
   expect(defaultLabels.additionKinds).toEqual({ ice: "Ice", other: "Other" });
   const merged = mergeLabels({ additionKinds: { ice: "氷" } });
   expect(merged.additionKinds.ice).toBe("氷");
-  expect(merged.additionKinds.other).toBe("Other");   // untouched default kept
+  expect(merged.additionKinds.other).toBe("Other"); // untouched default kept
 });
 
 test("brew labels merge key-by-key over the defaults", () => {
-  const merged = mergeLabels({ brew: { pause: "Anhalten", reset: "Neu starten" } });
+  const merged = mergeLabels({
+    brew: { pause: "Anhalten", reset: "Neu starten" },
+  });
   expect(merged.brew.pause).toBe("Anhalten");
   expect(merged.brew.reset).toBe("Neu starten");
   expect(merged.brew.resume).toBe("Resume");
@@ -44,7 +54,8 @@ test("brew labels merge key-by-key over the defaults", () => {
 // what a method is called.
 test("methodLabel reads the same vocabulary the label set exposes", () => {
   const table: Record<string, string | undefined> = defaultLabels.methods;
-  for (const slug of Object.keys(table)) expect(methodLabel(slug), slug).toBe(table[slug]);
+  for (const slug of Object.keys(table))
+    expect(methodLabel(slug), slug).toBe(table[slug]);
 });
 
 test("the default method table is prototype-safe on its own", () => {
@@ -55,14 +66,15 @@ test("the default method table is prototype-safe on its own", () => {
   expect(table["constructor"]).toBeUndefined();
 });
 
-
 // A renderer never spells a token, so every closed set one prints needs a label
 // for every member. Schema → arrays → labels, with nothing free to drift between:
 // `vocabularies.test.ts` holds the arrays equal to the schema, and `tsc` is the
 // real assertion on the `Record<T, string>` parameter here.
 test("every vocabulary label set names every token of its vocabulary", () => {
-  const missing = <T extends string>(tokens: readonly T[], table: Record<T, string>): T[] =>
-    tokens.filter((t) => !table[t]);
+  const missing = <T extends string>(
+    tokens: readonly T[],
+    table: Record<T, string>,
+  ): T[] => tokens.filter((t) => !table[t]);
   expect(missing(BREW_METHODS, defaultLabels.methods)).toEqual([]);
   expect(missing(PROCESSES, defaultLabels.processes)).toEqual([]);
   expect(missing(STEP_KINDS, defaultLabels.stepKinds)).toEqual([]);
@@ -83,15 +95,20 @@ test("the vocabulary tables are prototype-safe, every one of them", () => {
   // The tables' own types do not admit these keys; the RUNTIME objects must not
   // either.
   const tables: Record<string, string | undefined>[] = [
-    defaultLabels.methods, defaultLabels.processes, defaultLabels.stepKinds,
-    defaultLabels.roastLevels, defaultLabels.grindSizes,
+    defaultLabels.methods,
+    defaultLabels.processes,
+    defaultLabels.stepKinds,
+    defaultLabels.roastLevels,
+    defaultLabels.grindSizes,
   ];
   for (const table of tables) {
     expect(table["__proto__"]).toBeUndefined();
     expect(table["constructor"]).toBeUndefined();
   }
   const merged = mergeLabels({ processes: { washed: "Lavado" } });
-  expect((merged.processes as Record<string, string | undefined>)["__proto__"]).toBeUndefined();
+  expect(
+    (merged.processes as Record<string, string | undefined>)["__proto__"],
+  ).toBeUndefined();
 });
 
 test("the new vocabularies merge by token, keeping the defaults not overridden", () => {
@@ -102,13 +119,13 @@ test("the new vocabularies merge by token, keeping the defaults not overridden",
     grindSizes: { fine: "Fino" },
   });
   expect(l.processes.washed).toBe("Lavado");
-  expect(l.processes.natural).toBe("Natural");        // default kept
+  expect(l.processes.natural).toBe("Natural"); // default kept
   expect(l.stepKinds.bloom).toBe("Floración");
-  expect(l.stepKinds.pour).toBe("Pour");              // default kept
+  expect(l.stepKinds.pour).toBe("Pour"); // default kept
   expect(l.roastLevels.light).toBe("Claro");
-  expect(l.roastLevels.dark).toBe("Dark");            // default kept
+  expect(l.roastLevels.dark).toBe("Dark"); // default kept
   expect(l.grindSizes.fine).toBe("Fino");
-  expect(l.grindSizes.coarse).toBe("Coarse");         // default kept
+  expect(l.grindSizes.coarse).toBe("Coarse"); // default kept
 });
 
 // A consumer must be able to localize a token this build does not know, exactly
@@ -122,18 +139,28 @@ test("a vocabulary override may name a token this build has never heard of", () 
 // a policy the caller chooses: a set defining `other` falls back to it, and the
 // two ordered scales define none and so answer with nothing.
 test("vocabularyLabel: a known token, `other`, and a token this build lacks", () => {
-  expect(vocabularyLabel(defaultLabels.processes, "pulped_natural")).toBe("Pulped natural");
+  expect(vocabularyLabel(defaultLabels.processes, "pulped_natural")).toBe(
+    "Pulped natural",
+  );
   expect(vocabularyLabel(defaultLabels.processes, "other")).toBe("Other");
   expect(vocabularyLabel(defaultLabels.processes, "koji")).toBe("Other");
 
-  expect(vocabularyLabel(defaultLabels.stepKinds, "valve_close")).toBe("Close valve");
+  expect(vocabularyLabel(defaultLabels.stepKinds, "valve_close")).toBe(
+    "Close valve",
+  );
   expect(vocabularyLabel(defaultLabels.stepKinds, "other")).toBe("Other");
-  expect(vocabularyLabel(defaultLabels.stepKinds, "laminar_pour")).toBe("Other");
+  expect(vocabularyLabel(defaultLabels.stepKinds, "laminar_pour")).toBe(
+    "Other",
+  );
 
-  expect(vocabularyLabel(defaultLabels.roastLevels, "light_medium")).toBe("Light-medium");
+  expect(vocabularyLabel(defaultLabels.roastLevels, "light_medium")).toBe(
+    "Light-medium",
+  );
   expect(vocabularyLabel(defaultLabels.roastLevels, "charcoal")).toBe("");
 
-  expect(vocabularyLabel(defaultLabels.grindSizes, "medium_coarse")).toBe("Medium-coarse");
+  expect(vocabularyLabel(defaultLabels.grindSizes, "medium_coarse")).toBe(
+    "Medium-coarse",
+  );
   expect(vocabularyLabel(defaultLabels.grindSizes, "gravelly")).toBe("");
 
   expect(vocabularyLabel(defaultLabels.methods, null)).toBe("");
@@ -146,12 +173,17 @@ test("the ordered scales define no `other` to fall back to, and must not grow on
 });
 
 test("every decode reason has a default sentence, and re-wording is key-by-key", () => {
-  const missing = DECODE_ERROR_KINDS.filter((kind) => !defaultLabels.decodeErrors[kind]);
+  const missing = DECODE_ERROR_KINDS.filter(
+    (kind) => !defaultLabels.decodeErrors[kind],
+  );
   expect(missing).toEqual([]);
-  const extra = Object.keys(defaultLabels.decodeErrors)
-    .filter((k) => !(DECODE_ERROR_KINDS as readonly string[]).includes(k));
+  const extra = Object.keys(defaultLabels.decodeErrors).filter(
+    (k) => !(DECODE_ERROR_KINDS as readonly string[]).includes(k),
+  );
   expect(extra).toEqual([]);
   const merged = mergeLabels({ decodeErrors: { not_json: "Pas du JSON." } });
   expect(merged.decodeErrors.not_json).toBe("Pas du JSON.");
-  expect(merged.decodeErrors.no_payload).toBe(defaultLabels.decodeErrors.no_payload);
+  expect(merged.decodeErrors.no_payload).toBe(
+    defaultLabels.decodeErrors.no_payload,
+  );
 });

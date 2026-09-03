@@ -1,6 +1,12 @@
 import { expect, test } from "vitest";
 import {
-  fmtClock, fmtMeasurement, fmtStepTime, formatRatio, gearLabel, methodLabel, regionLabel,
+  fmtClock,
+  fmtMeasurement,
+  fmtStepTime,
+  formatRatio,
+  gearLabel,
+  methodLabel,
+  regionLabel,
   unitSymbol,
 } from "../src/format";
 import { gearLabelsFor } from "../src/gear-labels";
@@ -39,7 +45,9 @@ test("formatRatio: integers plain, fractions to one decimal, .0 stripped, null e
 
 test("gearLabel: label wins, then brand+model, then id, tolerant of garbage", () => {
   expect(gearLabel({ id: "g1", label: "Comandante" })).toBe("Comandante");
-  expect(gearLabel({ id: "b1", brand: "Hario", model: "V60" })).toBe("Hario V60");
+  expect(gearLabel({ id: "b1", brand: "Hario", model: "V60" })).toBe(
+    "Hario V60",
+  );
   expect(gearLabel({ id: "only-id" })).toBe("only-id");
   expect(gearLabel({})).toBe("");
   expect(gearLabel(undefined)).toBe("");
@@ -51,17 +59,32 @@ test("gearLabel: a known id resolves against the registry, and variant rides alo
   // The id is the wire form; the display string is the edge. A document naming
   // registered gear carries no label, so without the lookup this renders a slug.
   expect(gearLabel({ id: "hario-v60" })).toBe("Hario V60");
-  expect(gearLabel({ id: "kalita-wave", variant: "185" })).toBe("Kalita Wave 185");
-  expect(gearLabel({ id: "comandante-c40", variant: "MK4" })).toBe("Comandante C40 MK4");
+  expect(gearLabel({ id: "kalita-wave", variant: "185" })).toBe(
+    "Kalita Wave 185",
+  );
+  expect(gearLabel({ id: "comandante-c40", variant: "MK4" })).toBe(
+    "Comandante C40 MK4",
+  );
   // An alias resolves to the same product.
   expect(gearLabel({ id: "sage-bambino" })).toBe("Breville Bambino");
   // A known id wins over a producer's own label — that is what "localized at the
   // edges" means — while custom and unrecognized ids still fall back to it.
-  expect(gearLabel({ id: "hario-v60", label: "ドリッパー01（V60）" })).toBe("Hario V60");
-  expect(gearLabel({ id: "custom", label: "Modbar", variant: "AV" })).toBe("Modbar AV");
-  expect(gearLabel({ id: "modbar-av", brand: "Modbar", model: "AV" })).toBe("Modbar AV");
+  expect(gearLabel({ id: "hario-v60", label: "ドリッパー01（V60）" })).toBe(
+    "Hario V60",
+  );
+  expect(gearLabel({ id: "custom", label: "Modbar", variant: "AV" })).toBe(
+    "Modbar AV",
+  );
+  expect(gearLabel({ id: "modbar-av", brand: "Modbar", model: "AV" })).toBe(
+    "Modbar AV",
+  );
   // A consumer's own map overrides the registry's neutral label.
-  expect(gearLabel({ id: "hario-v60", variant: "02" }, { "hario-v60": "ハリオ V60" })).toBe("ハリオ V60 02");
+  expect(
+    gearLabel(
+      { id: "hario-v60", variant: "02" },
+      { "hario-v60": "ハリオ V60" },
+    ),
+  ).toBe("ハリオ V60 02");
   expect(gearLabel({ id: "hario-v60", variant: "" })).toBe("Hario V60");
 });
 
@@ -106,14 +129,27 @@ test("dictionary lookups are immune to __proto__/constructor keys", () => {
 // here and the suite reports whether the formatter caught up. One the display
 // table omits renders as nothing — how a measurement disappears from a card.
 const SCHEMA_UNITS = [
-  "gram", "ounce", "milliliter", "celsius", "fahrenheit", "bar", "meter", "foot",
+  "gram",
+  "ounce",
+  "milliliter",
+  "celsius",
+  "fahrenheit",
+  "bar",
+  "meter",
+  "foot",
 ] as const;
 
 // Every SCHEMA_UNITS entry must appear: a missing one means the formatter
 // deletes that unit.
 const EXPECTED_SYMBOL: Record<string, string> = {
-  gram: "g", ounce: "oz", milliliter: "mL",
-  celsius: "°C", fahrenheit: "°F", bar: "bar", meter: "m", foot: "ft",
+  gram: "g",
+  ounce: "oz",
+  milliliter: "mL",
+  celsius: "°C",
+  fahrenheit: "°F",
+  bar: "bar",
+  meter: "m",
+  foot: "ft",
 };
 
 test("every schema unit renders magnitude and symbol", () => {
@@ -123,7 +159,9 @@ test("every schema unit renders magnitude and symbol", () => {
     expect(expected, `${unit} has no expected display symbol`).toBeDefined();
     expect(unitSymbol(unit), unit).toBe(expected);
     expect(fmtMeasurement({ value: 12, unit }), unit).toBe(`12 ${expected}`);
-    expect(fmtMeasurement({ min: 12, max: 14, unit }), unit).toBe(`12–14 ${expected}`);
+    expect(fmtMeasurement({ min: 12, max: 14, unit }), unit).toBe(
+      `12–14 ${expected}`,
+    );
   }
 });
 
@@ -131,6 +169,8 @@ test("every schema unit renders magnitude and symbol", () => {
 // temperature — so `milliliter` renders as itself.
 test("milliliter renders as a volume, point and window alike", () => {
   expect(fmtMeasurement({ value: 320, unit: "milliliter" })).toBe("320 mL");
-  expect(fmtMeasurement({ min: 300, max: 320, unit: "milliliter" })).toBe("300–320 mL");
+  expect(fmtMeasurement({ min: 300, max: 320, unit: "milliliter" })).toBe(
+    "300–320 mL",
+  );
   expect(unitSymbol("milliliter")).toBe("mL");
 });

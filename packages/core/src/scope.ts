@@ -1,5 +1,5 @@
-import type { DecodedDocument } from "./codec.js";
 import { associatedMember, associatedMembers } from "./association.js";
+import type { DecodedDocument } from "./codec.js";
 import { arr, isObj, str } from "./json.js";
 
 // Projections: part of a document as a document of its own. Nothing is invented
@@ -40,9 +40,15 @@ function beansFor(
   tastings: readonly unknown[],
 ): unknown[] {
   const beans = arr(doc["beans"]);
-  const wanted = new Set<unknown>(associatedMembers(beans, str(recipe["bean_ref"]), idOf));
+  const wanted = new Set<unknown>(
+    associatedMembers(beans, str(recipe["bean_ref"]), idOf),
+  );
   for (const tasting of tastings) {
-    const named = associatedMember(beans, isObj(tasting) ? str(tasting["bean_ref"]) : null, idOf);
+    const named = associatedMember(
+      beans,
+      isObj(tasting) ? str(tasting["bean_ref"]) : null,
+      idOf,
+    );
     if (named !== null) wanted.add(named);
   }
   return beans.filter((b) => wanted.has(b));
@@ -67,7 +73,10 @@ function tastingsFor(
  * there is no recipe at `index`, so callers decide what out-of-range means. For a
  * one-recipe document this is the identity, byte for byte.
  */
-export function scopeToRecipe(doc: unknown, index: number): DecodedDocument | null {
+export function scopeToRecipe(
+  doc: unknown,
+  index: number,
+): DecodedDocument | null {
   if (!isDocument(doc)) return null;
   // Indexed against the RAW array: `index` is a position in the caller's own
   // document, so dropping unreadable entries would shift every later one.
@@ -86,7 +95,10 @@ export function scopeToRecipe(doc: unknown, index: number): DecodedDocument | nu
  * recipes are dropped, not emptied. This coffee's tastings come along and the
  * other coffees' do not: a lineup would hand over every opinion of every bag.
  */
-export function scopeToBean(doc: unknown, index: number): DecodedDocument | null {
+export function scopeToBean(
+  doc: unknown,
+  index: number,
+): DecodedDocument | null {
   if (!isDocument(doc)) return null;
   const bean = arr(doc["beans"])[index];
   if (!isObj(bean)) return null;
