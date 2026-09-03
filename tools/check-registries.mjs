@@ -8,6 +8,17 @@
 
 const GEAR_ID = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const CATEGORIES = new Set(["dripper", "immersion", "stovetop", "espresso-machine", "basket", "grinder"]);
+// What kind of name a varietal entry carries. Both members are optional: a row
+// whose parentage is genuinely disputed omits the key rather than guessing, and a
+// forced guess is worse data than a stated gap. `in` rather than `!== undefined`,
+// because a present-but-null member is the thing the null rule forbids — and
+// `SPECIES_EPITHET.test(null)` would otherwise pass, null stringifying to "null".
+const VARIETAL_KINDS = new Set([
+  "cultivar", "group", "landrace", "species", "botanical_variety",
+  "interspecific_hybrid", "f1_hybrid",
+]);
+// The botanical epithet the name is sold as; `a-x-b` for a true interspecific cross.
+const SPECIES_EPITHET = /^[a-z]+(-x-[a-z]+)?$/;
 
 /** Backticked kebab slugs inside a section's table rows (the Gear registry
  *  seed table in docs/spec/06-vocabularies.md). */
@@ -102,6 +113,10 @@ export function registryFindings(gearRegistry, varietalRegistry, vocabulariesMd,
     if (!entry.name) problems.push("name is required");
     if (names.has(entry.name)) problems.push("duplicate name");
     names.add(entry.name);
+    if ("kind" in entry && !VARIETAL_KINDS.has(entry.kind))
+      problems.push(`unknown kind "${entry.kind}" — one of ${[...VARIETAL_KINDS].join(", ")}, or omit the key`);
+    if ("species" in entry && !(typeof entry.species === "string" && SPECIES_EPITHET.test(entry.species)))
+      problems.push(`species "${entry.species}" is not a lowercase epithet — or omit the key`);
     for (const alias of entry.aliases ?? []) {
       if (alias === entry.name) problems.push(`alias "${alias}" duplicates its canonical name`);
       if (allAliases.has(alias)) problems.push(`alias "${alias}" appears twice`);

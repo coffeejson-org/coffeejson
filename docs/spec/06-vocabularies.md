@@ -488,6 +488,41 @@ Canonical varietal names for `bean.varietals[]`, plus an alias map from common
 synonyms and breeding codes to a canonical name. The canonical data is
 [`registries/varietals.json`](https://coffeejson.org/registries/varietals.json).
 
+**Each entry says what kind of name it is.** A varietal field collects several
+different botanical claims — one bred selection, a whole breeding family, an
+undifferentiated local population, a species — and a flat list of names cannot
+tell them apart. `Heirloom` covers thousands of Ethiopian genotypes and
+`Pacamara` is one 1958 cross; a consumer grouping or filtering varietals needs
+to know which it is holding.
+
+| `kind` | What the name denotes | Registry examples |
+| --- | --- | --- |
+| `cultivar` | one named selection | `Bourbon` · `Gesha` · `SL28` · `Castillo` |
+| `group` | a breeding family covering many selections | `Catimor` · `Sarchimor` |
+| `landrace` | an undifferentiated local population | `Heirloom` · `Kurume` · `Wolisho` |
+| `species` | a species named as the varietal | `Liberica` · `Robusta` · `Eugenioides` |
+| `botanical_variety` | a named variety within a species | `Excelsa` · `Nganda` |
+| `interspecific_hybrid` | a cross between two species | `Timor Hybrid` |
+| `f1_hybrid` | a first-generation controlled cross | `H1` · `Starmaya` · `Milenio` |
+
+`species` carries the botanical epithet the name is sold as — `arabica` ·
+`canephora` · `liberica` · `eugenioides` · `stenophylla` · `racemosa` ·
+`charrieriana` · `congensis`, and `a-x-b` for a true cross. **An arabica
+cultivar carrying Timor Hybrid ancestry is `arabica`**, because that is what it
+is botanically and commercially: `Catimor`, `Castillo`, `Colombia`, `Lempira`,
+`Marsellesa`, `Parainema`, `Batian` and `Ruiru 11` are all `arabica`, and only
+`Timor Hybrid` itself is the cross.
+
+**Both members are optional.** A name whose parentage is genuinely disputed
+omits the key rather than guessing, because a forced guess is worse data than a
+stated gap. Every row here carries both where they are settled.
+
+Both members are **annotations on the match, never a constraint on a document**.
+`bean.varietals[]` stays an array of strings, a producer emits what the roaster
+claimed, and a consumer that ignores `kind` and `species` entirely behaves
+exactly as before. The `kind` set is open: an unrecognized value is ignored, not
+an error.
+
 Canonical examples: `Bourbon` · `Caturra` · `Catuai` · `Typica` · `Gesha` ·
 `SL28` · `SL34` · `Heirloom` · `Pacamara` · `Pacas` · `Mundo Novo`.
 
