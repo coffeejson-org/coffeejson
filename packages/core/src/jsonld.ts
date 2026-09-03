@@ -53,7 +53,9 @@ export function recipeJsonLd(
 
   const grind = isObj(r["grind"]) ? r["grind"] : null;
   const tool = [r["brewer"], r["basket"], grind ? grind["grinder"] : undefined]
-    .map(gearLabel)
+    // Arrow, not a bare reference: gearLabel takes an optional label map as its
+    // second argument and Array.map would hand it the index.
+    .map((g) => gearLabel(g))
     .filter(Boolean)
     .map((toolName) => ({ "@type": "HowToTool", name: toolName }));
   if (tool.length) ld["tool"] = tool;

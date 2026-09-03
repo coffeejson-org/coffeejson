@@ -5,7 +5,7 @@
       "title": "ONIBUS COFFEE — スイッチドリッパー　ホットコーヒーの淹れ方",
       "description": "ONIBUS COFFEE の浸漬式ドリッパー スイッチ（HARIO）によるホットコーヒーのレシピ。スイッチを閉じた状態で中挽きの粉13gに92℃のお湯を50cc注いで1分蒸らし、165ccを追加してからスイッチを開けて落としきる。",
       "method": "immersion",
-      "brewer": { "id": "hario-switch", "brand": "HARIO", "model": "浸漬式ドリッパー スイッチ" },
+      "brewer": { "id": "hario-switch", "label": "浸漬式ドリッパー スイッチ" },
       "coffee": { "value": 13, "unit": "gram" },
       "water": { "value": 215, "unit": "milliliter" },
       "water_temp": { "value": 92, "unit": "celsius" },

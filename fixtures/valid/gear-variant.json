@@ -1,0 +1,18 @@
+{
+  "coffeejson": "1.0",
+  "recipes": [
+    {
+      "title": "Gear variant — the family is the id, the variant is which one",
+      "method": "pour_over",
+      "brewer": { "id": "hario-v60", "variant": "02" },
+      "basket": { "id": "vst-precision", "variant": "18 g" },
+      "coffee": { "value": 20, "unit": "gram" },
+      "water": { "value": 300, "unit": "gram" },
+      "ratio": 15,
+      "grind": { "grinder": { "id": "varia-vs3", "variant": "Gen 2" }, "setting": "4.5" },
+      "steps": [{ "at_s": 0, "to_water": { "value": 300, "unit": "gram" }, "instruction": "single pour" }],
+      "notes": "The registry names hario-v60, vst-precision and varia-vs3 as families; a size, a dose and a generation are variants of them, never slugs of their own.",
+      "lang": "en"
+    }
+  ]
+}

@@ -29,7 +29,7 @@
       "title": "Roaster's V60",
       "method": "pour_over",
       "recommended": true,
-      "brewer": { "id": "hario-v60", "label": "Hario V60" },
+      "brewer": { "id": "hario-v60" },
       "coffee": { "value": 15, "unit": "gram" },
       "water": { "value": 250, "unit": "gram" },
       "water_temp": { "value": 94, "unit": "celsius" }
@@ -38,7 +38,7 @@
       "title": "Roaster's AeroPress",
       "method": "aeropress",
       "recommended": true,
-      "brewer": { "id": "aeropress", "label": "AeroPress" },
+      "brewer": { "id": "aeropress" },
       "coffee": { "value": 14, "unit": "gram" },
       "water": { "value": 220, "unit": "gram" },
       "water_temp": { "value": 88, "unit": "celsius" }

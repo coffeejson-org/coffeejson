@@ -14,6 +14,10 @@ export interface GearRef {
   id: string;
   brand?: string;
   model?: string;
+  /** Which one of the family — a size, material or generation, as the maker
+   *  prints it ("02", "185", "MDN-41", "Gen 2"). The registry entry names the
+   *  family; this names the instance. */
+  variant?: string;
   label?: string;
 }
 

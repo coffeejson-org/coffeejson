@@ -51,9 +51,8 @@
       "method": "cold_brew",
       "recommended": true,
       "brewer": {
-        "id": "custom",
-        "brand": "Toddy",
-        "label": "Toddy Gallon"
+        "id": "toddy-cold-brew-system",
+        "variant": "Gallon"
       },
       "coffee": {
         "value": 283,

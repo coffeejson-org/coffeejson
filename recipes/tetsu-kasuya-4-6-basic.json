@@ -5,7 +5,7 @@
       "title": "Tetsu Kasuya 4:6 Method (basic)",
       "description": "Tetsu Kasuya's World Brewers Cup-winning 4:6 pour-over: five equal pours — the first 40% of the water tunes taste, the last 60% sets strength.",
       "method": "pour_over",
-      "brewer": { "id": "hario-v60", "brand": "Hario", "model": "V60 02", "label": "Hario V60" },
+      "brewer": { "id": "hario-v60", "variant": "02" },
       "coffee": { "value": 20, "unit": "gram" },
       "water": { "value": 300, "unit": "gram" },
       "ratio": 15,

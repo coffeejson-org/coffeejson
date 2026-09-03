@@ -26,9 +26,7 @@
       },
       "grind": {
         "grinder": {
-          "id": "mahlkonig-e80",
-          "brand": "Mahlkönig",
-          "model": "E80"
+          "id": "mahlkonig-e80"
         },
         "setting": "0.5 - 0.7"
       },

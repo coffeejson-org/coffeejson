@@ -5,7 +5,7 @@
       "title": "James Hoffmann Ultimate V60",
       "description": "James Hoffmann's one-cup V60 technique: a generous bloom with a swirl, then two slow spiral pours for an even, sweet extraction.",
       "method": "pour_over",
-      "brewer": { "id": "hario-v60", "brand": "Hario", "model": "V60", "label": "Hario V60" },
+      "brewer": { "id": "hario-v60" },
       "coffee": { "value": 30, "unit": "gram" },
       "water": { "value": 500, "unit": "gram" },
       "water_temp": { "value": 95, "unit": "celsius" },

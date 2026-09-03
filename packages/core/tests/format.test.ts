@@ -3,6 +3,7 @@ import {
   fmtClock, fmtMeasurement, fmtStepTime, formatRatio, gearLabel, methodLabel, regionLabel,
   unitSymbol,
 } from "../src/format";
+import { gearLabelsFor } from "../src/gear-labels";
 
 test("fmtMeasurement renders known units and drops unknown ones", () => {
   expect(fmtMeasurement({ value: 250, unit: "gram" })).toBe("250 g");
@@ -44,6 +45,34 @@ test("gearLabel: label wins, then brand+model, then id, tolerant of garbage", ()
   expect(gearLabel(undefined)).toBe("");
   expect(gearLabel("junk")).toBe("");
   expect(gearLabel({ brand: 42, model: null, id: true })).toBe("");
+});
+
+test("gearLabel: a known id resolves against the registry, and variant rides along", () => {
+  // The id is the wire form; the display string is the edge. A document naming
+  // registered gear carries no label, so without the lookup this renders a slug.
+  expect(gearLabel({ id: "hario-v60" })).toBe("Hario V60");
+  expect(gearLabel({ id: "kalita-wave", variant: "185" })).toBe("Kalita Wave 185");
+  expect(gearLabel({ id: "comandante-c40", variant: "MK4" })).toBe("Comandante C40 MK4");
+  // An alias resolves to the same product.
+  expect(gearLabel({ id: "sage-bambino" })).toBe("Breville Bambino");
+  // A known id wins over a producer's own label — that is what "localized at the
+  // edges" means — while custom and unrecognized ids still fall back to it.
+  expect(gearLabel({ id: "hario-v60", label: "ドリッパー01（V60）" })).toBe("Hario V60");
+  expect(gearLabel({ id: "custom", label: "Modbar", variant: "AV" })).toBe("Modbar AV");
+  expect(gearLabel({ id: "modbar-av", brand: "Modbar", model: "AV" })).toBe("Modbar AV");
+  // A consumer's own map overrides the registry's neutral label.
+  expect(gearLabel({ id: "hario-v60", variant: "02" }, { "hario-v60": "ハリオ V60" })).toBe("ハリオ V60 02");
+  expect(gearLabel({ id: "hario-v60", variant: "" })).toBe("Hario V60");
+});
+
+test("gearLabelsFor: a language tag narrows before it falls back", () => {
+  // `en` is the only set the registry can supply today; the shape is what makes
+  // adding `ja` a data change rather than a reshape.
+  expect(gearLabelsFor("en")["hario-v60"]).toBe("Hario V60");
+  expect(gearLabelsFor("ja")["hario-v60"]).toBe("Hario V60");
+  expect(gearLabelsFor("ja-JP")["hario-v60"]).toBe("Hario V60");
+  expect(gearLabelsFor(undefined)["hario-v60"]).toBe("Hario V60");
+  expect(gearLabelsFor("")["hario-v60"]).toBe("Hario V60");
 });
 
 test("methodLabel maps known slugs, unknown → Other, absent → empty", () => {

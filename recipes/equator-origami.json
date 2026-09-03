@@ -5,7 +5,7 @@
       "title": "Equator Coffees — Origami",
       "description": "Equator Coffees' Origami Dripper guide for one 10 oz cup: 22 g at 1:17, a 50 g bloom then two slow pours.",
       "method": "pour_over",
-      "brewer": { "id": "origami", "brand": "Origami", "model": "Origami Dripper" },
+      "brewer": { "id": "origami" },
       "coffee": { "value": 22, "unit": "gram" },
       "water": { "value": 370, "unit": "gram" },
       "ratio": 17,

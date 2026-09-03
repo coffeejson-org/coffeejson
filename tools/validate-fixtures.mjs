@@ -165,6 +165,14 @@ readFileSync(AUTHORING_SCHEMA_PATH, "utf8") === renderAuthoringSchema(runtime)
   : fail("authoring schema matches its generator (no drift)", "regenerate: node tools/gen-authoring-schema.mjs");
 const validateAuthoring = ajv.compile(buildAuthoringSchema(runtime));
 
+// The bundled gear labels are generated. Nothing else notices when they go stale,
+// and a stale map silently renders yesterday's name — or a raw slug for a new entry.
+const { renderGearLabels } = await import("./gen-gear-labels.mjs");
+readFileSync(join(root, "packages/core/src/gear-labels.ts"), "utf8")
+  === renderGearLabels(JSON.parse(readFileSync(join(root, "registries/gear.json"), "utf8")).gear).out
+  ? ok("bundled gear labels match the registry (no drift)")
+  : fail("bundled gear labels match the registry (no drift)", "regenerate: node tools/gen-gear-labels.mjs");
+
 // Fixtures that exist to prove RUNTIME leniency are exempt from the strict pass.
 const authoringExempt = new Map([
   ["forward-compat-unknown-fields.json", "unknown members are its purpose"],
@@ -401,8 +409,11 @@ const registryDocs = [...jsonFiles(join(root, "fixtures", "valid")).filter((f) =
 for (const { label, error } of registryFindings(gearRegistry, varietalRegistry, proseDocs.vocabularies, registryDocs, TOKEN_REGISTRIES))
   error ? fail(`registry ${label}`, error) : ok(`registry ${label}`);
 
-const customEntry = { gear: [...gearRegistry.gear, { id: "custom", category: "dripper", label: "x" }] };
-registryFindings(customEntry, varietalRegistry, proseDocs.vocabularies, []).some((f) => f.label === "gear custom" && f.error)
+// Otherwise well-formed — roles and category present — so the finding can only be
+// the reserved-id guard. Without them the entry trips two unrelated checks and the
+// probe passes even if the guard is deleted.
+const customEntry = { gear: [...gearRegistry.gear, { id: "custom", roles: ["brewer"], category: "dripper", label: "x" }] };
+registryFindings(customEntry, varietalRegistry, proseDocs.vocabularies, []).some((f) => f.label === "gear custom" && f.error?.includes("escape hatch"))
   ? ok("registry probe: a custom registry entry is rejected")
   : fail("registry probe: a custom registry entry is rejected", "seeded entry produced no finding");
 // Injected into the seed table itself — the file's earlier bare `hario-v60`
@@ -415,6 +426,16 @@ const probeDoc = (id) => ({ coffeejson: "1.0", recipes: [{ title: "x", coffee: {
 registryFindings(gearRegistry, varietalRegistry, proseDocs.vocabularies, [{ label: "probe", doc: probeDoc("not-registered") }]).some((f) => f.label === "document gear probe" && f.error?.includes("not-registered"))
   ? ok("registry probe: an unregistered document gear id is caught")
   : fail("registry probe: an unregistered document gear id is caught", "seeded id produced no finding");
+// A grinder in a brewer slot: JSON Schema cannot see it, and only the registry knows.
+registryFindings(gearRegistry, varietalRegistry, proseDocs.vocabularies, [{ label: "probe", doc: probeDoc("comandante-c40") }])
+  .some((f) => f.label === "document gear roles probe" && f.error?.includes("comandante-c40 in brewer"))
+  ? ok("registry probe: gear used in a slot it does not play is caught")
+  : fail("registry probe: gear used in a slot it does not play is caught", "seeded misplacement produced no finding");
+// A non-array `roles` must report, not throw and abort the sweep.
+registryFindings({ gear: [{ id: "x", label: "X", roles: 5 }] }, varietalRegistry, proseDocs.vocabularies, [])
+  .some((f) => f.label === "gear x" && f.error?.includes("roles is required"))
+  ? ok("registry probe: a malformed roles reports rather than throwing")
+  : fail("registry probe: a malformed roles reports rather than throwing", "seeded value produced no finding");
 // An alias is a synonym this repository's own documents never write.
 registryFindings(gearRegistry, varietalRegistry, proseDocs.vocabularies, [{ label: "probe", doc: probeDoc("sage-bambino") }]).some((f) => f.label === "document gear probe" && f.error?.includes("sage-bambino"))
   ? ok("registry probe: an alias id in one of the repo's documents is caught")

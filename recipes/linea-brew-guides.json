@@ -5,7 +5,7 @@
       "title": "Linea Caffe — Chemex",
       "description": "Linea Caffe's Chemex method: 29 g ground on the coarsest setting, a 150 g bloom, and the rest of 450 g poured at 1:20 to finish at 4:20.",
       "method": "pour_over",
-      "brewer": { "id": "chemex", "brand": "Chemex" },
+      "brewer": { "id": "chemex" },
       "coffee": { "value": 29, "unit": "gram" },
       "water": { "value": 450, "unit": "gram" },
       "water_temp": { "min": 195, "max": 205, "unit": "fahrenheit" },

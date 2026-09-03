@@ -32,12 +32,12 @@
       "description": "PHILOCOFFEA が420 Rwanda Simbi Washedに添えるハリオ スイッチのレシピ。粉20gに83℃のお湯300gを4投で注ぎ、スイッチはすべて透過（オープン）のまま抽出する。",
       "method": "pour_over",
       "recommended": true,
-      "brewer": { "id": "hario-switch", "brand": "HARIO", "model": "スイッチ" },
+      "brewer": { "id": "hario-switch", "label": "スイッチ" },
       "coffee": { "value": 20, "unit": "gram" },
       "water": { "value": 300, "unit": "gram" },
       "water_temp": { "value": 83, "unit": "celsius" },
       "grind": {
-        "grinder": { "id": "comandante-c40", "brand": "Comandante", "model": "C40 MK4" },
+        "grinder": { "id": "comandante-c40", "variant": "MK4" },
         "setting": "27-33クリック前後",
         "size": "medium_coarse"
       },

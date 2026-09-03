@@ -518,8 +518,12 @@
           "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
           "description": "Canonical registry slug (lowercase kebab-case — schema-enforced), or the literal \"custom\" for off-registry gear. Matching is byte-exact, so the producer gate rejects the case/space/underscore typos that would silently fail every registry match."
         },
-        "brand": { "type": "string", "description": "Normalized brand name, e.g. Hario." },
-        "model": { "type": "string", "description": "Normalized model name, e.g. V60." },
+        "brand": { "type": "string", "description": "Normalized brand name for OFF-registry gear, e.g. Modbar. With a known id the registry supplies it and a producer omits it; the strict authoring schema enforces that." },
+        "model": { "type": "string", "description": "Normalized model name for OFF-registry gear, e.g. AV. Names the product, not which one of it \u2014 a size, material or generation is `variant`. With a known id the registry supplies it and a producer omits it." },
+        "variant": {
+          "type": "string",
+          "description": "The maker's own variant designation for this instance, as printed \u2014 a size (\"02\", \"185\", \"MDN-41\"), a material (\"ceramic\"), a generation (\"Gen 2\"). The registry entry names the product family; this names which one of it. Free text, never coerced to an enum: the varying axis differs per family, so no closed list fits the next one."
+        },
         "label": {
           "type": "string",
           "description": "Display string / fallback. Required when id is \"custom\"."

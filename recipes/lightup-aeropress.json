@@ -5,7 +5,7 @@
       "title": "LIGHT UP COFFEE — AERO PRESS",
       "description": "LIGHT UP COFFEE のエアロプレスレシピ。逆さまにした本体に粉16gを入れ、92℃のお湯235gを注ぎ、1分で攪拌してからゆっくりプレスする。",
       "method": "aeropress",
-      "brewer": { "id": "aeropress", "brand": "AeroPress" },
+      "brewer": { "id": "aeropress" },
       "coffee": { "value": 16, "unit": "gram" },
       "water": { "value": 235, "unit": "gram" },
       "water_temp": { "value": 92, "unit": "celsius" },

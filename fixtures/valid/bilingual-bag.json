@@ -28,7 +28,7 @@
       "title": "4:6メソッド",
       "lang": "ja",
       "method": "pour_over",
-      "brewer": { "id": "hario-v60", "brand": "Hario", "model": "V60" },
+      "brewer": { "id": "hario-v60" },
       "coffee": { "value": 20, "unit": "gram" },
       "water": { "value": 300, "unit": "gram" },
       "water_temp": { "value": 92, "unit": "celsius" },

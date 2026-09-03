@@ -37,9 +37,7 @@
       "method": "espresso",
       "basis": "yield",
       "brewer": {
-        "id": "fellow-espresso-series-1",
-        "brand": "Fellow",
-        "model": "Espresso Series 1"
+        "id": "fellow-espresso-series-1"
       },
       "coffee": {
         "value": 18,
@@ -60,9 +58,7 @@
       "preinfusion_s": 4,
       "grind": {
         "grinder": {
-          "id": "fellow-espresso-series-1",
-          "brand": "Fellow",
-          "model": "Espresso Series 1"
+          "id": "fellow-espresso-series-1"
         },
         "setting": "#2"
       },

@@ -10,7 +10,7 @@
       "bean_ref": "nano-challa",
       "recommended": true,
       "method": "pour_over",
-      "brewer": { "id": "hario-v60", "label": "Hario V60" },
+      "brewer": { "id": "hario-v60" },
       "coffee": { "value": 15, "unit": "gram" },
       "water": { "value": 250, "unit": "gram" },
       "water_temp": { "value": 94, "unit": "celsius" }
@@ -19,7 +19,7 @@
       "title": "Nano Challa AeroPress",
       "bean_ref": "nano-challa",
       "method": "aeropress",
-      "brewer": { "id": "aeropress", "label": "AeroPress" },
+      "brewer": { "id": "aeropress" },
       "coffee": { "value": 14, "unit": "gram" },
       "water": { "value": 220, "unit": "gram" }
     },
@@ -28,7 +28,7 @@
       "bean_ref": "las-brisas",
       "recommended": true,
       "method": "french_press",
-      "brewer": { "id": "french-press", "label": "French Press" },
+      "brewer": { "id": "french-press" },
       "coffee": { "value": 30, "unit": "gram" },
       "water": { "value": 500, "unit": "gram" }
     }

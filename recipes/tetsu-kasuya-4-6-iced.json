@@ -5,7 +5,7 @@
       "title": "Tetsu Kasuya 4:6 Method (iced)",
       "description": "The 4:6 method flash-brewed: half the water, poured hot straight onto ice so the coffee chills instantly without going flat.",
       "method": "pour_over",
-      "brewer": { "id": "hario-v60", "brand": "Hario", "model": "V60 02", "label": "Hario V60" },
+      "brewer": { "id": "hario-v60", "variant": "02" },
       "coffee": { "value": 20, "unit": "gram" },
       "water": { "value": 150, "unit": "gram" },
       "ratio": 7.5,

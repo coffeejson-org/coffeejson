@@ -7,7 +7,15 @@
 // roaster's claim verbatim.
 
 const GEAR_ID = /^[a-z0-9]+(-[a-z0-9]+)*$/;
-const CATEGORIES = new Set(["dripper", "immersion", "stovetop", "espresso-machine", "basket", "grinder"]);
+// Where an entry attaches in a document. An all-in-one carries more than one.
+const ROLES = new Set(["brewer", "grinder", "basket"]);
+// How a brewer brews. Only a `brewer` has one, and the set mirrors `method`:
+// `dripper` is the vessel you pour into, `pour-over-machine` the motor that
+// pours for you, `drip` the batch filter with one shower head over a flat bed.
+const CATEGORIES = new Set([
+  "dripper", "pour-over-machine", "drip", "immersion", "stovetop",
+  "espresso-machine", "capsule",
+]);
 // What kind of name a varietal entry carries. Both members are optional: a row
 // whose parentage is genuinely disputed omits the key rather than guessing, and a
 // forced guess is worse data than a stated gap. `in` rather than `!== undefined`,
@@ -71,6 +79,21 @@ export function gearIdsInDocument(doc) {
   return ids;
 }
 
+/** Every (slot, id) a document uses, so a slot can be checked against the entry's roles. */
+export function gearSlotsInDocument(doc) {
+  const slots = [];
+  for (const recipe of doc.recipes ?? []) {
+    for (const [role, gear] of [
+      ["brewer", recipe.brewer],
+      ["basket", recipe.basket],
+      ["grinder", recipe.grind?.grinder],
+    ]) {
+      if (gear && typeof gear.id === "string") slots.push([role, gear.id]);
+    }
+  }
+  return slots;
+}
+
 /**
  * Run every registry check.
  * @param gearRegistry      parsed registries/gear.json
@@ -93,7 +116,14 @@ export function registryFindings(gearRegistry, varietalRegistry, vocabulariesMd,
     if (entry.id === "custom") problems.push('"custom" is the reserved escape hatch, never a registry entry');
     if (gearIds.has(entry.id) || gearAliases.has(entry.id)) problems.push("duplicate id");
     if (!entry.label) problems.push("label is required — it is the display fallback the spec names");
-    if (!CATEGORIES.has(entry.category)) problems.push(`unknown category "${entry.category}"`);
+    const roles = entry.roles ?? [];
+    if (!Array.isArray(roles) || !roles.length) problems.push("roles is required and non-empty");
+    else for (const role of roles) if (!ROLES.has(role)) problems.push(`unknown role "${role}"`);
+    if (Array.isArray(roles) && roles.includes("brewer")) {
+      if (!CATEGORIES.has(entry.category)) problems.push(`unknown category "${entry.category}"`);
+    } else if (Array.isArray(roles) && "category" in entry) {
+      problems.push(`category "${entry.category}" on an entry that is not a brewer — only a brewer brews`);
+    }
     gearIds.add(entry.id);
     for (const alias of entry.aliases ?? []) {
       if (!GEAR_ID.test(alias)) problems.push(`alias "${alias}" is not a kebab-case slug`);
@@ -124,6 +154,30 @@ export function registryFindings(gearRegistry, varietalRegistry, vocabulariesMd,
     }
     add(`varietal ${entry.name ?? "<no name>"}`, problems.length ? problems.join("; ") : null);
   }
+  // The chapter spells both sets out inline, so an edit there must not leave these
+  // constants stale — the failure mode `registry parity` exists to prevent.
+  const gearChapter = (() => {
+    const lines = vocabulariesMd.split("\n");
+    const start = lines.findIndex((l) => l.trim() === "### Gear registry");
+    if (start === -1) return null;
+    const end = lines.findIndex((l, i) => i > start && /^### /.test(l));
+    return lines.slice(start, end === -1 ? undefined : end).join("\n");
+  })();
+  for (const [what, set, re] of [
+    ["roles", ROLES, /A `brewer` attaches at[^]*?a `basket` at/],
+    ["categories", CATEGORIES, /Only a brewer has a `category`:([^]*?)\. It overlaps/],
+  ]) {
+    const m = gearChapter?.match(re);
+    const named = new Set([...(m?.[1] ?? m?.[0] ?? "").matchAll(/`([a-z][a-z-]*)`/g)].map((x) => x[1]));
+    const missing = [...set].filter((v) => !named.has(v));
+    const extra = [...named].filter((v) => !set.has(v));
+    add(`prose gear ${what}`,
+      !m ? `the paragraph naming the ${what} was not found — re-point the extractor`
+      : missing.length || extra.length
+        ? `prose and checker disagree — only in the checker: ${missing.join(", ") || "none"}; only in the prose: ${extra.join(", ") || "none"}`
+        : null);
+  }
+
   const collisions = [...allAliases].filter((a) => names.has(a));
   add("varietal aliases distinct from canonical names",
     collisions.length ? `alias and canonical at once: ${collisions.join(", ")}` : null);
@@ -191,6 +245,19 @@ export function registryFindings(gearRegistry, varietalRegistry, vocabulariesMd,
       offRegistry.length
         ? `non-canonical gear id(s): ${offRegistry.join(", ")} — use the canonical slug, register a new one, or use "custom"`
         : null);
+
+    // A slot must hold a thing that plays that part. JSON Schema cannot say so:
+    // the Gear object is one shape everywhere, and only the registry knows that
+    // `comandante-c40` grinds and does not brew.
+    const misplaced = [];
+    for (const [role, id] of gearSlotsInDocument(doc)) {
+      const entry = gear.find((e) => e.id === id);
+      if (entry && !(entry.roles ?? []).includes(role)) {
+        misplaced.push(`${id} in ${role} (its roles are ${(entry.roles ?? []).join(", ") || "none"})`);
+      }
+    }
+    add(`document gear roles ${label}`,
+      misplaced.length ? `gear used in a slot it does not play: ${misplaced.join("; ")}` : null);
   }
 
   return findings;

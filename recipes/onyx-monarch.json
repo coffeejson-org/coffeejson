@@ -63,9 +63,7 @@
       "recommended": true,
       "brewer": {
         "id": "kalita-wave",
-        "brand": "Kalita",
-        "model": "Wave 185",
-        "label": "Kalita Wave 185"
+        "variant": "185"
       },
       "coffee": {
         "value": 25,

@@ -5,7 +5,7 @@
       "title": "ONIBUS COFFEE — ハンドドリップ　アイスコーヒーの淹れ方",
       "description": "ONIBUS COFFEE のハンドドリップ（HARIO V60）によるアイスコーヒーのレシピ。中挽きの粉18gに92℃のお湯150ccを3投で注ぎ、氷160gを80gずつ2回に分けて加える。",
       "method": "pour_over",
-      "brewer": { "id": "hario-v60", "brand": "HARIO", "model": "ドリッパー01（V60）" },
+      "brewer": { "id": "hario-v60", "variant": "01", "label": "ドリッパー01（V60）" },
       "coffee": { "value": 18, "unit": "gram" },
       "water": { "value": 150, "unit": "milliliter" },
       "water_temp": { "value": 92, "unit": "celsius" },

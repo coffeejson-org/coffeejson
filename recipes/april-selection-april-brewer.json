@@ -5,12 +5,12 @@
       "title": "April Selection — April Brewer",
       "description": "April Coffee Roasters' base filter recipe for their Selection, Espresso and Limited beans: 12 g to 200 g at 92 °C in two pours, each a circle then a centre.",
       "method": "pour_over",
-      "brewer": { "id": "april", "brand": "April", "label": "April Brewer" },
+      "brewer": { "id": "april" },
       "coffee": { "value": 12, "unit": "gram" },
       "water": { "value": 200, "unit": "gram" },
       "water_temp": { "value": 92, "unit": "celsius" },
       "grind": {
-        "grinder": { "id": "mahlkonig-ek43", "brand": "Mahlkönig", "model": "EK43" },
+        "grinder": { "id": "mahlkonig-ek43" },
         "setting": "11.5 - 12.5"
       },
       "steps": [

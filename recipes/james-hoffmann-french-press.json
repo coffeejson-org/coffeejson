@@ -5,7 +5,7 @@
       "title": "James Hoffmann French Press",
       "description": "James Hoffmann's no-plunge French press: steep, stir the crust, skim, rest, then pour off the settled brew for a clean, sludge-free cup.",
       "method": "french_press",
-      "brewer": { "id": "french-press", "label": "French press" },
+      "brewer": { "id": "french-press" },
       "coffee": { "value": 30, "unit": "gram" },
       "water": { "value": 500, "unit": "gram" },
       "water_temp": { "value": 100, "unit": "celsius" },

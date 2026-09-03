@@ -83,6 +83,7 @@ They belong to a future semantic validator's warning set, not to this corpus.
 | `date-published.json` | `date_published` (ISO 8601 date) beside `author`/`based_on`. |
 | `recipe-description.json` | The recipe's one-line `description` beside its long-form `notes`. |
 | `gear-custom.json` | The gear escape hatch: `id: "custom"` + `label` on both a brewer and a grinder. |
+| `gear-variant.json` | `variant` on all three gear slots: the registry names the family (`hario-v60`, `vst-precision`, `varia-vs3`) and the document names which one of it — a size, a dose and a generation, none of them a slug. |
 | `vendor-ext.json` | The reserved vendor-extension home: vendor-private data under `ext`, keyed by vendor id, validates today ([Versioning § Reserved extensions](../docs/spec/07-versioning.md#reserved-extensions)), on a recipe and on its brewer. |
 | `recipe-ratio-instead-of-water.json` | A water-basis recipe stating `ratio` and no `water` — the dose plus the ratio fixes the brew, and recipes are commonly published that way ("20 g at 1:15"). |
 | `recipe-ratio-disagrees-with-water.json` | A stated `ratio` that its own `coffee` and `water` contradict. The document is conformant; the measurements are authoritative, so a consumer shows 1:15 and not the stated 16.7. |

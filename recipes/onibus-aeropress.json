@@ -5,7 +5,7 @@
       "title": "ONIBUS COFFEE — エアロプレス　ホットコーヒーの淹れ方",
       "description": "ONIBUS COFFEE のエアロプレスによるホットコーヒーのレシピ。中挽きの粉15gに90℃のお湯を30cc注いで攪拌し、170ccを追加してから30秒かけて押し切る。",
       "method": "aeropress",
-      "brewer": { "id": "aeropress", "brand": "AeroPress", "model": "エアロプレス" },
+      "brewer": { "id": "aeropress", "label": "エアロプレス" },
       "coffee": { "value": 15, "unit": "gram" },
       "water": { "value": 200, "unit": "milliliter" },
       "water_temp": { "value": 90, "unit": "celsius" },

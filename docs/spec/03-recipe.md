@@ -632,27 +632,35 @@ Three things that look like filter data and are not:
 ## Gear object
 
 One shape for any piece of equipment: a grinder, a brewer, or a basket. It
-carries three things at once, so that "separate brand + product" and
-"combined product name" are both representable: a canonical **id** for
-matching, normalized **brand** / **model** for querying, and a display
-**label** for fallback.
+carries a canonical **id** for matching, a **variant** naming which one of
+that family was used, normalized **brand** / **model** for off-registry gear,
+and a display **label** for fallback.
 
 ```json
-{ "id": "hario-v60", "brand": "Hario", "model": "V60", "label": "Hario V60" }
+{ "id": "hario-v60", "variant": "02" }
+{ "id": "custom", "brand": "Modbar", "model": "AV", "label": "Modbar AV" }
 ```
+
+The registry entry names the **family**; `variant` names **which one of it**.
+That split is why `hario-v60` covers every V60 ever made without the registry
+growing a row per size, material and generation.
 
 | Field | Type | Req? | Notes |
 | --- | --- | --- | --- |
 | `id` | string | yes | Canonical registry slug — lowercase kebab-case, schema-enforced — or the literal `"custom"` for off-registry gear. This is the field other apps match on (byte-exact), which is why the grammar is strict: a mis-cased id would validate yet match nothing. |
 | `brand` | string | no | Normalized brand, for example `Hario`. |
 | `model` | string | no | Normalized model, for example `V60`. |
+| `variant` | string | no | The maker's own variant designation for this instance, as printed — a size (`02`, `185`, `MDN-41`), a material (`ceramic`), a generation (`Gen 2`). Free text, never an enum: the varying axis differs per family, so no closed list fits the next one. Same call `grind.setting` makes. |
 | `label` | string | no | Display string / fallback. Required when `id` is `"custom"`, and schema-enforced there, since there is no registry entry to localize. |
 
 Consumer behavior:
 
 - For a **known** `id`, a consumer **SHOULD** prefer its own localized label
   over the producer's `label`, so the same gear reads consistently in the
-  consumer's locale.
+  consumer's locale — and **SHOULD** render `variant` beside it, since the
+  registry cannot supply it and dropping it loses what the document knew.
+- With a known `id`, a producer **SHOULD** omit `brand` and `model`: the
+  registry is authoritative for both, and repeating them only drifts from it.
 - For `id: "custom"`, a consumer shows the producer's `label` verbatim.
 - An unknown (non-`"custom"`) `id` is treated like `"custom"`: fall back to
   `label`, then to `brand` / `model`. A consumer **MUST NOT** fail on an

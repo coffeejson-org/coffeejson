@@ -5,7 +5,7 @@
       "title": "Sightglass V60",
       "description": "Sightglass Coffee's café V60 method: rinse the paper, bloom 30 g for 45 seconds, then one slow centre pour to 320 g.",
       "method": "pour_over",
-      "brewer": { "id": "hario-v60", "brand": "Hario", "model": "V60-02" },
+      "brewer": { "id": "hario-v60", "variant": "02" },
       "coffee": { "value": 20, "unit": "gram" },
       "water": { "value": 320, "unit": "gram" },
       "grind": { "size": "medium_fine" },

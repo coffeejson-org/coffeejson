@@ -40,7 +40,7 @@
       "description": "Verve's French press suggestion for Streetlevel: 35 g to 500 g on a medium grind, five minutes.",
       "method": "french_press",
       "recommended": true,
-      "brewer": { "id": "french-press", "label": "French press" },
+      "brewer": { "id": "french-press" },
       "coffee": { "value": 35, "unit": "gram" },
       "water": { "value": 500, "unit": "gram" },
       "grind": { "size": "medium" },

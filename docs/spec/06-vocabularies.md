@@ -399,34 +399,91 @@ The set of known slugs for the [Gear](03-recipe.md#gear-object) `id` field
 design**: `id: "custom"` plus a `label` always works, so missing coverage
 never blocks a share. The canonical list is
 [`registries/gear.json`](https://coffeejson.org/registries/gear.json). Each
-entry carries a neutral `label`, a `category`, and `brand`/`model` where
-unambiguous. `"custom"` is the reserved escape hatch and not an entry.
+entry carries a neutral `label`, its `roles`, a `category` where it brews, and
+`brand`/`model` where unambiguous. `"custom"` is the reserved escape hatch and
+not an entry.
+
+**`roles` says where an entry attaches; `category` says how it brews.** They
+are different questions and a single member answered neither cleanly.
+
+A `brewer` attaches at [`recipe.brewer`](03-recipe.md#fields), a `grinder` at
+[`grind.grinder`](03-recipe.md#grind-object), and a `basket` at
+[`recipe.basket`](03-recipe.md#fields).
+
+An **all-in-one carries more than one** — `breville-barista-express` and
+`xbloom-studio` are `["brewer", "grinder"]`, because one machine fills both
+slots in the same recipe. A consumer listing every brewer tests
+`roles` for `brewer` rather than enumerating brew families.
+
+Only a brewer has a `category`: `dripper` · `pour-over-machine` · `drip` ·
+`immersion` · `stovetop` · `espresso-machine` · `capsule`. It overlaps
+[`method`](#method) without mirroring it — `method` is the technique and
+`category` is the kind of device, so `aeropress`, `french_press`, `siphon`,
+`moka` and `cezve` are methods performed *with* an `immersion` or `stovetop`
+device. The three devices that are easily confused: **`dripper`** is the vessel
+you pour into by hand (`hario-v60`), **`pour-over-machine`** is the motor that
+performs the pour for you (`xbloom-studio`), and **`drip`** is the batch filter
+running one shower head over a flat bed. A grinder has no `category`, because
+grinding is not a way of brewing.
+
+`drip` and `capsule` are defined and currently carry no entry: the registry is
+non-exhaustive, and a value exists here so the first such product has somewhere
+to land rather than forcing a vocabulary change with it.
 
 **An entry names a product at the granularity a source names it** — the
-family (`hario-v60`, `kalita-wave`, `comandante-c40`), not its sizes,
-materials, or generations. A document carries what it knows beyond the family
-in its own `brand` / `model` / `label`: `{ "id": "hario-v60", "brand":
-"Hario", "model": "V60 02" }`. A few entries also list `aliases` — true
-synonyms of the same product, such as a regional brand name (`sage-bambino`
-for `breville-bambino`) or a shorter spelling (`vst-18g`). A producer
-**SHOULD** emit the canonical `id`; a consumer that resolves aliases matches
-more sources, and one that does not still falls back correctly.
+family (`hario-v60`, `kalita-wave`, `vst-precision`), never its sizes,
+materials or generations. Those go in the Gear object's own
+[`variant`](03-recipe.md#gear-object), as the maker prints them:
+
+```json
+{ "id": "hario-v60",    "variant": "02" }
+{ "id": "kalita-wave",  "variant": "185" }
+{ "id": "kono-meimon",  "variant": "MDN-41" }
+{ "id": "vst-precision", "variant": "18 g" }
+{ "id": "varia-vs3",    "variant": "Gen 2" }
+```
+
+**`variant` is free text and is never coerced to an enum.** The varying axis is
+different for every family — `01`/`02`/`03`, `155`/`185`, `S`/`M`/`L`,
+`XL`/`Go`, ceramic/plastic/glass, `Gen 2` — so any closed list is wrong by the
+next family it meets. This is the same call [`grind.setting`](03-recipe.md#grind-object)
+already makes for the same reason.
+
+A few entries also list `aliases` — true synonyms of the same product, such as
+a vendor's own name for an OEM design (`turin-df64` for `df64`) or a regional
+brand name (`sage-bambino` for `breville-bambino`). **An alias is never a
+variant designation.** `vst-18g` is not an alias of `vst-precision`: resolving
+it would silently discard the dose, which is the one thing it says. A retired
+per-variant slug is not aliased to its family for the same reason — it is
+simply unrecognized, and an unrecognized id falls back correctly. A producer **SHOULD** emit the canonical `id`; a
+consumer that resolves aliases matches more sources, and one that does not
+still falls back correctly.
 
 Seed entries (illustrative, not the complete list):
 
 | Category | Example slugs |
 | --- | --- |
 | Drippers | `hario-v60` · `chemex` · `kalita-wave` · `origami` · `orea` · `april` · `clever-dripper` |
+| Pour-over machines | `xbloom-studio` |
 | Immersion | `aeropress` · `french-press` · `siphon` |
 | Stovetop | `moka-pot` · `cezve` |
 | Espresso machines | `breville-barista-pro` · `profitec-pro-600` · `rocket-appartamento` |
-| Baskets | `vst-precision-18g` · `ims-precision-18g` |
+| Baskets | `vst-precision` · `ims-precision` · `pullman-876` |
 | Grinders | `comandante-c40` · `1zpresso-jx` · `fellow-ode` · `baratza-encore` · `df64` |
 
 **Matching rule.** A consumer matches on `id`. For a known `id` it **SHOULD**
-substitute its own localized label. For `id: "custom"` or an unknown `id` it
-falls back to `label`, then to `brand` / `model`. It **MUST NOT** fail on an
+substitute its own localized label, and **SHOULD** render `variant` beside it —
+`variant` is the one thing the registry cannot supply, so a consumer that drops
+it loses what the document knew. For `id: "custom"` or an unknown `id` it falls
+back to `label`, then to `brand` / `model`. It **MUST NOT** fail on an
 unrecognized `id`.
+
+**With a known `id`, a producer SHOULD omit `brand` and `model`** — the registry
+is authoritative for both, and a document that repeats them only drifts from it.
+`label` keeps its own job: what the source itself called the thing, which is
+worth carrying when the source wrote it in its own language
+(`"ドリッパー01（V60）"`). A consumer **MAY** show that as provenance beside its
+own label.
 
 Adding a slug is a data change, not a spec change. It does not bump the format
 version.

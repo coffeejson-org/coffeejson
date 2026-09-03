@@ -6,9 +6,7 @@
       "description": "April Coffee Roasters' base recipe for their Hybrid Brewer: 14 g to 240 g in three ten-second pours, with the valve opened, closed, then opened again.",
       "method": "pour_over",
       "brewer": {
-        "id": "april-hybrid-brewer",
-        "brand": "April",
-        "model": "Hybrid Brewer"
+        "id": "april-hybrid-brewer"
       },
       "coffee": {
         "value": 14,
@@ -20,9 +18,7 @@
       },
       "grind": {
         "grinder": {
-          "id": "mahlkonig-ek43",
-          "brand": "Mahlkönig",
-          "model": "EK43"
+          "id": "mahlkonig-ek43"
         }
       },
       "steps": [

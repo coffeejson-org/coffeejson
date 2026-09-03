@@ -5,7 +5,7 @@
       "title": "LIGHT UP COFFEE — ICED DRIP COFFEE [KALITA WAVE]",
       "description": "LIGHT UP COFFEE のカリタウェーブによるアイスドリップレシピ。粉20gに91℃のお湯150gを4投で注ぎ、氷を入れたサーバーに落とす。",
       "method": "pour_over",
-      "brewer": { "id": "kalita-wave", "brand": "Kalita", "model": "Wave" },
+      "brewer": { "id": "kalita-wave" },
       "coffee": { "value": 20, "unit": "gram" },
       "water": { "value": 150, "unit": "gram" },
       "water_temp": { "value": 91, "unit": "celsius" },

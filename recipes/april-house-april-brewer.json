@@ -5,12 +5,12 @@
       "title": "April Sustainable Profile — April Brewer",
       "description": "April Coffee Roasters' one standard filter recipe for their House line and organic beans: 13 g to 200 g at 94 °C in two pours, each a circle then a centre.",
       "method": "pour_over",
-      "brewer": { "id": "april", "brand": "April", "label": "April Brewer" },
+      "brewer": { "id": "april" },
       "coffee": { "value": 13, "unit": "gram" },
       "water": { "value": 200, "unit": "gram" },
       "water_temp": { "value": 94, "unit": "celsius" },
       "grind": {
-        "grinder": { "id": "mahlkonig-ek43", "brand": "Mahlkönig", "model": "EK43" },
+        "grinder": { "id": "mahlkonig-ek43" },
         "setting": "9"
       },
       "steps": [

@@ -15,6 +15,7 @@ export {
 } from "./codec.js";
 export type { DecodeError, DecodeResult, DecodedDocument } from "./codec.js";
 export { FORMAT_VERSION, MEDIA_TYPE, SUPPORTED_MAJOR } from "./version.js";
+export { GEAR_LABELS, gearLabelsFor } from "./gear-labels.js";
 export {
   fmtClock, fmtMeasurement, fmtStepTime, formatRatio, gearLabel, methodLabel, originLine,
   processLine, producerLine, regionLabel, roleLabel, summary, unitSymbol, vocabularyLabel,

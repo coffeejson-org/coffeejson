@@ -10,7 +10,7 @@
       "bean_ref": "sermon",
       "recommended": true,
       "method": "pour_over",
-      "brewer": { "id": "hario-v60", "label": "Hario V60" },
+      "brewer": { "id": "hario-v60" },
       "coffee": { "value": 20, "unit": "gram" },
       "water": { "value": 300, "unit": "gram" },
       "water_temp": { "value": 93, "unit": "celsius" }
@@ -20,7 +20,7 @@
       "title": "Sermon in a French press",
       "bean_ref": "sermon",
       "method": "french_press",
-      "brewer": { "id": "french-press", "label": "French Press" },
+      "brewer": { "id": "french-press" },
       "coffee": { "value": 35, "unit": "gram" },
       "water": { "value": 500, "unit": "gram" }
     }

@@ -5,7 +5,7 @@
       "title": "Equator Coffees — AeroPress",
       "description": "Equator Coffees' AeroPress guide for one small 6 oz cup of strong coffee: 18 g at 1:11, a sealed bloom, then a stir and a slow plunge at two minutes.",
       "method": "aeropress",
-      "brewer": { "id": "aeropress", "brand": "AeroPress" },
+      "brewer": { "id": "aeropress" },
       "coffee": { "value": 18, "unit": "gram" },
       "water": { "value": 200, "unit": "gram" },
       "ratio": 11,

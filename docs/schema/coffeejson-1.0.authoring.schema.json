@@ -834,11 +834,15 @@
         },
         "brand": {
           "type": "string",
-          "description": "Normalized brand name, e.g. Hario."
+          "description": "Normalized brand name for OFF-registry gear, e.g. Modbar. With a known id the registry supplies it and a producer omits it; the strict authoring schema enforces that."
         },
         "model": {
           "type": "string",
-          "description": "Normalized model name, e.g. V60."
+          "description": "Normalized model name for OFF-registry gear, e.g. AV. Names the product, not which one of it — a size, material or generation is `variant`. With a known id the registry supplies it and a producer omits it."
+        },
+        "variant": {
+          "type": "string",
+          "description": "The maker's own variant designation for this instance, as printed — a size (\"02\", \"185\", \"MDN-41\"), a material (\"ceramic\"), a generation (\"Gen 2\"). The registry entry names the product family; this names which one of it. Free text, never coerced to an enum: the varying axis differs per family, so no closed list fits the next one."
         },
         "label": {
           "type": "string",
@@ -868,6 +872,151 @@
             "required": [
               "label"
             ]
+          }
+        },
+        {
+          "$comment": "Authoring lint: brand/model belong to off-registry gear. For an id this registry carries, the registry supplies them and a copy in the document only drifts from it. An unregistered id keeps them — they are the fallback a consumer has left.",
+          "if": {
+            "type": "object",
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "enum": [
+                  "1zpresso-jx",
+                  "1zpresso-k-ultra",
+                  "1zpresso-zp6",
+                  "aeropress",
+                  "april",
+                  "april-hybrid-brewer",
+                  "baratza-270",
+                  "baratza-encore",
+                  "baratza-encore-esp",
+                  "baratza-sette-270",
+                  "baratza-virtuoso-plus",
+                  "bialetti-moka-express",
+                  "breville-bambino",
+                  "breville-bambino-plus",
+                  "breville-barista-express",
+                  "breville-barista-pro",
+                  "breville-dual-boiler",
+                  "cafec-flower",
+                  "cafelat-robot",
+                  "cezve",
+                  "chemex",
+                  "clever-dripper",
+                  "comandante-c40",
+                  "decent-de1",
+                  "df54",
+                  "df64",
+                  "ecm-synchronika",
+                  "eureka-mignon-specialita",
+                  "eureka-mignon-zero",
+                  "eureka-specialita",
+                  "fellow-espresso-series-1",
+                  "fellow-ode",
+                  "fellow-opus",
+                  "fellow-stagg-x",
+                  "fellow-stagg-xf",
+                  "flair-58",
+                  "flair-neo-flex",
+                  "flair-pro-2",
+                  "french-press",
+                  "gaggia-classic-pro",
+                  "graycano",
+                  "gs3",
+                  "hario-switch",
+                  "hario-v60",
+                  "hario-v60-mugen",
+                  "hario-v60-neo",
+                  "ims-precision",
+                  "kalita-101",
+                  "kalita-wave",
+                  "kinu-m47",
+                  "kono-meimon",
+                  "la-marzocco-gs3",
+                  "la-marzocco-linea-micra",
+                  "la-marzocco-linea-mini",
+                  "lagom-01",
+                  "lagom-mini",
+                  "lagom-p64",
+                  "lelit-bianca",
+                  "lelit-mara-x",
+                  "linea-micra",
+                  "mahlkonig-e80",
+                  "mahlkonig-ek43",
+                  "mazzer-philos",
+                  "mazzer-super-jolly",
+                  "miicoffee-df64",
+                  "moka-pot",
+                  "nextlevel-pulsar",
+                  "niche-duo",
+                  "niche-zero",
+                  "option-o-lagom-01",
+                  "option-o-lagom-mini",
+                  "option-o-lagom-p64",
+                  "orea",
+                  "origami",
+                  "profitec-go",
+                  "profitec-pro-600",
+                  "pullman-876",
+                  "pulsar",
+                  "rancilio-silvia",
+                  "rocket-appartamento",
+                  "sage-bambino",
+                  "sage-barista-express",
+                  "sage-dual-boiler",
+                  "siphon",
+                  "slayer-1-group",
+                  "slayer-espresso",
+                  "slayer-single-group",
+                  "stagg-xf",
+                  "timemore-078",
+                  "timemore-078s",
+                  "timemore-b75",
+                  "timemore-c2",
+                  "timemore-c3",
+                  "timemore-chestnut-c2",
+                  "timemore-sculptor-078",
+                  "timemore-sculptor-078s",
+                  "toddy",
+                  "toddy-cold-brew-system",
+                  "torch-mountain",
+                  "tricolate",
+                  "turin-df54",
+                  "turin-df64",
+                  "varia-vs3",
+                  "verve-dwell",
+                  "vst-precision",
+                  "wafo-basket",
+                  "wafo-spirit",
+                  "weber-eg-1",
+                  "weber-hg-2",
+                  "weber-key",
+                  "weber-unibasket",
+                  "xbloom-studio",
+                  "zerno-z1"
+                ]
+              }
+            }
+          },
+          "then": {
+            "type": "object",
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "brand"
+                  ]
+                },
+                {
+                  "required": [
+                    "model"
+                  ]
+                }
+              ]
+            }
           }
         }
       ],

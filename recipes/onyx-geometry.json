@@ -57,9 +57,7 @@
       "method": "pour_over",
       "recommended": true,
       "brewer": {
-        "id": "origami",
-        "brand": "Origami",
-        "label": "Origami"
+        "id": "origami"
       },
       "coffee": {
         "value": 25,

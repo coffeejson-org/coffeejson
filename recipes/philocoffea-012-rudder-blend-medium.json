@@ -47,12 +47,12 @@
       "description": "PHILOCOFFEA が012 RUDDER BLEND Mediumに添えるV60レシピ。粉20gに88℃のお湯300gを、60gずつ5投で注ぐ。",
       "method": "pour_over",
       "recommended": true,
-      "brewer": { "id": "hario-v60", "brand": "HARIO", "model": "V60" },
+      "brewer": { "id": "hario-v60" },
       "coffee": { "value": 20, "unit": "gram" },
       "water": { "value": 300, "unit": "gram" },
       "water_temp": { "value": 88, "unit": "celsius" },
       "grind": {
-        "grinder": { "id": "comandante-c40", "brand": "Comandante", "model": "C40 MK4" },
+        "grinder": { "id": "comandante-c40", "variant": "MK4" },
         "setting": "27〜33クリック前後",
         "size": "medium_coarse"
       },

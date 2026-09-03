@@ -1,3 +1,4 @@
+import { gearLabelsFor } from "./gear-labels.js";
 import type { Measurement } from "./types.js";
 import type { Unit } from "./vocabularies.js";
 import type { LabelSet } from "./labels.js";
@@ -62,15 +63,25 @@ export function formatRatio(ratio: number | null): string {
 }
 
 // Tolerant: `normalize` feeds it untrusted gear objects straight off the wire.
-export function gearLabel(g: unknown): string {
+export function gearLabel(g: unknown, labels: Readonly<Record<string, string>> = gearLabelsFor()): string {
   if (typeof g !== "object" || g === null || Array.isArray(g)) return "";
   const o = g as Record<string, unknown>;
+  const id = typeof o["id"] === "string" ? o["id"] : "";
   const label = typeof o["label"] === "string" ? o["label"] : null;
-  if (label !== null) return label;
   const brand = typeof o["brand"] === "string" ? o["brand"] : null;
   const model = typeof o["model"] === "string" ? o["model"] : null;
   const brandModel = [brand, model].filter(Boolean).join(" ");
-  return brandModel || (typeof o["id"] === "string" ? o["id"] : "");
+  // Spec order, 03-recipe.md § Gear object: a KNOWN id resolves to the consumer's
+  // own label first, because the id is the wire form and the display string is the
+  // edge — a document naming registered gear carries none. Only `custom` and an
+  // unrecognized id fall back to what the producer wrote.
+  const base = (id && id !== "custom" ? labels[id] : undefined)
+    ?? label ?? (brandModel || id);
+  if (!base) return "";
+  // The registry names the family; `variant` names which one of it, and no lookup
+  // can supply it — so a consumer that drops it loses what the document knew.
+  const variant = typeof o["variant"] === "string" && o["variant"] !== "" ? o["variant"] : null;
+  return variant ? `${base} ${variant}` : base;
 }
 
 /**

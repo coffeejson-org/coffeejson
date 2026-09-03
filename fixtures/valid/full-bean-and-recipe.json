@@ -39,13 +39,13 @@
       "title": "Sunday V60",
       "description": "A relaxed Sunday pour-over — bright, floral, and forgiving.",
       "method": "pour_over",
-      "brewer": { "id": "hario-v60", "brand": "Hario", "model": "V60", "label": "Hario V60" },
+      "brewer": { "id": "hario-v60" },
       "coffee": { "value": 15, "unit": "gram" },
       "water": { "value": 250, "unit": "gram" },
       "ratio": 16.7,
       "water_temp": { "value": 94, "unit": "celsius" },
       "grind": {
-        "grinder": { "id": "comandante-c40", "brand": "Comandante", "model": "C40", "label": "Comandante C40" },
+        "grinder": { "id": "comandante-c40" },
         "setting": "22 clicks",
         "microns_approx": 700,
         "size": "medium_fine"

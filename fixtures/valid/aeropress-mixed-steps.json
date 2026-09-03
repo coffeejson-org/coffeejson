@@ -4,7 +4,7 @@
     {
       "title": "Inverted AeroPress",
       "method": "aeropress",
-      "brewer": { "id": "aeropress", "label": "AeroPress" },
+      "brewer": { "id": "aeropress" },
       "coffee": { "value": 14, "unit": "gram" },
       "water": { "value": 220, "unit": "gram" },
       "water_temp": { "value": 85, "unit": "celsius" },

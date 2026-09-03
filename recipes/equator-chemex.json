@@ -5,7 +5,7 @@
       "title": "Equator Coffees — Chemex",
       "description": "Equator Coffees' Chemex guide for two 12 oz cups: 45 g at 1:16, a 90 g bloom and three 210 g pours a minute apart.",
       "method": "pour_over",
-      "brewer": { "id": "chemex", "brand": "Chemex" },
+      "brewer": { "id": "chemex" },
       "coffee": { "value": 45, "unit": "gram" },
       "water": { "value": 720, "unit": "gram" },
       "ratio": 16,

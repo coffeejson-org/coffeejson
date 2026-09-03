@@ -5,7 +5,7 @@
       "title": "LIGHT UP COFFEE — DRIP COFFEE [KALITA WAVE]",
       "description": "LIGHT UP COFFEE のカリタウェーブによるドリップレシピ。粉15gに90℃のお湯240gを、35g・90g・140g・190g・240gと5投で注ぐ。",
       "method": "pour_over",
-      "brewer": { "id": "kalita-wave", "brand": "Kalita", "model": "Wave" },
+      "brewer": { "id": "kalita-wave" },
       "coffee": { "value": 15, "unit": "gram" },
       "water": { "value": 240, "unit": "gram" },
       "water_temp": { "value": 90, "unit": "celsius" },
