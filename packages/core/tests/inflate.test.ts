@@ -1,8 +1,8 @@
-import { describe, expect, test } from "vitest";
-import { deflateSync } from "node:zlib";
-import { readFileSync, readdirSync } from "node:fs";
-import { fileURLToPath } from "node:url";
+import { readdirSync, readFileSync } from "node:fs";
 import { basename, join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { deflateSync } from "node:zlib";
+import { describe, expect, test } from "vitest";
 import { inflateZlib } from "../src/inflate";
 
 const LIMIT = 8192;
@@ -121,7 +121,10 @@ describe("corpus round-trip", () => {
       const json = JSON.stringify(JSON.parse(raw)); // the payload form: minified
       const bytes = enc.encode(json);
       for (const level of [1, 6, 9]) {
-        const r = inflateZlib(new Uint8Array(deflateSync(bytes, { level })), LIMIT);
+        const r = inflateZlib(
+          new Uint8Array(deflateSync(bytes, { level })),
+          LIMIT,
+        );
         expect(r.ok, `${name} @${level}`).toBe(true);
         if (r.ok) {
           expect(r.bytes.length, `${name} @${level}`).toBe(bytes.length);

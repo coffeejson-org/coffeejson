@@ -37,7 +37,10 @@ const RATIO_TOLERANCE = 0.05;
 
 /** Documents whose self-contradiction is the point. Never grows without a reason beside it. */
 const EXEMPT = new Map([
-  ["fixtures/valid/recipe-ratio-disagrees-with-water.json", "the disagreeing ratio is what it documents"],
+  [
+    "fixtures/valid/recipe-ratio-disagrees-with-water.json",
+    "the disagreeing ratio is what it documents",
+  ],
 ]);
 
 /** Grams, or null when the quantity is not a mass this tool can compare. */
@@ -57,7 +60,8 @@ function* windows(node, path) {
     return;
   }
   if ("min" in node || "max" in node) yield [path || "(root)", node];
-  for (const [k, v] of Object.entries(node)) yield* windows(v, path ? `${path}.${k}` : k);
+  for (const [k, v] of Object.entries(node))
+    yield* windows(v, path ? `${path}.${k}` : k);
 }
 
 /** Findings for one parsed document. `label` names the file; `error` is null when clean. */
@@ -67,7 +71,11 @@ export function consistencyFindings(file, doc) {
   const exemption = EXEMPT.get(file);
 
   for (const [path, w] of windows(doc, "")) {
-    if (typeof w.min === "number" && typeof w.max === "number" && w.min > w.max) {
+    if (
+      typeof w.min === "number" &&
+      typeof w.max === "number" &&
+      w.min > w.max
+    ) {
       add(
         `${file} ${path}`,
         `min ${w.min} is above max ${w.max} — an empty window. Folding the range into the ` +

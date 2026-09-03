@@ -1,6 +1,16 @@
-import { fmtMeasurement, gearLabel } from "./format.js";
 import { associatedMember } from "./association.js";
-import { arr, calendarDay, isObj, measurement, num, objItems, partyName, str, strArr } from "./json.js";
+import { fmtMeasurement, gearLabel } from "./format.js";
+import {
+  arr,
+  calendarDay,
+  isObj,
+  measurement,
+  num,
+  objItems,
+  partyName,
+  str,
+  strArr,
+} from "./json.js";
 
 /**
  * CoffeeJSON → schema.org `Recipe` JSON-LD, for `<script type="application/ld+json">`.
@@ -24,7 +34,11 @@ export function recipeJsonLd(
   const name = str(r["title"])?.trim();
   if (!name) return null;
 
-  const ld: Record<string, unknown> = { "@context": "https://schema.org", "@type": "Recipe", name };
+  const ld: Record<string, unknown> = {
+    "@context": "https://schema.org",
+    "@type": "Recipe",
+    name,
+  };
   if (options?.url) ld["url"] = options.url;
   const description = str(r["description"]);
   if (description) ld["description"] = description;
@@ -79,11 +93,18 @@ function partyNode(v: unknown): Record<string, unknown> | undefined {
 
 // `recipeIngredient` strings — e.g. `"15 g coffee — Nano Challa (Example
 // Roastery)"`, `"250 g water"`, `"100 g milk (oat)"`.
-function ingredientStrings(doc: Record<string, unknown>, r: Record<string, unknown>): string[] {
+function ingredientStrings(
+  doc: Record<string, unknown>,
+  r: Record<string, unknown>,
+): string[] {
   const out: string[] = [];
   const coffee = fmtMeasurement(measurement(r["coffee"]));
   if (coffee) {
-    const bean = associatedMember(objItems(doc["beans"]), str(r["bean_ref"]), (b) => str(b["id"]));
+    const bean = associatedMember(
+      objItems(doc["beans"]),
+      str(r["bean_ref"]),
+      (b) => str(b["id"]),
+    );
     const beanName = bean === null ? null : str(bean["name"])?.trim();
     const roaster = bean === null ? null : partyName(bean["roaster"]);
     out.push(
@@ -112,7 +133,8 @@ function ingredientStrings(doc: Record<string, unknown>, r: Record<string, unkno
 // any `label` present is the author's and rides as the step `name`.
 function stepNode(s: Record<string, unknown>): Record<string, unknown> | null {
   const target = fmtMeasurement(measurement(s["to_water"]));
-  const text = str(s["instruction"])?.trim() || (target ? `Pour to ${target}` : "");
+  const text =
+    str(s["instruction"])?.trim() || (target ? `Pour to ${target}` : "");
   if (!text) return null;
   const node: Record<string, unknown> = { "@type": "HowToStep", text };
   const label = str(s["label"]);
@@ -151,7 +173,11 @@ export function beanJsonLd(
   const name = str(b["name"])?.trim();
   if (!name) return null;
 
-  const ld: Record<string, unknown> = { "@context": "https://schema.org", "@type": "Product", name };
+  const ld: Record<string, unknown> = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name,
+  };
   if (options?.url) ld["url"] = options.url;
   // The roaster's listing is where the offer lives. When the page IS the listing
   // (the roaster embedding this on their own product page), `url` already says so.
@@ -165,20 +191,27 @@ export function beanJsonLd(
   if (brand) ld["brand"] = brand;
 
   const items = isObj(b["origin"]) ? objItems(b["origin"]["items"]) : [];
-  const countries = [...new Set(items.map((it) => str(it["country"])).filter((c): c is string => !!c))];
+  const countries = [
+    ...new Set(
+      items.map((it) => str(it["country"])).filter((c): c is string => !!c),
+    ),
+  ];
   // The code rides as `identifier`, never as `name`: an alpha-2 code is not what
   // the country is called, the format carries no display name for one, and
   // inventing "Colombia" would fabricate a string in a language the document
   // never chose. A consumer that wants a name maps the code itself.
   const countryNode = (c: string) => ({ "@type": "Country", identifier: c });
-  if (countries.length === 1) ld["countryOfOrigin"] = countryNode(countries[0]!);
-  else if (countries.length > 1) ld["countryOfOrigin"] = countries.map(countryNode);
+  if (countries.length === 1)
+    ld["countryOfOrigin"] = countryNode(countries[0]!);
+  else if (countries.length > 1)
+    ld["countryOfOrigin"] = countries.map(countryNode);
 
   const roastDate = calendarDay(b["roast_date"]);
   if (roastDate) ld["productionDate"] = roastDate;
 
   const props: Record<string, unknown>[] = [];
-  const prop = (name: string, value: unknown) => props.push({ "@type": "PropertyValue", name, value });
+  const prop = (name: string, value: unknown) =>
+    props.push({ "@type": "PropertyValue", name, value });
   // Lot-level facts export only when there is exactly one lot to attribute them
   // to. A blend's per-component region or altitude belongs to a component the
   // node cannot name, so a blend exports its countries and nothing finer.
@@ -209,7 +242,9 @@ export function beanJsonLd(
     const stated = strArr(b[key]);
     if (stated.length) return stated;
     if (items.length === 1) return strArr(items[0]![key]);
-    return key === "process" ? [...new Set(items.flatMap((it) => strArr(it[key])))] : [];
+    return key === "process"
+      ? [...new Set(items.flatMap((it) => strArr(it[key])))]
+      : [];
   };
   const setFromLots = (key: string) => {
     const values = fromLots(key);
@@ -258,7 +293,10 @@ function altitudeNode(v: unknown): Record<string, unknown> | null {
   if (!isObj(v)) return null;
   const unitCode = LENGTH_UNIT_CODE[str(v["unit"]) ?? ""];
   if (!unitCode) return null;
-  const node: Record<string, unknown> = { "@type": "PropertyValue", name: "altitude" };
+  const node: Record<string, unknown> = {
+    "@type": "PropertyValue",
+    name: "altitude",
+  };
   const value = num(v["value"]);
   const min = num(v["min"]);
   const max = num(v["max"]);
@@ -276,7 +314,10 @@ function restDaysNode(v: unknown): Record<string, unknown> | null {
   const min = num(v["min"]);
   const max = num(v["max"]);
   if (min === null && max === null) return null;
-  const node: Record<string, unknown> = { "@type": "PropertyValue", name: "rest_days" };
+  const node: Record<string, unknown> = {
+    "@type": "PropertyValue",
+    name: "rest_days",
+  };
   if (min !== null) node["minValue"] = min;
   if (max !== null) node["maxValue"] = max;
   node["unitText"] = "day";

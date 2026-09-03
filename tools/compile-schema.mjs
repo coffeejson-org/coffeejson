@@ -10,8 +10,18 @@ import addFormats from "ajv-formats";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 
-export const SCHEMA_PATH = join(root, "docs", "schema", "coffeejson-1.0.schema.json");
-export const AUTHORING_SCHEMA_PATH = join(root, "docs", "schema", "coffeejson-1.0.authoring.schema.json");
+export const SCHEMA_PATH = join(
+  root,
+  "docs",
+  "schema",
+  "coffeejson-1.0.schema.json",
+);
+export const AUTHORING_SCHEMA_PATH = join(
+  root,
+  "docs",
+  "schema",
+  "coffeejson-1.0.authoring.schema.json",
+);
 
 /** A fresh ajv, formats added — the setup every validating tool needs. */
 export function schemaCompiler() {

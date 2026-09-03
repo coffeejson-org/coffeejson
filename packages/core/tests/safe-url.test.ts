@@ -15,5 +15,7 @@ test("tolerates absent and type-confused input (never throws)", () => {
   expect(safeUrl(null)).toBe("");
   expect(safeUrl(123 as unknown as string)).toBe("");
   expect(safeUrl({} as unknown as string)).toBe("");
-  expect(safeUrl({ toString: () => "https://x.com" } as unknown as string)).toBe("https://x.com");
+  expect(
+    safeUrl({ toString: () => "https://x.com" } as unknown as string),
+  ).toBe("https://x.com");
 });

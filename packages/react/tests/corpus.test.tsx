@@ -1,9 +1,9 @@
-import { expect, test } from "vitest";
-import { readFileSync, readdirSync } from "node:fs";
-import { fileURLToPath } from "node:url";
+import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { renderToStaticMarkup } from "react-dom/server";
+import { fileURLToPath } from "node:url";
 import { normalize } from "@coffeejson/core";
+import { renderToStaticMarkup } from "react-dom/server";
+import { expect, test } from "vitest";
 import { CoffeeJSONView } from "../src/CoffeeJSONView";
 
 const root = fileURLToPath(new URL("../../..", import.meta.url));
@@ -13,7 +13,9 @@ const countOf = (html: string, cls: string): number =>
 
 test("every corpus document renders exactly one card per normalized entity", () => {
   for (const dir of ["fixtures/valid", "recipes"])
-    for (const f of readdirSync(join(root, dir)).filter((f) => f.endsWith(".json") && f !== "catalog.json")) {
+    for (const f of readdirSync(join(root, dir)).filter(
+      (f) => f.endsWith(".json") && f !== "catalog.json",
+    )) {
       const doc = JSON.parse(readFileSync(join(root, dir, f), "utf8"));
       const n = normalize(doc);
       const html = renderToStaticMarkup(<CoffeeJSONView doc={doc} />);

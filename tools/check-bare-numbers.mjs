@@ -52,8 +52,17 @@ const isMeasurement = (def) =>
  */
 const subschemas = (node) => {
   const out = [];
-  for (const key of ["if", "then", "else", "not", "items", "contains",
-                     "additionalProperties", "unevaluatedItems", "unevaluatedProperties"])
+  for (const key of [
+    "if",
+    "then",
+    "else",
+    "not",
+    "items",
+    "contains",
+    "additionalProperties",
+    "unevaluatedItems",
+    "unevaluatedProperties",
+  ])
     if (node[key] && typeof node[key] === "object") out.push(node[key]);
   for (const key of ["allOf", "anyOf", "oneOf", "prefixItems"])
     for (const sub of Array.isArray(node[key]) ? node[key] : [])
@@ -78,7 +87,8 @@ export function bareNumbers(schema) {
       if (typeof def !== "object" || def === null) continue;
       const here = path ? `${path}.${key}` : key;
       const numeric = def.type === "number" || def.type === "integer";
-      if (numeric && !(inMeasurement && MEASUREMENT_MEMBERS.has(key))) found.push(here);
+      if (numeric && !(inMeasurement && MEASUREMENT_MEMBERS.has(key)))
+        found.push(here);
       walk(def, here, inMeasurement || isMeasurement(def));
     }
     // An applicator names no member of its own, so the path does not deepen.
@@ -115,7 +125,8 @@ export function bareNumberFindings(schema) {
     if (!actual.has(path))
       findings.push({
         label: `${path} still exists`,
-        error: "on the roster but not in the schema — drop the line; " +
+        error:
+          "on the roster but not in the schema — drop the line; " +
           "the roster may shrink, never grow",
       });
   }

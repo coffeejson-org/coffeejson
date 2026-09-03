@@ -1,7 +1,7 @@
-import { MEDIA_TYPE, decodePayload } from "@coffeejson/core";
-import { esc } from "../lib/text.mjs";
+import { decodePayload, MEDIA_TYPE } from "@coffeejson/core";
 import { qrPanel, qrSvg } from "../lib/qr";
 import { flash } from "../lib/save";
+import { esc } from "../lib/text.mjs";
 
 /**
  * The HTML already carries everything a reader or crawler needs, so this adds only
@@ -42,27 +42,37 @@ function wire(slot: HTMLElement): void {
     if (restoreFocus) qrBtn.focus();
   };
 
-  slot.querySelector<HTMLButtonElement>("[data-copy]")!.addEventListener("click", async (e) => {
-    await navigator.clipboard.writeText(`${location.origin}/r/?d=${payload}`);
-    flash(e.currentTarget as HTMLButtonElement, "Copied");
-  });
+  slot
+    .querySelector<HTMLButtonElement>("[data-copy]")!
+    .addEventListener("click", async (e) => {
+      await navigator.clipboard.writeText(`${location.origin}/r/?d=${payload}`);
+      flash(e.currentTarget as HTMLButtonElement, "Copied");
+    });
 
-  slot.querySelector<HTMLButtonElement>("[data-dl]")!.addEventListener("click", () => {
-    const result = decodePayload(payload);
-    if (!result.ok) return;
-    const blob = new Blob([JSON.stringify(result.document, null, 2)],
-      { type: MEDIA_TYPE });
-    const a = Object.assign(document.createElement("a"),
-      { href: URL.createObjectURL(blob), download: `${file}.json` });
-    a.click();
-    URL.revokeObjectURL(a.href);
-  });
+  slot
+    .querySelector<HTMLButtonElement>("[data-dl]")!
+    .addEventListener("click", () => {
+      const result = decodePayload(payload);
+      if (!result.ok) return;
+      const blob = new Blob([JSON.stringify(result.document, null, 2)], {
+        type: MEDIA_TYPE,
+      });
+      const a = Object.assign(document.createElement("a"), {
+        href: URL.createObjectURL(blob),
+        download: `${file}.json`,
+      });
+      a.click();
+      URL.revokeObjectURL(a.href);
+    });
 
   qrBtn.addEventListener("click", async () => {
     // The same disclosure contract /recipes uses, and no dialog role for a focus
     // trap that does not exist.
     if (qrBtn.getAttribute("aria-busy") === "true") return;
-    if (panel.innerHTML) { close(); return; }
+    if (panel.innerHTML) {
+      close();
+      return;
+    }
     qrBtn.setAttribute("aria-busy", "true");
     // The short `?s=` form for the reason the cards use it: an enriched document
     // outgrows the code's capacity, and a printed square cannot degrade
@@ -71,13 +81,17 @@ function wire(slot: HTMLElement): void {
     qrBtn.removeAttribute("aria-busy");
     panel.innerHTML = qrPanel(svg, {
       fileName: file,
-      caption: "Scan to open on a phone (short link — Copy link gives the self-contained form)",
+      caption:
+        "Scan to open on a phone (short link — Copy link gives the self-contained form)",
       tooLargeNoun: "document",
     });
     qrBtn.setAttribute("aria-expanded", "true");
     const img = panel.querySelector("svg");
     img?.setAttribute("role", "img");
-    img?.setAttribute("aria-label", `QR code linking to this ${i ? "recipe" : "publication"}`);
+    img?.setAttribute(
+      "aria-label",
+      `QR code linking to this ${i ? "recipe" : "publication"}`,
+    );
   });
 
   document.addEventListener("keydown", (ev) => {

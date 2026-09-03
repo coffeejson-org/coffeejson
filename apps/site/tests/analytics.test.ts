@@ -1,9 +1,9 @@
-import { readFileSync, readdirSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import { PRIVACY, footerHtml, licenseLine } from "../src/lib/footer.mjs";
 import { pathOnly, posthogOptions, scrubUrls } from "../src/lib/analytics";
+import { footerHtml, licenseLine, PRIVACY } from "../src/lib/footer.mjs";
 
 const site = fileURLToPath(new URL("..", import.meta.url));
 const read = (p: string) => readFileSync(join(site, p), "utf8");
@@ -59,16 +59,20 @@ describe("the retracted claim", () => {
     // because both builders append it rather than accepting it.
     for (const page of entryPages()) {
       const html = read(page);
-      if (html.includes("CC0 1.0 Universal")) expect(html, page).toContain(PRIVACY);
+      if (html.includes("CC0 1.0 Universal"))
+        expect(html, page).toContain(PRIVACY);
     }
   });
 
   // A links-only footer is silent rather than false, but silent is not what the
   // other pages do. Every footer is built from `footer.mjs`, the only way to get
   // the sentence, so a page growing its own fails here.
-  const emitters = ["tools/gen.mjs",
-    ...["src/pages", "src/lib"].flatMap((d) => readdirSync(join(site, d)).map((f) => `${d}/${f}`))]
-    .filter((f) => /<footer|footerHtml\(/.test(read(f)));
+  const emitters = [
+    "tools/gen.mjs",
+    ...["src/pages", "src/lib"].flatMap((d) =>
+      readdirSync(join(site, d)).map((f) => `${d}/${f}`),
+    ),
+  ].filter((f) => /<footer|footerHtml\(/.test(read(f)));
 
   it("every module that emits a footer is accounted for", () => {
     expect(emitters.sort()).toEqual([
@@ -105,16 +109,31 @@ describe("the crawler posture", () => {
   const robots = read("public/robots.txt");
 
   it("still asks the named training crawlers away", () => {
-    for (const bot of ["GPTBot", "CCBot", "Bytespider", "Amazonbot", "Applebot-Extended", "meta-externalagent"]) {
+    for (const bot of [
+      "GPTBot",
+      "CCBot",
+      "Bytespider",
+      "Amazonbot",
+      "Applebot-Extended",
+      "meta-externalagent",
+    ]) {
       expect(robots).toContain(`User-agent: ${bot}`);
     }
   });
 
   it("still welcomes search and retrieval", () => {
-    for (const bot of ["ClaudeBot", "Google-Extended", "OAI-SearchBot", "ChatGPT-User", "PerplexityBot"]) {
+    for (const bot of [
+      "ClaudeBot",
+      "Google-Extended",
+      "OAI-SearchBot",
+      "ChatGPT-User",
+      "PerplexityBot",
+    ]) {
       expect(robots).not.toContain(`User-agent: ${bot}`);
     }
-    expect(robots).toContain("Content-Signal: search=yes,ai-input=yes,ai-train=no");
+    expect(robots).toContain(
+      "Content-Signal: search=yes,ai-input=yes,ai-train=no",
+    );
   });
 
   it("names no analytics host — ingestion is not a crawl", () => {
@@ -126,7 +145,9 @@ describe("the recipe payload never leaves the browser", () => {
   const SHARE = "https://coffeejson.org/r/?d=eyJjb2ZmZWVqc29uIjoiMS4wIn0";
 
   it("the URL PostHog is given carries no query string", () => {
-    expect(posthogOptions.get_current_url(SHARE)).toBe("https://coffeejson.org/r/");
+    expect(posthogOptions.get_current_url(SHARE)).toBe(
+      "https://coffeejson.org/r/",
+    );
     expect(posthogOptions.get_current_url(SHARE)).not.toContain("?");
   });
 

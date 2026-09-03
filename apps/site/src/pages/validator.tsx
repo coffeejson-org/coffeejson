@@ -1,13 +1,13 @@
-import { createRoot } from "react-dom/client";
-import { FORMAT_VERSION } from "@coffeejson/core";
 import type { CoffeeJSONDocument } from "@coffeejson/core";
+import { FORMAT_VERSION } from "@coffeejson/core";
 import { CoffeeJSONView } from "@coffeejson/react";
+import { createRoot } from "react-dom/client";
 import "@coffeejson/react/styles.css";
 import { documentFromInput } from "../lib/input-document";
-import { lintDocument, validateDocument } from "../lib/validate";
-import type { ValidationIssue } from "../lib/validate";
-import { plural } from "../lib/text.mjs";
 import { siteHeader } from "../lib/site-header.mjs";
+import { plural } from "../lib/text.mjs";
+import type { ValidationIssue } from "../lib/validate";
+import { lintDocument, validateDocument } from "../lib/validate";
 
 const app = document.querySelector<HTMLElement>("#app")!;
 app.innerHTML = `
@@ -31,25 +31,48 @@ type Outcome =
 
 function ValidationResult({ outcome }: { outcome: Outcome | null }) {
   if (outcome === null) return null;
-  if (outcome.kind === "error") return <div className="error">{outcome.message}</div>;
+  if (outcome.kind === "error")
+    return <div className="error">{outcome.message}</div>;
   if (outcome.kind === "issues")
     return (
       <div className="error">
-        <p><strong>{plural(outcome.issues.length, "problem")}</strong></p>
-        <ul>{outcome.issues.map((i, k) => <li key={k}><code>{i.path}</code> {i.message}</li>)}</ul>
+        <p>
+          <strong>{plural(outcome.issues.length, "problem")}</strong>
+        </p>
+        <ul>
+          {outcome.issues.map((i, k) => (
+            <li key={k}>
+              <code>{i.path}</code> {i.message}
+            </li>
+          ))}
+        </ul>
       </div>
     );
   const d = outcome.doc;
   return (
     <>
-      <div className="banner">Valid CoffeeJSON {d.coffeejson} — {plural(d.recipes?.length ?? 0, "recipe")}, {plural(d.beans?.length ?? 0, "bean")}.</div>
+      <div className="banner">
+        Valid CoffeeJSON {d.coffeejson} —{" "}
+        {plural(d.recipes?.length ?? 0, "recipe")},{" "}
+        {plural(d.beans?.length ?? 0, "bean")}.
+      </div>
       {outcome.lint.length > 0 && (
         <div className="notes">
-          <p><strong>{plural(outcome.lint.length, "authoring note")}.</strong> The document is
-          valid and every consumer must ignore what these name. They are what the stricter{" "}
-          <a href="/schema/authoring/1.0">authoring schema</a> catches for whoever produced it,
-          most often a typo'd member that would otherwise be dropped in silence.</p>
-          <ul>{outcome.lint.map((i, k) => <li key={k}><code>{i.path}</code> {i.message}</li>)}</ul>
+          <p>
+            <strong>{plural(outcome.lint.length, "authoring note")}.</strong>{" "}
+            The document is valid and every consumer must ignore what these
+            name. They are what the stricter{" "}
+            <a href="/schema/authoring/1.0">authoring schema</a> catches for
+            whoever produced it, most often a typo'd member that would otherwise
+            be dropped in silence.
+          </p>
+          <ul>
+            {outcome.lint.map((i, k) => (
+              <li key={k}>
+                <code>{i.path}</code> {i.message}
+              </li>
+            ))}
+          </ul>
         </div>
       )}
       <CoffeeJSONView doc={d} />
@@ -59,23 +82,50 @@ function ValidationResult({ outcome }: { outcome: Outcome | null }) {
 
 const resultRoot = createRoot(document.querySelector<HTMLElement>("#result")!);
 function run(): void {
-  const { doc, error } = documentFromInput(input.value, "Nothing to validate yet.");
-  if (error) return resultRoot.render(<ValidationResult outcome={{ kind: "error", message: error }} />);
+  const { doc, error } = documentFromInput(
+    input.value,
+    "Nothing to validate yet.",
+  );
+  if (error) {
+    resultRoot.render(
+      <ValidationResult outcome={{ kind: "error", message: error }} />,
+    );
+    return;
+  }
   const issues = validateDocument(doc);
-  if (issues.length) return resultRoot.render(<ValidationResult outcome={{ kind: "issues", issues }} />);
-  resultRoot.render(<ValidationResult outcome={{ kind: "valid", doc: doc as CoffeeJSONDocument, lint: lintDocument(doc) }} />);
+  if (issues.length) {
+    resultRoot.render(
+      <ValidationResult outcome={{ kind: "issues", issues }} />,
+    );
+    return;
+  }
+  resultRoot.render(
+    <ValidationResult
+      outcome={{
+        kind: "valid",
+        doc: doc as CoffeeJSONDocument,
+        lint: lintDocument(doc),
+      }}
+    />,
+  );
 }
 
 const check = document.querySelector<HTMLButtonElement>("#check")!;
 check.addEventListener("click", run);
-document.querySelector<HTMLInputElement>("#file")!.addEventListener("change", async (e) => {
-  const f = (e.currentTarget as HTMLInputElement).files?.[0];
-  if (!f) return;
-  // Reading the file is async, and Validate pressed in between would run against
-  // the previous textarea contents.
-  check.disabled = true;
-  check.setAttribute("aria-busy", "true");
-  try { input.value = await f.text(); }
-  finally { check.disabled = false; check.removeAttribute("aria-busy"); }
-  run();
-});
+document
+  .querySelector<HTMLInputElement>("#file")!
+  .addEventListener("change", async (e) => {
+    const f = (e.currentTarget as HTMLInputElement).files?.[0];
+    if (!f) return;
+    // Reading the file is async, and Validate pressed in between would run against
+    // the previous textarea contents.
+    check.disabled = true;
+    check.setAttribute("aria-busy", "true");
+    try {
+      input.value = await f.text();
+    } finally {
+      check.disabled = false;
+      check.removeAttribute("aria-busy");
+    }
+    run();
+  });

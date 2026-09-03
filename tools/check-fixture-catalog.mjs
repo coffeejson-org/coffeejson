@@ -36,21 +36,32 @@ export function catalogFindings(readmeMd, dirs) {
   for (const name of ["valid", "invalid"]) {
     const section = sectionOf(readmeMd, `${name}/`);
     if (!section) {
-      add(`${name}/ table`, `section "## ${name}/" not found — re-point the extractor`);
+      add(
+        `${name}/ table`,
+        `section "## ${name}/" not found — re-point the extractor`,
+      );
       continue;
     }
     const rows = rowFiles(section);
     const files = dirs[name];
-    if (!rows.length) { add(`${name}/ table`, "no fixture rows extracted"); continue; }
+    if (!rows.length) {
+      add(`${name}/ table`, "no fixture rows extracted");
+      continue;
+    }
 
     const undocumented = files.filter((f) => !rows.includes(f));
     const phantom = rows.filter((r) => !files.includes(r));
     const duplicated = rows.filter((r, i) => rows.indexOf(r) !== i);
 
     const problems = [];
-    if (undocumented.length) problems.push(`in ${name}/ but not in the table: ${undocumented.join(", ")}`);
-    if (phantom.length) problems.push(`in the table but not in ${name}/: ${phantom.join(", ")}`);
-    if (duplicated.length) problems.push(`listed twice: ${[...new Set(duplicated)].join(", ")}`);
+    if (undocumented.length)
+      problems.push(
+        `in ${name}/ but not in the table: ${undocumented.join(", ")}`,
+      );
+    if (phantom.length)
+      problems.push(`in the table but not in ${name}/: ${phantom.join(", ")}`);
+    if (duplicated.length)
+      problems.push(`listed twice: ${[...new Set(duplicated)].join(", ")}`);
     add(`${name}/ table`, problems.length ? problems.join("; ") : null);
   }
 

@@ -1,6 +1,16 @@
+import type {
+  LabelSet,
+  Measurement,
+  NormalizedStep,
+  PartialLabels,
+  UnitSystem,
+} from "@coffeejson/core";
+import {
+  convertMeasurement,
+  fmtMeasurement,
+  mergeLabels,
+} from "@coffeejson/core";
 import type { ComponentType } from "react";
-import type { LabelSet, Measurement, NormalizedStep, PartialLabels, UnitSystem } from "@coffeejson/core";
-import { convertMeasurement, fmtMeasurement, mergeLabels } from "@coffeejson/core";
 
 /**
  * The addressable parts of the `cj-*` DOM contract. Status and variant modifiers
@@ -8,19 +18,57 @@ import { convertMeasurement, fmtMeasurement, mergeLabels } from "@coffeejson/cor
  * per render. The four fixed modifiers below have one meaning each, so each is.
  */
 export type CjPart =
-  | "view" | "card" | "recipeCard" | "beanCard" | "title" | "badge" | "subtitle"
-  | "fact" | "factLabel" | "factValue" | "originItem"
-  | "steps" | "step" | "stepActive" | "stepTime" | "stepBody" | "stepTarget"
-  | "stepDelta" | "stepDeltaNone"
-  | "generator" | "notes" | "description"
-  | "brew" | "brewClock" | "brewControls" | "brewBtn" | "brewBtnPrimary" | "brewBtnGhost"
-  | "timeline" | "timelineMarker"
-  | "stepCard" | "stepCardHead" | "stepCardStep" | "stepCardTime" | "stepCardText"
-  | "stepCardPour" | "stepCardTotal" | "stepCardLabel" | "stepCardMsg"
-  | "countdown" | "countdownLabel" | "countdownValue" | "countdownPour"
-  | "stepList" | "stepListRow" | "stepListIndex" | "stepListTime" | "stepListLabel"
+  | "view"
+  | "card"
+  | "recipeCard"
+  | "beanCard"
+  | "title"
+  | "badge"
+  | "subtitle"
+  | "fact"
+  | "factLabel"
+  | "factValue"
+  | "originItem"
+  | "steps"
+  | "step"
+  | "stepActive"
+  | "stepTime"
+  | "stepBody"
+  | "stepTarget"
+  | "stepDelta"
+  | "stepDeltaNone"
+  | "generator"
+  | "notes"
+  | "description"
+  | "brew"
+  | "brewClock"
+  | "brewControls"
+  | "brewBtn"
+  | "brewBtnPrimary"
+  | "brewBtnGhost"
+  | "timeline"
+  | "timelineMarker"
+  | "stepCard"
+  | "stepCardHead"
+  | "stepCardStep"
+  | "stepCardTime"
+  | "stepCardText"
+  | "stepCardPour"
+  | "stepCardTotal"
+  | "stepCardLabel"
+  | "stepCardMsg"
+  | "countdown"
+  | "countdownLabel"
+  | "countdownValue"
+  | "countdownPour"
+  | "stepList"
+  | "stepListRow"
+  | "stepListIndex"
+  | "stepListTime"
+  | "stepListLabel"
   | "stepListDelta"
-  | "pourCounter" | "pourCounterN";
+  | "pourCounter"
+  | "pourCounterN";
 
 /** Props a `components.Fact` override receives. `id` is the same field-id
  *  vocabulary as the `data-cj-fact` attribute (`dose`, `ratio`, `grind`, …). */
@@ -81,7 +129,12 @@ export interface ResolvedConfig {
 }
 
 const DEFAULT_SHOW: ResolvedConfig["show"] = {
-  bean: true, steps: true, grind: true, gear: true, generator: true, espresso: true,
+  bean: true,
+  steps: true,
+  grind: true,
+  gear: true,
+  generator: true,
+  espresso: true,
 };
 
 // Resolving is pure and every component calls it per render, so a WeakMap gives
@@ -94,7 +147,10 @@ let resolvedDefault: ResolvedConfig | undefined;
 
 // Fills every default, so no component special-cases a missing `config` prop.
 export function resolveConfig(config?: CoffeeJSONConfig): ResolvedConfig {
-  if (config === undefined) return (resolvedDefault ??= build(undefined));
+  if (config === undefined) {
+    resolvedDefault ??= build(undefined);
+    return resolvedDefault;
+  }
   const hit = RESOLVED.get(config);
   if (hit) return hit;
   const built = build(config);
@@ -114,26 +170,57 @@ function build(config: CoffeeJSONConfig | undefined): ResolvedConfig {
 }
 
 const FROZEN_CLASS: Record<CjPart, string> = {
-  view: "cj-view", card: "cj-card", recipeCard: "cj-recipe-card", beanCard: "cj-bean-card",
-  title: "cj-title", badge: "cj-badge", subtitle: "cj-subtitle",
-  fact: "cj-fact", factLabel: "cj-fact-label", factValue: "cj-fact-value", originItem: "cj-origin-item",
-  steps: "cj-steps", step: "cj-step", stepActive: "cj-step--active",
-  stepTime: "cj-step-time", stepBody: "cj-step-body", stepTarget: "cj-step-target",
-  stepDelta: "cj-step-delta", stepDeltaNone: "cj-step-delta--none",
-  generator: "cj-generator", notes: "cj-notes", description: "cj-description",
-  brew: "cj-brew", brewClock: "cj-brew-clock", brewControls: "cj-brew-controls",
-  brewBtn: "cj-brew-btn", brewBtnPrimary: "cj-brew-btn--primary", brewBtnGhost: "cj-brew-btn--ghost",
-  timeline: "cj-timeline", timelineMarker: "cj-timeline-marker",
-  stepCard: "cj-stepcard", stepCardHead: "cj-stepcard-head", stepCardStep: "cj-stepcard-step",
-  stepCardTime: "cj-stepcard-time", stepCardText: "cj-stepcard-text",
-  stepCardPour: "cj-stepcard-pour", stepCardTotal: "cj-stepcard-total",
-  stepCardLabel: "cj-stepcard-label", stepCardMsg: "cj-stepcard-msg",
-  countdown: "cj-countdown", countdownLabel: "cj-countdown-label",
-  countdownValue: "cj-countdown-value", countdownPour: "cj-countdown-pour",
-  stepList: "cj-steplist", stepListRow: "cj-steplist-row", stepListIndex: "cj-steplist-index",
-  stepListTime: "cj-steplist-time", stepListLabel: "cj-steplist-label",
+  view: "cj-view",
+  card: "cj-card",
+  recipeCard: "cj-recipe-card",
+  beanCard: "cj-bean-card",
+  title: "cj-title",
+  badge: "cj-badge",
+  subtitle: "cj-subtitle",
+  fact: "cj-fact",
+  factLabel: "cj-fact-label",
+  factValue: "cj-fact-value",
+  originItem: "cj-origin-item",
+  steps: "cj-steps",
+  step: "cj-step",
+  stepActive: "cj-step--active",
+  stepTime: "cj-step-time",
+  stepBody: "cj-step-body",
+  stepTarget: "cj-step-target",
+  stepDelta: "cj-step-delta",
+  stepDeltaNone: "cj-step-delta--none",
+  generator: "cj-generator",
+  notes: "cj-notes",
+  description: "cj-description",
+  brew: "cj-brew",
+  brewClock: "cj-brew-clock",
+  brewControls: "cj-brew-controls",
+  brewBtn: "cj-brew-btn",
+  brewBtnPrimary: "cj-brew-btn--primary",
+  brewBtnGhost: "cj-brew-btn--ghost",
+  timeline: "cj-timeline",
+  timelineMarker: "cj-timeline-marker",
+  stepCard: "cj-stepcard",
+  stepCardHead: "cj-stepcard-head",
+  stepCardStep: "cj-stepcard-step",
+  stepCardTime: "cj-stepcard-time",
+  stepCardText: "cj-stepcard-text",
+  stepCardPour: "cj-stepcard-pour",
+  stepCardTotal: "cj-stepcard-total",
+  stepCardLabel: "cj-stepcard-label",
+  stepCardMsg: "cj-stepcard-msg",
+  countdown: "cj-countdown",
+  countdownLabel: "cj-countdown-label",
+  countdownValue: "cj-countdown-value",
+  countdownPour: "cj-countdown-pour",
+  stepList: "cj-steplist",
+  stepListRow: "cj-steplist-row",
+  stepListIndex: "cj-steplist-index",
+  stepListTime: "cj-steplist-time",
+  stepListLabel: "cj-steplist-label",
   stepListDelta: "cj-steplist-delta",
-  pourCounter: "cj-pourcounter", pourCounterN: "cj-pourcounter-n",
+  pourCounter: "cj-pourcounter",
+  pourCounterN: "cj-pourcounter-n",
 };
 
 // Never replaces the frozen class — `classNames` is purely additive.
@@ -154,9 +241,15 @@ function numberFormat(locale: string): Intl.NumberFormat {
   if (hit) return hit;
   let nf: Intl.NumberFormat;
   try {
-    nf = new Intl.NumberFormat(locale, { maximumFractionDigits: 1, useGrouping: false });
+    nf = new Intl.NumberFormat(locale, {
+      maximumFractionDigits: 1,
+      useGrouping: false,
+    });
   } catch {
-    nf = new Intl.NumberFormat(FALLBACK_LOCALE, { maximumFractionDigits: 1, useGrouping: false });
+    nf = new Intl.NumberFormat(FALLBACK_LOCALE, {
+      maximumFractionDigits: 1,
+      useGrouping: false,
+    });
   }
   NUMBER_FORMATS.set(locale, nf);
   return nf;
@@ -164,7 +257,10 @@ function numberFormat(locale: string): Intl.NumberFormat {
 
 // The config's contribution to core's `fmtMeasurement`: the unit system to
 // convert into, and a locale to render the digits with.
-export function fmt(m: Measurement | null | undefined, rc: ResolvedConfig): string {
+export function fmt(
+  m: Measurement | null | undefined,
+  rc: ResolvedConfig,
+): string {
   if (!m) return "";
   const nf = numberFormat(rc.locale);
   return fmtMeasurement(convertMeasurement(m, rc.units), (n) => nf.format(n));
@@ -172,10 +268,16 @@ export function fmt(m: Measurement | null | undefined, rc: ResolvedConfig): stri
 
 // The first targeted step shows its fill unsigned, every later pour carries a
 // leading "+". Empty when `fmt` cannot render the amount — a lone "+" says nothing.
-export function pourAmount(steps: readonly NormalizedStep[], index: number, rc: ResolvedConfig): string {
+export function pourAmount(
+  steps: readonly NormalizedStep[],
+  index: number,
+  rc: ResolvedConfig,
+): string {
   const step = steps[index];
   if (!step || step.pourDelta === null) return "";
   const amount = fmt(step.pourDelta, rc);
   if (!amount) return "";
-  return index === steps.findIndex((s) => s.toWater !== null) ? amount : `+${amount}`;
+  return index === steps.findIndex((s) => s.toWater !== null)
+    ? amount
+    : `+${amount}`;
 }

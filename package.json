@@ -6,11 +6,16 @@
   "type": "module",
   "packageManager": "pnpm@11.23.0",
   "scripts": {
+    "format": "biome format --write .",
+    "lint": "biome lint .",
+    "check": "biome check --write .",
+    "check:ci": "biome ci .",
     "test": "node tools/validate-fixtures.mjs",
     "test:all": "pnpm test && pnpm -r test",
     "validate:doc": "node tools/validate-doc.mjs"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.5.12",
     "ajv": "^8.20.0",
     "ajv-formats": "^3.0.1"
   }

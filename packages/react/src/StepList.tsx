@@ -1,6 +1,10 @@
-import type { CSSProperties } from "react";
-import type { NormalizedRecipe, NormalizedStep, TimerState } from "@coffeejson/core";
+import type {
+  NormalizedRecipe,
+  NormalizedStep,
+  TimerState,
+} from "@coffeejson/core";
 import { fmtClock, fmtStepTime } from "@coffeejson/core";
+import type { CSSProperties } from "react";
 import type { CoffeeJSONConfig, ResolvedConfig } from "./config.js";
 import { cx, fmt, pourAmount, resolveConfig } from "./config.js";
 
@@ -14,7 +18,11 @@ export interface StepListProps {
 // Fill % [0..100] of the segment [prevStop, curStop] covered by `elapsed`. A
 // zero-width segment — an untimed step, or the at_s=0 first row — reads as filled
 // once `elapsed` reaches curStop, empty before.
-function connectorFill(elapsed: number, prevStop: number, curStop: number): number {
+function connectorFill(
+  elapsed: number,
+  prevStop: number,
+  curStop: number,
+): number {
   if (curStop <= prevStop) return elapsed >= curStop ? 100 : 0;
   const pct = ((elapsed - prevStop) / (curStop - prevStop)) * 100;
   return Math.max(0, Math.min(100, pct));
@@ -30,7 +38,12 @@ function rowLabel(step: NormalizedStep, rc: ResolvedConfig): string {
 
 // Class-only: the connector track and fill are a ::before/::after the consumer
 // styles from `--cj-fill` and the status class.
-export function StepList({ recipe, state, elapsedS = 0, config }: StepListProps) {
+export function StepList({
+  recipe,
+  state,
+  elapsedS = 0,
+  config,
+}: StepListProps) {
   const rc = resolveConfig(config);
   const { steps, finishS } = recipe;
   const done = new Set(state.doneIndexes);
@@ -40,14 +53,24 @@ export function StepList({ recipe, state, elapsedS = 0, config }: StepListProps)
   // the finish row is row `steps.length`.
   const raw: (number | null)[] = [0, ...steps.map((s) => s.atS), finishS];
   let last = 0;
-  const bounds = raw.map((v) => { if (v !== null) last = v; return last; });
+  const bounds = raw.map((v) => {
+    if (v !== null) last = v;
+    return last;
+  });
   const fillStyle = (i: number): CSSProperties =>
-    ({ ["--cj-fill"]: `${connectorFill(elapsedS, bounds[i]!, bounds[i + 1]!)}%` } as CSSProperties);
+    ({
+      ["--cj-fill"]: `${connectorFill(elapsedS, bounds[i]!, bounds[i + 1]!)}%`,
+    }) as CSSProperties;
 
   return (
     <ol className={cx("stepList", rc)}>
       {steps.map((step, i) => {
-        const status = i === state.currentIndex ? "current" : done.has(i) ? "done" : "future";
+        const status =
+          i === state.currentIndex
+            ? "current"
+            : done.has(i)
+              ? "done"
+              : "future";
         const delta = pourAmount(steps, i, rc);
         return (
           <li
@@ -58,8 +81,12 @@ export function StepList({ recipe, state, elapsedS = 0, config }: StepListProps)
             style={fillStyle(i)}
           >
             <span className={cx("stepListIndex", rc)}>{i + 1}</span>
-            <span className={cx("stepListTime", rc)}>{fmtStepTime(step.atS)}</span>
-            <span className={cx("stepListLabel", rc)}>{rowLabel(step, rc)}</span>
+            <span className={cx("stepListTime", rc)}>
+              {fmtStepTime(step.atS)}
+            </span>
+            <span className={cx("stepListLabel", rc)}>
+              {rowLabel(step, rc)}
+            </span>
             <span className={cx("stepListDelta", rc)}>{delta}</span>
           </li>
         );
@@ -72,7 +99,9 @@ export function StepList({ recipe, state, elapsedS = 0, config }: StepListProps)
         >
           <span className={cx("stepListIndex", rc)} />
           <span className={cx("stepListTime", rc)}>{fmtClock(finishS)}</span>
-          <span className={cx("stepListLabel", rc)}>{rc.labels.facts.finish}</span>
+          <span className={cx("stepListLabel", rc)}>
+            {rc.labels.facts.finish}
+          </span>
           <span className={cx("stepListDelta", rc)} />
         </li>
       ) : null}

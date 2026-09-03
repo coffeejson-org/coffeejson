@@ -10,21 +10,23 @@
 //
 // Aliases resolve to the same label as their canonical id — that is what an alias is.
 import { readFileSync, writeFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 export function renderGearLabels(gear) {
-const rows = [];
-for (const e of gear) {
-  rows.push([e.id, e.label]);
-  for (const a of e.aliases ?? []) rows.push([a, e.label]);
-}
-rows.sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0));
+  const rows = [];
+  for (const e of gear) {
+    rows.push([e.id, e.label]);
+    for (const a of e.aliases ?? []) rows.push([a, e.label]);
+  }
+  rows.sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0));
 
-const body = rows.map(([k, v]) => `    ${JSON.stringify(k)}: ${JSON.stringify(v)},`).join("\n");
-const out = `// GENERATED from registries/gear.json by tools/gen-gear-labels.mjs — do not edit by hand.
+  const body = rows
+    .map(([k, v]) => `    ${JSON.stringify(k)}: ${JSON.stringify(v)},`)
+    .join("\n");
+  const out = `// GENERATED from registries/gear.json by tools/gen-gear-labels.mjs — do not edit by hand.
 //
 // The registry's label for every gear id and alias. \`gearLabel\` resolves a known id
 // through this map, because a document that names registered gear carries no display
@@ -56,12 +58,16 @@ export function gearLabelsFor(lang?: string): Readonly<Record<string, string>> {
   return GEAR_LABELS["en"]!;
 }
 `;
-return { out, count: rows.length };
+  return { out, count: rows.length };
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const { gear } = JSON.parse(readFileSync(join(root, "registries/gear.json"), "utf8"));
+  const { gear } = JSON.parse(
+    readFileSync(join(root, "registries/gear.json"), "utf8"),
+  );
   const { out, count } = renderGearLabels(gear);
   writeFileSync(join(root, "packages/core/src/gear-labels.ts"), out);
-  console.log(`wrote packages/core/src/gear-labels.ts — ${count} ids and aliases`);
+  console.log(
+    `wrote packages/core/src/gear-labels.ts — ${count} ids and aliases`,
+  );
 }

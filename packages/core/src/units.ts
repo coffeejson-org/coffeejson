@@ -1,5 +1,9 @@
 import type { Measurement } from "./types.js";
-import type { AltitudeUnit, MassUnit, TemperatureUnit } from "./vocabularies.js";
+import type {
+  AltitudeUnit,
+  MassUnit,
+  TemperatureUnit,
+} from "./vocabularies.js";
 
 export type UnitSystem = "as-authored" | "metric" | "imperial";
 
@@ -17,7 +21,11 @@ const GRAMS_PER_OUNCE = 28.349523125;
 const METERS_PER_FOOT = 0.3048;
 
 // Unrounded: formatters own display rounding, not the derivations calling this.
-export function convertMassValue(value: number, from: string, to: string): number | null {
+export function convertMassValue(
+  value: number,
+  from: string,
+  to: string,
+): number | null {
   if (from === to) return value;
   if (from === GRAM && to === OUNCE) return value / GRAMS_PER_OUNCE;
   if (from === OUNCE && to === GRAM) return value * GRAMS_PER_OUNCE;
@@ -25,7 +33,11 @@ export function convertMassValue(value: number, from: string, to: string): numbe
 }
 
 // A window converts bound by bound, so a 32-34 g yield stays a window in ounces.
-export const mapMagnitudes = (m: Measurement, f: (n: number) => number, unit: string): Measurement => ({
+export const mapMagnitudes = (
+  m: Measurement,
+  f: (n: number) => number,
+  unit: string,
+): Measurement => ({
   ...(m.value !== undefined ? { value: round1(f(m.value)) } : {}),
   ...(m.min !== undefined ? { min: round1(f(m.min)) } : {}),
   ...(m.max !== undefined ? { max: round1(f(m.max)) } : {}),
@@ -33,12 +45,16 @@ export const mapMagnitudes = (m: Measurement, f: (n: number) => number, unit: st
 });
 
 /** Each magnitude rounded to one decimal, unit unchanged. */
-export const roundMeasurement = (m: Measurement): Measurement => mapMagnitudes(m, (n) => n, m.unit);
+export const roundMeasurement = (m: Measurement): Measurement =>
+  mapMagnitudes(m, (n) => n, m.unit);
 
 // Mass (gram⇄ounce), temperature (celsius⇄fahrenheit) and length (meter⇄foot)
 // convert; every other unit passes through untouched. Length is here because
 // 04-bean.md makes converting a recognized altitude unit a consumer MUST.
-export function convertMeasurement(m: Measurement, system: UnitSystem): Measurement {
+export function convertMeasurement(
+  m: Measurement,
+  system: UnitSystem,
+): Measurement {
   if (system === "as-authored") return m;
   const toMetric = system === "metric";
   switch (m.unit) {
@@ -47,9 +63,13 @@ export function convertMeasurement(m: Measurement, system: UnitSystem): Measurem
     case GRAM:
       return toMetric ? m : mapMagnitudes(m, (n) => n / GRAMS_PER_OUNCE, OUNCE);
     case FAHRENHEIT:
-      return toMetric ? mapMagnitudes(m, (n) => (n - 32) * 5 / 9, CELSIUS) : m;
+      return toMetric
+        ? mapMagnitudes(m, (n) => ((n - 32) * 5) / 9, CELSIUS)
+        : m;
     case CELSIUS:
-      return toMetric ? m : mapMagnitudes(m, (n) => n * 9 / 5 + 32, FAHRENHEIT);
+      return toMetric
+        ? m
+        : mapMagnitudes(m, (n) => (n * 9) / 5 + 32, FAHRENHEIT);
     case FOOT:
       return toMetric ? mapMagnitudes(m, (n) => n * METERS_PER_FOOT, METER) : m;
     case METER:

@@ -1,8 +1,8 @@
-import Ajv2020 from "ajv/dist/2020.js";
-import addFormats from "ajv-formats";
 import { FORMAT_VERSION } from "@coffeejson/core";
 import schema from "@coffeejson/core/schema";
 import authoringSchema from "@coffeejson/core/schema/authoring";
+import Ajv2020 from "ajv/dist/2020.js";
+import addFormats from "ajv-formats";
 
 const ajv = new Ajv2020({ allErrors: true });
 addFormats(ajv);
@@ -13,9 +13,17 @@ addFormats(ajv);
 const validateRuntime = ajv.compile(schema);
 const validateAuthoring = ajv.compile(authoringSchema);
 
-export interface ValidationIssue { path: string; message: string }
+export interface ValidationIssue {
+  path: string;
+  message: string;
+}
 
-interface AjvError { instancePath: string; message?: string; keyword?: string; params?: Record<string, unknown> }
+interface AjvError {
+  instancePath: string;
+  message?: string;
+  keyword?: string;
+  params?: Record<string, unknown>;
+}
 
 // For `additionalProperties` ajv puts the offending member in `params` and
 // nowhere in `message`, so two typos in one object read as two identical lines.
@@ -23,12 +31,20 @@ interface AjvError { instancePath: string; message?: string; keyword?: string; p
 // gives "must have required property \'coffee\': coffee".
 function phrase(e: AjvError): string {
   const message = e.message ?? "invalid";
-  const member = e.keyword === "additionalProperties" ? e.params?.additionalProperty : undefined;
+  const member =
+    e.keyword === "additionalProperties"
+      ? e.params?.additionalProperty
+      : undefined;
   return typeof member === "string" ? `${message}: ${member}` : message;
 }
 
-function issuesFrom(validator: { errors?: AjvError[] | null }): ValidationIssue[] {
-  return (validator.errors ?? []).map((e) => ({ path: e.instancePath || "/", message: phrase(e) }));
+function issuesFrom(validator: {
+  errors?: AjvError[] | null;
+}): ValidationIssue[] {
+  return (validator.errors ?? []).map((e) => ({
+    path: e.instancePath || "/",
+    message: phrase(e),
+  }));
 }
 
 const minor = (v: string): number => Number(v.split(".")[1]);

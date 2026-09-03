@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useReducer, useRef, useState } from "react";
-import { timerState } from "@coffeejson/core";
 import type { NormalizedStep, TimerState } from "@coffeejson/core";
+import { timerState } from "@coffeejson/core";
+import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 
 export interface BrewAlongState {
   elapsedS: number;
@@ -49,7 +49,9 @@ export function useBrewAlong(
   // Kept current by an effect rather than a dependency list, so `tick` reads a
   // value at most one commit old — immaterial against a 250 ms tick.
   const inputs = useRef({ steps, finishS, elapsed });
-  useEffect(() => { inputs.current = { steps, finishS, elapsed }; });
+  useEffect(() => {
+    inputs.current = { steps, finishS, elapsed };
+  });
 
   useEffect(() => {
     if (!running) return;
@@ -61,28 +63,52 @@ export function useBrewAlong(
     let handle: ReturnType<typeof setTimeout> | null = null;
     const tick = () => {
       if (!live) return;
-      const t = Math.max(0, ((pausedAt.current ?? performance.now()) - anchor - pausedTotal.current) / 1000);
+      const t = Math.max(
+        0,
+        ((pausedAt.current ?? performance.now()) -
+          anchor -
+          pausedTotal.current) /
+          1000,
+      );
       setElapsed(t);
       const { steps: s, finishS: f } = inputs.current;
-      if (timerState(s, f, t, acked.current!).finished) { setRunning(false); return; }
+      if (timerState(s, f, t, acked.current!).finished) {
+        setRunning(false);
+        return;
+      }
       handle = setTimeout(tick, 250);
     };
     tick();
     // `live` stops the stale callback acting, but an uncleared timeout still sits
     // in the queue after unmount.
-    return () => { live = false; if (handle !== null) clearTimeout(handle); };
+    return () => {
+      live = false;
+      if (handle !== null) clearTimeout(handle);
+    };
   }, [running]);
 
   // `start` and `reset` differ only in whether the clock runs afterwards.
   const rewind = useCallback((run: boolean) => {
     acked.current = leadingUntimed(inputs.current.steps);
-    startedAt.current = performance.now(); pausedAt.current = null; pausedTotal.current = 0;
-    setElapsed(0); setRunning(run);
+    startedAt.current = performance.now();
+    pausedAt.current = null;
+    pausedTotal.current = 0;
+    setElapsed(0);
+    setRunning(run);
   }, []);
   const start = useCallback(() => rewind(true), [rewind]);
-  const pause = useCallback(() => { if (pausedAt.current === null) { pausedAt.current = performance.now(); setRunning(false); } }, []);
+  const pause = useCallback(() => {
+    if (pausedAt.current === null) {
+      pausedAt.current = performance.now();
+      setRunning(false);
+    }
+  }, []);
   const resume = useCallback(() => {
-    if (pausedAt.current !== null) { pausedTotal.current += performance.now() - pausedAt.current; pausedAt.current = null; setRunning(true); }
+    if (pausedAt.current !== null) {
+      pausedTotal.current += performance.now() - pausedAt.current;
+      pausedAt.current = null;
+      setRunning(true);
+    }
   }, []);
   const reset = useCallback(() => rewind(false), [rewind]);
   // One identity for the life of the component: depending on `elapsed` would
@@ -90,8 +116,20 @@ export function useBrewAlong(
   const tapDone = useCallback(() => {
     const { steps: s, finishS: f, elapsed: e } = inputs.current;
     const st = timerState(s, f, e, acked.current!);
-    if (st.currentIndex !== null) { acked.current!.add(st.currentIndex); force(); }
+    if (st.currentIndex !== null) {
+      acked.current!.add(st.currentIndex);
+      force();
+    }
   }, []);
 
-  return { elapsedS: elapsed, state: timerState(steps, finishS, elapsed, ackedSet), running, start, pause, resume, reset, tapDone };
+  return {
+    elapsedS: elapsed,
+    state: timerState(steps, finishS, elapsed, ackedSet),
+    running,
+    start,
+    pause,
+    resume,
+    reset,
+    tapDone,
+  };
 }

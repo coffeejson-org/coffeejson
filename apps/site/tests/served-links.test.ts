@@ -32,7 +32,10 @@ function servedPathFor(url: string): string | null {
 }
 
 const documents = [
-  ...SERVED_MD.map((p: string) => ({ name: p, text: readFileSync(pub(p), "utf8") })),
+  ...SERVED_MD.map((p: string) => ({
+    name: p,
+    text: readFileSync(pub(p), "utf8"),
+  })),
   { name: "llms-full.txt", text: readFileSync(pub("llms-full.txt"), "utf8") },
 ];
 
@@ -40,8 +43,14 @@ describe("served docs carry no relative links", () => {
   for (const { name, text } of documents) {
     it(`${name} — every link is absolute or a fragment`, () => {
       for (const target of linkTargets(text)) {
-        const ok = target.startsWith("#") || /^https?:\/\//.test(target) || /^mailto:/.test(target);
-        expect(ok, `relative link survived rewriting: ${target} in ${name}`).toBe(true);
+        const ok =
+          target.startsWith("#") ||
+          /^https?:\/\//.test(target) ||
+          /^mailto:/.test(target);
+        expect(
+          ok,
+          `relative link survived rewriting: ${target} in ${name}`,
+        ).toBe(true);
       }
     });
 
@@ -52,8 +61,12 @@ describe("served docs carry no relative links", () => {
         if (served === null) continue;
         // Generated artifacts live under public/; the page HTML entry points
         // live at the site root (Vite multi-page inputs) and build into dist.
-        const exists = existsSync(pub(served)) || existsSync(join(site, served));
-        expect(exists, `${target} (→ ${served}) missing, linked from ${name}`).toBe(true);
+        const exists =
+          existsSync(pub(served)) || existsSync(join(site, served));
+        expect(
+          exists,
+          `${target} (→ ${served}) missing, linked from ${name}`,
+        ).toBe(true);
       }
     });
   }

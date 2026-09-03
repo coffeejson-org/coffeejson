@@ -15,10 +15,19 @@ export interface IndexEntry {
   title: string;
   /** The document's `author` party, as the projection words it. */
   author: { name: string; url?: string };
-  method: string; methodLabel: string;
-  coffee: string; brew: string; ratio: string; temp: string; totalTime: string;
+  method: string;
+  methodLabel: string;
+  coffee: string;
+  brew: string;
+  ratio: string;
+  temp: string;
+  totalTime: string;
   stepCount: number;
-  attribution: { source_url: string; source_label: string; transcribed: string };
+  attribution: {
+    source_url: string;
+    source_label: string;
+    transcribed: string;
+  };
   payload: string;
 }
 /**
@@ -33,7 +42,10 @@ export interface BeanEntry {
   roaster: { name: string; url?: string };
   /** The bag's own page, where the transcription named one. */
   url?: string;
-  origin: string; process: string; roast: string; notes: string;
+  origin: string;
+  process: string;
+  roast: string;
+  notes: string;
   /** Corpus recipes brewed with this bag, in catalog order. */
   recipes: { slug: string; title: string; methodLabel: string }[];
   /** The winning bean re-enveloped as its own document — what this card shares. */
@@ -43,14 +55,24 @@ export interface BeanEntry {
 /** Which lens `/recipes` is showing. `recipes` is the default and stays out of the URL. */
 export type View = "recipes" | "beans";
 
-export interface Filters { view: View; q: string; author: string | null; method: string | null }
+export interface Filters {
+  view: View;
+  q: string;
+  author: string | null;
+  method: string | null;
+}
 
 export function filterEntries(entries: IndexEntry[], f: Filters): IndexEntry[] {
   const q = f.q.trim().toLowerCase();
-  return entries.filter((e) =>
-    (!q || [e.title, e.author.name, e.method, e.methodLabel].some((v) => v.toLowerCase().includes(q))) &&
-    (!f.author || slugify(e.author.name) === f.author) &&
-    (!f.method || e.method === f.method));
+  return entries.filter(
+    (e) =>
+      (!q ||
+        [e.title, e.author.name, e.method, e.methodLabel].some((v) =>
+          v.toLowerCase().includes(q),
+        )) &&
+      (!f.author || slugify(e.author.name) === f.author) &&
+      (!f.method || e.method === f.method),
+  );
 }
 
 /**
@@ -60,16 +82,23 @@ export function filterEntries(entries: IndexEntry[], f: Filters): IndexEntry[] {
  */
 export function filterBeans(entries: BeanEntry[], f: Filters): BeanEntry[] {
   const q = f.q.trim().toLowerCase();
-  return entries.filter((e) =>
-    (!q || [e.name, e.roaster.name, e.origin, e.notes].some((v) => v.toLowerCase().includes(q))) &&
-    (!f.author || slugify(e.roaster.name) === f.author));
+  return entries.filter(
+    (e) =>
+      (!q ||
+        [e.name, e.roaster.name, e.origin, e.notes].some((v) =>
+          v.toLowerCase().includes(q),
+        )) &&
+      (!f.author || slugify(e.roaster.name) === f.author),
+  );
 }
 
 export function filtersFromSearch(search: string): Filters {
   const p = new URLSearchParams(search);
   return {
     view: p.get("view") === "beans" ? "beans" : "recipes",
-    q: p.get("q") ?? "", author: p.get("author"), method: p.get("method"),
+    q: p.get("q") ?? "",
+    author: p.get("author"),
+    method: p.get("method"),
   };
 }
 
@@ -88,4 +117,8 @@ export function searchFromFilters(f: Filters): string {
  * something on either side — and drops `method`, which would silently re-apply
  * itself on the way back.
  */
-export const withView = (f: Filters, view: View): Filters => ({ ...f, view, method: null });
+export const withView = (f: Filters, view: View): Filters => ({
+  ...f,
+  view,
+  method: null,
+});

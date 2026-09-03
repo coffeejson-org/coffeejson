@@ -1,16 +1,44 @@
 import { expect, test } from "vitest";
-import { slugify } from "../src/lib/text.mjs";
-import { filterBeans, filterEntries, filtersFromSearch, searchFromFilters, withView }
-  from "../src/lib/filter";
 import type { BeanEntry, Filters, IndexEntry } from "../src/lib/filter";
+import {
+  filterBeans,
+  filterEntries,
+  filtersFromSearch,
+  searchFromFilters,
+  withView,
+} from "../src/lib/filter";
+import { slugify } from "../src/lib/text.mjs";
 
-const e = (slug: string, title: string, author: string, method: string): IndexEntry =>
-  ({ slug, id: slug, siblings: 1, title, author: { name: author }, method, methodLabel: method,
-     coffee: "", brew: "", ratio: "", temp: "", totalTime: "", stepCount: 0,
-     attribution: { source_url: "", source_label: "", transcribed: "" }, payload: "" });
+const e = (
+  slug: string,
+  title: string,
+  author: string,
+  method: string,
+): IndexEntry => ({
+  slug,
+  id: slug,
+  siblings: 1,
+  title,
+  author: { name: author },
+  method,
+  methodLabel: method,
+  coffee: "",
+  brew: "",
+  ratio: "",
+  temp: "",
+  totalTime: "",
+  stepCount: 0,
+  attribution: { source_url: "", source_label: "", transcribed: "" },
+  payload: "",
+});
 
-const f = (over: Partial<Filters> = {}): Filters =>
-  ({ view: "recipes", q: "", author: null, method: null, ...over });
+const f = (over: Partial<Filters> = {}): Filters => ({
+  view: "recipes",
+  q: "",
+  author: null,
+  method: null,
+  ...over,
+});
 
 const entries = [
   e("a", "4:6 Method", "Tetsu Kasuya", "pour_over"),
@@ -24,11 +52,18 @@ test("text query matches title, author, and method, case-insensitively", () => {
   expect(filterEntries(entries, f({ q: "4:6" }))[0]!.slug).toBe("a");
 });
 test("chips filter by slugified author and by method id", () => {
-  expect(filterEntries(entries, f({ author: "onyx-coffee-lab" }))).toHaveLength(1);
+  expect(filterEntries(entries, f({ author: "onyx-coffee-lab" }))).toHaveLength(
+    1,
+  );
   expect(filterEntries(entries, f({ method: "pour_over" }))).toHaveLength(2);
 });
 test("URL state round-trips", () => {
-  const state = { view: "beans" as const, q: "v60", author: "james-hoffmann", method: "pour_over" };
+  const state = {
+    view: "beans" as const,
+    q: "v60",
+    author: "james-hoffmann",
+    method: "pour_over",
+  };
   expect(filtersFromSearch(searchFromFilters(state))).toEqual(state);
   expect(searchFromFilters(f())).toBe("");
 });
@@ -38,14 +73,32 @@ test("the recipe view is the default and stays out of the URL", () => {
   expect(filtersFromSearch("").view).toBe("recipes");
   expect(filtersFromSearch("?view=nonsense").view).toBe("recipes");
 });
-test("slugify", () => { expect(slugify("Onyx Coffee Lab")).toBe("onyx-coffee-lab"); });
+test("slugify", () => {
+  expect(slugify("Onyx Coffee Lab")).toBe("onyx-coffee-lab");
+});
 
-const b = (name: string, roaster: string, over: Partial<BeanEntry> = {}): BeanEntry =>
-  ({ key: `${slugify(roaster)}/${slugify(name)}`, name, roaster: { name: roaster },
-     origin: "", process: "", roast: "", notes: "", recipes: [], payload: "", ...over });
+const b = (
+  name: string,
+  roaster: string,
+  over: Partial<BeanEntry> = {},
+): BeanEntry => ({
+  key: `${slugify(roaster)}/${slugify(name)}`,
+  name,
+  roaster: { name: roaster },
+  origin: "",
+  process: "",
+  roast: "",
+  notes: "",
+  recipes: [],
+  payload: "",
+  ...over,
+});
 
 const beans = [
-  b("Monarch", "Onyx Coffee Lab", { origin: "Colombia + Ethiopia", notes: "dark chocolate · molasses" }),
+  b("Monarch", "Onyx Coffee Lab", {
+    origin: "Colombia + Ethiopia",
+    notes: "dark chocolate · molasses",
+  }),
   b("Geometry", "Onyx Coffee Lab", { origin: "Colombia + Ethiopia" }),
   b("Kilimanjaro", "Bench Roasters", { origin: "Tanzania", notes: "citrus" }),
 ];
@@ -65,7 +118,11 @@ test("method is inert over bags — a stale one never hides a card", () => {
 });
 test("switching view carries q and the roaster chip, and drops method", () => {
   const from = f({ q: "onyx", author: "onyx-coffee-lab", method: "pour_over" });
-  expect(withView(from, "beans")).toEqual(f({ view: "beans", q: "onyx", author: "onyx-coffee-lab" }));
-  expect(searchFromFilters(withView(from, "beans"))).toBe("?view=beans&q=onyx&author=onyx-coffee-lab");
+  expect(withView(from, "beans")).toEqual(
+    f({ view: "beans", q: "onyx", author: "onyx-coffee-lab" }),
+  );
+  expect(searchFromFilters(withView(from, "beans"))).toBe(
+    "?view=beans&q=onyx&author=onyx-coffee-lab",
+  );
   expect(withView(withView(from, "beans"), "recipes").method).toBeNull();
 });

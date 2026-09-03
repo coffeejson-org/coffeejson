@@ -1,17 +1,32 @@
-import { describe, expect, test } from "vitest";
 import { readFileSync } from "node:fs";
 import { deflateSync, gzipSync } from "node:zlib";
+import { describe, expect, test } from "vitest";
 import {
-  DECODE_ERROR_KINDS, MAX_PAYLOAD_BYTES, checkEnvelope, decodeDocumentText, decodePayload,
-  encodePayload, payloadFromLocation,
+  checkEnvelope,
+  DECODE_ERROR_KINDS,
+  decodeDocumentText,
+  decodePayload,
+  encodePayload,
+  MAX_PAYLOAD_BYTES,
+  payloadFromLocation,
 } from "../src/codec";
-import { FORMAT_VERSION, MEDIA_TYPE, SUPPORTED_MAJOR } from "../src/version";
 import { normalize } from "../src/normalize";
+import { FORMAT_VERSION, MEDIA_TYPE, SUPPORTED_MAJOR } from "../src/version";
 
-const minimal = JSON.parse(readFileSync(new URL("../../../fixtures/valid/minimal.json", import.meta.url), "utf8"));
+const minimal = JSON.parse(
+  readFileSync(
+    new URL("../../../fixtures/valid/minimal.json", import.meta.url),
+    "utf8",
+  ),
+);
 const b64url = (b: Buffer | Uint8Array) => Buffer.from(b).toString("base64url");
 const compress = (doc: unknown, opts: Record<string, number> = {}) =>
-  b64url(deflateSync(Buffer.from(JSON.stringify(doc), "utf8"), { level: 9, ...opts }));
+  b64url(
+    deflateSync(Buffer.from(JSON.stringify(doc), "utf8"), {
+      level: 9,
+      ...opts,
+    }),
+  );
 
 describe("encode/decode round-trip", () => {
   test("round-trips the minimal fixture byte-identically", () => {
@@ -21,9 +36,20 @@ describe("encode/decode round-trip", () => {
     expect(r.ok && r.document).toEqual(minimal);
   });
   test("round-trips non-ASCII titles (UTF-8, not latin1)", () => {
-    const doc = { coffeejson: "1.0", recipes: [{ title: "朝のV60 — café", coffee: { value: 15, unit: "gram" }, water: { value: 250, unit: "gram" } }] };
+    const doc = {
+      coffeejson: "1.0",
+      recipes: [
+        {
+          title: "朝のV60 — café",
+          coffee: { value: 15, unit: "gram" },
+          water: { value: 250, unit: "gram" },
+        },
+      ],
+    };
     const r = decodePayload(encodePayload(doc));
-    expect(r.ok && normalize(r.document).recipes[0]!.title).toBe("朝のV60 — café");
+    expect(r.ok && normalize(r.document).recipes[0]!.title).toBe(
+      "朝のV60 — café",
+    );
   });
   test("accepts padded and +/ alphabet input (normalization)", () => {
     const std = Buffer.from(JSON.stringify(minimal), "utf8").toString("base64"); // +,/,= form
@@ -33,7 +59,12 @@ describe("encode/decode round-trip", () => {
 });
 
 describe("guards", () => {
-  test("no_payload", () => { expect(decodePayload("")).toEqual({ ok: false, error: { kind: "no_payload" } }); });
+  test("no_payload", () => {
+    expect(decodePayload("")).toEqual({
+      ok: false,
+      error: { kind: "no_payload" },
+    });
+  });
   test("malformed base64", () => {
     const r = decodePayload("!!!not-base64!!!");
     expect(!r.ok && r.error.kind).toBe("malformed_base64");
@@ -43,22 +74,48 @@ describe("guards", () => {
     expect(!r.ok && r.error.kind).toBe("not_json");
   });
   test("size cap", () => {
-    const big = { coffeejson: "1.0", recipes: [{ title: "x".repeat(MAX_PAYLOAD_BYTES), coffee: { value: 1, unit: "gram" }, water: { value: 1, unit: "gram" } }] };
+    const big = {
+      coffeejson: "1.0",
+      recipes: [
+        {
+          title: "x".repeat(MAX_PAYLOAD_BYTES),
+          coffee: { value: 1, unit: "gram" },
+          water: { value: 1, unit: "gram" },
+        },
+      ],
+    };
     const r = decodePayload(encodePayload(big));
     expect(!r.ok && r.error.kind).toBe("too_large");
   });
   test("newer major is gated, newer minor is not", () => {
-    const v2 = decodePayload(encodePayload({ coffeejson: "2.0", recipes: [{ title: "t" }] }));
+    const v2 = decodePayload(
+      encodePayload({ coffeejson: "2.0", recipes: [{ title: "t" }] }),
+    );
     expect(!v2.ok && v2.error.kind).toBe("unsupported_version");
-    const v17 = decodePayload(encodePayload({ coffeejson: "1.7", recipes: [{ title: "t", coffee: { value: 1, unit: "gram" }, water: { value: 1, unit: "gram" } }] }));
+    const v17 = decodePayload(
+      encodePayload({
+        coffeejson: "1.7",
+        recipes: [
+          {
+            title: "t",
+            coffee: { value: 1, unit: "gram" },
+            water: { value: 1, unit: "gram" },
+          },
+        ],
+      }),
+    );
     expect(v17.ok).toBe(true);
   });
   test("JSON that is not a CoffeeJSON document", () => {
-    const r = decodePayload(Buffer.from('{"hello":"world"}', "utf8").toString("base64url"));
+    const r = decodePayload(
+      Buffer.from('{"hello":"world"}', "utf8").toString("base64url"),
+    );
     expect(!r.ok && r.error.kind).toBe("not_a_document");
   });
   test("a JSON array never reaches the parser — a document is an object", () => {
-    const r = decodePayload(Buffer.from("[1,2,3]", "utf8").toString("base64url"));
+    const r = decodePayload(
+      Buffer.from("[1,2,3]", "utf8").toString("base64url"),
+    );
     expect(!r.ok && r.error.kind).toBe("unrecognized_encoding");
   });
 });
@@ -71,24 +128,38 @@ describe("the envelope carries something", () => {
     return r.ok ? "accepted" : r.error.kind;
   };
   test("empty collections", () => {
-    expect(kindOf({ coffeejson: "1.0", beans: [], recipes: [] })).toBe("empty_document");
+    expect(kindOf({ coffeejson: "1.0", beans: [], recipes: [] })).toBe(
+      "empty_document",
+    );
   });
   test("absent collections state the same thing as empty ones", () => {
     expect(kindOf({ coffeejson: "1.0" })).toBe("empty_document");
-    expect(kindOf({ coffeejson: "1.0", generator: { name: "ExampleBrewApp" } })).toBe("empty_document");
+    expect(
+      kindOf({ coffeejson: "1.0", generator: { name: "ExampleBrewApp" } }),
+    ).toBe("empty_document");
   });
   test("tastings alone do not make a document", () => {
-    expect(kindOf({ coffeejson: "1.0", tastings: [{ rating: 4 }] })).toBe("empty_document");
+    expect(kindOf({ coffeejson: "1.0", tastings: [{ rating: 4 }] })).toBe(
+      "empty_document",
+    );
   });
   test("a collection that is not an array reads as absent", () => {
-    expect(kindOf({ coffeejson: "1.0", recipes: { title: "t" } })).toBe("empty_document");
+    expect(kindOf({ coffeejson: "1.0", recipes: { title: "t" } })).toBe(
+      "empty_document",
+    );
   });
   test("either collection alone is enough", () => {
-    expect(kindOf({ coffeejson: "1.0", recipes: [{ title: "t" }] })).toBe("accepted");
-    expect(kindOf({ coffeejson: "1.0", beans: [{ name: "Nano Challa" }] })).toBe("accepted");
+    expect(kindOf({ coffeejson: "1.0", recipes: [{ title: "t" }] })).toBe(
+      "accepted",
+    );
+    expect(
+      kindOf({ coffeejson: "1.0", beans: [{ name: "Nano Challa" }] }),
+    ).toBe("accepted");
   });
   test("the version gate is answered first — a newer major's envelope is not ours to judge", () => {
-    expect(kindOf({ coffeejson: "2.0", beans: [], recipes: [] })).toBe("unsupported_version");
+    expect(kindOf({ coffeejson: "2.0", beans: [], recipes: [] })).toBe(
+      "unsupported_version",
+    );
   });
 });
 
@@ -105,9 +176,20 @@ describe("the compressed form", () => {
     expect(r.ok && r.document).toEqual(minimal);
   });
   test("survives non-ASCII through compression", () => {
-    const doc = { coffeejson: "1.0", recipes: [{ title: "朝のV60 — café", coffee: { value: 15, unit: "gram" }, water: { value: 250, unit: "gram" } }] };
+    const doc = {
+      coffeejson: "1.0",
+      recipes: [
+        {
+          title: "朝のV60 — café",
+          coffee: { value: 15, unit: "gram" },
+          water: { value: 250, unit: "gram" },
+        },
+      ],
+    };
     const r = decodePayload(compress(doc));
-    expect(r.ok && normalize(r.document).recipes[0]!.title).toBe("朝のV60 — café");
+    expect(r.ok && normalize(r.document).recipes[0]!.title).toBe(
+      "朝のV60 — café",
+    );
   });
   test("a damaged stream is rejected, not repaired", () => {
     const bytes = Buffer.from(compress(minimal), "base64url");
@@ -122,7 +204,9 @@ describe("the compressed form", () => {
     expect(!r.ok && r.error.kind).toBe("too_large");
   });
   test("a third encoding is unrecognized, not guessed at", () => {
-    const r = decodePayload(b64url(gzipSync(Buffer.from(JSON.stringify(minimal)))));
+    const r = decodePayload(
+      b64url(gzipSync(Buffer.from(JSON.stringify(minimal)))),
+    );
     expect(!r.ok && r.error.kind).toBe("unrecognized_encoding");
   });
   // Producers convert last: the decode ships everywhere before anything mints a
@@ -134,8 +218,19 @@ describe("the compressed form", () => {
 
 describe("the shared scan-vector corpus", () => {
   const { vectors } = JSON.parse(
-    readFileSync(new URL("../../../fixtures/transport/scan-vectors.json", import.meta.url), "utf8"),
-  ) as { vectors: { name: string; input: string; expect: string; kind?: string; document?: unknown }[] };
+    readFileSync(
+      new URL("../../../fixtures/transport/scan-vectors.json", import.meta.url),
+      "utf8",
+    ),
+  ) as {
+    vectors: {
+      name: string;
+      input: string;
+      expect: string;
+      kind?: string;
+      document?: unknown;
+    }[];
+  };
 
   // Three kinds reject on the URL or before a payload exists, so they are
   // `decodeScanned`'s contract — `decodePayload` never sees the link.
@@ -148,7 +243,9 @@ describe("the shared scan-vector corpus", () => {
       .filter((d): d is string => !!d)
       .map((d) => Buffer.from(d, "base64url")[0]);
     expect(firstBytes).toContain(0x7b);
-    expect(firstBytes.some((b) => b !== undefined && b !== 0x7b && (b & 0x0f) === 8)).toBe(true);
+    expect(
+      firstBytes.some((b) => b !== undefined && b !== 0x7b && (b & 0x0f) === 8),
+    ).toBe(true);
   });
 
   for (const v of payloadLevel) {
@@ -178,11 +275,17 @@ describe("the shared scan-vector corpus", () => {
 });
 
 describe("payloadFromLocation", () => {
-  test("reads the d query item", () => { expect(payloadFromLocation("?d=abc")).toBe("abc"); });
+  test("reads the d query item", () => {
+    expect(payloadFromLocation("?d=abc")).toBe("abc");
+  });
   // A #fragment payload is not a shape of this transport: rejected by the spec,
   // emitted by nothing. Pinned so the fallback cannot quietly return.
-  test("a fragment payload is NOT read", () => { expect(payloadFromLocation("")).toBeNull(); });
-  test("no d item", () => { expect(payloadFromLocation("?x=1")).toBeNull(); });
+  test("a fragment payload is NOT read", () => {
+    expect(payloadFromLocation("")).toBeNull();
+  });
+  test("no d item", () => {
+    expect(payloadFromLocation("?x=1")).toBeNull();
+  });
 });
 
 // A POST body and an uploaded file arrive already parsed, and must be answered
@@ -200,7 +303,10 @@ describe("checkEnvelope — a parsed value, no transport in front of it", () => 
     ["null", null],
     ["a number", 7],
     ["an object with no coffeejson member", { recipes: [{ title: "x" }] }],
-    ["a coffeejson member that is not a string", { coffeejson: 1, recipes: [{ title: "x" }] }],
+    [
+      "a coffeejson member that is not a string",
+      { coffeejson: 1, recipes: [{ title: "x" }] },
+    ],
   ])("%s is not_a_document", (_label, value) => {
     const r = checkEnvelope(value);
     expect(r.ok).toBe(false);
@@ -217,7 +323,9 @@ describe("checkEnvelope — a parsed value, no transport in front of it", () => 
   });
 
   test("a newer minor of the supported major is read", () => {
-    expect(checkEnvelope({ coffeejson: "1.7", recipes: [{ title: "x" }] }).ok).toBe(true);
+    expect(
+      checkEnvelope({ coffeejson: "1.7", recipes: [{ title: "x" }] }).ok,
+    ).toBe(true);
   });
 
   test.each([
@@ -252,13 +360,24 @@ describe("the format version is a value, not a literal", () => {
 
   test("the schema accepts the version this build emits", () => {
     const schema = JSON.parse(
-      readFileSync(new URL("../../../docs/schema/coffeejson-1.0.schema.json", import.meta.url), "utf8"),
+      readFileSync(
+        new URL(
+          "../../../docs/schema/coffeejson-1.0.schema.json",
+          import.meta.url,
+        ),
+        "utf8",
+      ),
     );
-    expect(FORMAT_VERSION).toMatch(new RegExp(schema.properties.coffeejson.pattern));
+    expect(FORMAT_VERSION).toMatch(
+      new RegExp(schema.properties.coffeejson.pattern),
+    );
   });
 
   test("MEDIA_TYPE is the type the spec reserves", () => {
-    const spec = readFileSync(new URL("../../../docs/spec/07-versioning.md", import.meta.url), "utf8");
+    const spec = readFileSync(
+      new URL("../../../docs/spec/07-versioning.md", import.meta.url),
+      "utf8",
+    );
     expect(spec).toContain(`\n${MEDIA_TYPE}\n`);
   });
 
@@ -269,23 +388,38 @@ describe("the format version is a value, not a literal", () => {
 });
 
 describe("encoding normalizes the linking ids to NFC", () => {
-  const decomposed = "café-blend";   // e + combining acute
-  const precomposed = "café-blend";   // é
+  const decomposed = "café-blend"; // e + combining acute
+  const precomposed = "café-blend"; // é
   const doc = {
     coffeejson: "1.0",
     beans: [{ id: decomposed, name: "Café" }],
-    recipes: [{
-      id: decomposed, bean_ref: precomposed, title: "Café V60",
-      coffee: { value: 15, unit: "gram" }, water: { value: 250, unit: "gram" },
-    }],
-    tastings: [{ id: decomposed, recipe_ref: decomposed, bean_ref: decomposed, rating: 4 }],
+    recipes: [
+      {
+        id: decomposed,
+        bean_ref: precomposed,
+        title: "Café V60",
+        coffee: { value: 15, unit: "gram" },
+        water: { value: 250, unit: "gram" },
+      },
+    ],
+    tastings: [
+      {
+        id: decomposed,
+        recipe_ref: decomposed,
+        bean_ref: decomposed,
+        rating: 4,
+      },
+    ],
   };
 
   test("every id and reference comes back precomposed, so the two forms link", () => {
     const r = decodePayload(encodePayload(doc));
     expect(r.ok).toBe(true);
     if (!r.ok) return;
-    const d = r.document as unknown as Record<string, Record<string, unknown>[]>;
+    const d = r.document as unknown as Record<
+      string,
+      Record<string, unknown>[]
+    >;
     expect(d["beans"]![0]!["id"]).toBe(precomposed);
     expect(d["recipes"]![0]!["id"]).toBe(precomposed);
     expect(d["recipes"]![0]!["bean_ref"]).toBe(precomposed);
@@ -298,7 +432,10 @@ describe("encoding normalizes the linking ids to NFC", () => {
     const r = decodePayload(encodePayload(doc));
     expect(r.ok).toBe(true);
     if (!r.ok) return;
-    const d = r.document as unknown as Record<string, Record<string, unknown>[]>;
+    const d = r.document as unknown as Record<
+      string,
+      Record<string, unknown>[]
+    >;
     expect(d["beans"]![0]!["name"]).toBe("Café");
     expect(d["recipes"]![0]!["title"]).toBe("Café V60");
   });
@@ -357,17 +494,19 @@ describe("decodeDocumentText — the File binding's reader", () => {
   // free and JSON.parse throws, so without this the two SDKs disagree on the
   // same file. fixtures/transport/bom-prefixed-file.json carries the real bytes.
   test("discards a leading byte-order mark", () => {
-    const r = decodeDocumentText("\uFEFF" + doc);
+    const r = decodeDocumentText(`\uFEFF${doc}`);
     expect(r.ok && r.document.recipes?.length).toBe(1);
   });
   test("the real fixture reads", () => {
-    const bytes = readFileSync("../../fixtures/transport/bom-prefixed-file.json");
+    const bytes = readFileSync(
+      "../../fixtures/transport/bom-prefixed-file.json",
+    );
     expect(bytes.subarray(0, 3)).toEqual(Buffer.from([0xef, 0xbb, 0xbf]));
     expect(decodeDocumentText(bytes.toString("utf8")).ok).toBe(true);
   });
   // A mark anywhere else is not a mark, it is content the parser must reject.
   test("only a leading mark is discarded", () => {
-    const r = decodeDocumentText(doc + "\uFEFF");
+    const r = decodeDocumentText(`${doc}\uFEFF`);
     expect(!r.ok && r.error.kind).toBe("not_json");
   });
   test("unparseable text names the same reason a link does", () => {
@@ -376,7 +515,9 @@ describe("decodeDocumentText — the File binding's reader", () => {
     expect(!r.ok && r.error.kind).toBe("not_json");
   });
   test("a parsed non-document goes through the same envelope check", () => {
-    const r = decodeDocumentText('{"coffeejson":"2.0","recipes":[{"title":"t"}]}');
+    const r = decodeDocumentText(
+      '{"coffeejson":"2.0","recipes":[{"title":"t"}]}',
+    );
     expect(!r.ok && r.error.kind).toBe("unsupported_version");
   });
 });

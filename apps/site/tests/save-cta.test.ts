@@ -1,21 +1,25 @@
 // @vitest-environment jsdom
-import { expect, test, vi } from "vitest";
+
 import type { CoffeeJSONDocument } from "@coffeejson/core";
+import { expect, test, vi } from "vitest";
 import { saveCta, wireSaveCta } from "../src/lib/save";
 
 // The save panel's QR button encodes the whole document into a self-contained
 // `?d=` URL. 24 corpus documents are past QR's absolute ceiling, so the button
 // has to have an answer for "this cannot be a QR" that is not silence.
 
-const doc = (notes: string): CoffeeJSONDocument => ({
-  coffeejson: "1.0",
-  recipes: [{
-    title: "Bench brew",
-    coffee: { value: 20, unit: "gram" },
-    water: { value: 300, unit: "gram" },
-    notes,
-  }],
-} as CoffeeJSONDocument);
+const doc = (notes: string): CoffeeJSONDocument =>
+  ({
+    coffeejson: "1.0",
+    recipes: [
+      {
+        title: "Bench brew",
+        coffee: { value: 20, unit: "gram" },
+        water: { value: 300, unit: "gram" },
+        notes,
+      },
+    ],
+  }) as CoffeeJSONDocument;
 
 /** Mount the panel the way SaveCta does, and click one of its buttons. */
 const clickSave = (d: CoffeeJSONDocument, action: string): HTMLElement => {
@@ -29,7 +33,8 @@ const clickSave = (d: CoffeeJSONDocument, action: string): HTMLElement => {
 test("the QR button renders a code for a document that fits", async () => {
   const root = clickSave(doc("short"), "qr");
   await vi.waitFor(() =>
-    expect(root.querySelector("[data-qr-slot]")!.innerHTML).toContain("<svg"));
+    expect(root.querySelector("[data-qr-slot]")!.innerHTML).toContain("<svg"),
+  );
 });
 
 test("the QR button explains itself when the document is too large to encode", async () => {

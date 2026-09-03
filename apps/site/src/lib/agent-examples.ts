@@ -42,7 +42,8 @@ export const EXAMPLES: readonly Example[] = [
     },
   },
   {
-    prompt: "20 g coffee, 300 g water at 93 °C. Bloom with 60 g for 45 s, then pour to 300 g by 1:30.",
+    prompt:
+      "20 g coffee, 300 g water at 93 °C. Bloom with 60 g for 45 s, then pour to 300 g by 1:30.",
     note: "Note `to_water` is cumulative: the second pour reads 300, not 240. And `at_s` is the clock time the step starts, not how long it lasts.",
     doc: {
       coffeejson: FORMAT_VERSION,
@@ -54,8 +55,18 @@ export const EXAMPLES: readonly Example[] = [
           water: { value: 300, unit: "gram" },
           water_temp: { value: 93, unit: "celsius" },
           steps: [
-            { kind: "bloom", at_s: 0, to_water: { value: 60, unit: "gram" }, instruction: "Bloom and swirl." },
-            { kind: "pour", at_s: 45, to_water: { value: 300, unit: "gram" }, instruction: "Pour in slow spirals." },
+            {
+              kind: "bloom",
+              at_s: 0,
+              to_water: { value: 60, unit: "gram" },
+              instruction: "Bloom and swirl.",
+            },
+            {
+              kind: "pour",
+              at_s: 45,
+              to_water: { value: 300, unit: "gram" },
+              instruction: "Pour in slow spirals.",
+            },
           ],
         },
       ],
@@ -71,7 +82,10 @@ export const EXAMPLES: readonly Example[] = [
           name: "Ethiopia Washed",
           roaster: { name: "Onyx Coffee Lab", type: "organization" },
           roast_level: "light",
-          origin: { type: "single", items: [{ country: "ET", process: ["washed"] }] },
+          origin: {
+            type: "single",
+            items: [{ country: "ET", process: ["washed"] }],
+          },
         },
       ],
     },
@@ -79,7 +93,11 @@ export const EXAMPLES: readonly Example[] = [
 ];
 
 /** The mistakes a generating model actually makes, worth stating as anti-examples. */
-export const PITFALLS: readonly { wrong: string; right: string; why: string }[] = [
+export const PITFALLS: readonly {
+  wrong: string;
+  right: string;
+  why: string;
+}[] = [
   {
     wrong: `"coffee": 15`,
     right: `"coffee": { "value": 15, "unit": "gram" }`,

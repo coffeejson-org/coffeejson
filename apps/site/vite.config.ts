@@ -1,6 +1,6 @@
-import { defineConfig } from "vite";
 import { readdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
+import { defineConfig } from "vite";
 import { prerender } from "./tools/prerender";
 
 const page = (p: string) => fileURLToPath(new URL(p, import.meta.url));

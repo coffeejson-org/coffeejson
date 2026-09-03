@@ -14,6 +14,7 @@ if (validate(doc)) {
   console.log(`ok  ${file}`);
 } else {
   console.error(`FAIL  ${file}`);
-  for (const e of validate.errors ?? []) console.error(`      ${e.instancePath || "/"} ${e.message}`);
+  for (const e of validate.errors ?? [])
+    console.error(`      ${e.instancePath || "/"} ${e.message}`);
   process.exit(1);
 }

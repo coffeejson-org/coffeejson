@@ -2,13 +2,18 @@ import type { BeanEntry, IndexEntry } from "../src/lib/filter";
 
 /** One catalog entry paired with its validated document, in catalog order. */
 export interface CorpusDoc {
-  entry: { slug: string; attribution: { source_label: string; transcribed: string } };
+  entry: {
+    slug: string;
+    attribution: { source_label: string; transcribed: string };
+  };
   doc: unknown;
 }
 /** One entry PER RECIPE — a document carrying several yields several cards. */
 export declare function buildIndex(corpus?: readonly CorpusDoc[]): IndexEntry[];
 /** Projects the corpus by bag. Takes an explicit corpus so the rules are testable. */
-export declare function buildBeansIndex(corpus?: readonly CorpusDoc[]): BeanEntry[];
+export declare function buildBeansIndex(
+  corpus?: readonly CorpusDoc[],
+): BeanEntry[];
 export declare function encodePayload(doc: unknown): string;
 
 export declare const SITE_URL: string;
@@ -19,7 +24,9 @@ export declare const INDEXABLE_PATHS: readonly string[];
 export declare function indexableUrls(): string[];
 export declare function buildSitemap(urls?: readonly string[]): string;
 export declare function buildLlmsTxt(): string;
-export declare function buildLlmsFullTxt(read?: (path: string) => string): string;
+export declare function buildLlmsFullTxt(
+  read?: (path: string) => string,
+): string;
 
 /** One generated page per corpus DOCUMENT — the counterpart to buildIndex's per-recipe cards. */
 export interface CorpusPage {
@@ -30,7 +37,9 @@ export interface CorpusPage {
 }
 export declare function corpusPagePath(slug: string): string;
 /** Document slugs that produce at least one recipe card, in catalog order. */
-export declare function corpusPageSlugs(index?: readonly IndexEntry[]): string[];
+export declare function corpusPageSlugs(
+  index?: readonly IndexEntry[],
+): string[];
 export declare function corpusPageUrls(index?: readonly IndexEntry[]): string[];
 /** The hand-written pages plus every corpus AND bean page — what the sitemap advertises. */
 export declare function allIndexableUrls(
@@ -67,12 +76,21 @@ export declare function beanPageSlugs(beans?: readonly BeanEntry[]): string[];
 export declare function beanPageUrls(beans?: readonly BeanEntry[]): string[];
 export declare function buildBeanPage(bean: BeanEntry): string;
 /** Throws on a slug collision rather than letting one page overwrite another. */
-export declare function buildBeanPages(beans?: readonly BeanEntry[]): CorpusPage[];
+export declare function buildBeanPages(
+  beans?: readonly BeanEntry[],
+): CorpusPage[];
 
 /** Blob-URL base for repo paths the site does not serve. */
 export declare const GITHUB_BLOB: string;
 /** The off-host links llms.txt carries: the skills repository and its three skills. */
-export declare const SKILLS_LINKS: readonly (readonly [string, string, string])[];
+export declare const SKILLS_LINKS: readonly (readonly [
+  string,
+  string,
+  string,
+])[];
 /** Every markdown path served under /docs/ — the set link rewriting keeps relative-free. */
 export declare const SERVED_MD: readonly string[];
-export declare function rewriteDocLinks(markdown: string, docPath: string): string;
+export declare function rewriteDocLinks(
+  markdown: string,
+  docPath: string,
+): string;

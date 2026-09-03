@@ -7,14 +7,21 @@
 // that survives the packages — error banners, filter chips, the save CTA, the
 // static pages. All five entities, because these strings land in attributes too.
 export const esc = (s) =>
-  String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+  String(s ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 
 // Unicode letters and digits survive: an ASCII-only class would collapse every
 // roaster written in a non-Latin script to the same empty slug, so the bean
 // view's roaster chips and the recipe view's author chips share one slug space.
 export const slugify = (s) =>
-  s.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, "-").replace(/^-|-$/g, "");
+  s
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}]+/gu, "-")
+    .replace(/^-|-$/g, "");
 
 // "1 recipe" / "3 recipes" — count + noun, naive English s-plural (every noun
 // this site counts pluralizes that way).

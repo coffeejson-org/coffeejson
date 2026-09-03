@@ -1,6 +1,6 @@
-import { expect, test } from "vitest";
 import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
+import { expect, test } from "vitest";
 import registry from "../../../registries/implementations.json";
 
 // An `icon` is a path /showcase renders as an <img>. A listing whose icon is
@@ -11,6 +11,9 @@ test("every registry icon is a /showcase/ path to a file under public/", () => {
     const icon = (i as { icon?: string }).icon;
     if (icon === undefined) continue;
     expect(icon, i.id).toMatch(/^\/showcase\/[a-z0-9-]+\.(png|svg)$/);
-    expect(existsSync(fileURLToPath(new URL(`../public${icon}`, import.meta.url))), icon).toBe(true);
+    expect(
+      existsSync(fileURLToPath(new URL(`../public${icon}`, import.meta.url))),
+      icon,
+    ).toBe(true);
   }
 });

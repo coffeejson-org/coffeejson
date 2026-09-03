@@ -1,8 +1,8 @@
-import registry from "../../../../registries/implementations.json";
-import { MEDIA_TYPE, encodePayload, normalize } from "@coffeejson/core";
-import { esc } from "./text.mjs";
-import { qrPanel, qrSvg } from "./qr";
 import type { DecodedDocument } from "@coffeejson/core";
+import { encodePayload, MEDIA_TYPE, normalize } from "@coffeejson/core";
+import registry from "../../../../registries/implementations.json";
+import { qrPanel, qrSvg } from "./qr";
+import { esc } from "./text.mjs";
 
 export const shareUrlFor = (doc: unknown): string =>
   `${location.origin}/r/?d=${encodePayload(doc)}`;
@@ -15,7 +15,9 @@ const docTitle = (doc: DecodedDocument): string | null => {
 
 const slugFor = (doc: DecodedDocument): string =>
   (docTitle(doc) ?? "coffeejson")
-    .toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "coffeejson";
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "") || "coffeejson";
 
 /**
  * What this document is, for the copy that names it. `beans` and `recipes`
@@ -52,14 +54,21 @@ export function saveCta(
   }
   // Only implementations that READ something can receive this link: the registry
   // lists producers too, and a handoff to one cannot open what the reader holds.
-  const openIn = registry.implementations.filter((i) => i.reads.length).map((i) =>
-    `<li><a href="${esc(i.url)}" rel="noopener">${esc(i.name)}</a>
-       <span class="muted">(${i.platforms.join(", ")})${"note" in i && i.note ? " — " + esc(String(i.note)) : ""}</span></li>`).join("");
+  const openIn = registry.implementations
+    .filter((i) => i.reads.length)
+    .map(
+      (i) =>
+        `<li><a href="${esc(i.url)}" rel="noopener">${esc(i.name)}</a>
+       <span class="muted">(${i.platforms.join(", ")})${"note" in i && i.note ? ` — ${esc(String(i.note))}` : ""}</span></li>`,
+    )
+    .join("");
   const n = noun(doc);
   return `<section class="card">
-    ${opts.prominent
-      ? `<h2>Enjoyed it? Save this ${n} to ${n === "recipe" ? "brew it again" : "keep it"}</h2>`
-      : `<h2>Save this ${n}</h2>`}
+    ${
+      opts.prominent
+        ? `<h2>Enjoyed it? Save this ${n} to ${n === "recipe" ? "brew it again" : "keep it"}</h2>`
+        : `<h2>Save this ${n}</h2>`
+    }
     ${shareRow(false)}
     <p class="muted">The ${n} is the data in this page’s link — it works with any
     app that reads CoffeeJSON, no account anywhere.</p>
@@ -76,32 +85,60 @@ export function wireSaveCta(root: HTMLElement, doc: DecodedDocument): void {
       // first settles: a slow share sheet otherwise opens twice.
       if (btn.getAttribute("aria-busy") === "true") return;
       btn.setAttribute("aria-busy", "true");
-      try { await runSave(btn, root, doc, url, json); }
-      finally { btn.removeAttribute("aria-busy"); }
+      try {
+        await runSave(btn, root, doc, url, json);
+      } finally {
+        btn.removeAttribute("aria-busy");
+      }
     });
   });
 }
 
-async function runSave(btn: HTMLButtonElement, root: HTMLElement, doc: DecodedDocument,
-  url: string, json: string): Promise<void> {
+async function runSave(
+  btn: HTMLButtonElement,
+  root: HTMLElement,
+  doc: DecodedDocument,
+  url: string,
+  json: string,
+): Promise<void> {
   switch (btn.dataset["save"]) {
     case "file": {
       const blob = new Blob([json], { type: MEDIA_TYPE });
       const a = Object.assign(document.createElement("a"), {
-        href: URL.createObjectURL(blob), download: `${slugFor(doc)}.json` });
-      a.click(); URL.revokeObjectURL(a.href); break;
+        href: URL.createObjectURL(blob),
+        download: `${slugFor(doc)}.json`,
+      });
+      a.click();
+      URL.revokeObjectURL(a.href);
+      break;
     }
-    case "json": await navigator.clipboard.writeText(json); flash(btn, "Copied"); break;
-    case "link": await navigator.clipboard.writeText(url); flash(btn, "Copied"); break;
+    case "json":
+      await navigator.clipboard.writeText(json);
+      flash(btn, "Copied");
+      break;
+    case "link":
+      await navigator.clipboard.writeText(url);
+      flash(btn, "Copied");
+      break;
     case "share":
-      if (navigator.share) await navigator.share({ title: docTitle(doc) ?? "CoffeeJSON", url });
-      else { await navigator.clipboard.writeText(url); flash(btn, "Link copied"); }
+      if (navigator.share)
+        await navigator.share({ title: docTitle(doc) ?? "CoffeeJSON", url });
+      else {
+        await navigator.clipboard.writeText(url);
+        flash(btn, "Link copied");
+      }
       break;
     case "qr": {
       const slot = root.querySelector<HTMLElement>("[data-qr-slot]")!;
-      if (slot.innerHTML) { slot.innerHTML = ""; break; }
-      slot.innerHTML = qrPanel(await qrSvg(url),
-        { fileName: slugFor(doc), caption: "Scan to open this recipe", tooLargeNoun: noun(doc) });
+      if (slot.innerHTML) {
+        slot.innerHTML = "";
+        break;
+      }
+      slot.innerHTML = qrPanel(await qrSvg(url), {
+        fileName: slugFor(doc),
+        caption: "Scan to open this recipe",
+        tooLargeNoun: noun(doc),
+      });
       break;
     }
   }
@@ -115,5 +152,7 @@ export function flash(btn: HTMLButtonElement, text: string): void {
   const original = btn.textContent;
   btn.style.minWidth = `${btn.getBoundingClientRect().width}px`;
   btn.textContent = text;
-  setTimeout(() => { btn.textContent = original; }, 1200);
+  setTimeout(() => {
+    btn.textContent = original;
+  }, 1200);
 }

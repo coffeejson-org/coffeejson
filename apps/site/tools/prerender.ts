@@ -1,11 +1,11 @@
-import { landingBody } from "../src/pages/landing";
-import { showcaseBody } from "../src/pages/showcase";
-import { implementationsBody } from "../src/pages/implementations";
-import { agentsBody } from "../src/pages/for-ai-agents";
 import { beansBody } from "../src/lib/beans-body";
-import { recipesBody, recipesJsonLd } from "../src/lib/recipes-body";
 import { filtersFromSearch } from "../src/lib/filter";
 import { jsonLdJson } from "../src/lib/jsonld";
+import { recipesBody, recipesJsonLd } from "../src/lib/recipes-body";
+import { agentsBody } from "../src/pages/for-ai-agents";
+import { implementationsBody } from "../src/pages/implementations";
+import { landingBody } from "../src/pages/landing";
+import { showcaseBody } from "../src/pages/showcase";
 
 // The corpus and bean pages have always been written as complete HTML by
 // `gen.mjs`. These five were not: they assembled themselves in the browser, so
@@ -50,9 +50,12 @@ export function fill(html: string, page: string): string {
 
   const ld = HEAD_JSONLD[page]?.();
   if (ld?.length) {
-    if (!out.includes(HEAD_SLOT)) throw new Error(`${page} has no ${HEAD_SLOT} to fill`);
-    out = out.replace(HEAD_SLOT,
-      `  <script type="application/ld+json">${jsonLdJson(ld)}</script>\n  ${HEAD_SLOT}`);
+    if (!out.includes(HEAD_SLOT))
+      throw new Error(`${page} has no ${HEAD_SLOT} to fill`);
+    out = out.replace(
+      HEAD_SLOT,
+      `  <script type="application/ld+json">${jsonLdJson(ld)}</script>\n  ${HEAD_SLOT}`,
+    );
   }
   return out;
 }
@@ -62,6 +65,7 @@ export const prerender = () => ({
   name: "coffeejson:prerender",
   transformIndexHtml: {
     order: "pre" as const,
-    handler: (html: string, ctx: { path: string }) => fill(html, ctx.path.replace(/^\//, "")),
+    handler: (html: string, ctx: { path: string }) =>
+      fill(html, ctx.path.replace(/^\//, "")),
   },
 });

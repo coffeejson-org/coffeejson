@@ -1,7 +1,16 @@
-import type { Measurement } from "./types.js";
-import { gearLabel, magnitude } from "./format.js";
 import { associatedMember } from "./association.js";
-import { calendarDay, isObj, measurement, num, objItems, partyName, str, strArr } from "./json.js";
+import { gearLabel, magnitude } from "./format.js";
+import {
+  calendarDay,
+  isObj,
+  measurement,
+  num,
+  objItems,
+  partyName,
+  str,
+  strArr,
+} from "./json.js";
+import type { Measurement } from "./types.js";
 import { convertMassValue, mapMagnitudes } from "./units.js";
 
 export interface NormalizedStep {
@@ -163,7 +172,12 @@ const parties = (v: unknown): NormalizedParty[] => {
   for (const p of objItems(v)) {
     const name = partyName(p);
     if (name !== null)
-      out.push({ name, role: str(p["role"]), url: str(p["url"]), type: str(p["type"]) });
+      out.push({
+        name,
+        role: str(p["role"]),
+        url: str(p["url"]),
+        type: str(p["type"]),
+      });
   }
   return out;
 };
@@ -189,16 +203,22 @@ const scaleMagnitudes = (m: Measurement, by: number): Measurement | null =>
 // and an unrecognized unit is treated as absent.
 const grams = (m: Measurement | null): number | null => {
   const value = magnitude(m);
-  return m === null || value === null ? null : convertMassValue(value, m.unit, "gram");
+  return m === null || value === null
+    ? null
+    : convertMassValue(value, m.unit, "gram");
 };
 
 const additions = (v: unknown): NormalizedAddition[] =>
-  objItems(v).map((a): NormalizedAddition => ({
-    kind: str(a["type"]) === "ice" ? "ice" : "other",
-    amount: measurement(a["amount"]),
-  }));
+  objItems(v).map(
+    (a): NormalizedAddition => ({
+      kind: str(a["type"]) === "ice" ? "ice" : "other",
+      amount: measurement(a["amount"]),
+    }),
+  );
 
-const normalizeStepBase = (v: Record<string, unknown>): Omit<NormalizedStep, "pourDelta"> => ({
+const normalizeStepBase = (
+  v: Record<string, unknown>,
+): Omit<NormalizedStep, "pourDelta"> => ({
   kind: str(v["kind"]),
   atS: num(v["at_s"]),
   toWater: measurement(v["to_water"]),
@@ -207,15 +227,19 @@ const normalizeStepBase = (v: Record<string, unknown>): Omit<NormalizedStep, "po
 
 // pourDelta depends on the *sequence* of steps, where every other field is a pure
 // function of one step object — hence a second, stateful pass.
-function pourDeltaFor(toWater: Measurement | null, lastCumulative: Measurement | null): Measurement | null {
+function pourDeltaFor(
+  toWater: Measurement | null,
+  lastCumulative: Measurement | null,
+): Measurement | null {
   if (toWater === null) return null;
   // No prior cumulative: the first targeted step fills from an implicit 0.
   const prevMagnitude = magnitude(lastCumulative);
-  const prevInCurrentUnit = lastCumulative === null
-    ? 0
-    : prevMagnitude === null
-      ? null
-      : convertMassValue(prevMagnitude, lastCumulative.unit, toWater.unit);
+  const prevInCurrentUnit =
+    lastCumulative === null
+      ? 0
+      : prevMagnitude === null
+        ? null
+        : convertMassValue(prevMagnitude, lastCumulative.unit, toWater.unit);
   if (prevInCurrentUnit === null) return null;
   const current = magnitude(toWater);
   if (current === null) return null;
@@ -266,7 +290,10 @@ function normalizeBean(v: Record<string, unknown>): NormalizedBean {
   };
 }
 
-function normalizeRecipe(v: Record<string, unknown>, beans: NormalizedBean[]): NormalizedRecipe {
+function normalizeRecipe(
+  v: Record<string, unknown>,
+  beans: NormalizedBean[],
+): NormalizedRecipe {
   const method = str(v["method"]);
   const basis = str(v["basis"]);
   const coffee = measurement(v["coffee"]);
@@ -276,11 +303,16 @@ function normalizeRecipe(v: Record<string, unknown>, beans: NormalizedBean[]): N
   // `basis` is the structural switch and `method` is descriptive, so a stated
   // basis decides. A basis absent or unrecognized is derived from the quantities
   // present, in this order; a recipe stating none leaves only its method to go on.
-  const isEspresso = basis === "yield" ? true
-    : basis === "water" ? false
-    : water !== null || explicitRatio !== null ? false
-    : yield_ !== null ? true
-    : method === "espresso";
+  const isEspresso =
+    basis === "yield"
+      ? true
+      : basis === "water"
+        ? false
+        : water !== null || explicitRatio !== null
+          ? false
+          : yield_ !== null
+            ? true
+            : method === "espresso";
   const doseGrams = grams(coffee);
   const dose = doseGrams !== null && doseGrams > 0 ? doseGrams : null;
   const yieldGrams = grams(yield_);
@@ -288,20 +320,30 @@ function normalizeRecipe(v: Record<string, unknown>, beans: NormalizedBean[]): N
   // The measurements are authoritative and `ratio` is a convenience, so a stated
   // ratio stands only where `coffee` and `water` state none of their own.
   const rawRatio = isEspresso
-    ? yieldGrams !== null && dose !== null ? yieldGrams / dose : null
-    : (waterGrams !== null && dose !== null ? waterGrams / dose : null) ?? explicitRatio;
+    ? yieldGrams !== null && dose !== null
+      ? yieldGrams / dose
+      : null
+    : ((waterGrams !== null && dose !== null ? waterGrams / dose : null) ??
+      explicitRatio);
   // Drop non-finite or non-positive ratios rather than letting a renderer
   // display "1 : Infinity" verbatim.
-  const ratio = rawRatio !== null && Number.isFinite(rawRatio) && rawRatio > 0 ? rawRatio : null;
+  const ratio =
+    rawRatio !== null && Number.isFinite(rawRatio) && rawRatio > 0
+      ? rawRatio
+      : null;
   // A recipe states its water or the ratio it follows from, so each fixes the
   // other and "20 g at 1:15" renders with water. A windowed dose derives a
   // windowed water: a midpoint would publish a number the author never wrote.
-  const waterFromRatio = !isEspresso && water === null && ratio !== null && coffee !== null
+  const waterFromRatio =
+    !isEspresso &&
+    water === null &&
+    ratio !== null &&
+    coffee !== null &&
     // A ratio is dimensionless, so the dose's own unit carries — but only a unit
     // the ratio is defined against, which is the one that converts to a mass.
-    && doseGrams !== null
-    ? scaleMagnitudes(coffee, ratio)
-    : null;
+    doseGrams !== null
+      ? scaleMagnitudes(coffee, ratio)
+      : null;
   const grind = isObj(v["grind"]) ? v["grind"] : null;
   const bean = associatedMember(beans, str(v["bean_ref"]), (b) => b.id);
   return {
@@ -346,7 +388,9 @@ function perceivedOf(v: unknown): NormalizedPerceived | null {
   if (!isObj(v)) return null;
   const extraction = num(v["extraction"]);
   const strength = num(v["strength"]);
-  return extraction === null && strength === null ? null : { extraction, strength };
+  return extraction === null && strength === null
+    ? null
+    : { extraction, strength };
 }
 
 function measuredOf(v: unknown): NormalizedMeasured | null {
@@ -368,11 +412,17 @@ function extractionYieldOf(
   if (tds === null || tds <= 0 || recipe === null) return null;
   const dose = recipe.coffee;
   const doseMagnitude = magnitude(dose);
-  if (dose === null || doseMagnitude === null || doseMagnitude <= 0) return null;
+  if (dose === null || doseMagnitude === null || doseMagnitude <= 0)
+    return null;
   const beverage = measured?.yield ?? recipe.yield;
   const beverageMagnitude = magnitude(beverage);
-  if (beverage === null || beverageMagnitude === null || beverageMagnitude <= 0) return null;
-  const beverageInDoseUnit = convertMassValue(beverageMagnitude, beverage.unit, dose.unit);
+  if (beverage === null || beverageMagnitude === null || beverageMagnitude <= 0)
+    return null;
+  const beverageInDoseUnit = convertMassValue(
+    beverageMagnitude,
+    beverage.unit,
+    dose.unit,
+  );
   if (beverageInDoseUnit === null) return null;
   const ey = (beverageInDoseUnit * tds) / doseMagnitude;
   return Number.isFinite(ey) && ey > 0 ? ey : null;
@@ -388,7 +438,10 @@ function normalizeTasting(
   // bag is a case the format expresses, not a conflict. `recipe_ref` has no
   // co-location fall-back — that rule triggers on a single BEAN and links a coffee.
   const recipeRef = str(v["recipe_ref"]);
-  const recipe = recipeRef === null ? null : associatedMember(recipes, recipeRef, (r) => r.id);
+  const recipe =
+    recipeRef === null
+      ? null
+      : associatedMember(recipes, recipeRef, (r) => r.id);
   const measured = measuredOf(v["measured"]);
   return {
     id: str(v["id"]),
@@ -409,11 +462,21 @@ function normalizeTasting(
 // never re-checks. No version gate (the codec owns the wire) and no schema
 // validation (rendering is tolerant).
 export function normalize(input: unknown): NormalizedDoc {
-  if (!isObj(input)) return { beans: [], recipes: [], tastings: [], generator: null };
+  if (!isObj(input))
+    return { beans: [], recipes: [], tastings: [], generator: null };
   const beans = objItems(input["beans"]).map(normalizeBean);
-  const recipes = objItems(input["recipes"]).map((r) => normalizeRecipe(r, beans));
-  const tastings = objItems(input["tastings"]).map((t) => normalizeTasting(t, recipes, beans));
-  return { beans, recipes, tastings, generator: generatorOf(input["generator"]) };
+  const recipes = objItems(input["recipes"]).map((r) =>
+    normalizeRecipe(r, beans),
+  );
+  const tastings = objItems(input["tastings"]).map((t) =>
+    normalizeTasting(t, recipes, beans),
+  );
+  return {
+    beans,
+    recipes,
+    tastings,
+    generator: generatorOf(input["generator"]),
+  };
 }
 
 // `name` is the whole identity: a generator naming no software states nothing.
