@@ -32,7 +32,7 @@ export default defineConfig({
         r: page("r/index.html"),
         recipes: page("recipes/index.html"),
         generate: page("generate/index.html"),
-        "for-ai-agents": page("for-ai-agents/index.html"),
+        agents: page("agents/index.html"),
         implementations: page("implementations/index.html"),
         showcase: page("showcase/index.html"),
         beans: page("beans/index.html"),

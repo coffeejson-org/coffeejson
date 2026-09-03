@@ -17,7 +17,7 @@ const NAV_ORDER = [
 ];
 
 // The headers that are themselves nav destinations. `/`, `/r/`, `/beans/` and
-// `/for-ai-agents/` have no nav entry: the agents page is agent-facing and
+// `/agents/` have no nav entry: the agents page is agent-facing and
 // `llms.txt` is its front door, so it stays out of a nav that is for humans —
 // reopen only with a reason that survives that. `/implementations/` and
 // `/showcase/` are in because both answer the question an evaluator opens the
@@ -47,12 +47,7 @@ test("a page marks itself as current exactly when it has a nav entry", () => {
     // Its own entry stops being a link: a reader is already there.
     expect(html, href).not.toContain(`href="${href}"`);
   }
-  for (const current of [
-    "/",
-    "/beans/",
-    "/for-ai-agents/",
-    "/recipes/some-slug/",
-  ])
+  for (const current of ["/", "/beans/", "/agents/", "/recipes/some-slug/"])
     expect(
       (siteHeader(current).match(/aria-current="page"/g) ?? []).length,
       current,

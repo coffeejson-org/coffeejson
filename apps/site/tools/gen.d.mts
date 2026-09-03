@@ -24,6 +24,8 @@ export declare const INDEXABLE_PATHS: readonly string[];
 export declare function indexableUrls(): string[];
 export declare function buildSitemap(urls?: readonly string[]): string;
 export declare function buildLlmsTxt(): string;
+/** `/agents.md` — this site described for an agent, with the guide inlined. */
+export declare function buildAgentsMd(guide?: string): string;
 export declare function buildLlmsFullTxt(
   read?: (path: string) => string,
 ): string;

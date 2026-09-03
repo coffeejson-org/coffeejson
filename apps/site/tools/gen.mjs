@@ -39,10 +39,13 @@ import Ajv2020 from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
 // The page footers, shared with the hand-written pages so the license and
 // privacy wording has exactly one source across generated and authored HTML.
+import { guideMarkdown } from "../src/lib/agent-guide.mjs";
 import {
   CORRECTIONS,
+  CRAWLERS_UNCHANGED,
   footerHtml,
   LICENSE_CORPUS,
+  PRIVACY,
   QUOTED_PROSE,
 } from "../src/lib/footer.mjs";
 import { siteHeader } from "../src/lib/site-header.mjs";
@@ -96,7 +99,7 @@ export const INDEXABLE_PATHS = [
   "/r/",
   "/recipes/",
   "/generate/",
-  "/for-ai-agents/",
+  "/agents/",
   "/implementations/",
   "/beans/",
   "/showcase/",
@@ -299,6 +302,11 @@ export function buildLlmsTxt() {
       `${SITE_URL}/llms-full.txt`,
       "Every chapter concatenated, for loading into a single context",
     ),
+    link(
+      "Agent instructions",
+      `${SITE_URL}/agents.md`,
+      "The canonical agent-facing description of this site: what it serves, how to emit and validate a document, and what the crawl policy asks",
+    ),
     "",
     "## Tools",
     "",
@@ -319,7 +327,7 @@ export function buildLlmsTxt() {
     ),
     link(
       "For AI agents",
-      `${SITE_URL}/for-ai-agents/`,
+      `${SITE_URL}/agents/`,
       "How to emit valid CoffeeJSON: a system-prompt snippet, worked examples, the mistakes models make, and the validate-and-fix loop",
     ),
     link(
@@ -348,6 +356,120 @@ export function buildLlmsTxt() {
     "- Minimum valid document: the `coffeejson` version string, a recipe `title`, a `coffee` quantity, and either a `water` quantity or a ratio. A reader is required to ignore members it does not know, so documents stay readable as the format grows.",
     "",
   ].join("\n");
+}
+
+// `/agents.md`, per the convention the name carries: not a teaching document
+// about the format but a description of THIS SITE for an agent — what it serves,
+// what it can be asked for, and what it asks back. The emission guide is inlined
+// rather than linked, because emitting a valid document is the thing an agent
+// comes here to do, and a file it already fetched beats a second round trip.
+//
+// `llms.txt` stays the llmstxt.org link index rather than a mirror of this. The
+// two answer different questions — "what is published here" and "how do I act
+// here" — and collapsing them would cost the index without improving this.
+export function buildAgentsMd(guide = guideMarkdown(SITE_URL)) {
+  const doc = (title, path, description) =>
+    `- **${title}** — \`GET ${path}\`. ${description}`;
+  return `${[
+    "# Agent Instructions — CoffeeJSON",
+    "",
+    `This document describes how AI agents can work with CoffeeJSON and its canonical site at ${SITE_URL}.`,
+    "",
+    `> ${SUMMARY}`,
+    "",
+    "There is no service here. No account, no key, no endpoint to call: every surface below is a plain unauthenticated GET of a static file, and the format artifacts are public domain.",
+    "",
+    "## What an agent does here",
+    "",
+    "1. **Emit** a CoffeeJSON document from a source — a brew guide, a bag, a product page. The guide for that is inlined below.",
+    "2. **Validate** it against the authoring schema, and fix what it rejects.",
+    "3. **Read** the specification, a chapter at a time or all at once.",
+    "4. **Consume** documents in your own software, through a published SDK or your own parser.",
+    "",
+    "## Machine-readable surfaces",
+    "",
+    doc(
+      "Schema",
+      `${SITE_URL}/schema/1.0`,
+      "The normative runtime schema, served at its `$id`. Permissive by design: a reader ignores members it does not recognize.",
+    ),
+    doc(
+      "Authoring schema",
+      `${SITE_URL}/schema/authoring/1.0`,
+      "The strict variant. Closes every object apart from the reserved `ext`, so a typo fails loudly. **Generators validate against this one.**",
+    ),
+    doc(
+      "Specification",
+      `${SITE_URL}/docs/spec/01-overview.md`,
+      `Seven chapters, \`01-overview\` through \`07-versioning\`, served as markdown.`,
+    ),
+    doc(
+      "Integration guide",
+      `${SITE_URL}/docs/integration-guide.md`,
+      "The consumer and producer checklists. `/docs/transport.md` covers URLs and QR codes.",
+    ),
+    doc(
+      "Whole specification, one file",
+      `${SITE_URL}/llms-full.txt`,
+      "Every chapter concatenated, for loading into a single context.",
+    ),
+    doc(
+      "Link index",
+      `${SITE_URL}/llms.txt`,
+      "Every published surface as an llmstxt.org index.",
+    ),
+    doc(
+      "Registries",
+      `${SITE_URL}/registries/gear.json`,
+      "Curated open value sets. Also `varietals`, `addition-types`, `producer-roles`, and `implementations` — the self-declared list of software that reads and writes the format.",
+    ),
+    doc("Sitemap", `${SITE_URL}/sitemap.xml`, "Every indexable page."),
+    doc(
+      "Crawl policy",
+      `${SITE_URL}/robots.txt`,
+      "Retrieval and search welcome; bulk training crawlers asked away. See the closing section.",
+    ),
+    "",
+    `**Agent discovery:** this document (\`/agents.md\`) is the canonical agent-facing description of this site. ${SITE_URL}/agents/ renders the same guide for a reader with a browser.`,
+    "",
+    "## The corpus",
+    "",
+    "Real recipes transcribed from published sources, each naming and linking its own.",
+    "",
+    doc(
+      "Directory",
+      `${SITE_URL}/recipes/`,
+      "Every transcribed recipe. The same corpus by bag at `?view=beans`.",
+    ),
+    doc(
+      "One recipe",
+      `${SITE_URL}/recipes/<slug>/`,
+      "HTML carrying a schema.org `Recipe` as `ld+json`.",
+    ),
+    doc(
+      "One bag",
+      `${SITE_URL}/beans/<slug>/`,
+      "HTML carrying a schema.org `Product` as `ld+json`.",
+    ),
+    "",
+    "The CoffeeJSON documents themselves are not served as JSON here — they live in the repository, under `recipes/` at https://github.com/coffeejson-org/coffeejson, where each is a file you can fetch raw.",
+    "",
+    "## Tools",
+    "",
+    "- **Agent skills** — `npx skills add coffeejson-org/skills` installs three: changing the format, adding it to a product, and turning a published source into a document.",
+    "- **TypeScript** — `npm i @coffeejson/core` for validation, normalization, share-link encoding and schema.org export; `@coffeejson/react` for rendering.",
+    "- **Swift** — `coffeejson-swift`, at https://github.com/coffeejson-org/coffeejson-swift.",
+    `- **In a browser** — ${SITE_URL}/validator/ checks a pasted document entirely client-side, and ${SITE_URL}/generate/ builds one from a form.`,
+    "",
+    // The wrapper owns the document's structure, so the heading over the guide
+    // is here rather than in `GUIDE` — the page has an `<h1>` saying it already.
+    "## Emitting a document",
+    "",
+    guide,
+    "---",
+    "",
+    `${LICENSE_CORPUS} ${CRAWLERS_UNCHANGED} ${PRIVACY}`,
+  ].join("\n")}\n`;
 }
 
 export function buildLlmsFullTxt(
@@ -1273,6 +1395,12 @@ if (isMain) {
     console.log(
       `gen: llms.txt + llms-full.txt (${Math.round(full.length / 1024)} KB)`,
     );
+
+    // `/agents.md` — the same guide `/agents/` renders, for an agent that fetches
+    // rather than renders. Derived for the reason above: two hand-kept copies of
+    // one guide diverge, and the copy that drifts is the one nobody looks at.
+    writeFileSync(join(site, "public/agents.md"), buildAgentsMd());
+    console.log("gen: agents.md → public/agents.md");
 
     // Demo QR — Tetsu Kasuya 4:6, the full scan → render → brew-along path.
     const QRCode = (await import("qrcode")).default;

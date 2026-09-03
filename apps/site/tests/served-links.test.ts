@@ -37,6 +37,7 @@ const documents = [
     text: readFileSync(pub(p), "utf8"),
   })),
   { name: "llms-full.txt", text: readFileSync(pub("llms-full.txt"), "utf8") },
+  { name: "agents.md", text: readFileSync(pub("agents.md"), "utf8") },
 ];
 
 describe("served docs carry no relative links", () => {
@@ -70,6 +71,30 @@ describe("served docs carry no relative links", () => {
       }
     });
   }
+
+  // `agents.md` advertises surfaces as bare `GET <url>` code spans rather than
+  // markdown links, so the loop above never sees them. They are the whole point
+  // of the file — an agent reads it precisely to learn what it may fetch — and
+  // a rename that leaves one behind is exactly what this branch did to
+  // `/for-ai-agents/`. Placeholders (`<slug>`) stand for a set, not a path.
+  it("agents.md advertises only surfaces the build actually writes", () => {
+    const agents = readFileSync(pub("agents.md"), "utf8");
+    const urls = [...agents.matchAll(/`GET ([^`]+)`/g)].map((m) => m[1] ?? "");
+    expect(urls.length).toBeGreaterThan(8);
+    for (const url of urls) {
+      if (url.includes("<")) continue;
+      expect(
+        url.startsWith(SITE_URL),
+        `${url} is not on the canonical host`,
+      ).toBe(true);
+      const served = servedPathFor(url);
+      if (served === null) continue;
+      const exists = existsSync(pub(served)) || existsSync(join(site, served));
+      expect(exists, `${url} (→ ${served}) is advertised but not served`).toBe(
+        true,
+      );
+    }
+  });
 
   it("the rewriter actually fired — unserved targets became blob URLs", () => {
     const all = documents.map((d) => d.text).join("\n");

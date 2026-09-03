@@ -4,7 +4,11 @@ import { fileURLToPath } from "node:url";
 import Ajv2020 from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
 import { describe, expect, it } from "vitest";
-import { EXAMPLES, PITFALLS, SYSTEM_PROMPT } from "../src/lib/agent-examples";
+import {
+  EXAMPLES,
+  PITFALLS,
+  SYSTEM_PROMPT,
+} from "../src/lib/agent-examples.mjs";
 
 const repo = fileURLToPath(new URL("../../..", import.meta.url));
 const load = (p: string) => JSON.parse(readFileSync(join(repo, p), "utf8"));
@@ -22,7 +26,7 @@ const validateRuntime = ajv.compile(
   load("docs/schema/coffeejson-1.0.schema.json"),
 );
 
-describe("/for-ai-agents examples", () => {
+describe("/agents examples", () => {
   it.each(EXAMPLES.map((e, i) => [i, e.prompt] as const))(
     "example %i (%s) validates against the AUTHORING schema",
     (i) => {

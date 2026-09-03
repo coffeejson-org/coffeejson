@@ -3,6 +3,11 @@ import { FORMAT_VERSION } from "@coffeejson/core";
 // Exported rather than inlined into the page so the suite can validate every
 // example against the AUTHORING schema: an agent-facing page that teaches an
 // invalid shape is worse than no page at all.
+//
+// A `.mjs` with a `.d.mts` beside it, for the reason `footer.mjs` states: two
+// runtimes read it. `/agents/` is TypeScript built by vite; `/agents.md` is
+// written by `tools/gen.mjs`, which is plain Node. Both must teach the same
+// examples, so neither may hold its own copy.
 
 /** A copy-pasteable system-prompt fragment for a model asked to emit CoffeeJSON. */
 export const SYSTEM_PROMPT = `When asked to produce a coffee recipe as structured data, emit a CoffeeJSON document.
@@ -18,14 +23,8 @@ Rules:
   and fix what it rejects. That schema refuses unknown keys, so a typo fails loudly.
 - The one key it still accepts is "ext", the reserved home for your own vendor data.`;
 
-export interface Example {
-  readonly prompt: string;
-  readonly note: string;
-  readonly doc: unknown;
-}
-
 /** Few-shot pairs: the request a user makes, and the document that answers it. */
-export const EXAMPLES: readonly Example[] = [
+export const EXAMPLES = [
   {
     prompt: "15 g coffee, 250 g water, V60.",
     note: "The floor. Only what was actually stated — no invented temperature, grind, or steps.",
@@ -93,11 +92,7 @@ export const EXAMPLES: readonly Example[] = [
 ];
 
 /** The mistakes a generating model actually makes, worth stating as anti-examples. */
-export const PITFALLS: readonly {
-  wrong: string;
-  right: string;
-  why: string;
-}[] = [
+export const PITFALLS = [
   {
     wrong: `"coffee": 15`,
     right: `"coffee": { "value": 15, "unit": "gram" }`,

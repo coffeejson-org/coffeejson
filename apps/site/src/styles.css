@@ -632,7 +632,7 @@ textarea.field {
   white-space: nowrap;
 }
 
-/* The site's two tables — the wrong/right/why table on /for-ai-agents and the
+/* The site's two tables — the wrong/right/why table on /agents and the
    SDK + registry tables on /implementations — are the same object and share one
    skin. Both scroll inside their own box on narrow screens rather than forcing
    the page sideways. The fill is scoped to `thead th` rather than every `th`,

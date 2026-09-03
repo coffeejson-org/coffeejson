@@ -2,7 +2,7 @@ import { beansBody } from "../src/lib/beans-body";
 import { filtersFromSearch } from "../src/lib/filter";
 import { jsonLdJson } from "../src/lib/jsonld";
 import { recipesBody, recipesJsonLd } from "../src/lib/recipes-body";
-import { agentsBody } from "../src/pages/for-ai-agents";
+import { agentsBody } from "../src/pages/agents";
 import { implementationsBody } from "../src/pages/implementations";
 import { landingBody } from "../src/pages/landing";
 import { showcaseBody } from "../src/pages/showcase";
@@ -26,7 +26,7 @@ export const PRERENDERED: Record<string, () => string> = {
   "index.html": landingBody,
   "showcase/index.html": showcaseBody,
   "implementations/index.html": implementationsBody,
-  "for-ai-agents/index.html": agentsBody,
+  "agents/index.html": agentsBody,
   "beans/index.html": () => beansBody(),
   "recipes/index.html": () => recipesBody(filtersFromSearch("")),
 };

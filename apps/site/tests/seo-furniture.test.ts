@@ -19,7 +19,7 @@ const PAGES: [string, string][] = [
   ["r/index.html", "/r/"],
   ["recipes/index.html", "/recipes/"],
   ["generate/index.html", "/generate/"],
-  ["for-ai-agents/index.html", "/for-ai-agents/"],
+  ["agents/index.html", "/agents/"],
 ];
 
 // A minimal robots matcher for the `User-agent: *` group. Deliberately literal

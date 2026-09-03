@@ -64,7 +64,7 @@ export const implementationsBody = (): string => `
 
   <footer class="site-footer">
     <a href="/">Home</a> · <a href="/showcase/">Showcase</a> ·
-    <a href="${SPEC}">Spec</a> · <a href="/for-ai-agents/">For AI agents</a> ·
+    <a href="${SPEC}">Spec</a> · <a href="/agents/">For AI agents</a> ·
     <a href="https://github.com/coffeejson-org/coffeejson" rel="noopener">GitHub</a>
     ${licenseLine(LICENSE_SITE, PACKAGES)}
   </footer>`;
