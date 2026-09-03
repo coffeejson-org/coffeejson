@@ -221,11 +221,11 @@ export function registryFindings(
     return lines.slice(start, end === -1 ? undefined : end).join("\n");
   })();
   for (const [what, set, re] of [
-    ["roles", ROLES, /A `brewer` attaches at[^]*?a `basket` at/],
+    ["roles", ROLES, /A `brewer` attaches at[\s\S]*?a `basket` at/],
     [
       "categories",
       CATEGORIES,
-      /Only a brewer has a `category`:([^]*?)\. It overlaps/,
+      /Only a brewer has a `category`:([\s\S]*?)\. It overlaps/,
     ],
   ]) {
     const m = gearChapter?.match(re);

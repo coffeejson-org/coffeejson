@@ -86,15 +86,19 @@ function run(): void {
     input.value,
     "Nothing to validate yet.",
   );
-  if (error)
-    return resultRoot.render(
+  if (error) {
+    resultRoot.render(
       <ValidationResult outcome={{ kind: "error", message: error }} />,
     );
+    return;
+  }
   const issues = validateDocument(doc);
-  if (issues.length)
-    return resultRoot.render(
+  if (issues.length) {
+    resultRoot.render(
       <ValidationResult outcome={{ kind: "issues", issues }} />,
     );
+    return;
+  }
   resultRoot.render(
     <ValidationResult
       outcome={{

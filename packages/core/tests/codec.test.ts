@@ -494,7 +494,7 @@ describe("decodeDocumentText — the File binding's reader", () => {
   // free and JSON.parse throws, so without this the two SDKs disagree on the
   // same file. fixtures/transport/bom-prefixed-file.json carries the real bytes.
   test("discards a leading byte-order mark", () => {
-    const r = decodeDocumentText("\uFEFF" + doc);
+    const r = decodeDocumentText(`\uFEFF${doc}`);
     expect(r.ok && r.document.recipes?.length).toBe(1);
   });
   test("the real fixture reads", () => {
@@ -506,7 +506,7 @@ describe("decodeDocumentText — the File binding's reader", () => {
   });
   // A mark anywhere else is not a mark, it is content the parser must reject.
   test("only a leading mark is discarded", () => {
-    const r = decodeDocumentText(doc + "\uFEFF");
+    const r = decodeDocumentText(`${doc}\uFEFF`);
     expect(!r.ok && r.error.kind).toBe("not_json");
   });
   test("unparseable text names the same reason a link does", () => {

@@ -60,7 +60,10 @@ export function wireKeys(schema) {
     if (node.items) walk(node.items, owner);
     // A key appearing only inside a `then` is still one an implementation reads.
     for (const kw of ["allOf", "anyOf", "oneOf"])
-      if (node[kw]) node[kw].forEach((n) => walk(n, owner));
+      if (node[kw])
+        node[kw].forEach((n) => {
+          walk(n, owner);
+        });
     for (const kw of ["if", "then", "else"])
       if (node[kw]) walk(node[kw], owner);
     if (node.$defs)

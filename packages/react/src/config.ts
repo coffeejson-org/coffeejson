@@ -147,7 +147,10 @@ let resolvedDefault: ResolvedConfig | undefined;
 
 // Fills every default, so no component special-cases a missing `config` prop.
 export function resolveConfig(config?: CoffeeJSONConfig): ResolvedConfig {
-  if (config === undefined) return (resolvedDefault ??= build(undefined));
+  if (config === undefined) {
+    resolvedDefault ??= build(undefined);
+    return resolvedDefault;
+  }
   const hit = RESOLVED.get(config);
   if (hit) return hit;
   const built = build(config);

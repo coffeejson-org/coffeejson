@@ -9,7 +9,7 @@ import { FAQ, faqJsonLd } from "../src/lib/faq.mjs";
 // as a reason to drop the rich result, and a second hand-kept copy is exactly how
 // a mismatch arrives. So the head is compared against the array both come from.
 const site = fileURLToPath(new URL("..", import.meta.url));
-const index = readFileSync(site + "index.html", "utf8");
+const index = readFileSync(`${site}index.html`, "utf8");
 
 const blocks = [
   ...index.matchAll(/<script type="application\/ld\+json">(.*?)<\/script>/gs),

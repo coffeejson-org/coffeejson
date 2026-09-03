@@ -49,10 +49,19 @@ the aliases and breeding codes it absorbs.
 pnpm install
 pnpm test        # schema, fixtures, corpus, doc examples, parity, doc links, registries, scan vectors
 pnpm test:all    # the harness plus every workspace suite
+pnpm check       # format and lint the code, writing the fixes
+pnpm check:ci    # the same, read-only — what CI runs
 ```
 
 `pnpm validate:doc path/to/document.json` checks one document. CI runs the same
 commands on every pull request.
+
+Code is formatted and linted by [Biome](https://biomejs.dev); `biome.json` is the
+whole configuration. **The formatter does not touch documents.** `fixtures/`,
+`recipes/`, `registries/` and `docs/schema/` are written by hand in a house style
+a formatter cannot express — leaf objects stay on one line, and key order is
+meaningful — so Biome lints them for JSON errors and leaves their shape alone.
+Two-space indent and a trailing newline are the only conventions they follow.
 
 ## Licensing
 

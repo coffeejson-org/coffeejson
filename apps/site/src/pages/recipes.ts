@@ -37,7 +37,7 @@ function wire(): void {
     render();
     document.querySelector<HTMLInputElement>("#q")?.focus();
   });
-  document.querySelectorAll<HTMLButtonElement>("[data-view]").forEach((t) =>
+  document.querySelectorAll<HTMLButtonElement>("[data-view]").forEach((t) => {
     t.addEventListener("click", () => {
       const view = t.dataset["view"] as View;
       if (view === filters.view) return;
@@ -47,13 +47,13 @@ function wire(): void {
       document
         .querySelector<HTMLButtonElement>(`[data-view="${view}"]`)
         ?.focus();
-    }),
-  );
+    });
+  });
   // `[data-kind]` scopes this to the facet chips — the view toggle wears the
   // same pill skin but is a lens, not a filter, and has its own handler below.
   document
     .querySelectorAll<HTMLButtonElement>(".chip[data-kind]")
-    .forEach((c) =>
+    .forEach((c) => {
       c.addEventListener("click", () => {
         const kind = c.dataset["kind"] as "author" | "method";
         const value = c.dataset["value"]!;
@@ -68,18 +68,18 @@ function wire(): void {
             `.chip[data-kind="${kind}"][data-value="${value}"]`,
           )
           ?.focus();
-      }),
-    );
-  document.querySelectorAll<HTMLButtonElement>("[data-copy]").forEach((b) =>
+      });
+    });
+  document.querySelectorAll<HTMLButtonElement>("[data-copy]").forEach((b) => {
     b.addEventListener("click", async () => {
       const s = shareable(b.dataset["copy"]!)!;
       await navigator.clipboard.writeText(
         `${location.origin}/r/?d=${s.payload}`,
       );
       flash(b, "Copied");
-    }),
-  );
-  document.querySelectorAll<HTMLButtonElement>("[data-dl]").forEach((b) =>
+    });
+  });
+  document.querySelectorAll<HTMLButtonElement>("[data-dl]").forEach((b) => {
     b.addEventListener("click", () => {
       const s = shareable(b.dataset["dl"]!)!;
       // Through core, not a local base64url reader: the payload form is the
@@ -95,9 +95,9 @@ function wire(): void {
       });
       a.click();
       URL.revokeObjectURL(a.href);
-    }),
-  );
-  document.querySelectorAll<HTMLButtonElement>("[data-qr]").forEach((b) =>
+    });
+  });
+  document.querySelectorAll<HTMLButtonElement>("[data-qr]").forEach((b) => {
     b.addEventListener("click", async () => {
       const id = b.dataset["qr"]!;
       const s = shareable(id)!;
@@ -135,8 +135,8 @@ function wire(): void {
       const img = slot.querySelector("svg");
       img?.setAttribute("role", "img");
       img?.setAttribute("aria-label", `QR code linking to ${s.title}`);
-    }),
-  );
+    });
+  });
 
   document.addEventListener("keydown", (ev) => {
     if (ev.key !== "Escape") return;

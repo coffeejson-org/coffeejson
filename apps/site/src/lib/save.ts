@@ -59,7 +59,7 @@ export function saveCta(
     .map(
       (i) =>
         `<li><a href="${esc(i.url)}" rel="noopener">${esc(i.name)}</a>
-       <span class="muted">(${i.platforms.join(", ")})${"note" in i && i.note ? " — " + esc(String(i.note)) : ""}</span></li>`,
+       <span class="muted">(${i.platforms.join(", ")})${"note" in i && i.note ? ` — ${esc(String(i.note))}` : ""}</span></li>`,
     )
     .join("");
   const n = noun(doc);

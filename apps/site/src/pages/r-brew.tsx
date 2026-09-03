@@ -92,7 +92,12 @@ export function Brew({
       </p>
       <div className="row">
         <BrewControls brew={brew} variant="text" />
-        <button className="btn btn--ghost" data-brew="back" onClick={onBack}>
+        <button
+          type="button"
+          className="btn btn--ghost"
+          data-brew="back"
+          onClick={onBack}
+        >
           Back
         </button>
       </div>

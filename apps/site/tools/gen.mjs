@@ -1146,7 +1146,7 @@ if (isMain) {
     };
     writeFileSync(
       join(site, "src/generated/corpus-counts.json"),
-      JSON.stringify(counts, null, 2) + "\n",
+      `${JSON.stringify(counts, null, 2)}\n`,
     );
     console.log(
       `gen: corpus-counts.json — ${counts.recipes} recipes · ` +

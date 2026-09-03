@@ -24,7 +24,7 @@ function project(
       continue;
     }
     const projected = replacements[key];
-    if (projected && projected.length) out[key] = projected;
+    if (projected?.length) out[key] = projected;
   }
   return out as unknown as DecodedDocument;
 }

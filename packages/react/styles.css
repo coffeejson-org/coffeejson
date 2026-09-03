@@ -68,6 +68,10 @@
   font-weight: 600;
   color: var(--cj-accent);
 }
+.cj-step-delta {
+  color: var(--cj-muted);
+  font-variant-numeric: tabular-nums;
+}
 /* When a recipe has a pour increment beyond its initial fill, each step's
    delta + target render as siblings of cj-step-body rather than nested inside
    it (the nested cj-step-target of the plain single-pour rendering needs no
@@ -75,10 +79,6 @@
 .cj-step-body ~ .cj-step-target,
 .cj-step-body ~ .cj-step-delta {
   margin-left: 0.35rem;
-}
-.cj-step-delta {
-  color: var(--cj-muted);
-  font-variant-numeric: tabular-nums;
 }
 .cj-description {
   margin: 0.75rem 0 0;

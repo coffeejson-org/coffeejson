@@ -34,7 +34,7 @@ function disallowedForAll(path: string): boolean {
   for (const line of lines.slice(start + 1)) {
     if (/^user-agent:/i.test(line)) break;
     const m = /^disallow:\s*(\S*)$/i.exec(line);
-    if (m && m[1]) rules.push(m[1]);
+    if (m?.[1]) rules.push(m[1]);
   }
   return rules.some((r) => path.startsWith(r));
 }

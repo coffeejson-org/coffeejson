@@ -69,6 +69,7 @@ export function buildAuthoringSchema(
           required: ["id"],
           properties: { id: { enum: registeredIds } },
         },
+        // biome-ignore lint/suspicious/noThenProperty: JSON Schema's `then` keyword, not a thenable
         then: {
           type: "object",
           not: { anyOf: [{ required: ["brand"] }, { required: ["model"] }] },
@@ -92,6 +93,7 @@ export function buildAuthoringSchema(
       },
       // Types stated so the fragment is well-formed on its own: ajv strict mode
       // warns on `items` and `required` that do not say what they apply to.
+      // biome-ignore lint/suspicious/noThenProperty: JSON Schema's `then` keyword, not a thenable
       then: {
         properties: {
           recipes: {
@@ -135,7 +137,7 @@ function walk(node) {
 }
 
 export function renderAuthoringSchema(runtime) {
-  return JSON.stringify(buildAuthoringSchema(runtime), null, 2) + "\n";
+  return `${JSON.stringify(buildAuthoringSchema(runtime), null, 2)}\n`;
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {

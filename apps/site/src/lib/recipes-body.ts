@@ -1,4 +1,4 @@
-import { decodePayload, MEDIA_TYPE } from "@coffeejson/core";
+import { decodePayload } from "@coffeejson/core";
 import rawBeans from "../generated/beans-index.json";
 import rawDocuments from "../generated/documents-index.json";
 import rawIndex from "../generated/recipes-index.json";

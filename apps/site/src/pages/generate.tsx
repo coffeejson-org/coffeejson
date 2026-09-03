@@ -149,9 +149,15 @@ function tryLoad(text: string, fromJson: boolean): void {
     if (fromJson) paintJsonNotice();
     else renderAll();
   };
-  if (error) return fail(`<div class="error">${esc(error)}</div>`);
+  if (error) {
+    fail(`<div class="error">${esc(error)}</div>`);
+    return;
+  }
   const issues = validateDocument(doc);
-  if (issues.length) return fail(issuesHtml(issues));
+  if (issues.length) {
+    fail(issuesHtml(issues));
+    return;
+  }
   loadDocumentIntoForm(doc as CoffeeJSONDocument, { fromJson });
 }
 
@@ -545,57 +551,59 @@ function wireForm(): void {
     .addEventListener("toggle", (e) => {
       beanOpen = (e.currentTarget as HTMLDetailsElement).open; // bookkeeping only — no re-render
     });
-  app.querySelectorAll<HTMLInputElement>("[data-bk]").forEach((el) =>
+  app.querySelectorAll<HTMLInputElement>("[data-bk]").forEach((el) => {
     el.addEventListener("input", () => {
       (bean as unknown as Record<string, unknown>)[el.dataset["bk"]!] =
         el.value;
       refreshFeedback();
-    }),
-  );
-  app.querySelectorAll<HTMLInputElement>("[data-ok]").forEach((el) =>
+    });
+  });
+  app.querySelectorAll<HTMLInputElement>("[data-ok]").forEach((el) => {
     el.addEventListener("input", () => {
       const i = Number(el.dataset["i"]);
       (bean.origin[i]! as unknown as Record<string, string>)[
         el.dataset["ok"]!
       ] = el.value;
       refreshFeedback();
-    }),
-  );
+    });
+  });
   app.querySelector("#addorigin")!.addEventListener("click", () => {
     bean.origin.push(emptyOriginItemForm());
     renderAll();
   });
-  app.querySelectorAll<HTMLButtonElement>("[data-delorigin]").forEach((b) =>
+  app.querySelectorAll<HTMLButtonElement>("[data-delorigin]").forEach((b) => {
     b.addEventListener("click", () => {
       bean.origin.splice(Number(b.dataset["delorigin"]), 1);
       renderAll();
-    }),
-  );
+    });
+  });
 
   app
     .querySelectorAll<HTMLInputElement>("[data-rk]:not([data-rk='method'])")
-    .forEach((el) =>
+    .forEach((el) => {
       el.addEventListener("input", () => {
         const ri = Number(el.dataset["r"]);
         (recipes[ri]! as unknown as Record<string, unknown>)[
           el.dataset["rk"]!
         ] = el.value;
         refreshFeedback(); // inputs stay in the DOM → focus/cursor preserved
-      }),
-    );
-  app.querySelectorAll<HTMLSelectElement>("[data-rk='method']").forEach((el) =>
-    el.addEventListener("change", () => {
-      recipes[Number(el.dataset["r"])]!.method = el.value;
-      renderAll(); // fields swap → full re-render
-    }),
-  );
-  app.querySelectorAll<HTMLInputElement>("[data-rcheck]").forEach((el) =>
+      });
+    });
+  app
+    .querySelectorAll<HTMLSelectElement>("[data-rk='method']")
+    .forEach((el) => {
+      el.addEventListener("change", () => {
+        recipes[Number(el.dataset["r"])]!.method = el.value;
+        renderAll(); // fields swap → full re-render
+      });
+    });
+  app.querySelectorAll<HTMLInputElement>("[data-rcheck]").forEach((el) => {
     el.addEventListener("change", () => {
       recipes[Number(el.dataset["rcheck"])]!.recommended = el.checked;
       refreshFeedback();
-    }),
-  );
-  app.querySelectorAll<HTMLInputElement>("[data-sk]").forEach((el) =>
+    });
+  });
+  app.querySelectorAll<HTMLInputElement>("[data-sk]").forEach((el) => {
     el.addEventListener("input", () => {
       const ri = Number(el.dataset["r"]);
       const i = Number(el.dataset["i"]);
@@ -603,30 +611,30 @@ function wireForm(): void {
         el.dataset["sk"]!
       ] = el.value;
       refreshFeedback();
-    }),
-  );
-  app.querySelectorAll<HTMLButtonElement>("[data-addstep]").forEach((b) =>
+    });
+  });
+  app.querySelectorAll<HTMLButtonElement>("[data-addstep]").forEach((b) => {
     b.addEventListener("click", () => {
       recipes[Number(b.dataset["addstep"])]!.steps.push(emptyStepForm());
       renderAll();
-    }),
-  );
-  app.querySelectorAll<HTMLButtonElement>("[data-delstep]").forEach((b) =>
+    });
+  });
+  app.querySelectorAll<HTMLButtonElement>("[data-delstep]").forEach((b) => {
     b.addEventListener("click", () => {
       recipes[Number(b.dataset["r"])]!.steps.splice(Number(b.dataset["i"]), 1);
       renderAll();
-    }),
-  );
+    });
+  });
   app.querySelector("#addrecipe")!.addEventListener("click", () => {
     recipes.push(blankRecipe());
     renderAll();
   });
-  app.querySelectorAll<HTMLButtonElement>("[data-delrecipe]").forEach((b) =>
+  app.querySelectorAll<HTMLButtonElement>("[data-delrecipe]").forEach((b) => {
     b.addEventListener("click", () => {
       recipes.splice(Number(b.dataset["delrecipe"]), 1);
       renderAll();
-    }),
-  );
+    });
+  });
 }
 
 renderAll();

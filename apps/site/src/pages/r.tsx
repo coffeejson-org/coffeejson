@@ -93,6 +93,7 @@ export function App({
             {r.steps.length > 0 ? (
               <p>
                 <button
+                  type="button"
                   className="btn"
                   onClick={() => setMode({ kind: "brew", index: i })}
                 >
