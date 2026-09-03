@@ -57,6 +57,45 @@ test("omitting the url option leaves no url member to contradict a canonical", (
   expect(ld!["url"]).toBeUndefined();
 });
 
+// A bean beside a recipe rides inside the Recipe node; a bean on its own — a
+// roaster's bag, scanned to /r — is the page's subject and exports as Product.
+test("a bean-only document exports Product; a bag-to-brew document exports only its Recipe", () => {
+  const bag = { coffeejson: "1.0", beans: [{ name: "Monarch", roaster: { name: "Onyx Coffee Lab" } }] };
+  const [bean] = docJsonLd(bag as never) as Record<string, unknown>[];
+  expect(bean).toMatchObject({ "@type": "Product", name: "Monarch" });
+  expect(bean).not.toHaveProperty("offers");
+  const brew = { ...bag, recipes: [{ title: "Shot", coffee: { value: 18, unit: "gram" } }] };
+  const nodes = docJsonLd(brew as never) as Record<string, unknown>[];
+  expect(nodes.map((n) => n["@type"])).toEqual(["Recipe"]);
+});
+
+// An untitled recipe still says what the page is about, so the bean fallback
+// must read whether a recipe is PRESENT, not whether one managed to export.
+test("a document whose only recipe is untitled exports nothing — not the bag beside it", () => {
+  const doc = {
+    coffeejson: "1.0",
+    beans: [{ name: "Monarch", roaster: { name: "Onyx Coffee Lab" } }],
+    recipes: [{ coffee: { value: 18, unit: "gram" } }],
+  };
+  expect(docJsonLd(doc as never)).toEqual([]);
+});
+
+// One page, one subject: a URL handed to several Product nodes would have each
+// of them claim it, and two entities cannot share one address.
+test("a multi-bean document exports every bag but hands none of them the page url", () => {
+  const doc = {
+    coffeejson: "1.0",
+    beans: [
+      { name: "Monarch", url: "https://onyx.example/monarch" },
+      { name: "Geometry", url: "https://onyx.example/geometry" },
+    ],
+  };
+  const nodes = docJsonLd(doc as never, "https://coffeejson.org/r/abc") as Record<string, unknown>[];
+  expect(nodes.map((n) => n["name"])).toEqual(["Monarch", "Geometry"]);
+  for (const n of nodes) expect(n["url"]).toBeUndefined();
+  expect(nodes.map((n) => n["sameAs"])).toEqual(["https://onyx.example/monarch", "https://onyx.example/geometry"]);
+});
+
 // Both the card copy and the share controls branch on `siblings`. Pinned as an
 // invariant rather than a count, so it stays true as the corpus grows.
 test("siblings equals the number of index entries sharing a document slug", () => {

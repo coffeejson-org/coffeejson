@@ -13,8 +13,8 @@ import authoringSchema from "@coffeejson/core/schema/authoring" with { type: "js
 // imports the same package. Reimplementing the exporter would be worse — the
 // corpus pages and `/r` must emit the same Recipe for the same document.
 import {
-  defaultLabels, encodePayload, fmtClock, fmtMeasurement, formatRatio, methodLabel, normalize,
-  originLine, processLine, recipeJsonLd, scopeToRecipe, vocabularyLabel,
+  beanJsonLd, decodePayload, defaultLabels, encodePayload, fmtClock, fmtMeasurement, formatRatio,
+  methodLabel, normalize, originLine, processLine, recipeJsonLd, scopeToRecipe, vocabularyLabel,
 } from "@coffeejson/core";
 // The page footers, shared with the hand-written pages so the license and
 // privacy wording has exactly one source across generated and authored HTML.
@@ -174,7 +174,7 @@ export function buildLlmsTxt() {
     link("Generator", `${SITE_URL}/generate/`, "Build a valid document from a form, then share it as a link, QR code, or file"),
     link("For AI agents", `${SITE_URL}/for-ai-agents/`, "How to emit valid CoffeeJSON: a system-prompt snippet, worked examples, the mistakes models make, and the validate-and-fix loop"),
     link("Implementations", `${SITE_URL}/implementations/`, "The reference SDKs for TypeScript and Swift, the conformance corpus any implementation can run against its own code, and the self-declared registry of apps that read and write the format"),
-    link("Showcase", `${SITE_URL}/showcase/`, "The five places a CoffeeJSON document goes — between two apps, on a bag of coffee as a QR code, inside a share link, on a web page as schema.org Recipe, and as a plain file you keep — plus the software that reads and writes the format today"),
+    link("Showcase", `${SITE_URL}/showcase/`, "The five places a CoffeeJSON document goes — between two apps, on a bag of coffee as a QR code, inside a share link, on a web page as schema.org Recipe or Product, and as a plain file you keep — plus the software that reads and writes the format today"),
     "",
     "## Agent skills",
     "",
@@ -671,12 +671,24 @@ export function buildCorpusPage(entry, doc) {
 }
 
 /**
- * One page per bean identity — the bag, not the transcription of it. NO JSON-LD:
- * the nearest schema.org type is `Product`, which asserts a sale at a price the
- * corpus does not carry.
+ * One page per bean identity — the bag, not the transcription of it. Its JSON-LD
+ * is a schema.org `Product` with no `offers`: the page already names the roaster's
+ * listing under Sources, and the node says the same to a machine (`sameAs`),
+ * asserting no sale at any price — the price lives on the listing.
  */
 export function buildBeanPage(bean) {
   const url = `${SITE_URL}${beanPagePath(bean.slug)}`;
+  // Decoded from the card's own payload rather than carried beside it: the index
+  // ships to the browser, and a second copy of every bean would ride with it.
+  const decoded = decodePayload(bean.payload);
+  // This build encoded that payload three lines of call stack ago, so a decode
+  // failure means the encoder broke — not that this bag is unusual. Failing open
+  // would ship every bean page with no structured data on a green build.
+  if (!decoded.ok) {
+    const { kind, detail } = decoded.error;
+    die(`bean "${bean.slug}": its own payload does not decode (${kind}${detail ? `: ${detail}` : ""}) — the page would ship with no JSON-LD`);
+  }
+  const ld = [beanJsonLd(decoded.document, 0, { url })].filter(Boolean);
   const roasterName = bean.roaster?.name ?? "";
   const title = `${bean.name} — ${roasterName} — CoffeeJSON`;
   const description = [bean.name, roasterName, bean.origin, bean.notes]
@@ -712,7 +724,7 @@ export function buildBeanPage(bean) {
 
   return `<!doctype html>
 <html lang="en">
-  ${pageHead({ title, description, url })}
+  ${pageHead({ title, description, url, ld })}
   <body>
     <main id="app" data-bean="${esc(bean.slug)}">
       ${siteHeader(beanPagePath(bean.slug))}

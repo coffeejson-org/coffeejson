@@ -76,7 +76,8 @@ const SURFACES: { title: string; body: string }[] = [
     title: "On a web page",
     body: `Publish your method as data instead of a picture of a table. A reader can
       send it straight to their timer, and it exports to schema.org <code>Recipe</code>,
-      so search engines read the actual steps.`,
+      so search engines read the actual steps. A bag exports the same way, as a
+      <code>Product</code> whose identity is the coffee's — never its price.`,
   },
   {
     title: "In files you keep",

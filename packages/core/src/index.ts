@@ -8,7 +8,7 @@ export type {
   Grind, Measurement, MeasuredCup, Origin, OriginItem, Party, PerceivedAxes, Recipe,
   RecipeLocalization, RestWindow, Step, StepLocalization, Tasting,
 } from "./types.js";
-export { recipeJsonLd } from "./jsonld.js";
+export { beanJsonLd, recipeJsonLd } from "./jsonld.js";
 export {
   DECODE_ERROR_KINDS, MAX_PAYLOAD_BYTES, checkEnvelope, decodeDocumentText, decodePayload,
   decodeScanned, encodePayload, payloadFromLocation,

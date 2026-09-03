@@ -165,8 +165,9 @@ transcription slip fails the build instead of degrading into "unknown" silently.
 ## schema.org JSON-LD export
 
 A page that renders a CoffeeJSON recipe can also expose it to search engines
-as [schema.org `Recipe`](https://schema.org/Recipe) structured data.
-`@coffeejson/core` ships the exporter:
+and agents as [schema.org `Recipe`](https://schema.org/Recipe) structured
+data, and a page that renders a bean as [`Product`](https://schema.org/Product)
+([below](#a-bean-as-product)). `@coffeejson/core` ships both exporters:
 
 ```ts
 import { recipeJsonLd } from "@coffeejson/core";
@@ -210,10 +211,51 @@ subtype, which is what legitimizes `tool` and `performTime`.
 The optional `url` option is the page's canonical URL — page knowledge, not
 document data — and lands on the JSON-LD `url` member.
 
+### A bean as `Product`
+
+A page that renders a bean — a roaster's product page, a directory of bags —
+exports it as [schema.org `Product`](https://schema.org/Product) the same way:
+
+```ts
+import { beanJsonLd } from "@coffeejson/core";
+
+const ld = beanJsonLd(doc, 0, { url: "https://example-roastery.com/products/nano-challa" });
+// null when the input is unexportable (no bean at that index, or no usable name)
+```
+
+The node carries **no `offers`**. Price, stock and lot size are the listing's
+facts, not the coffee's ([Overview § Design principles](https://coffeejson.org/docs/spec/01-overview.md#design-principles),
+principle 4); a roaster's page already has an offer, and a page that is not
+the listing points at it with `sameAs`. The identity rides as
+`additionalProperty` under the CoffeeJSON member names with the wire values
+verbatim, so a reader that knows the format reads it straight back.
+
+| CoffeeJSON | JSON-LD | Rule |
+| --- | --- | --- |
+| `name` | `name` | verbatim (a bean without a usable name exports `null`) |
+| `url` | `sameAs` | the roaster's listing, verbatim — omitted when it equals the page `url`, because then the page *is* the listing |
+| `description` | `description` | verbatim |
+| `images` | `image` | the array, verbatim |
+| `roaster` | `brand` | `Organization`/`Person` by the party's `type`; absent `type` reads as `Organization` (the roaster role's default); a party without a usable `name` is omitted |
+| `origin.items[].country` | `countryOfOrigin` | one `Country` node per distinct code, in stated order; a single-country origin exports one node, not an array. The code rides as `identifier`, never as `name` — an alpha-2 code is not what a country is called, and the format carries no display name to put there |
+| `roast_date` | `productionDate` | verbatim (both ISO 8601 calendar dates) |
+| a **single lot**'s `region` · `producers[]` · `altitude` · `harvest_time` | `additionalProperty[]` | one `PropertyValue` each (`producer` per named party; `altitude` as `value` or `minValue`/`maxValue` with UN/CEFACT `unitCode` `MTR`/`FOT`). Exported only when the origin has exactly one item: a blend's per-component facts belong to a component the node cannot name, so a blend exports its countries and nothing finer |
+| `process` · `drying_method` · `varietals` · `roast_level` · `roast_agtron` · `rest_days` · `production_roaster` · `decaf` · `form` · `preferred_extraction` · `certifications` · `roaster_notes` | `additionalProperty[]` | one `PropertyValue` each, `name` = the member name, `value` = the wire value verbatim (arrays stay arrays; `rest_days` as `minValue`/`maxValue` with `unitText: "day"`) |
+| `origin.items[].process` · `origin.items[].varietals` | `additionalProperty[]` | only where the bean states none of its own. **One lot** is the bag, so both fall back to it. **Several lots**: `process` exports the distinct union across them — [`processList`](https://coffeejson.org/docs/spec/06-vocabularies.md) reads a multi-process list at bag level as "the bag contains coffee of each", so the union is the format's own reading — and `varietals` does not, because every lot's varieties in one list describes no coffee in the bag |
+
+Never exported: `id`, `lang`, `localizations` (document mechanics and hints);
+`origin.type` (already implied by the count of `countryOfOrigin` nodes); each
+producer's `role` (the party exports as its name); and the remaining
+`origin.items[]` members — `name` and `percentage` — which name or weight a
+component this node has no way to itemize.
+
 ### What is never exported
 
 The exporter is **document-true**: absent data stays absent, and nothing is
 fabricated for the sake of search features.
+
+- **No `offers`, `price`, `aggregateRating` or `review` on a `Product`** —
+  the format carries none of them, by design.
 
 - No `aggregateRating`, `nutrition`, servings, or `keywords` — CoffeeJSON
   carries none of these.

@@ -67,9 +67,14 @@ test("a bean page names its sources and links its brews", () => {
   expect(html).toContain('<link rel="canonical" href="https://coffeejson.org/beans/onyx-monarch/" />');
   expect(html).toContain("Onyx Coffee Lab");
   for (const d of monarch.documents) expect(html).toContain(`/recipes/${d.slug}/`);
-  // No JSON-LD: the nearest schema.org type is Product, which would assert a
-  // thing for sale the corpus does not describe.
-  expect(html).not.toContain("application/ld+json");
+  // Product without offers: the page already names the roaster's listing under
+  // Sources, and the node says the same thing to a machine, `sameAs` pointing at
+  // it. No offer is asserted, so nothing is claimed for sale here.
+  expect(html).toContain('<script type="application/ld+json">');
+  expect(html).toContain('"@type":"Product"');
+  expect(html).toContain('"url":"https://coffeejson.org/beans/onyx-monarch/"');
+  expect(html).toContain('"sameAs":"https://onyxcoffeelab.com/products/monarch"');
+  expect(html).not.toContain('"offers"');
 });
 
 test("the collision guard fails the build rather than overwriting a page", () => {

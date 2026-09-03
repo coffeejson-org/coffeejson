@@ -2,7 +2,7 @@ import { expect, test } from "vitest";
 import { readFileSync, readdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { join } from "node:path";
-import { recipeJsonLd } from "../src/jsonld";
+import { beanJsonLd, recipeJsonLd } from "../src/jsonld";
 import type { CoffeeJSONDocument } from "../src/types";
 
 // The documented full example (design sample): every mapped field at once.
@@ -309,4 +309,266 @@ test("datePublished names a real day or is absent", () => {
   expect(withDate("2026-06-01")?.["datePublished"]).toBe("2026-06-01");
   expect(withDate("2026-02-31")?.["datePublished"]).toBeUndefined();
   expect(withDate("2026-06-01T09:00:00Z")?.["datePublished"]).toBeUndefined();
+});
+
+// ---------------------------------------------------------------------------
+// beanJsonLd — schema.org Product, no offer. A bean is a coffee a roaster sells;
+// the price, stock and lot live in the roaster's own listing, never here.
+
+const FULL_BEAN: CoffeeJSONDocument = {
+  coffeejson: "1.0",
+  beans: [
+    {
+      name: "Nano Challa",
+      roaster: { name: "Example Roastery", url: "https://example-roastery.com", type: "organization" },
+      url: "https://example-roastery.com/products/nano-challa",
+      images: ["https://example-roastery.com/img/nano-challa.jpg"],
+      origin: {
+        type: "single",
+        items: [
+          {
+            country: "ET",
+            region: "Jimma",
+            producers: [{ name: "Nano Challa Cooperative", role: "cooperative" }],
+            altitude: { min: 1900, max: 2100, unit: "meter" },
+            harvest_time: "Nov–Jan 2025",
+          },
+        ],
+      },
+      process: ["washed"],
+      drying_method: "raised_bed",
+      varietals: ["Heirloom"],
+      roast_level: "light",
+      roast_agtron: 72,
+      roast_date: "2026-06-20",
+      rest_days: { min: 7, max: 21 },
+      production_roaster: "Loring S15",
+      decaf: false,
+      form: "bean",
+      preferred_extraction: "filter",
+      certifications: ["organic"],
+      roaster_notes: ["jasmine", "bergamot", "honey"],
+      description: "A washed Jimma lot from the Nano Challa cooperative.",
+      lang: "en",
+    },
+  ],
+};
+
+test("the full bean mapping — every documented field lands on its schema.org slot", () => {
+  expect(beanJsonLd(FULL_BEAN, 0, { url: "https://coffeejson.org/beans/example-nano-challa/" })).toEqual({
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: "Nano Challa",
+    url: "https://coffeejson.org/beans/example-nano-challa/",
+    sameAs: "https://example-roastery.com/products/nano-challa",
+    description: "A washed Jimma lot from the Nano Challa cooperative.",
+    image: ["https://example-roastery.com/img/nano-challa.jpg"],
+    brand: { "@type": "Organization", name: "Example Roastery", url: "https://example-roastery.com" },
+    countryOfOrigin: { "@type": "Country", identifier: "ET" },
+    productionDate: "2026-06-20",
+    additionalProperty: [
+      { "@type": "PropertyValue", name: "region", value: "Jimma" },
+      { "@type": "PropertyValue", name: "producer", value: "Nano Challa Cooperative" },
+      { "@type": "PropertyValue", name: "altitude", minValue: 1900, maxValue: 2100, unitCode: "MTR" },
+      { "@type": "PropertyValue", name: "harvest_time", value: "Nov–Jan 2025" },
+      { "@type": "PropertyValue", name: "process", value: ["washed"] },
+      { "@type": "PropertyValue", name: "drying_method", value: "raised_bed" },
+      { "@type": "PropertyValue", name: "varietals", value: ["Heirloom"] },
+      { "@type": "PropertyValue", name: "roast_level", value: "light" },
+      { "@type": "PropertyValue", name: "roast_agtron", value: 72 },
+      { "@type": "PropertyValue", name: "rest_days", minValue: 7, maxValue: 21, unitText: "day" },
+      { "@type": "PropertyValue", name: "production_roaster", value: "Loring S15" },
+      { "@type": "PropertyValue", name: "decaf", value: false },
+      { "@type": "PropertyValue", name: "form", value: "bean" },
+      { "@type": "PropertyValue", name: "preferred_extraction", value: "filter" },
+      { "@type": "PropertyValue", name: "certifications", value: ["organic"] },
+      { "@type": "PropertyValue", name: "roaster_notes", value: ["jasmine", "bergamot", "honey"] },
+    ],
+  });
+});
+
+test("a minimal bean exports exactly the members it carries — no offer, nothing fabricated", () => {
+  const doc: CoffeeJSONDocument = { coffeejson: "1.0", beans: [{ name: "Plain" }] };
+  expect(beanJsonLd(doc, 0)).toEqual({ "@context": "https://schema.org", "@type": "Product", name: "Plain" });
+  expect(beanJsonLd(doc, 0)).not.toHaveProperty("offers");
+});
+
+test("a bean without a usable name, or no bean at that index, exports null", () => {
+  expect(beanJsonLd({ coffeejson: "1.0", beans: [{ roaster: { name: "R" } }] }, 0)).toBeNull();
+  expect(beanJsonLd({ coffeejson: "1.0", beans: [{ name: "  " }] }, 0)).toBeNull();
+  expect(beanJsonLd({ coffeejson: "1.0", beans: [] }, 0)).toBeNull();
+  expect(beanJsonLd("not a document", 0)).toBeNull();
+});
+
+test("the roaster's page is the page: sameAs is omitted when it equals url", () => {
+  const doc: CoffeeJSONDocument = {
+    coffeejson: "1.0",
+    beans: [{ name: "x", url: "https://example-roastery.com/products/x" }],
+  };
+  expect(beanJsonLd(doc, 0, { url: "https://example-roastery.com/products/x" })).toEqual({
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: "x",
+    url: "https://example-roastery.com/products/x",
+  });
+  expect(beanJsonLd(doc, 0)).toHaveProperty("sameAs", "https://example-roastery.com/products/x");
+});
+
+test("a blend exports every country and, absent a stated process, no per-lot properties", () => {
+  const doc: CoffeeJSONDocument = {
+    coffeejson: "1.0",
+    beans: [
+      {
+        name: "Blend",
+        origin: {
+          type: "blend",
+          items: [
+            { country: "CO", region: "Huila", altitude: { value: 1800, unit: "meter" }, percentage: 60 },
+            { country: "ET", region: "Guji", percentage: 40 },
+            { country: "CO", region: "Nariño" },
+          ],
+        },
+      },
+    ],
+  };
+  const ld = beanJsonLd(doc, 0)!;
+  expect(ld["countryOfOrigin"]).toEqual([
+    { "@type": "Country", identifier: "CO" },
+    { "@type": "Country", identifier: "ET" },
+  ]);
+  expect(ld).not.toHaveProperty("additionalProperty");
+});
+
+test("a single origin with two lots exports its country once and no lot properties", () => {
+  const doc: CoffeeJSONDocument = {
+    coffeejson: "1.0",
+    beans: [{ name: "x", origin: { type: "single", items: [{ country: "BR", region: "a" }, { country: "BR", region: "b" }] } }],
+  };
+  const ld = beanJsonLd(doc, 0)!;
+  expect(ld["countryOfOrigin"]).toEqual({ "@type": "Country", identifier: "BR" });
+  expect(ld).not.toHaveProperty("additionalProperty");
+});
+
+test("a single lot may state process and varietals on the lot — one lot is the bag", () => {
+  const doc: CoffeeJSONDocument = {
+    coffeejson: "1.0",
+    beans: [
+      {
+        name: "Yirgacheffe",
+        origin: { items: [{ country: "ET", process: ["washed"], varietals: ["Heirloom"] }] },
+      },
+    ],
+  };
+  expect(beanJsonLd(doc, 0)!["additionalProperty"]).toEqual([
+    { "@type": "PropertyValue", name: "process", value: ["washed"] },
+    { "@type": "PropertyValue", name: "varietals", value: ["Heirloom"] },
+  ]);
+});
+
+test("a bean-level process wins over the lot's — the bag's own claim is not overridden", () => {
+  const doc: CoffeeJSONDocument = {
+    coffeejson: "1.0",
+    beans: [
+      {
+        name: "x",
+        process: ["natural"],
+        varietals: ["Bourbon"],
+        origin: { items: [{ country: "BR", process: ["washed"], varietals: ["Catuaí"] }] },
+      },
+    ],
+  };
+  expect(beanJsonLd(doc, 0)!["additionalProperty"]).toEqual([
+    { "@type": "PropertyValue", name: "process", value: ["natural"] },
+    { "@type": "PropertyValue", name: "varietals", value: ["Bourbon"] },
+  ]);
+});
+
+test("a blend unions its lots' processes — the bag contains coffee of each", () => {
+  const doc: CoffeeJSONDocument = {
+    coffeejson: "1.0",
+    beans: [
+      {
+        name: "Sermon",
+        origin: {
+          type: "blend",
+          items: [
+            { country: "ET", process: ["washed"] },
+            { country: "CO", process: ["natural"] },
+            { country: "CO", process: ["washed"] },
+          ],
+        },
+      },
+    ],
+  };
+  expect(beanJsonLd(doc, 0)!["additionalProperty"]).toEqual([
+    { "@type": "PropertyValue", name: "process", value: ["washed", "natural"] },
+  ]);
+});
+
+test("a blend does NOT union its lots' varietals — nine varietals across three lots is not a bag fact", () => {
+  const doc: CoffeeJSONDocument = {
+    coffeejson: "1.0",
+    beans: [
+      {
+        name: "Rudder",
+        origin: {
+          type: "blend",
+          items: [
+            { country: "ET", varietals: ["Heirloom"] },
+            { country: "BR", varietals: ["Yellow Bourbon"] },
+          ],
+        },
+      },
+    ],
+  };
+  expect(beanJsonLd(doc, 0)).not.toHaveProperty("additionalProperty");
+});
+
+test("a blend's bean-level process is left alone — no union runs when the bag states one", () => {
+  const doc: CoffeeJSONDocument = {
+    coffeejson: "1.0",
+    beans: [
+      {
+        name: "x",
+        process: ["honey"],
+        origin: { type: "blend", items: [{ country: "ET", process: ["washed"] }, { country: "CO", process: ["natural"] }] },
+      },
+    ],
+  };
+  expect(beanJsonLd(doc, 0)!["additionalProperty"]).toEqual([
+    { "@type": "PropertyValue", name: "process", value: ["honey"] },
+  ]);
+});
+
+test("altitude in feet carries the UN/CEFACT code, a single value exports as value", () => {
+  const doc: CoffeeJSONDocument = {
+    coffeejson: "1.0",
+    beans: [{ name: "x", origin: { items: [{ altitude: { value: 5400, unit: "foot" } }] } }],
+  };
+  expect(beanJsonLd(doc, 0)!["additionalProperty"]).toEqual([
+    { "@type": "PropertyValue", name: "altitude", value: 5400, unitCode: "FOT" },
+  ]);
+});
+
+test("the roaster defaults to Organization; a person-typed roaster stays a Person; nameless is omitted", () => {
+  const doc = (roaster: object): CoffeeJSONDocument => ({
+    coffeejson: "1.0",
+    beans: [{ name: "x", roaster } as never],
+  });
+  expect(beanJsonLd(doc({ name: "R" }), 0)).toHaveProperty("brand", { "@type": "Organization", name: "R" });
+  expect(beanJsonLd(doc({ name: "R", type: "person" }), 0)).toHaveProperty("brand", { "@type": "Person", name: "R" });
+  expect(beanJsonLd(doc({ url: "https://example.com" }), 0)).not.toHaveProperty("brand");
+});
+
+test("every corpus bean exports a Product carrying its roaster and its listing", () => {
+  for (const [file, doc] of [...docsIn("recipes"), ...docsIn("fixtures/valid")]) {
+    (doc.beans ?? []).forEach((b, i) => {
+      const ld = beanJsonLd(doc, i)!;
+      expect(ld, `${file} bean ${i}`).not.toBeNull();
+      expect(ld["@type"], file).toBe("Product");
+      expect(ld, file).not.toHaveProperty("offers");
+      if (b.roaster?.name) expect((ld["brand"] as { name: string }).name, file).toBe(b.roaster.name);
+      if (b.url) expect(ld["sameAs"], file).toBe(b.url);
+    });
+  }
 });
