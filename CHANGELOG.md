@@ -40,10 +40,10 @@ place ([Versioning](docs/spec/07-versioning.md)); layout follows
   `category` narrowed to how a brewer brews, and `pour-over-machine`, `drip` and
   `capsule` added to it. An all-in-one carries more than one role, which one
   member could not express. Registry data: nothing bumps.
-- **Thirty-three gear entries and twenty-six varietals.** The gear baskets
-  collapse from eight per-dose slugs to four families, the dose moving to
-  `variant`. Every varietal entry now carries a `kind` and the `species` epithet
-  it is sold as, both optional.
+- **Thirty-three gear entries and twenty-six varietals.** The four per-dose
+  basket slugs become two families, with the dose in `variant`. Every varietal
+  entry now carries a `kind` and the `species` epithet it is sold as, both
+  optional.
 
 ### Changed
 
@@ -54,8 +54,21 @@ place ([Versioning](docs/spec/07-versioning.md)); layout follows
   authoring schema enforces the omission for registered ids and leaves it alone
   for an id the registry does not carry, which still needs the fallback.
 - **`gearLabel` in `@coffeejson/core` resolves a known id** against the
-  registry's own labels and renders `variant` beside it, rather than reading the
-  display string off the document. The bundled map is keyed by language tag.
+  registry's own labels and renders `variant` beside that label, rather than
+  reading the display string off the document. The bundled map is keyed by
+  language tag. For `custom` and an unknown id, it shows the producer's `label`
+  as written. Without a `label`, it shows `brand` and `model`, then `variant`.
+
+### Removed
+
+- **Four per-dose basket slugs and their aliases are retired** from the
+  [gear registry](docs/spec/06-vocabularies.md#gear-registry):
+  `ims-precision-18g` (`ims-precision-18`), `vst-precision-15g` (`vst-15g`),
+  `vst-precision-18g` (`vst-18g`) and `vst-precision-20g` (`vst-20g`). Emit
+  `ims-precision` or `vst-precision` with the dose in `variant`:
+  `{ "id": "vst-precision", "variant": "18 g" }`. The old slugs do not resolve
+  to a family, because the family does not identify the dose. A consumer
+  treats them as unknown ids.
 
 ### Fixed
 

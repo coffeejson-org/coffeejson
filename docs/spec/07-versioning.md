@@ -272,9 +272,13 @@ from the canonical host). Their governance is lightweight by design:
   version. Producers and
   consumers that have not yet synced the registry fall back per the
   vocabulary's rule, so nothing breaks.
-- **Ids are stable.** Once published, a slug is not repurposed. Correcting a
-  mistake means adding a new slug and aliasing the old one, never silently
-  changing what a slug means.
+- **Ids are stable.** A published slug never changes its meaning, and a
+  removed slug is never used again. A correction for a misspelled or misnamed
+  slug adds the right slug and keeps the old one as its alias. A per-variant
+  slug that is folded into its family is removed. It does not become an alias
+  of the family slug, because the family slug does not identify the variant
+  ([Gear registry](06-vocabularies.md#gear-registry)). A consumer treats a
+  removed slug as an unknown id.
 - **Country codes are not curated here.** They track ISO 3166-1 directly.
 
 If CoffeeJSON becomes a shared standard, extracting these registries into a

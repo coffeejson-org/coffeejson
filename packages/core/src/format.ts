@@ -96,11 +96,11 @@ export function gearLabel(
   // Spec order, 03-recipe.md § Gear object: a KNOWN id resolves to the consumer's
   // own label first, because the id is the wire form and the display string is the
   // edge — a document naming registered gear carries none. Only `custom` and an
-  // unrecognized id fall back to what the producer wrote.
-  const base =
-    (id && id !== "custom" ? labels[id] : undefined) ??
-    label ??
-    (brandModel || id);
+  // unrecognized id use what the producer wrote. A stated label is shown as
+  // written, because it can already contain the variant.
+  const known = id && id !== "custom" ? labels[id] : undefined;
+  if (known === undefined && label !== null) return label;
+  const base = known ?? (brandModel || id);
   if (!base) return "";
   // The registry names the family; `variant` names which one of it, and no lookup
   // can supply it — so a consumer that drops it loses what the document knew.

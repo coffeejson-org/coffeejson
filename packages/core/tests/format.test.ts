@@ -73,7 +73,7 @@ test("gearLabel: a known id resolves against the registry, and variant rides alo
     "Hario V60",
   );
   expect(gearLabel({ id: "custom", label: "Modbar", variant: "AV" })).toBe(
-    "Modbar AV",
+    "Modbar",
   );
   expect(gearLabel({ id: "modbar-av", brand: "Modbar", model: "AV" })).toBe(
     "Modbar AV",
@@ -86,6 +86,29 @@ test("gearLabel: a known id resolves against the registry, and variant rides alo
     ),
   ).toBe("ハリオ V60 02");
   expect(gearLabel({ id: "hario-v60", variant: "" })).toBe("Hario V60");
+});
+
+test("gearLabel: a producer's stated label is shown verbatim, never doubled by variant", () => {
+  // 03-recipe.md § Gear object: for custom and unknown ids, the label is shown
+  // as written.
+  expect(
+    gearLabel({ id: "custom", label: "Hario V60 02", variant: "02" }),
+  ).toBe("Hario V60 02");
+  expect(
+    gearLabel({ id: "not-registered", label: "Bench dripper", variant: "L" }),
+  ).toBe("Bench dripper");
+  // A name built from brand and model gets the variant.
+  expect(
+    gearLabel({
+      id: "not-registered",
+      brand: "Modbar",
+      model: "AV",
+      variant: "2",
+    }),
+  ).toBe("Modbar AV 2");
+  expect(gearLabel({ id: "not-registered", variant: "2" })).toBe(
+    "not-registered 2",
+  );
 });
 
 test("gearLabelsFor: a language tag narrows before it falls back", () => {
