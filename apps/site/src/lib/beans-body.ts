@@ -2,8 +2,8 @@ import beans from "../generated/beans-index.json";
 import {
   CORRECTIONS,
   LICENSE_SITE,
-  licenseLine,
   QUOTED_PROSE,
+  siteFooter,
 } from "./footer.mjs";
 import { siteHeader } from "./site-header.mjs";
 import { esc, slugify } from "./text.mjs";
@@ -76,10 +76,5 @@ export const beansBody = (selected: string | null = null): string => {
 
   ${shown.length ? shown.map(card).join("") : `<p>No bag matches that roaster.</p>`}
 
-  <footer class="site-footer">
-    <a href="/">Home</a> · <a href="/recipes/">Browse</a><a href="/showcase/">Showcase</a> ·
-    <a href="/docs/">Spec</a> ·
-    <a href="https://github.com/coffeejson-org/coffeejson" rel="noopener">GitHub</a>
-    ${licenseLine(LICENSE_SITE, QUOTED_PROSE, CORRECTIONS)}
-  </footer>`;
+  ${siteFooter(LICENSE_SITE, QUOTED_PROSE, CORRECTIONS)}`;
 };

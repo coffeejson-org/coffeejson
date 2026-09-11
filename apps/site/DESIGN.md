@@ -174,6 +174,9 @@ with a 22% radius, the iOS mask, so a square export reads as the icon it is.
   Implementations · Validator · Generate) over a 2px `on-surface` rule; the heavy rule is
   what makes it a masthead rather than chrome. The current page is bold with
   `aria-current`, not accent-colored. Brew-along strips it to the wordmark.
+- **Links footer** — one row of links in a fixed order (Home · Browse · Showcase · Spec ·
+  For AI agents · GitHub), separated by dots, above the license line. Only `siteFooter`
+  builds it. Spec links to GitHub because the site has no page at `/docs/`.
 - **Button** (`components.button`); **ghost** (`components.button-ghost`) is a modifier on
   it with a primary border. Hover shades the fill 15% toward `on-surface`, instantly.
 - **Chip** (`components.chip`, on-state `components.chip-on`) — facet filters and the

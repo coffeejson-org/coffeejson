@@ -72,7 +72,7 @@ describe("the retracted claim", () => {
     ...["src/pages", "src/lib"].flatMap((d) =>
       readdirSync(join(site, d)).map((f) => `${d}/${f}`),
     ),
-  ].filter((f) => /<footer|footerHtml\(/.test(read(f)));
+  ].filter((f) => /<footer|footerHtml\(|siteFooter\(/.test(read(f)));
 
   it("every module that emits a footer is accounted for", () => {
     expect(emitters.sort()).toEqual([
@@ -88,7 +88,7 @@ describe("the retracted claim", () => {
   });
 
   it.each(emitters)("%s builds its footer from the shared source", (file) => {
-    expect(read(file)).toMatch(/\b(footerHtml|licenseLine)\(/);
+    expect(read(file)).toMatch(/\b(footerHtml|licenseLine|siteFooter)\(/);
   });
 });
 

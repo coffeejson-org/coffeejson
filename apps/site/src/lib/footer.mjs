@@ -3,6 +3,8 @@
 // `tools/gen.mjs` is plain Node. A `.ts` module reaches only half the pages, and
 // the sentence below is then hand-copied into the other half.
 
+import { GITHUB_URL } from "./site-header.mjs";
+
 /** License line for the hand-written pages, which cover more than the corpus. */
 export const LICENSE_SITE =
   "Spec, schema and corpus: CC0 1.0 Universal — public domain.";
@@ -57,3 +59,34 @@ export const licenseLine = (...clauses) =>
  */
 export const footerHtml = (...clauses) =>
   `<footer>${licenseLine(...clauses)}</footer>`;
+
+/**
+ * The spec on GitHub. The site has no spec page at `/docs/`, so links for
+ * readers go here.
+ */
+export const SPEC_URL = `${GITHUB_URL}/tree/main/docs/spec`;
+
+/** The footer links, in display order. */
+export const FOOTER_LINKS = [
+  ["/", "Home"],
+  ["/recipes/", "Browse"],
+  ["/showcase/", "Showcase"],
+  [SPEC_URL, "Spec"],
+  ["/agents/", "For AI agents"],
+  [GITHUB_URL, "GitHub"],
+];
+
+/**
+ * The links row and the license line. Every page with this footer calls this
+ * function, so the pages cannot drift apart.
+ *
+ * @param {...string} clauses
+ * @returns {string}
+ */
+export const siteFooter = (...clauses) =>
+  `<footer class="site-footer"><nav aria-label="Site">${FOOTER_LINKS.map(
+    ([href, label]) =>
+      href.startsWith("/")
+        ? `<a href="${href}">${label}</a>`
+        : `<a href="${href}" rel="noopener">${label}</a>`,
+  ).join(" · ")}</nav>${licenseLine(...clauses)}</footer>`;

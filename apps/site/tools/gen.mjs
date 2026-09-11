@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 // Build-time generation for apps/site. Fails the build on an invalid corpus.
+import { execFileSync } from "node:child_process";
 import {
   existsSync,
   mkdirSync,
@@ -107,8 +108,156 @@ export const INDEXABLE_PATHS = [
 export const indexableUrls = () =>
   INDEXABLE_PATHS.map((p) => `${SITE_URL}${p}`);
 
-export function buildSitemap(urls = indexableUrls()) {
-  const body = urls.map((u) => `  <url><loc>${u}</loc></url>`).join("\n");
+/**
+ * The source paths of each hand-written page. A directory includes all files
+ * under it. A page's `<lastmod>` is the date of the last commit to one of these
+ * paths. Shared parts, such as the header and the footer, do not count.
+ */
+export const PAGE_SOURCES = {
+  "/": [
+    "apps/site/index.html",
+    "apps/site/src/pages/landing.ts",
+    "apps/site/src/lib/faq.mjs",
+    "apps/site/src/lib/sample.ts",
+    "recipes",
+  ],
+  "/validator/": [
+    "apps/site/validator/index.html",
+    "apps/site/src/pages/validator.tsx",
+  ],
+  "/r/": [
+    "apps/site/r/index.html",
+    "apps/site/src/pages/r.tsx",
+    "apps/site/src/pages/r-shared.tsx",
+    "apps/site/src/pages/r-brew.tsx",
+  ],
+  "/recipes/": [
+    "apps/site/recipes/index.html",
+    "apps/site/src/pages/recipes.ts",
+    "apps/site/src/lib/recipes-body.ts",
+    "recipes",
+  ],
+  "/generate/": [
+    "apps/site/generate/index.html",
+    "apps/site/src/pages/generate.tsx",
+  ],
+  "/agents/": [
+    "apps/site/agents/index.html",
+    "apps/site/src/pages/agents.ts",
+    "apps/site/src/lib/agent-guide.mjs",
+    "apps/site/src/lib/agent-examples.mjs",
+  ],
+  "/implementations/": [
+    "apps/site/implementations/index.html",
+    "apps/site/src/pages/implementations.ts",
+  ],
+  "/beans/": [
+    "apps/site/beans/index.html",
+    "apps/site/src/pages/beans.ts",
+    "apps/site/src/lib/beans-body.ts",
+    "recipes",
+  ],
+  "/showcase/": [
+    "apps/site/showcase/index.html",
+    "apps/site/src/pages/showcase.ts",
+    "registries/implementations.json",
+  ],
+};
+
+/** Each sitemap URL and the source paths of its content. */
+export const pageSources = (index = buildIndex(), beans = buildBeansIndex()) =>
+  new Map([
+    ...INDEXABLE_PATHS.map((p) => [`${SITE_URL}${p}`, PAGE_SOURCES[p]]),
+    ...corpusPageSlugs(index).map((s) => [
+      `${SITE_URL}${corpusPagePath(s)}`,
+      [`recipes/${s}.json`],
+    ]),
+    ...beans.map((b) => [
+      `${SITE_URL}${beanPagePath(b.slug)}`,
+      b.documents.map((d) => `recipes/${d.slug}.json`),
+    ]),
+  ]);
+
+/**
+ * Parses `git log --name-only --format=@%ct` into path → the newest commit
+ * time, in Unix seconds.
+ */
+export function parseGitLog(log) {
+  const times = new Map();
+  let time = 0;
+  for (const line of log.split("\n")) {
+    if (line.startsWith("@")) time = Number(line.slice(1));
+    else if (line) times.set(line, Math.max(times.get(line) ?? 0, time));
+  }
+  return times;
+}
+
+/**
+ * The last commit time of each path on this branch. Returns `null` for a
+ * shallow clone or when git fails. A shallow clone has one commit, so all pages
+ * get the same date. Search engines ignore dates like that.
+ */
+export function lastCommitTimes(cwd = repo) {
+  const git = (...args) =>
+    execFileSync("git", args, {
+      cwd,
+      encoding: "utf8",
+      maxBuffer: 64 * 1024 * 1024,
+      stdio: ["ignore", "pipe", "ignore"],
+    });
+  try {
+    if (git("rev-parse", "--is-shallow-repository").trim() === "true")
+      return null;
+    // With --first-parent, a file's date is when it reached this branch,
+    // not when someone wrote it on another branch.
+    return parseGitLog(
+      git(
+        "-c",
+        "core.quotePath=false",
+        "log",
+        "--first-parent",
+        "--diff-merges=first-parent",
+        "--name-only",
+        "--format=@%ct",
+      ),
+    );
+  } catch {
+    return null;
+  }
+}
+
+/** The `YYYY-MM-DD` date of the newest commit to any source, or undefined. */
+export function lastmodOf(sources, times) {
+  let latest = 0;
+  for (const [path, t] of times)
+    if (sources.some((s) => path === s || path.startsWith(`${s}/`)))
+      latest = Math.max(latest, t);
+  return latest
+    ? new Date(latest * 1000).toISOString().slice(0, 10)
+    : undefined;
+}
+
+/** URL → lastmod for each URL with a dated source. Empty without git history. */
+export function sitemapLastmods(
+  sources = pageSources(),
+  times = lastCommitTimes(),
+) {
+  const out = new Map();
+  if (!times) return out;
+  for (const [url, paths] of sources) {
+    const d = lastmodOf(paths, times);
+    if (d) out.set(url, d);
+  }
+  return out;
+}
+
+export function buildSitemap(urls = indexableUrls(), lastmods = new Map()) {
+  const body = urls
+    .map((u) => {
+      const d = lastmods.get(u);
+      return `  <url><loc>${u}</loc>${d ? `<lastmod>${d}</lastmod>` : ""}</url>`;
+    })
+    .join("\n");
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${body}\n</urlset>\n`;
 }
 
@@ -1349,12 +1498,21 @@ if (isMain) {
     );
 
     const all = allIndexableUrls(index, beans);
-    writeFileSync(join(site, "public/sitemap.xml"), buildSitemap(all));
+    const lastmods = sitemapLastmods(pageSources(index, beans));
+    writeFileSync(
+      join(site, "public/sitemap.xml"),
+      buildSitemap(all, lastmods),
+    );
     console.log(
       `gen: sitemap.xml — ${all.length} URLs ` +
         `(${INDEXABLE_PATHS.length} hand-written + ${corpusPageSlugs(index).length} corpus ` +
-        `+ ${beanPages.length} bean)`,
+        `+ ${beanPages.length} bean), ${lastmods.size} with <lastmod>`,
     );
+    if (lastmods.size < all.length)
+      console.warn(
+        `gen: WARN ${all.length - lastmods.size} sitemap URLs have no <lastmod> ` +
+          "(a shallow clone or uncommitted sources)",
+      );
 
     // The curated data behind 06-vocabularies' open registries, served from the
     // canonical host so adopters sync the same slugs the seed tables illustrate.

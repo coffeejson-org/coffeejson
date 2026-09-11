@@ -22,7 +22,32 @@ export declare const SHARE_PATH: string;
 /** The indexable URL set — both the sitemap and the robots test derive from it. */
 export declare const INDEXABLE_PATHS: readonly string[];
 export declare function indexableUrls(): string[];
-export declare function buildSitemap(urls?: readonly string[]): string;
+/** Source paths of each hand-written page. A directory includes all files under it. */
+export declare const PAGE_SOURCES: Readonly<Record<string, readonly string[]>>;
+/** Each sitemap URL → the source paths of its content. */
+export declare function pageSources(
+  index?: readonly IndexEntry[],
+  beans?: readonly BeanEntry[],
+): Map<string, readonly string[]>;
+/** Parses `git log --name-only --format=@%ct` into path → newest commit time (Unix seconds). */
+export declare function parseGitLog(log: string): Map<string, number>;
+/** The commit time of each path. `null` for a shallow clone or when git fails. */
+export declare function lastCommitTimes(
+  cwd?: string,
+): Map<string, number> | null;
+/** `YYYY-MM-DD` of the newest commit to any source, or undefined. */
+export declare function lastmodOf(
+  sources: readonly string[],
+  times: ReadonlyMap<string, number>,
+): string | undefined;
+export declare function sitemapLastmods(
+  sources?: ReadonlyMap<string, readonly string[]>,
+  times?: ReadonlyMap<string, number> | null,
+): Map<string, string>;
+export declare function buildSitemap(
+  urls?: readonly string[],
+  lastmods?: ReadonlyMap<string, string>,
+): string;
 export declare function buildLlmsTxt(): string;
 /** `/agents.md` — this site described for an agent, with the guide inlined. */
 export declare function buildAgentsMd(guide?: string): string;

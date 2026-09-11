@@ -12,3 +12,9 @@ export declare const CRAWLERS_UNCHANGED: string;
 export declare function licenseLine(...clauses: string[]): string;
 /** Joins the given license clauses with the privacy sentence, always last. */
 export declare function footerHtml(...clauses: string[]): string;
+/** The spec on GitHub. */
+export declare const SPEC_URL: string;
+/** Footer links as `[href, label]`, in display order. */
+export declare const FOOTER_LINKS: readonly (readonly [string, string])[];
+/** The footer: the links row, then the license line. */
+export declare function siteFooter(...clauses: string[]): string;

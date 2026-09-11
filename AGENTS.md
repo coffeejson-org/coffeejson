@@ -55,7 +55,9 @@ Four places, or it does not build: the shell at `apps/site/<name>/index.html`,
 the body at `apps/site/src/pages/<name>.ts`, an entry in `tools/prerender.ts`,
 and an input in `vite.config.ts`. Add the path to `INDEXABLE_PATHS` in
 `tools/gen.mjs` as well — that one array feeds both the sitemap and the check
-that robots.txt never blocks a URL the sitemap advertises.
+that robots.txt never blocks a URL the sitemap advertises. Also add the page's
+source files to `PAGE_SOURCES`. The sitemap `<lastmod>` comes from their git
+history.
 
 Three more lists are hardcoded, and a page missing from them ships with **no
 test failing** — the silent gap, so add the page to all three: `PAGES` in

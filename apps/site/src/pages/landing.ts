@@ -6,6 +6,7 @@ import {
   LICENSE_SITE,
   PACKAGES,
   QUOTED_PROSE,
+  SPEC_URL,
 } from "../lib/footer.mjs";
 import { SAMPLE_DOC, SAMPLE_TEXT } from "../lib/sample";
 import { siteHeader } from "../lib/site-header.mjs";
@@ -113,7 +114,7 @@ export const landingBody = (): string => `
   <h2>Read the spec</h2>
   <ul>
     <li><a href="${GUIDE}" rel="noopener">Integration guide</a> — the consumer and producer checklists</li>
-    <li><a href="https://github.com/coffeejson-org/coffeejson/tree/main/docs/spec" rel="noopener">Specification</a> — envelope, Recipe, Bean, Tasting, vocabularies</li>
+    <li><a href="${SPEC_URL}" rel="noopener">Specification</a> — envelope, Recipe, Bean, Tasting, vocabularies</li>
     <li><a href="/schema/1.0">JSON Schema</a> — draft 2020-12</li>
     <li><a href="https://github.com/coffeejson-org/coffeejson/blob/main/docs/transport.md" rel="noopener">Transport</a> — file, share URL, QR</li>
     <li><a href="https://github.com/coffeejson-org/coffeejson/tree/main/fixtures" rel="noopener">Fixture corpus</a> — valid and invalid, checked in CI</li>
