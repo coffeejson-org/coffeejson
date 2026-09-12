@@ -1,5 +1,5 @@
 {
-  "coffeejson": "1.1",
+  "coffeejson": "1.2",
   "recipes": [
     {
       "title": "Unknown registry values from a later minor",
@@ -15,7 +15,7 @@
         }
       ],
       "additions": [
-        { "type": "oat_milk", "note": "an addition type no 1.0 registry lists" }
+        { "type": "oat_milk", "note": "an addition type no 1.1 registry lists" }
       ]
     }
   ],

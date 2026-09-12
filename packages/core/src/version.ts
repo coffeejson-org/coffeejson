@@ -1,7 +1,7 @@
 // Values, not literals retyped at each site that emits or gates a document.
 
 /** The version a document emitted by this build states. */
-export const FORMAT_VERSION = "1.0";
+export const FORMAT_VERSION = "1.1";
 
 /**
  * The major this build reads. Minors are forward-compatible by contract: a `1.7`

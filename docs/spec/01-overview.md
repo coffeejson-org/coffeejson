@@ -1,11 +1,14 @@
-# CoffeeJSON v1.0 — Overview
+# CoffeeJSON v1.1 — Overview
 
 CoffeeJSON is a JSON document format for a coffee **brew** and the **coffee**
 it was made from. A document travels between applications, languages, and
 locales without loss.
 
-This is version **1.0** of the specification, early and still open to change
-in place ([Versioning § What you can rely on today](07-versioning.md#what-you-can-rely-on-today)).
+This text is version **1.1.0** of the specification. A document declares
+`"1.1"`, because the wire value carries the major and the minor only
+([Envelope § `coffeejson`](02-envelope.md#coffeejson)). The format is early and
+still open to change in place
+([Versioning § What you can rely on today](07-versioning.md#what-you-can-rely-on-today)).
 The format is small on purpose. Reserved areas for future growth are named in
 [Versioning § Reserved extensions](07-versioning.md#reserved-extensions).
 
@@ -64,7 +67,7 @@ bindings are described in the supporting document
   rated.
 - **Not a sensory-evaluation format.** A roaster's tasting notes are carried
   as *attributed claims* and a drinker's as *attributed opinion*. A structured
-  cupping score is a reserved extension, not part of v1.0 (see
+  cupping score is a reserved extension, not part of v1.1 (see
   [Versioning § Reserved extensions](07-versioning.md#reserved-extensions)).
 - **Not a grinder-conversion engine.** Grind settings are captured as the
   sender expressed them. The format never converts one grinder's scale to
@@ -149,7 +152,7 @@ and how easy the format is to adopt.
    precise consumer obligation is the
    [forward-compatibility contract](#the-forward-compatibility-contract-summary).
    (While there is one implementation the format may still evolve in place —
-   [Versioning § Evolving 1.0 in place](07-versioning.md#evolving-10-in-place).
+   [Versioning § Evolving 1.x in place](07-versioning.md#evolving-1x-in-place).
    From first outside adoption this principle binds unconditionally.)
 
 8. **No lock-in.** CoffeeJSON is [CC0](https://creativecommons.org/publicdomain/zero/1.0/)

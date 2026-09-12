@@ -1,7 +1,7 @@
 # Recipe
 
 A **Recipe** describes the parameters of a brew. It is the primary entity of
-CoffeeJSON v1.0. It and the [Bean](04-bean.md) are the two co-equal entities at
+CoffeeJSON v1.1. It and the [Bean](04-bean.md) are the two co-equal entities at
 the top level of a [document](02-envelope.md), each carried in its own array
 (`recipes`, `beans`). A [Tasting](05-tasting.md) evaluates a brew of one and is
 carried in a third.
@@ -171,7 +171,7 @@ is its water minus what the bed retains. A yield-basis recipe is the one that
 Espresso is the motivating case.
 
 Multi-phase pressure / flow **profiles**, a named machine-executable curve
-(Decent-style shot files, Fellow Aiden profiles), are not modeled in v1.0. A
+(Decent-style shot files, Fellow Aiden profiles), are not modeled in v1.1. A
 producer describes phases in step `instruction` text. Structured profiling is
 reserved by name in [Versioning § Reserved
 extensions](07-versioning.md#reserved-extensions).
@@ -661,10 +661,13 @@ Consumer behavior:
   registry cannot supply it and dropping it loses what the document knew.
 - With a known `id`, a producer **SHOULD** omit `brand` and `model`: the
   registry is authoritative for both, and repeating them only drifts from it.
-- For `id: "custom"`, a consumer shows the producer's `label` verbatim.
+- For `id: "custom"`, a consumer shows the producer's `label` verbatim, and
+  **SHOULD** render `variant` beside it when the label does not already name
+  it. A source often writes the variant into the label it states.
 - An unknown (non-`"custom"`) `id` is treated like `"custom"`: fall back to
-  `label`, then to `brand` / `model`. A consumer **MUST NOT** fail on an
-  unrecognized `id`.
+  `label`, then to `brand` / `model`, then to the `id` itself. A consumer
+  **MUST NOT** fail on an unrecognized `id`, and showing the id it cannot
+  resolve says more than showing nothing.
 
 The registry of known slugs is curated, open, and non-exhaustive by design.
 `id: "custom"` plus `label` always works, so missing coverage never blocks a
@@ -679,7 +682,7 @@ A V60 (device) is used with a `pour_over` (technique). An AeroPress (device)
 can be used `immersion` or `pour_over`. Keeping them separate prevents
 conflating "what I used" with "how I used it."
 
-The v1.0 values are stable machine ids. Consumers localize them:
+The v1.1 values are stable machine ids. Consumers localize them:
 
 `pour_over` · `immersion` · `aeropress` · `french_press` · `moka` ·
 `cold_brew` · `siphon` · `cezve` · `drip` · `capsule` · `espresso` · `other`
@@ -734,7 +737,7 @@ Grind is the one place CoffeeJSON refuses to be clever:
   across grinders in a way `setting` never is, and coarser-grained than
   `microns_approx`. A consumer that meets an unrecognized `size` value, or no
   `size` at all, falls back to `setting` / `microns_approx` for display.
-- **No cross-grinder conversion is defined or expected in v1.0.** A consumer
+- **No cross-grinder conversion is defined or expected in v1.1.** A consumer
   shows the sender's `grinder` / `setting` / `microns_approx` / `size` as
   stated and lets the user dial in their own equipment.
 

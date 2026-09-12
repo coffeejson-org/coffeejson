@@ -73,7 +73,7 @@ test("gearLabel: a known id resolves against the registry, and variant rides alo
     "Hario V60",
   );
   expect(gearLabel({ id: "custom", label: "Modbar", variant: "AV" })).toBe(
-    "Modbar",
+    "Modbar AV",
   );
   expect(gearLabel({ id: "modbar-av", brand: "Modbar", model: "AV" })).toBe(
     "Modbar AV",
@@ -88,15 +88,49 @@ test("gearLabel: a known id resolves against the registry, and variant rides alo
   expect(gearLabel({ id: "hario-v60", variant: "" })).toBe("Hario V60");
 });
 
-test("gearLabel: a producer's stated label is shown verbatim, never doubled by variant", () => {
-  // 03-recipe.md § Gear object: for custom and unknown ids, the label is shown
-  // as written.
+test("gearLabel: an empty label states nothing, and `custom` is never a name", () => {
+  expect(gearLabel({ id: "custom", label: "", variant: "02" })).toBe("");
+  // An empty label must not swallow the brand and model behind it.
+  expect(
+    gearLabel({ id: "custom", label: "", brand: "Acme", model: "Mill" }),
+  ).toBe("Acme Mill");
+  // `custom` is the escape hatch for off-registry gear, never a product name.
+  expect(gearLabel({ id: "custom", variant: "02" })).toBe("");
+  expect(gearLabel({ id: "not-registered", variant: "02" })).toBe(
+    "not-registered 02",
+  );
+});
+
+test("gearLabel: an id naming an Object.prototype member misses the map", () => {
+  // `id` comes off the wire, so the lookup must not reach the prototype chain.
+  expect(gearLabel({ id: "constructor", variant: "01" })).toBe(
+    "constructor 01",
+  );
+  expect(gearLabel({ id: "toString", label: "My Dripper" })).toBe("My Dripper");
+  expect(gearLabel({ id: "valueOf" })).toBe("valueOf");
+  expect(gearLabelsFor("constructor")).toBe(gearLabelsFor("en"));
+});
+
+test("gearLabel: a stated label takes the variant only when it does not name it", () => {
+  // 03-recipe.md § Gear object: for custom and unknown ids the label is shown as
+  // written, and the variant joins it only when the label leaves it out.
   expect(
     gearLabel({ id: "custom", label: "Hario V60 02", variant: "02" }),
   ).toBe("Hario V60 02");
   expect(
     gearLabel({ id: "not-registered", label: "Bench dripper", variant: "L" }),
-  ).toBe("Bench dripper");
+  ).toBe("Bench dripper L");
+  // The match is bounded: the `S` inside "Switch" is not the variant `S`, and a
+  // label that names it without spaces around it still counts.
+  expect(
+    gearLabel({ id: "custom", label: "Switch dripper", variant: "S" }),
+  ).toBe("Switch dripper S");
+  expect(
+    gearLabel({ id: "x-unknown", label: "ドリッパー01（V60）", variant: "01" }),
+  ).toBe("ドリッパー01（V60）");
+  expect(gearLabel({ id: "custom", label: "Bench 185B", variant: "185" })).toBe(
+    "Bench 185B 185",
+  );
   // A name built from brand and model gets the variant.
   expect(
     gearLabel({

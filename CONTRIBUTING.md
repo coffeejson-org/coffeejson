@@ -20,7 +20,7 @@
    each vocabulary's stated rule; nothing defined is removed, repurposed, or
    made required inside 1.x ([Versioning](docs/spec/07-versioning.md#versioning)).
    While there is one implementation it may still evolve in place ([Versioning §
-   Evolving 1.0 in place](docs/spec/07-versioning.md#evolving-10-in-place)).
+   Evolving 1.x in place](docs/spec/07-versioning.md#evolving-1x-in-place)).
 4. **When in doubt, leave it out.** An optional field can always be added
    later; it can never be cleanly removed.
 

@@ -3,11 +3,14 @@
 Changes to the CoffeeJSON **format** — the schema, the spec prose, and the
 fixture corpus. The SDKs version independently
 ([Versioning & conformance](docs/spec/07-versioning.md#what-you-can-rely-on-today)).
-The `coffeejson` version string tracks the format, and 1.x grows additively in
-place ([Versioning](docs/spec/07-versioning.md)); layout follows
-[Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+The `coffeejson` version string tracks the format
+([Versioning](docs/spec/07-versioning.md)). A wording-only release of the spec
+takes a patch number, as in `1.1.1`. Documents declare `major.minor` only.
+While the format [evolves in place](docs/spec/07-versioning.md#evolving-1x-in-place),
+a breaking change ships as the next minor, and its entry says **Breaking**.
+The layout follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased]
+## [1.1] — 2026-09-11
 
 ### Added
 
@@ -47,17 +50,30 @@ place ([Versioning](docs/spec/07-versioning.md)); layout follows
 
 ### Changed
 
+- **A document that uses `variant` declares `"1.1"`.** A document that uses
+  only 1.0 members can declare either, so **the corpus declares `"1.1"`
+  throughout**: it is written against the current format, which is what the
+  reference packages stamp
+  ([Envelope § `coffeejson`](docs/spec/02-envelope.md#coffeejson)). Fixtures
+  keep their own stamps, because a fixture's version is part of what it
+  tests. The one for unknown registry values moves from `"1.1"` to `"1.2"`,
+  so it still comes from a later minor.
+- **[Versioning](docs/spec/07-versioning.md) states the release rules.** The
+  spec text carries a patch number, as in `1.1.0`. A patch release fixes
+  wording only. While the format evolves in place, a breaking change ships as
+  the next minor and is marked **Breaking** here. `2.0` is kept for a
+  fundamental change.
+- **A stated `label` takes `variant` beside it when it does not already name
+  it.** For `custom` and an id the registry does not carry, the producer's
+  label is still shown as written, and a variant the label leaves out is
+  rendered after it rather than dropped
+  ([Recipe § Gear object](docs/spec/03-recipe.md#gear-object)).
 - **A document that names registered gear omits `brand` and `model`.** The
   registry is authoritative for both, and a copy in the document only drifts
   from it. `label` keeps its own job — what the source itself called the thing,
   which is worth carrying when it wrote it in its own language. The strict
   authoring schema enforces the omission for registered ids and leaves it alone
   for an id the registry does not carry, which still needs the fallback.
-- **`gearLabel` in `@coffeejson/core` resolves a known id** against the
-  registry's own labels and renders `variant` beside that label, rather than
-  reading the display string off the document. The bundled map is keyed by
-  language tag. For `custom` and an unknown id, it shows the producer's `label`
-  as written. Without a `label`, it shows `brand` and `model`, then `variant`.
 
 ### Removed
 
@@ -72,6 +88,12 @@ place ([Versioning](docs/spec/07-versioning.md)); layout follows
 
 ### Fixed
 
+- **The gear matching rule never stated its last fallback.** A document can
+  name gear with an id and nothing else, and the id is then the whole of what
+  it says, so a consumer shows it. Both reference implementations already did.
+  The prose stopped at `brand` / `model`
+  ([Recipe § Gear object](docs/spec/03-recipe.md#gear-object),
+  [Vocabularies § Gear registry](docs/spec/06-vocabularies.md#gear-registry)).
 - **The [gear registry](docs/spec/06-vocabularies.md#gear-registry) chapter
   contradicted itself.** Its granularity rule told a producer to put a size in
   `model`; its matching rule three paragraphs later said `model` is the fallback

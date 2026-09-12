@@ -61,8 +61,11 @@ This follows the convention, shared with OpenAPI and BeerJSON, where the root
 marker names the spec and its version. It is **not** a per-recipe revision
 number, and it is not a property of any individual recipe.
 
-The value is a [semantic version](07-versioning.md). For v1.0 the value is the
-string `"1.0"`. A consumer determines support by the **major** component:
+The value is a [semantic version](07-versioning.md) with a major and a minor
+component only. A document that uses a member added in 1.1, such as `variant`
+on the [Gear object](03-recipe.md#gear-object), declares `"1.1"`. A document
+that uses only 1.0 members can declare `"1.0"` or `"1.1"`. A consumer
+determines support by the **major** component:
 
 - A consumer **MAY** reject a document whose major version it does not
   implement. It **SHOULD** show a clear "unsupported version" message rather
@@ -70,6 +73,10 @@ string `"1.0"`. A consumer determines support by the **major** component:
 - A consumer **SHOULD** accept a document with the same major version and a
   newer minor version. The [forward-compatibility contract](01-overview.md)
   tells it to ignore what it does not recognize.
+
+While the format [evolves in place](07-versioning.md#evolving-1x-in-place), a
+minor can still relocate a field, so a consumer that stores documents
+**SHOULD** record the minor it read them under.
 
 ### `generator`
 

@@ -42,7 +42,7 @@ test("wire types name every field the published schema defines", () => {
     id: "morning",
     title: "V60",
     coffee: { value: 15, unit: "gram" },
-    basket: { id: "vst-18g", label: "VST 18 g" },
+    basket: { id: "vst-precision", variant: "18 g" },
     filter: { material: "paper", label: "Hario tabbed" },
     steps: [step],
   };

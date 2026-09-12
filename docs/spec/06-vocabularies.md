@@ -129,7 +129,7 @@ Used by every [Measurement](03-recipe.md#measurement-object) and by
 | Temperature | `fahrenheit` | `celsius = (fahrenheit − 32) × 5⁄9` |
 | Length | `meter` | already meters |
 | Length | `foot` | `1 foot = 0.3048 meter` |
-| Pressure | `bar` | already bar (v1.0's only pressure unit) |
+| Pressure | `bar` | already bar (v1.1's only pressure unit) |
 
 **Volume is water-only, and unconvertible by design.** `milliliter` is
 accepted by [`recipe.water`](03-recipe.md#water-quantity) and
@@ -475,8 +475,9 @@ Seed entries (illustrative, not the complete list):
 substitute its own localized label, and **SHOULD** render `variant` beside it —
 `variant` is the one thing the registry cannot supply, so a consumer that drops
 it loses what the document knew. For `id: "custom"` or an unknown `id` it falls
-back to `label`, then to `brand` / `model`. It **MUST NOT** fail on an
-unrecognized `id`.
+back to `label`, then to `brand` / `model`, then to the `id` itself, and
+**SHOULD** render `variant` beside a stated `label` that does not already name
+it. It **MUST NOT** fail on an unrecognized `id`.
 
 **With a known `id`, a producer SHOULD omit `brand` and `model`** — the registry
 is authoritative for both, and a document that repeats them only drifts from it.
@@ -648,7 +649,7 @@ consumer **MUST NOT** merge them.
 
 `bean.drying_method` records how the coffee was dried (for example
 `raised_bed`, `patio`, `covered_patio`, `mechanical`), distinct from
-`process`. **No controlled vocabulary in v1.0.** It is a free string. A
+`process`. **No controlled vocabulary in v1.1.** It is a free string. A
 consumer renders it (for example by Title-casing a slug) and **MUST** pass an
 unrecognized value through unchanged. A future registry may curate common
 methods. Adding one is a data change, not a version bump.
@@ -658,7 +659,7 @@ methods. Adding one is a data change, not a version bump.
 `bean.certifications[]` carries roaster-declared certification /
 production-claim strings (for example `organic`, `fair_trade`,
 `rainforest_alliance`, `kosher`, `biodynamic`). **No controlled vocabulary in
-v1.0.** They are free strings, a *stated* claim, never an independent audit.
+v1.1.** They are free strings, a *stated* claim, never an independent audit.
 A consumer **MUST** pass unknown values through unchanged. A future registry
 may normalize common claims.
 

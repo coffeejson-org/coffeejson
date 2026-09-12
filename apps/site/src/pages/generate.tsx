@@ -456,7 +456,7 @@ function Preview({ state }: { state: PreviewState }) {
   const { doc } = state;
   return (
     <>
-      <div className="banner">Valid CoffeeJSON 1.0.</div>
+      <div className="banner">Valid CoffeeJSON {FORMAT_VERSION}.</div>
       <CoffeeJSONView
         doc={doc}
         renderEmpty={() => (

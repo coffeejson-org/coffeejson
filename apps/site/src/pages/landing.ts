@@ -40,7 +40,7 @@ export const landingBody = (): string => `
     <a class="btn btn--ghost" href="${GUIDE}" rel="noopener">Make your app read it</a>
   </div>
 
-  <div class="banner"><strong>Early.</strong> CoffeeJSON 1.0 is settled in shape and still being polished —
+  <div class="banner"><strong>Early.</strong> CoffeeJSON 1.1 is settled in shape and still being polished —
   <a href="https://github.com/coffeejson-org/coffeejson/issues" rel="noopener">tell us
   where the model is wrong</a>.</div>
 

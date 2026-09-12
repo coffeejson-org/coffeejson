@@ -502,7 +502,7 @@
         "unit": {
           "type": "string",
           "enum": ["bar"],
-          "description": "Canonical pressure unit identifier: bar (v1.0's only pressure unit)."
+          "description": "Canonical pressure unit identifier: bar (v1.1's only pressure unit)."
         }
       }
     },

@@ -2,7 +2,7 @@
 
 A **Bean** describes the identity of a coffee: where it comes from, how it was
 processed, how it was roasted, and what the roaster says it tastes like. In
-v1.0 a Bean is a **top-level entity**, carried as an element of the `beans`
+v1.1 a Bean is a **top-level entity**, carried as an element of the `beans`
 array in the [document envelope](02-envelope.md). A one-element `beans` array
 shares a single coffee. A multi-element array carries a catalog of distinct
 coffees. Both are independent of any recipe. When a one-element `beans` array
@@ -190,7 +190,7 @@ about a particular bag's age, which would be inventory state (principle 4).
 `production_roaster` names the roasting **machine** the coffee is produced on:
 `"Diedrich CR-70"`, `"Loring S70 Peregrine"`, `"Probat P25"`. Roasters
 increasingly print it beside process and drying method as production
-provenance. It is a Tier-2 declared claim and a **free string** in v1.0 (no
+provenance. It is a Tier-2 declared claim and a **free string** in v1.1 (no
 machine registry). It is distinct from `roaster`, the company. A consumer
 shows it verbatim or ignores it.
 
@@ -220,14 +220,14 @@ See [Vocabularies § Varietal registry](06-vocabularies.md#varietal-registry).
 
 `roaster_notes` are tasting descriptors **as claimed by the roaster**: a
 Tier-3 attributed claim, never a bare assertion that the coffee *is*
-blueberry. In v1.0 they are free strings. A later revision may align them to
+blueberry. In v1.1 they are free strings. A later revision may align them to
 the Coffee Taster's Flavor Wheel lexicon, published by the Specialty Coffee
 Association and World Coffee Research (see [Versioning § Reserved
 extensions](07-versioning.md#reserved-extensions)). Until then, a consumer
 **MUST** accept arbitrary strings.
 
 `roaster_notes` is distinct from a structured cupping score, which is a
-reserved `tasting` extension and not part of v1.0.
+reserved `tasting` extension and not part of v1.1.
 
 ### Description
 
@@ -246,7 +246,7 @@ example `raised_bed` (African / raised beds), `patio`, `covered_patio`,
 `mechanical` (guardiola / drum). It is distinct from `process`, the
 post-harvest ferment/wash decision. Two washed coffees can be patio-dried and
 raised-bed-dried, and roasters increasingly print it as structured provenance
-rather than prose. In v1.0 it is a **free string** with no controlled
+rather than prose. In v1.1 it is a **free string** with no controlled
 vocabulary. A consumer that does not recognize a value **MUST** pass it
 through unchanged. A later revision may introduce a `drying_method` registry,
 a data change rather than a version bump (see [Versioning § Registry
@@ -256,7 +256,7 @@ governance](07-versioning.md#registry-governance)).
 
 `certifications` is an array of **roaster-declared** certification or
 production-claim strings, for example `organic`, `fair_trade`,
-`rainforest_alliance`, `kosher`, `biodynamic`, `regenerative_organic`. In v1.0
+`rainforest_alliance`, `kosher`, `biodynamic`, `regenerative_organic`. In v1.1
 they are **free strings**. A later vocabulary may normalize common claims. A
 certification here is a *stated claim on the bag* (Tier 2), never an
 independent audit. A consumer **MUST NOT** present it as verified, and

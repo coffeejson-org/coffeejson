@@ -121,7 +121,7 @@ export type PreferredExtraction = (typeof PREFERRED_EXTRACTIONS)[number];
 
 // Five unit enums, not one, because the schema constrains each dimension
 // separately: brew water accepts a volume that a dose never does, and pressure
-// has exactly one unit in 1.0. `Unit` is their union.
+// has exactly one unit in 1.1. `Unit` is their union.
 
 /** Coffee dose and beverage yield. */
 export const MASS_UNITS = ["gram", "ounce"] as const;
@@ -135,7 +135,7 @@ export type WaterUnit = (typeof WATER_UNITS)[number];
 export const TEMPERATURE_UNITS = ["celsius", "fahrenheit"] as const;
 export type TemperatureUnit = (typeof TEMPERATURE_UNITS)[number];
 
-/** Brew pressure. One unit in 1.0, and the set exists so a second one is a visible change. */
+/** Brew pressure. One unit in 1.1, and the set exists so a second one is a visible change. */
 export const PRESSURE_UNITS = ["bar"] as const;
 export type PressureUnit = (typeof PRESSURE_UNITS)[number];
 

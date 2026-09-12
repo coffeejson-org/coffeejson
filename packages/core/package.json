@@ -1,6 +1,6 @@
 {
   "name": "@coffeejson/core",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "license": "Apache-2.0",
   "description": "Framework-free TypeScript SDK for CoffeeJSON: wire types, payload codec, tolerant normalize, formatters.",
   "type": "module",
@@ -38,7 +38,8 @@
   },
   "files": [
     "dist",
-    "schema"
+    "schema",
+    "CHANGELOG.md"
   ],
   "publishConfig": {
     "access": "public"

@@ -40,7 +40,7 @@ conforms to
 From a checkout of this repository, `pnpm install && pnpm -r build` produces
 `dist/`; depend on the package by path from there.
 
-- **Types** — wire interfaces for the v1.0 schema (`CoffeeJSONDocument`, `Recipe`, `Bean`, …).
+- **Types** — wire interfaces for the 1.1 format (`CoffeeJSONDocument`, `Recipe`, `Bean`, …).
 - **Codec** — `decodeScanned(text)` takes a scanned string in and returns a
   document or a stated reason. It parses the URL, requires `http(s)`, reads
   `?d=` and decodes, so the transport spec's steps are not yours to reassemble.

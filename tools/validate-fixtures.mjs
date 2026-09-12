@@ -602,6 +602,9 @@ const linkedMd = new Map(
     // of the graph the docs rely on.
     join(root, "packages", "core", "README.md"),
     join(root, "packages", "react", "README.md"),
+    // The package changelogs ship in the tarballs, so a dead link there ships too.
+    join(root, "packages", "core", "CHANGELOG.md"),
+    join(root, "packages", "react", "CHANGELOG.md"),
     ...mdFiles(join(root, "docs")).sort(),
   ].map((f) => [
     relative(root, f).split(sep).join("/"),

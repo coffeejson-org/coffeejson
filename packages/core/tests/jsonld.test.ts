@@ -244,7 +244,7 @@ test("gear maps to HowToTool: brewer, basket, and the grinder, label-or-brand/mo
         title: "x",
         coffee: { value: 18, unit: "gram" },
         brewer: { id: "custom", label: "Hario V60" },
-        basket: { id: "vst-18g", brand: "VST", model: "18 g" },
+        basket: { id: "acme-not-registered", brand: "VST", model: "18 g" },
         grind: {
           grinder: { id: "custom", brand: "Comandante", model: "C40" },
           setting: "22 clicks",

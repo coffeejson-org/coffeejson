@@ -412,7 +412,7 @@ export function buildLlmsTxt() {
     "## Machine-readable",
     "",
     link(
-      "JSON Schema (v1.0)",
+      "JSON Schema (1.x)",
       `${SITE_URL}/schema/1.0`,
       "The normative schema, served at its `$id`. Validate any document against this",
     ),

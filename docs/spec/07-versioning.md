@@ -8,13 +8,13 @@ about a package's API version.
 
 | Surface | Status | What that means for you |
 |---|---|---|
-| The wire format (`coffeejson: "1.0"`) | **Early, one implementation** | The shape is settled and validated against a fixture corpus. Fields may still be added; the meaning of a defined field will not quietly change. |
+| The wire format (`coffeejson: "1.1"`) | **Early, one implementation** | The shape is settled and validated against a fixture corpus. Fields may still be added; the meaning of a defined field will not quietly change. |
 | The JSON Schema at its `$id` | **Stable address** | `https://coffeejson.org/schema/1.0` keeps resolving, re-published in place as 1.x grows — see [The published schema](#the-published-schema). |
-| `@coffeejson/core`, `@coffeejson/react`, `coffeejson-swift` | **1.0.0, semver** | Reference implementations that track the format while it can still change in place. A breaking API change is a major bump; a format change in place ships as a package release. The Swift package models the subset its consumers use rather than the whole format. |
+| `@coffeejson/core`, `@coffeejson/react`, `coffeejson-swift` | **1.1.0, semver** | Reference implementations that track the format while it can still change in place. A breaking API change is a major bump; a format change in place ships as a package release. Each package states its own coverage in its README. |
 
 While CoffeeJSON has one implementation the format may still change shape in
 place. See [Evolving
-1.0 in place](#evolving-10-in-place) for what that latitude covers and when
+1.x in place](#evolving-1x-in-place) for what that latitude covers and when
 it ends. If you build during that window, pin a copy of the schema. The
 [changelog](../../CHANGELOG.md) and the dated schema snapshots are the signal.
 
@@ -22,6 +22,10 @@ it ends. If you build during that window, pin a copy of the schema. The
 
 The `coffeejson` envelope field carries the [semantic version](https://semver.org)
 of the specification a document conforms to.
+
+While the format [evolves in place](#evolving-1x-in-place), the rules in this
+section describe where 1.x is going, not what binds today. Read that section
+first. From first outside adoption these rules bind unconditionally.
 
 - **Within a major version**, every change is **additive and optional**.
   New optional fields and new enum values can be introduced. Consumers ignore
@@ -32,16 +36,17 @@ of the specification a document conforms to.
   field's type, repurposing a value, or making an optional field required are
   all breaking and would produce `2.0`.
 - The **minor** version increments when additive features are introduced.
-  There is no patch component on the wire. Editorial fixes to this document
-  that do not change the data model do not change the version a document
-  declares.
+- The specification text carries a **patch** component as well, as in
+  `1.1.0`. A patch release fixes wording only and never changes the data
+  model. A document declares `major.minor` only, so a patch release does not
+  change the version a document declares.
 
 **The required-unit trap.** A new [unit](06-vocabularies.md#units) is only
 additive for **optional** measurements. A consumer treats an unrecognized
 unit as absent ([Conformance](#conformant-consumer)). That is harmless on an
 optional field like `water_temp`, but on a **required** measurement it
-deletes the field. If a 1.1 added `kilogram` and a producer emitted it for
-`coffee`, every 1.0 consumer would read that recipe as having *no dose at
+deletes the field. If a 1.2 added `kilogram` and a producer emitted it for
+`coffee`, every 1.1 consumer would read that recipe as having *no dose at
 all*, which is unusable despite "additive" versioning. So a minor can add
 units usable on optional measurements. A unit intended for a required
 measurement (`coffee`, `water`, `yield`) is a breaking change in effect and
@@ -57,15 +62,17 @@ effect and waits for a major. A consumer that meets an unknown one anyway
 derives the effective basis from the quantities present
 ([Vocabularies § `basis`](06-vocabularies.md#basis)).
 
-### Evolving 1.0 in place
+### Evolving 1.x in place
 
-CoffeeJSON 1.0 has a single known implementer and no second consumer to keep
-compatible. While that holds, the format may evolve directly,
-relocating or removing a field included, without a version bump or a
-back-compatibility shim. The version stays `"1.0"`. The schema `$id` stays
-`https://coffeejson.org/schema/1.0`. The [changelog](../../CHANGELOG.md)
-records each change. This latitude ends at first outside adoption, after
-which the rules above apply unconditionally.
+CoffeeJSON 1.x has a single known implementer and no second consumer to keep
+compatible. While that holds, the format can change shape in place, and that
+includes relocating or removing a field. No back-compatibility shim ships with
+the change. A breaking change ships as the next minor, and its
+[changelog](../../CHANGELOG.md) entry says **Breaking**. `2.0` is kept for a
+fundamental change to the format. The schema `$id` stays
+`https://coffeejson.org/schema/1.0`, because it names the major line. This
+latitude ends at first outside adoption. After that, the rules above apply
+unconditionally.
 
 **Documents minted by that implementer exist in the wild.** A change in place
 costs a migration of whatever that producer serves, and the cost grows with
@@ -102,14 +109,14 @@ producer lint, never a conformance or import gate.
 
 ### Reserved extensions
 
-Some growth areas are **named but not defined** in v1.0. Naming them means
+Some growth areas are **named but not defined** in v1.1. Naming them means
 each can be added within the 1.x line without a breaking change. A producer
-**MUST NOT** emit reserved fields as if they were defined in v1.0. A consumer
+**MUST NOT** emit reserved fields as if they were defined in v1.1. A consumer
 that meets an unknown member ignores it, per the
 [forward-compatibility contract](01-overview.md#the-forward-compatibility-contract-summary).
 
 1. **A professional cup-scoring module.** The consumer half of this is in
-   v1.0. The [Tasting](05-tasting.md#fields) entity carries a drinker's
+   v1.1. The [Tasting](05-tasting.md#fields) entity carries a drinker's
    rating, the perceived extraction/strength axes, flavor descriptors and a
    measured `tds`. That completes the small composable graph (*recipe ↔ bean
    ↔ tasting*). A tasting is distinct from
@@ -125,13 +132,13 @@ that meets an unknown member ignores it, per the
    1–9 on another. A score without a declared system is a number a consumer
    can only misread. A scoring module names its system, its
    attributes and its scale, or it does not ship.
-2. **Pressure / flow profiling.** The espresso model itself is whole in v1.0:
+2. **Pressure / flow profiling.** The espresso model itself is whole in v1.1:
    method id, `basis`, `yield`, `pressure`, `preinfusion_s`, `basket`, and
    the `distribute` / `tamp` / `pull` step kinds
    ([Recipe § Espresso](03-recipe.md#espresso-dose--yield)). What stays
    reserved is the *dynamic* layer: a named, multi-phase, machine-executable
    pressure or flow profile (Decent-style shot files, a roaster's named
-   preset). v1.0 carries the nominal numbers and free-text phase
+   preset). v1.1 carries the nominal numbers and free-text phase
    instructions. A structured profile object waits for real consumer pull.
 3. **Descriptor normalization.** Aligning `roaster_notes` (and a future
    `tasting`) to the [Coffee Taster's Flavor Wheel](https://sca.coffee)
@@ -141,7 +148,7 @@ that meets an unknown member ignores it, per the
    strings.
 4. **A water profile.** A structured brew-water specification: TDS/hardness
    targets or a named mineral profile ("60 ppm", Third Wave Water). It is the
-   one brew variable recipes state that v1.0 does not model. Water travels
+   one brew variable recipes state that v1.1 does not model. Water travels
    only as mass and temperature. Waits for a producer/consumer that exchanges
    it.
 5. **A vendor-extension member `ext`.** The named home for *third-party*
@@ -151,7 +158,7 @@ that meets an unknown member ignores it, per the
    defines. It **SHOULD** carry the data under `ext`, keyed by a vendor
    identifier (`"ext": { "app.example": { … } }`), or propose the field for
    the format itself. `ext` contents are vendor-defined by construction, so it
-   is the one reserved name whose *use* is permitted today. Emitting it does not pretend a v1.0
+   is the one reserved name whose *use* is permitted today. Emitting it does not pretend a v1.1
    definition exists. The payoff is a clean growth path. A vendor field that
    proves out can be promoted to a defined optional field in a later minor,
    while the original `ext` data stays valid vendor data. Nothing renames.
@@ -197,7 +204,7 @@ plain `.json` file that contains exactly one CoffeeJSON
 
 ### Conformant document
 
-A document is **conformant** to CoffeeJSON 1.0 if:
+A document is **conformant** to CoffeeJSON 1.1 if:
 
 1. It is a JSON object with a `coffeejson` string whose major version is `1`.
 2. It contains **at least one** of `beans` or `recipes`, present and non-empty
@@ -228,7 +235,7 @@ too ([Envelope §
 Association](02-envelope.md#association-explicit-reference)). It serializes
 [derived step labels as absent](03-recipe.md). It does not emit reserved
 fields ([Reserved extensions](#reserved-extensions)) as if they were defined
-in v1.0.
+in v1.1.
 
 ### Conformant consumer
 
@@ -244,6 +251,10 @@ A consumer is conformant if it:
 - **preserves step array order** and shows, rather than fails on, step kinds
   it does not model;
 - never depends on the informational `generator` field.
+
+While the format evolves in place, a consumer that stores documents **SHOULD**
+record the minor it read them under. A minor can still relocate a field during
+that window, and the changelog marks such a release **Breaking**.
 
 A consumer **MAY** also validate against the
 [JSON Schema](../schema/coffeejson-1.0.schema.json), but the prose

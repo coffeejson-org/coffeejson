@@ -15,7 +15,7 @@ a QR code — and it arrives intact: dose, water, temperature, grind, and the
 pour schedule, in the reader's own units and language. Small enough to ride
 inside a QR code. Public domain.
 
-- **Status:** 1.0, early — settled in shape, and still open to change while there is one implementation ([what you can rely on today](docs/spec/07-versioning.md#what-you-can-rely-on-today)). Second implementations and field reports wanted.
+- **Status:** 1.1, early — settled in shape, and still open to change while there is one implementation ([what you can rely on today](docs/spec/07-versioning.md#what-you-can-rely-on-today)). Second implementations and field reports wanted.
 - **Spec:** [`docs/`](docs/README.md) · **Schema:** [`docs/schema/coffeejson-1.0.schema.json`](docs/schema/coffeejson-1.0.schema.json) · **Site:** [coffeejson.org](https://coffeejson.org)
 
 The smallest valid document — a title and the two required measurements:

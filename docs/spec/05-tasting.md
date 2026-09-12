@@ -2,7 +2,7 @@
 
 A **Tasting** is how one brewed cup turned out: the outcome of following a
 recipe, not the recipe itself. It is the third top-level entity of CoffeeJSON
-v1.0, carried as an element of the `tastings` array in the [document
+v1.1, carried as an element of the `tastings` array in the [document
 envelope](02-envelope.md) beside [Recipe](03-recipe.md) and
 [Bean](04-bean.md). It points back at what it evaluates: a
 [`recipe_ref`](#fields) at the brew, a [`bean_ref`](#fields) at the coffee.

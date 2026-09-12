@@ -15,7 +15,7 @@ app.innerHTML = `
   <h1>Validator</h1>
   <p class="muted">Paste a CoffeeJSON document, a share URL (<code>…/r?d=…</code>), or upload a
   <code>.json</code> file. Validation runs entirely in your browser against the
-  <a href="/schema/1.0">v1.0 JSON Schema</a>, then lints whatever passes against the stricter
+  <a href="/schema/1.0">1.x JSON Schema</a>, then lints whatever passes against the stricter
   <a href="/schema/authoring/1.0">authoring schema</a> — nothing is uploaded anywhere.</p>
   <p><label class="btn btn--ghost">Upload file<input type="file" id="file" class="visually-hidden" accept=".json,application/json"></label></p>
   <textarea id="input" class="field" placeholder='{"coffeejson": "${FORMAT_VERSION}", …}  or  https://coffeejson.org/r?d=…'></textarea>

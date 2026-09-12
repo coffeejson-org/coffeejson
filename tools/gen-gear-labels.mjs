@@ -40,13 +40,20 @@ export function renderGearLabels(gear) {
 // is right rather than merely convenient: most of these strings are brand and model
 // names that do not translate.
 
-export const GEAR_LABELS: Readonly<Record<string, Readonly<Record<string, string>>>> = Object.freeze({
-  en: Object.freeze({
-${body}
-  }),
-});
+// Both maps below carry a null prototype, like \`UNIT\` in format.ts: a \`lang\` tag and
+// a gear \`id\` both arrive off the wire, so a document naming \`constructor\` has to
+// miss rather than find the member \`Object.prototype\` supplies.
+const bare = <T extends object>(o: T): T => Object.assign(Object.create(null), o);
 
-/** The registry's labels for a document's \`lang\`, falling back to \`en\`. */
+export const GEAR_LABELS: Readonly<Record<string, Readonly<Record<string, string>>>> = Object.freeze(bare({
+  en: Object.freeze(bare({
+${body}
+  })),
+}));
+
+/** The registry's labels for a language tag, falling back to \`en\`. The tag is the
+ *  CONSUMER's locale, never a document's \`lang\`: the same gear reads the same way
+ *  whatever language the document was written in. */
 export function gearLabelsFor(lang?: string): Readonly<Record<string, string>> {
   if (typeof lang === "string") {
     const exact = GEAR_LABELS[lang];

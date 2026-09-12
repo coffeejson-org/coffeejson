@@ -82,6 +82,13 @@ export function formatRatio(ratio: number | null): string {
 }
 
 // Tolerant: `normalize` feeds it untrusted gear objects straight off the wire.
+/** Whether `text` already names `variant`, bounded so a run of letters or digits
+ *  around the match is a different word. */
+function namesVariant(text: string, variant: string): boolean {
+  const escaped = variant.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`(?<![A-Za-z0-9])${escaped}(?![A-Za-z0-9])`).test(text);
+}
+
 export function gearLabel(
   g: unknown,
   labels: Readonly<Record<string, string>> = gearLabelsFor(),
@@ -89,7 +96,9 @@ export function gearLabel(
   if (typeof g !== "object" || g === null || Array.isArray(g)) return "";
   const o = g as Record<string, unknown>;
   const id = typeof o["id"] === "string" ? o["id"] : "";
-  const label = typeof o["label"] === "string" ? o["label"] : null;
+  // An empty label states nothing, so it is absent rather than a name of "".
+  const label =
+    typeof o["label"] === "string" && o["label"] !== "" ? o["label"] : null;
   const brand = typeof o["brand"] === "string" ? o["brand"] : null;
   const model = typeof o["model"] === "string" ? o["model"] : null;
   const brandModel = [brand, model].filter(Boolean).join(" ");
@@ -98,9 +107,24 @@ export function gearLabel(
   // edge — a document naming registered gear carries none. Only `custom` and an
   // unrecognized id use what the producer wrote. A stated label is shown as
   // written, because it can already contain the variant.
-  const known = id && id !== "custom" ? labels[id] : undefined;
-  if (known === undefined && label !== null) return label;
-  const base = known ?? (brandModel || id);
+  // An own-property check, because a caller may pass a plain object as `labels` and
+  // an `id` off the wire can name a member `Object.prototype` supplies. Spelled the
+  // long way: `Object.hasOwn` needs a newer `lib` than this package targets.
+  const own = Object.prototype.hasOwnProperty;
+  const known =
+    id && id !== "custom" && own.call(labels, id) ? labels[id] : undefined;
+  if (known === undefined && label !== null) {
+    // A stated label often already names the variant, so it is added only when the
+    // label leaves it out. The match is bounded: an `S` inside "Switch" is not the
+    // variant `S`.
+    const stated = typeof o["variant"] === "string" ? o["variant"] : "";
+    return stated && !namesVariant(label, stated)
+      ? `${label} ${stated}`
+      : label;
+  }
+  // `custom` is the escape hatch for off-registry gear, never a product name, so it
+  // is the one id never shown as one.
+  const base = known ?? (brandModel || (id === "custom" ? "" : id));
   if (!base) return "";
   // The registry names the family; `variant` names which one of it, and no lookup
   // can supply it — so a consumer that drops it loses what the document knew.
