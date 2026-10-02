@@ -27,6 +27,11 @@ import {
 } from "../lib/builder";
 import { LICENSE_SITE, PACKAGES, siteFooter } from "../lib/footer.mjs";
 import { documentFromInput } from "../lib/input-document";
+import {
+  mountLabelPanel,
+  resetLabelDate,
+  updateLabelPanel,
+} from "../lib/label-sheet";
 import { saveCta, wireSaveCta } from "../lib/save";
 import { esc, plural } from "../lib/text.mjs";
 import type { ValidationIssue } from "../lib/validate";
@@ -111,6 +116,9 @@ function loadDocumentIntoForm(
   recipes.splice(0, recipes.length, ...state.recipeForms);
   beanOpen = Object.keys(buildBean(bean)).length > 0;
   touched = true;
+  // A loaded document is another coffee, so a sheet date picked for the last
+  // one does not carry over.
+  resetLabelDate();
   // The spec's re-authoring honesty rule, applied to our own builder: editing here
   // re-authors the document without whatever the form cannot carry.
   const rebuilt = buildDocument({
@@ -315,6 +323,9 @@ function beanPanelHtml(): string {
     ${beanField("URL", "url")}
     ${beanField("Process", "process")}
     ${beanField("Roast level", "roastLevel")}
+    ${beanField("Roast date", "roastDate", 'type="date"')}
+    ${beanField("Rest days, from", "restMin", 'inputmode="numeric"')}
+    ${beanField("Rest days, to", "restMax", 'inputmode="numeric"')}
     ${beanField("Description", "description")}
     <h3>Origin</h3>
     <ol class="steps">${originRowsForm()}</ol>
@@ -399,6 +410,7 @@ function formHtml(): string {
   return `<div class="row">
       <button class="btn btn--ghost" id="clearform">Clear the form</button>
       <button class="btn btn--ghost" id="loadsample">Load the example</button>
+      <button class="btn btn--ghost" id="beanonly">Bean only</button>
     </div>
     ${beanPanelHtml()}
     ${recipes.map((_, ri) => recipeHtml(ri)).join("")}
@@ -498,6 +510,16 @@ function refreshFeedback(): void {
   });
   renderPreview();
   syncJsonFromForm();
+  refreshLabels();
+}
+
+// The label panel prints the document the preview shows, so it follows the same
+// state, and a document with problems has no labels.
+function refreshLabels(): void {
+  const el = app.querySelector<HTMLElement>("#labelpanel");
+  if (!el) return;
+  const state = previewState();
+  void updateLabelPanel(el, state.kind === "valid" ? state.doc : null);
 }
 
 function renderAll(): void {
@@ -508,13 +530,17 @@ function renderAll(): void {
     browser.</p>
     <div class="gen-layout">
       ${jsonPanelHtml()}
-      <section class="card gen-preview" aria-label="Preview"><h2>Preview</h2><div id="preview"></div></section>
+      <section class="card gen-preview" aria-label="Preview"><h2>Preview</h2><div id="preview"></div><div id="labelpanel" hidden></div></section>
       <div id="formhost" class="gen-form">${formHtml()}</div>
     </div>
     ${siteFooter(LICENSE_SITE, PACKAGES)}`;
   previewRoot = createRoot(app.querySelector<HTMLElement>("#preview")!);
   wireJsonPanel();
   wireForm();
+  mountLabelPanel(app.querySelector<HTMLElement>("#labelpanel")!, () => {
+    const state = previewState();
+    return state.kind === "valid" ? state.doc : null;
+  });
   refreshFeedback();
 }
 
@@ -537,6 +563,7 @@ function replaceState(
   beanOpen = false;
   touched = nowTouched;
   jsonNotice = "";
+  resetLabelDate();
   renderAll();
 }
 
@@ -547,6 +574,16 @@ function wireForm(): void {
   app
     .querySelector("#loadsample")!
     .addEventListener("click", () => replaceState(sampleRecipes(), true));
+  // A bag that states the coffee and nothing else has no recipe form at all.
+  // The bean panel opens, because it is now the whole document. The bean itself
+  // is kept — clearing it is what `Clear the form` is for.
+  app.querySelector("#beanonly")!.addEventListener("click", () => {
+    recipes.splice(0, recipes.length);
+    beanOpen = true;
+    touched = Object.keys(buildBean(bean)).length > 0;
+    jsonNotice = "";
+    renderAll();
+  });
 
   app
     .querySelector<HTMLDetailsElement>("#beanpanel")!

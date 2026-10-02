@@ -50,6 +50,11 @@ export interface BeanFormState {
   url: string;
   process: string;
   roastLevel: string;
+  // A printed bag code is for one batch. These are its roast day, as an ISO
+  // date, and the window in days after it that the roaster recommends brewing in.
+  roastDate: string;
+  restMin: string;
+  restMax: string;
   description: string;
   origin: OriginItemFormState[];
 }
@@ -97,6 +102,9 @@ export const emptyBeanForm = (): BeanFormState => ({
   url: "",
   process: "",
   roastLevel: "",
+  roastDate: "",
+  restMin: "",
+  restMax: "",
   description: "",
   origin: [],
 });
@@ -210,6 +218,15 @@ export function buildBean(form: BeanFormState): Bean {
   if (form.url.trim()) bean.url = form.url.trim();
   if (form.process.trim()) bean.process = [form.process.trim()];
   if (form.roastLevel.trim()) bean.roast_level = form.roastLevel.trim();
+  if (form.roastDate.trim()) bean.roast_date = form.roastDate.trim();
+  // Either bound may be stated alone. With neither, the member is omitted.
+  const restMin = num(form.restMin);
+  const restMax = num(form.restMax);
+  if (restMin !== undefined || restMax !== undefined) {
+    bean.rest_days = {};
+    if (restMin !== undefined) bean.rest_days.min = restMin;
+    if (restMax !== undefined) bean.rest_days.max = restMax;
+  }
   if (form.description.trim()) bean.description = form.description.trim();
   const items = form.origin
     .filter(
@@ -237,10 +254,13 @@ export function buildBean(form: BeanFormState): Bean {
 }
 
 export function buildDocument(state: BuilderState): CoffeeJSONDocument {
-  const doc: CoffeeJSONDocument = {
-    coffeejson: FORMAT_VERSION,
-    recipes: state.recipeForms.map(buildRecipe),
-  };
+  const doc: CoffeeJSONDocument = { coffeejson: FORMAT_VERSION };
+  // No recipe form at all is a bean-only document — a bag that states the
+  // coffee and nothing else — so the member is omitted rather than emitted
+  // empty. One blank form still emits an invalid recipe, so the live
+  // validator can name what is missing.
+  if (state.recipeForms.length)
+    doc.recipes = state.recipeForms.map(buildRecipe);
   const beans = state.beanForms
     .map(buildBean)
     .filter((b) => Object.keys(b).length > 0);
@@ -324,6 +344,9 @@ function beanToForm(b: Bean): BeanFormState {
     url: b.url ?? "",
     process: firstProcess(b.process),
     roastLevel: b.roast_level ?? "",
+    roastDate: b.roast_date ?? "",
+    restMin: str(b.rest_days?.min),
+    restMax: str(b.rest_days?.max),
     description: b.description ?? "",
     origin: (b.origin?.items ?? []).map((it) => ({
       ...emptyOriginItemForm(),

@@ -285,6 +285,12 @@ with a 22% radius, the iOS mask.
 - **Tables** — hairline rows, a muted header row, `overflow-x: auto`.
 - **QR panel** — an inline disclosure (`aria-expanded`, `aria-controls`), never a
   dialog.
+- **Label sheet** — on `/generate`, a page of identical QR labels for one coffee's
+  bags, drawn as one SVG whose unit is a millimeter. The panel scales it as a preview,
+  and it prints at its own size with everything else on the page hidden. Black on white in
+  both schemes, because it is printed. Each label is the code and, when the sheet is for
+  one batch, that batch's roast date in mono under it. The panel states the code's size
+  in numbers and warns when one of its squares would print under 0.35 mm.
 
 ## Motion
 

@@ -2933,6 +2933,50 @@ main .cj-view {
     animation: draw 900ms var(--ease-in-out) 150ms backwards;
   }
 }
+/* ── Label sheet ───────────────────────────────────────────────────────────
+   The sheet is one SVG whose unit is a millimeter. On screen it is a preview
+   scaled to the panel; in print it is the page. */
+.label-panel {
+  margin-top: var(--space-lg);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--line);
+}
+.label-check {
+  display: flex;
+  gap: var(--space-xs);
+  align-items: baseline;
+}
+.label-preview svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+}
+#label-print {
+  display: none;
+}
+@media print {
+  .printing-labels,
+  .printing-labels body {
+    margin: 0;
+    padding: 0;
+    background: #fff;
+  }
+  .printing-labels body > :not(#label-print) {
+    display: none;
+  }
+  .printing-labels #label-print {
+    display: block;
+  }
+  /* `max-width: none` undoes the site's cap on every svg. Capped to a page
+     box narrower than the paper, the sheet would scale down and every label
+     would print smaller than the panel said. */
+  .printing-labels #label-print svg {
+    display: block;
+    max-width: none;
+  }
+}
+
 /* Every duration on the site is one of three tokens, so asking for less motion
    is three assignments rather than an override on every rule. */
 @media (prefers-reduced-motion: reduce) {

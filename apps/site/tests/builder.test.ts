@@ -1,3 +1,5 @@
+import type { CoffeeJSONDocument } from "@coffeejson/core";
+import { FORMAT_VERSION } from "@coffeejson/core";
 import { describe, expect, test } from "vitest";
 import type {
   BeanFormState,
@@ -540,5 +542,85 @@ describe("the brew filter is authorable", () => {
       ],
     });
     expect(buildDocument(documentToState(doc))).toEqual(doc);
+  });
+});
+
+describe("the batch: roast date and rest window", () => {
+  const batch = (): BeanFormState => ({
+    ...emptyBeanForm(),
+    name: "Nano Challa",
+    roaster: "Example Roastery",
+    roastDate: "2026-06-20",
+    restMin: "7",
+    restMax: "45",
+  });
+
+  test("the bean states its roast date and both bounds of its rest window", () => {
+    const b = buildBean(batch());
+    expect(b.roast_date).toBe("2026-06-20");
+    expect(b.rest_days).toEqual({ min: 7, max: 45 });
+  });
+
+  test("one bound alone is a window; neither is no member at all", () => {
+    expect(buildBean({ ...batch(), restMax: "" }).rest_days).toEqual({
+      min: 7,
+    });
+    expect(buildBean({ ...batch(), restMin: "" }).rest_days).toEqual({
+      max: 45,
+    });
+    expect(
+      "rest_days" in buildBean({ ...batch(), restMin: "", restMax: "" }),
+    ).toBe(false);
+    expect(
+      "rest_days" in buildBean({ ...batch(), restMin: "soon", restMax: "" }),
+    ).toBe(false);
+  });
+
+  test("a pasted bag keeps its batch through the form, with nothing dropped", () => {
+    const pasted: CoffeeJSONDocument = {
+      coffeejson: FORMAT_VERSION,
+      beans: [
+        {
+          name: "Nano Challa",
+          roaster: { name: "Example Roastery" },
+          roast_date: "2026-06-20",
+          rest_days: { min: 7, max: 45 },
+        },
+      ],
+    };
+    const rebuilt = buildDocument(documentToState(pasted));
+    expect(rebuilt).toEqual(pasted);
+    expect(collectDroppedPaths(pasted, rebuilt)).toEqual([]);
+  });
+});
+
+describe("a bean-only document", () => {
+  test("no recipe form at all omits `recipes`, and the document is valid", () => {
+    const doc = buildDocument({
+      beanForms: [
+        {
+          ...emptyBeanForm(),
+          name: "Nano Challa",
+          roaster: "Example Roastery",
+        },
+      ],
+      recipeForms: [],
+    });
+    expect("recipes" in doc).toBe(false);
+    expect(validateDocument(doc)).toEqual([]);
+  });
+
+  test("one blank recipe form still emits a recipe, so the validator can name what is missing", () => {
+    const doc = buildDocument({
+      beanForms: [],
+      recipeForms: [emptyRecipeForm()],
+    });
+    expect(doc.recipes).toHaveLength(1);
+    expect(validateDocument(doc).length).toBeGreaterThan(0);
+  });
+
+  test("no bean and no recipe is not a document", () => {
+    const doc = buildDocument({ beanForms: [], recipeForms: [] });
+    expect(validateDocument(doc).length).toBeGreaterThan(0);
   });
 });
