@@ -257,6 +257,117 @@
       "note": "The vector the dispatch rule exists for: this stream begins 0x18, not 0x78, because the producer used a smaller window. Dispatch on the low nibble (CM == 8) plus the header check — a consumer that tests for 0x78 exactly rejects a valid payload."
     },
     {
+      "name": "bag-bean-only",
+      "input": "https://roastery.example/r?d=eyJjb2ZmZWVqc29uIjoiMS4xIiwiYmVhbnMiOlt7Im5hbWUiOiJOYW5vIENoYWxsYSIsInJvYXN0ZXIiOnsibmFtZSI6IkV4YW1wbGUgUm9hc3RlcnkifSwib3JpZ2luIjp7InR5cGUiOiJzaW5nbGUiLCJpdGVtcyI6W3siY291bnRyeSI6IkVUIiwicmVnaW9uIjoiR3VqaSJ9XX0sInByb2Nlc3MiOlsid2FzaGVkIl0sInJvYXN0X2xldmVsIjoibGlnaHRfbWVkaXVtIiwicm9hc3RfZGF0ZSI6IjIwMjYtMDYtMjAiLCJyZXN0X2RheXMiOnsibWluIjo3LCJtYXgiOjQ1fX1dfQ",
+      "expect": "document",
+      "document": {
+        "coffeejson": "1.1",
+        "beans": [
+          {
+            "name": "Nano Challa",
+            "roaster": {
+              "name": "Example Roastery"
+            },
+            "origin": {
+              "type": "single",
+              "items": [
+                {
+                  "country": "ET",
+                  "region": "Guji"
+                }
+              ]
+            },
+            "process": [
+              "washed"
+            ],
+            "roast_level": "light_medium",
+            "roast_date": "2026-06-20",
+            "rest_days": {
+              "min": 7,
+              "max": 45
+            }
+          }
+        ]
+      },
+      "note": "This bag states the coffee and its batch and carries no recipe. A document with beans alone is complete, so a reader imports the coffee and has nothing to brew from it."
+    },
+    {
+      "name": "bag-recommended",
+      "input": "https://coffeejson.org/r?d=eNqNkE1Lw0AYhP9KmYuXjaS1ibhXUW8iIl6khG3yNtmyH2F30w9K_rtsEqtIQa_vPMw7MyeUdrMh2nprwDG_noNhTcJ48I8TjNAEjmdh7Oy-EUoJMDgrfCAHftYfDkK3imavo3JEz2CdrKWJUDi2EfLS1IrAIAPp0b60nQnuGB3eojHVcojx1G0l-lXP0Dpbko809sI3VGE1BSgU7UiBQ8m6CYWmSnb6K11RiRB_LtJFnqR5skgH-0E4-hhKx2y3DFocwJdZ30dfKmVLY7Qgg4oOU6UrP3vPo4mm0NgKHK3tXGF35Abn0mpNpqIKPLiOGNaO9uNGMtKNcNImuzyN04yTR20nVEfg84yhMzKAo3ZCR2YvpoknZJGll5kikG5_gHfLM1eS8rLz6Hv2XejRkSmb2YuLs_7osxnuRTvdf-Uf1WRUL1W4Sf-skKX_rZBfqLDqPwEAx-Fs",
+      "expect": "document",
+      "document": {
+        "coffeejson": "1.1",
+        "beans": [
+          {
+            "name": "Nano Challa",
+            "roaster": {
+              "name": "Example Roastery"
+            },
+            "origin": {
+              "type": "single",
+              "items": [
+                {
+                  "country": "ET",
+                  "region": "Guji"
+                }
+              ]
+            },
+            "process": [
+              "washed"
+            ],
+            "roast_level": "light_medium",
+            "roast_date": "2026-06-20",
+            "rest_days": {
+              "min": 7,
+              "max": 45
+            }
+          }
+        ],
+        "recipes": [
+          {
+            "title": "Roaster's V60",
+            "method": "pour_over",
+            "recommended": true,
+            "brewer": {
+              "id": "hario-v60"
+            },
+            "coffee": {
+              "value": 15,
+              "unit": "gram"
+            },
+            "water": {
+              "value": 250,
+              "unit": "gram"
+            },
+            "water_temp": {
+              "value": 94,
+              "unit": "celsius"
+            }
+          },
+          {
+            "title": "French Press",
+            "method": "french_press",
+            "brewer": {
+              "id": "french-press"
+            },
+            "coffee": {
+              "value": 30,
+              "unit": "gram"
+            },
+            "water": {
+              "value": 500,
+              "unit": "gram"
+            },
+            "water_temp": {
+              "value": 96,
+              "unit": "celsius"
+            }
+          }
+        ]
+      },
+      "note": "This bag has the shape transport.md § Printed on a bag describes: one coffee with its batch's roast date, none of the prose the label prints, and two recipes, one of them recommended. The payload is compressed, which that section tells a producer to do."
+    },
+    {
       "name": "no-payload",
       "input": "https://coffeejson.org/r",
       "expect": "reject",

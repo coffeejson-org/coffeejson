@@ -225,6 +225,92 @@ domain** if it wants the scan to land on its page, or against a neutral
 format host. Every CoffeeJSON-aware reader decodes the same `d=` payload
 regardless of host.
 
+### Printed on a bag
+
+A coffee bag is a hard place to print a code. The label is small, curved
+and glossy. The code has to scan for as long as the bag exists. The person
+scanning it is often in a kitchen with a poor connection.
+
+This section adds no rule about documents. A bag carries an ordinary
+document, and every reader that reads a share link reads it. The section says
+how a producer chooses what that document holds.
+
+- **One coffee.** A producer **SHOULD** put exactly one bean in a bag
+  document. Every recipe beside it is then for that coffee by
+  [co-location](spec/02-envelope.md#association-co-location), so the document
+  needs no identifier and no reference.
+- **A recipe is optional.** A document that states the coffee and nothing else
+  is complete. A reader that scans one has a coffee and nothing to brew from
+  it, and that is not a failed scan.
+- **Carry what the label does not.** The label already prints the coffee's
+  name, its tasting notes and its story for a person to read. The code carries
+  what an application cannot read off a label: the coffee's identity as
+  fields, the roast date of the batch, the
+  [rest window](spec/04-bean.md#rest-window), and the brew numbers. A producer
+  **SHOULD** leave `description` and `roaster_notes` out of a printed code.
+  Prose adds more bytes to a document than recipes do, and a QR code has a
+  ceiling. A Base64 payload can use only byte mode, which holds 2953 bytes at
+  the lowest error correction and 2331 at the next level. A code that size is
+  177 modules on a side, and a label rarely has room to print them large
+  enough to scan. This choice applies to the printed code only. The same
+  coffee published as a file or over HTTP keeps its prose.
+- **State `roast_date` only on a code printed for one batch.** A roast date
+  belongs to a batch. A code reused from one batch to the next **SHOULD** omit
+  it, because the last batch's date is wrong for this one, and a producer
+  omits a value it does not know. `rest_days` is the coffee's own claim and
+  stays either way.
+- **Mark the recipe you recommend.** Where the bag carries recipes,
+  [`recommended`](spec/03-recipe.md#recommended) says which the roaster
+  suggests starting from. Several may carry it, one per method.
+- **Self-contained and compressed.** A bag can outlast the host that serves
+  its link. A producer **SHOULD** print the self-contained form and
+  **SHOULD** [compress](#compression) it. A hosted code suits a roaster who
+  needs to correct a recipe after printing, and it stops working when its
+  host does ([HTTP](#http)).
+
+A bag with one recommended recipe and one more:
+
+```json
+{
+  "coffeejson": "1.1",
+  "beans": [
+    {
+      "name": "Nano Challa",
+      "roaster": { "name": "Example Roastery" },
+      "origin": { "type": "single", "items": [{ "country": "ET", "region": "Guji" }] },
+      "process": ["washed"],
+      "roast_level": "light_medium",
+      "roast_date": "2026-06-20",
+      "rest_days": { "min": 7, "max": 45 }
+    }
+  ],
+  "recipes": [
+    {
+      "title": "Roaster's V60",
+      "method": "pour_over",
+      "recommended": true,
+      "brewer": { "id": "hario-v60" },
+      "coffee": { "value": 15, "unit": "gram" },
+      "water": { "value": 250, "unit": "gram" },
+      "water_temp": { "value": 94, "unit": "celsius" }
+    },
+    {
+      "title": "French Press",
+      "method": "french_press",
+      "brewer": { "id": "french-press" },
+      "coffee": { "value": 30, "unit": "gram" },
+      "water": { "value": 500, "unit": "gram" },
+      "water_temp": { "value": 96, "unit": "celsius" }
+    }
+  ]
+}
+```
+
+Compressed, that document makes a URL of 487 characters on
+`coffeejson.org`. Two [scan vectors](../fixtures/transport/scan-vectors.json)
+pin these shapes: `bag-bean-only` is a bag with no recipe, and
+`bag-recommended` is this document as a compressed code.
+
 ## HTTP
 
 A document can be served over HTTP at a URL, like any other resource. This is

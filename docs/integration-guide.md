@@ -153,7 +153,9 @@ Your page SHOULD NOT log the `d` parameter
 ink works offline and needs no infrastructure. Every CoffeeJSON-aware scanner
 can read it regardless of the printed host
 ([Transport § QR code](transport.md#qr-code)). Keep documents lean so the
-code stays scannable. Trim content. Never truncate a document.
+code stays scannable. Trim content. Never truncate a document. A code printed
+on a coffee bag has its own guidance
+([Transport § Printed on a bag](transport.md#printed-on-a-bag)).
 
 ## Test against the repository
 

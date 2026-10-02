@@ -10,6 +10,21 @@ While the format [evolves in place](docs/spec/07-versioning.md#evolving-1x-in-pl
 a breaking change ships as the next minor, and its entry says **Breaking**.
 The layout follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Added
+
+- **[Transport § Printed on a bag](docs/transport.md#printed-on-a-bag)** — how
+  a producer chooses what a code printed on a coffee bag carries. A bag
+  document holds one coffee, and a recipe is optional. The code carries what
+  the label does not, so `description` and `roaster_notes` stay out of it. A
+  producer states `roast_date` only on a code printed for one batch, and
+  prints the self-contained, compressed form. This is guidance for producers
+  under the existing QR binding. No rule about documents changed, and every
+  reader that reads a share link already reads a bag.
+- Two scan vectors, `bag-bean-only` and `bag-recommended`, pin a bag with no
+  recipe and a bag with a recommended one.
+
 ## [1.1] — 2026-09-11
 
 ### Added

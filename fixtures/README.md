@@ -187,6 +187,9 @@ a stream that inflates past the size cap, and one whose checksum is
 damaged — so an implementation that reads only one form, tests the wrong byte,
 inflates unbounded, skips the checksum, waves through a major version it does not
 read, or gates on a version spelling the wire grammar does not define fails the
-corpus. The harness runs
+corpus. Two vectors are printed bags
+([Transport § Printed on a bag](../docs/transport.md#printed-on-a-bag)): one
+that carries a coffee and no recipe, and one that carries a recommended recipe.
+The harness runs
 every vector through the § Encoding algorithm; SDK implementations are
 encouraged to run the same corpus.
