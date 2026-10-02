@@ -63,7 +63,7 @@ export function saveCta(
     )
     .join("");
   const n = noun(doc);
-  return `<section class="card">
+  return `<section class="card save-panel">
     ${
       opts.prominent
         ? `<h2>Enjoyed it? Save this ${n} to ${n === "recipe" ? "brew it again" : "keep it"}</h2>`

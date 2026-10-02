@@ -79,10 +79,14 @@ describe("the retracted claim", () => {
       "src/lib/beans-body.ts",
       "src/lib/footer.d.mts",
       "src/lib/footer.mjs",
+      "src/lib/recipes-body.ts",
       "src/pages/agents.ts",
+      "src/pages/generate.tsx",
       "src/pages/implementations.ts",
       "src/pages/landing.ts",
+      "src/pages/r-shared.tsx",
       "src/pages/showcase.ts",
+      "src/pages/validator.tsx",
       "tools/gen.mjs",
     ]);
   });

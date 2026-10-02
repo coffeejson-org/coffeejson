@@ -1,11 +1,18 @@
 import { decodePayload } from "@coffeejson/core";
 import rawBeans from "../generated/beans-index.json";
-import rawDocuments from "../generated/documents-index.json";
 import rawIndex from "../generated/recipes-index.json";
+import { BAGS_INTRO, bagSections } from "./bag-rows";
 import type { BeanEntry, Filters, IndexEntry, View } from "./filter";
 import { filterBeans, filterEntries } from "./filter";
-import { CORRECTIONS as SHARED_CORRECTIONS } from "./footer.mjs";
+import {
+  LICENSE_SITE,
+  PACKAGES,
+  QUOTED_PROSE,
+  CORRECTIONS as SHARED_CORRECTIONS,
+  siteFooter,
+} from "./footer.mjs";
 import { docJsonLd } from "./jsonld";
+import { corpusScale, overlayFigure, recipeGlyph } from "./pour-curve.mjs";
 import { siteHeader } from "./site-header.mjs";
 import { esc, slugify } from "./text.mjs";
 
@@ -19,72 +26,10 @@ export const index = rawIndex as IndexEntry[];
 // Two lenses over ONE corpus: the bean index is derived at build time from the
 // beans these same documents already carry. No bean card invents a document.
 const beans = rawBeans as BeanEntry[];
-// The publications a card does not already carry whole: only these need a
-// "Get all N", because for the rest the card IS the document.
-const documents = rawDocuments as Record<string, string>;
 
-const shareUrl = (slug: string): string => {
-  const e = index.find((x) => x.slug === slug);
-  return e ? `/r/?d=${e.payload}` : "/recipes/";
-};
-
-/**
- * Whatever the share controls are pointed at — a recipe by slug or a bag by key.
- * Both card kinds carry a real committed payload, so one set of handlers serves
- * both; the two id spaces cannot collide because a bean key always contains "/".
- */
-interface Shareable {
-  payload: string;
-  file: string;
-  title: string;
-  qrPath: string;
-}
-export const shareable = (id: string): Shareable | null => {
-  const r = index.find((x) => x.id === id);
-  // A recipe's QR encodes the host-resolved `?s=` form, because enriched documents
-  // outgrow level-M capacity at `?d=`; a bean document is small enough for `?d=`.
-  // `&i=N` makes the code recipe-precise, so a French-press square on a
-  // multi-method bag hands over one recipe, not three.
-  if (r) {
-    const siblings = index.filter((x) => x.slug === r.slug);
-    const n = siblings.indexOf(r) + 1;
-    const scoped = siblings.length > 1 ? `&i=${n}` : "";
-    return {
-      payload: r.payload,
-      file: `${r.slug}.json`,
-      title: r.title,
-      qrPath: `/r/?s=${encodeURIComponent(r.slug)}${scoped}`,
-    };
-  }
-  const b = beans.find((x) => x.key === id);
-  if (!b) return null;
-  return {
-    payload: b.payload,
-    file: `${b.key.replace(/\//g, "-")}.json`,
-    title: b.name,
-    qrPath: `/r/?d=${b.payload}`,
-  };
-};
-
-function actionRow(id: string, openLabel: string): string {
-  // THIS card's document, not the publication it came from: when the publication
-  // holds more, say so and keep it one click away rather than silently handing it
-  // over. The reader asked for a recipe.
-  const entry = index.find((x) => x.id === id);
-  const siblings = entry
-    ? index.filter((x) => x.slug === entry.slug).length
-    : 1;
-  const whole = entry && siblings > 1 ? documents[entry.slug] : undefined;
-  return `<div class="row">
-      <a class="btn" href="/r/?d=${shareable(id)!.payload}">${openLabel}</a>
-      <button class="btn btn--ghost" data-qr="${esc(id)}" aria-expanded="false"
-              aria-controls="qr-${esc(id)}">QR</button>
-      <button class="btn btn--ghost" data-copy="${esc(id)}">Copy link</button>
-      <button class="btn btn--ghost" data-dl="${esc(id)}">Download</button>
-      ${whole ? `<a class="btn btn--ghost" href="/r/?d=${whole}">Get all ${siblings}</a>` : ""}
-    </div>
-    <div id="qr-${esc(id)}" data-qr-slot="${esc(id)}"></div>`;
-}
+// Every row's glyph is drawn to one scale, so the rows can be compared: a
+// short brew is a short curve, a small brew a small square.
+const SCALE = corpusScale(index);
 
 const authors = [
   ...new Map(index.map((e) => [slugify(e.author.name), e.author])).entries(),
@@ -96,16 +41,19 @@ const methods = [
 // and the same slug space — which is what lets a chip survive a view switch.
 const roasters = [
   ...new Map(beans.map((b) => [slugify(b.roaster.name), b.roaster])).entries(),
-];
+].sort((a, b) => a[1].name.localeCompare(b[1].name));
 
+// A chip says how many it would show beside the other filters in force, and
+// is disabled when that is none: a click must never lead to an empty list.
 function chip(
   kind: "author" | "method",
   value: string,
   label: string,
   on: boolean,
+  count: number,
 ): string {
   return `<button class="chip${on ? " chip--on" : ""}" data-kind="${kind}" data-value="${esc(value)}"
-    aria-pressed="${on}">${esc(label)}</button>`;
+    aria-pressed="${on}"${count === 0 && !on ? " disabled" : ""}>${esc(label)} <span class="num">${count}</span></button>`;
 }
 
 function viewToggle(filters: Filters): string {
@@ -113,66 +61,81 @@ function viewToggle(filters: Filters): string {
     `<button class="chip${filters.view === v ? " chip--on" : ""}" data-view="${v}"
       aria-pressed="${filters.view === v}">${label} (${n})</button>`;
   return `<div class="row" role="group" aria-label="Browse by">
-    ${btn("recipes", "Recipes", index.length)}${btn("beans", "Beans", beans.length)}</div>`;
+    ${btn("recipes", "Recipes", index.length)}${btn("beans", "Bags", beans.length)}</div>`;
 }
+
+// A recipe is one row of an index: its curve, its name, its four numbers in
+// columns that line up down the page, and one action. The source stays on the
+// row — every transcription names where it came from, wherever it is listed.
+// What a reader does with a recipe (QR, copy, download) lives on its page.
+// A source is often titled "<author> — <what>". Under that author's heading the
+// name is said already, so the link reads as the part that tells rows apart;
+// its title keeps the label whole.
+const sourceText = (e: IndexEntry): string => {
+  const label = e.attribution.source_label;
+  if (!label.startsWith(e.author.name)) return label;
+  const rest = label.slice(e.author.name.length);
+  const cut = /^\s*[—–-]\s*/.exec(rest);
+  return cut ? rest.slice(cut[0].length) || label : label;
+};
+
+const ROWS_HEAD = `<p class="rows-head wide" aria-hidden="true"><span></span><span>Recipe</span><span>Dose → water</span><span>Ratio</span><span>Temp</span><span>Time</span><span></span></p>`;
+
+function row(e: IndexEntry): string {
+  const cell = (label: string, value: string) =>
+    `<span data-label="${label}">${esc(value)}</span>`;
+  return `<li class="recipe-row" data-id="${esc(e.id)}">
+    <div class="row-glyph">${recipeGlyph(e, SCALE)}</div>
+    <div class="row-main">
+      <h3><a href="/recipes/${esc(e.slug)}/">${esc(e.title)}</a></h3>
+      <p class="attribution row-source">${esc(e.methodLabel)}${
+        // The document is the shareable unit. Say when it holds more than this
+        // row; its page offers the whole of it.
+        e.siblings > 1 ? ` · 1 of ${e.siblings} in its document` : ""
+      } · from
+        <a class="row-link" href="${esc(e.attribution.source_url)}" rel="noopener" title="${esc(e.attribution.source_label)}">${esc(sourceText(e))}</a></p>
+    </div>
+    <p class="figures row-figs">${cell("Dose", `${e.coffee}${e.brew ? ` → ${e.brew}` : ""}`)}${cell("Ratio", e.ratio)}${cell("Temp", e.temp)}${cell("Time", e.totalTime)}</p>
+    <a class="btn btn--ghost" href="/r/?d=${e.payload}">${e.stepCount ? "Brew" : "Open"}</a>
+  </li>`;
+}
+
+// The corpus is transcribed author by author, and that is how a reader looks for
+// a recipe: one section per author, in the order the catalog introduces them.
+function grouped(entries: IndexEntry[]): string {
+  const groups = new Map<string, IndexEntry[]>();
+  for (const e of entries)
+    groups.set(e.author.name, [...(groups.get(e.author.name) ?? []), e]);
+  return [...groups]
+    .map(
+      ([author, es]) => `<section class="group">
+        <h2>${esc(author)} <span class="num muted">${es.length}</span></h2>
+        <ul class="rows">${es.map(row).join("")}</ul>
+      </section>`,
+    )
+    .join("");
+}
+
+// What the two glyphs are, said once above the rows that use them, each shown
+// by a real row's own.
+const timedRow = index.find((e) => e.curve);
+const weighedRow = index.find((e) => !e.curve && e.dose && e.brewAmount);
+const LEGEND = `<p class="legend">
+    ${timedRow ? `<span>${recipeGlyph(timedRow, SCALE)}a pour schedule, all to one scale</span>` : ""}
+    ${weighedRow ? `<span>${recipeGlyph(weighedRow, SCALE)}a dose and its water, where no schedule is stated</span>` : ""}
+    <span>Brew opens the timer; Open, the recipe.</span>
+  </p>`;
 
 /**
- * A bag, with the same share row a recipe card carries. What it shares is a real
- * document: the winning bean re-enveloped verbatim (see `buildBeansIndex`). The
- * links out are the roaster's own page and the corpus recipes brewed with it.
+ * The filters a lens can actually show. An author with no bag, carried across
+ * a lens switch or arriving in a URL, would otherwise filter the bags to
+ * nothing with no chip lit to say why.
  */
-function beanCard(b: BeanEntry): string {
-  const href = b.url ?? b.roaster.url;
-  const roaster = href
-    ? `<a href="${esc(href)}" rel="noopener">${esc(b.roaster.name)}</a>`
-    : esc(b.roaster.name);
-  // Origin takes its own line: it already spends " · " inside a blend component,
-  // so folding process and roast in makes a component's own process
-  // indistinguishable from the bag's.
-  const roastLine = [b.process, b.roast].filter(Boolean).join(" · ");
-  return `<li class="card bean-card">
-    <h3>${esc(b.name)}</h3>
-    <p class="muted">From ${roaster}</p>
-    ${b.origin ? `<p>${esc(b.origin)}</p>` : ""}
-    ${roastLine ? `<p>${esc(roastLine)}</p>` : ""}
-    ${b.notes ? `<p class="muted"><em>${esc(b.notes)}</em></p>` : ""}
-    ${
-      b.recipes.length
-        ? `<p class="attribution">Brewed in ${b.recipes.length === 1 ? "this recipe" : "these recipes"}:</p>
-         <ul class="bean-recipes">${b.recipes
-           .map(
-             (r) =>
-               `<li><a href="${shareUrl(r.slug)}">${esc(r.title)}</a> <span class="muted">· ${esc(r.methodLabel)}</span></li>`,
-           )
-           .join("")}</ul>`
-        : `<p class="attribution">No corpus recipe uses this bag yet.</p>`
-    }
-    ${actionRow(b.key, "Open")}
-  </li>`;
-}
-
-function card(e: IndexEntry): string {
-  const facts = [
-    `${e.coffee}${e.brew ? ` → ${e.brew}` : ""}`,
-    e.ratio,
-    e.temp,
-    e.totalTime ? `${e.totalTime} total` : "",
-  ]
-    .filter(Boolean)
-    .join(" · ");
-  return `<li class="card">
-    <h3><a href="/recipes/${esc(e.slug)}/">${esc(e.title)}</a></h3>
-    <p class="muted">${esc(e.author.name)} · ${esc(e.methodLabel)}</p>
-    <p>${esc(facts)}</p>
-    <p class="attribution">Transcribed from
-      <a href="${esc(e.attribution.source_url)}" rel="noopener">${esc(e.attribution.source_label)}</a>${
-        // The document is the shareable unit, so Copy link / Download / QR hand over
-        // all its recipes. Say so: giving someone three when they asked for one is
-        // the same species of lie as showing one when there are three.
-        e.siblings > 1 ? ` · one of ${e.siblings} recipes in this document` : ""
-      }</p>
-    ${actionRow(e.id, e.stepCount ? "Open / Brew" : "Open")}
-  </li>`;
+export function settle(f: Filters): Filters {
+  const known = (f.view === "beans" ? roasters : authors).some(
+    ([slug]) => slug === f.author,
+  );
+  return known || f.author === null ? f : { ...f, author: null };
 }
 
 const CORRECTIONS = `Quoted text stays the roasters’ — structure and
@@ -189,36 +152,60 @@ export function recipesJsonLd(): unknown[] {
 }
 
 /** The page body for a given filter state. Pure — same filters, same string. */
-export function recipesBody(filters: Filters): string {
+export function recipesBody(given: Filters): string {
+  const filters = settle(given);
   const isBeans = filters.view === "beans";
   const shownRecipes = filterEntries(index, filters);
   const shownBeans = filterBeans(beans, filters);
   const empty = (isBeans ? shownBeans : shownRecipes).length === 0;
   return `
     ${siteHeader("/recipes/")}
+    ${viewToggle(filters)}
     ${
       isBeans
-        ? `<h1>Real bags, as data</h1>
-         <p class="muted">Bean identities from the same transcribed documents — every card names and
-         links its roaster. Where several documents describe the same bag, one card shows the
-         fullest transcription and lists them all. ${CORRECTIONS}</p>`
+        ? `<h1>Bags</h1>
+         <p class="muted intro">${BAGS_INTRO} ${CORRECTIONS}</p>`
         : `<h1>Famous recipes, as data</h1>
-         <p class="muted">Unofficial transcriptions of publicly shared recipes — every card names and
+         <p class="muted intro">Unofficial transcriptions of publicly shared recipes — every row names and
          links its source. ${CORRECTIONS}</p>`
     }
-    ${viewToggle(filters)}
     <input id="q" class="field" type="search"
       placeholder="${isBeans ? "Filter by bean, roaster, origin, or notes" : "Filter by title, author, or method"}"
       value="${esc(filters.q)}" aria-label="${isBeans ? "Filter beans" : "Filter recipes"}">
-    <div class="row">${(isBeans ? roasters : authors)
-      .map(([slug, a]) => chip("author", slug, a.name, filters.author === slug))
-      .join("")}</div>
-    ${isBeans ? "" : `<div class="row">${methods.map(([id, label]) => chip("method", id, label, filters.method === id)).join("")}</div>`}
+    <div class="row facet" role="group" aria-label="${isBeans ? "Roaster" : "Author"}">
+      <span class="facet-label">${isBeans ? "Roaster" : "Author"}</span>${(isBeans
+        ? roasters
+        : authors
+      )
+        .map(([slug, a]) =>
+          chip(
+            "author",
+            slug,
+            a.name,
+            filters.author === slug,
+            isBeans
+              ? filterBeans(beans, { ...filters, author: slug }).length
+              : filterEntries(index, { ...filters, author: slug }).length,
+          ),
+        )
+        .join("")}</div>
+    ${isBeans ? "" : `<div class="row facet" role="group" aria-label="Method"><span class="facet-label">Method</span>${methods.map(([id, label]) => chip("method", id, label, filters.method === id, filterEntries(index, { ...filters, method: id }).length)).join("")}</div>`}
+    <div class="list-head">
+      <p class="muted count" role="status">${
+        isBeans
+          ? `${shownBeans.length} of ${beans.length} bags`
+          : `${shownRecipes.length} of ${index.length} recipes`
+      }</p>
+      ${isBeans ? "" : LEGEND}
+    </div>
     ${
       empty
-        ? `<div class="banner">No ${isBeans ? "beans" : "recipes"} match.
+        ? `<div class="empty"><p>No ${isBeans ? "bags" : "recipes"} match.</p>
          <button class="btn btn--ghost" id="clear">Clear filters</button></div>`
-        : `<ul class="cards">${isBeans ? shownBeans.map(beanCard).join("") : shownRecipes.map(card).join("")}</ul>`
+        : isBeans
+          ? bagSections(shownBeans)
+          : `${overlayFigure(shownRecipes, SCALE.domain)}${ROWS_HEAD}${grouped(shownRecipes)}`
     }
+    ${siteFooter(LICENSE_SITE, PACKAGES, QUOTED_PROSE)}
   `;
 }

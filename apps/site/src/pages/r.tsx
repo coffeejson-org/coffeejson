@@ -7,15 +7,16 @@ import {
   scopeToRecipe,
 } from "@coffeejson/core";
 import { BeanCard, RecipeCard } from "@coffeejson/react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "@coffeejson/react/styles.css";
 import { docJsonLd, injectJsonLd } from "../lib/jsonld";
 import type { CorpusEntry, DocumentIndex, ShortLink } from "../lib/short-link";
 import { payloadForShortLink, shortLinkFromSearch } from "../lib/short-link";
 import { Brew } from "./r-brew";
+import { PourCurve } from "./r-curve";
 import type { Mode } from "./r-shared";
-import { Fail, header, SaveCta } from "./r-shared";
+import { Fail, footer, header, SaveCta } from "./r-shared";
 
 export function App({
   doc,
@@ -60,20 +61,40 @@ export function App({
     if (title) document.title = `${title} — CoffeeJSON`;
   }, [doc]);
 
+  // Coming back from a brew puts focus on the button that started it: the
+  // screen was replaced under a keyboard reader, and without this they are
+  // returned to the top of the page.
+  const cameFrom = useRef<number | null>(null);
+  useEffect(() => {
+    if (mode.kind !== "view" || cameFrom.current === null) return;
+    document
+      .querySelector<HTMLElement>(`[data-start-brew="${cameFrom.current}"]`)
+      ?.focus();
+    cameFrom.current = null;
+  }, [mode]);
+
   if (mode.kind === "brew") {
     return (
       <Brew
         doc={doc}
         recipe={n.recipes[mode.index]!}
-        onBack={() => setMode({ kind: "view" })}
+        onBack={() => {
+          cameFrom.current = mode.index;
+          setMode({ kind: "view" });
+        }}
       />
     );
   }
 
+  // A document that is one recipe is headed by it, and the card's own copy of
+  // the title steps aside. Anything larger has no single name to put there.
+  const solo = n.recipes.length === 1 && n.beans.length === 0;
+
   return (
     <>
       {header}
-      <div className="cj-view">
+      {solo ? <h1>{n.recipes[0]!.title}</h1> : null}
+      <div className="cj-view" data-solo={solo ? "" : undefined}>
         {n.beans.map((b, i) => (
           <div className="cj-recipe-block" key={`b${i}`}>
             <BeanCard bean={b} />
@@ -89,18 +110,20 @@ export function App({
         ))}
         {n.recipes.map((r: NormalizedRecipe, i) => (
           <div className="cj-recipe-block" key={`r${i}`}>
-            <RecipeCard recipe={r} />
             {r.steps.length > 0 ? (
               <p>
                 <button
                   type="button"
-                  className="btn"
+                  className="btn btn--lg"
+                  data-start-brew={i}
                   onClick={() => setMode({ kind: "brew", index: i })}
                 >
                   Start brewing
                 </button>
               </p>
             ) : null}
+            <PourCurve recipe={r} />
+            <RecipeCard recipe={r} />
             {scoped?.recipes[i] ? (
               <SaveCta
                 doc={scoped.recipes[i]!}
@@ -117,10 +140,7 @@ export function App({
         ))}
       </div>
       <SaveCta doc={doc} prominent={false} />
-      <p className="muted">
-        Powered by <a href="/">CoffeeJSON</a>, an open format for coffee
-        recipes.
-      </p>
+      {footer}
     </>
   );
 }

@@ -100,3 +100,23 @@ function wire(slot: HTMLElement): void {
 }
 
 document.querySelectorAll<HTMLElement>("[data-share-slot]").forEach(wire);
+
+// A step and its point on the curve light together. Pointer-only, and nothing
+// is hidden behind it: both already show their numbers.
+document.querySelectorAll<HTMLElement>(".recipe").forEach((section) => {
+  const light = (step: string | undefined, on: boolean): void => {
+    if (step === undefined) return;
+    for (const el of section.querySelectorAll(`[data-step="${step}"]`))
+      el.classList.toggle("is-active", on);
+  };
+  section
+    .querySelectorAll<HTMLElement>(".steps [data-step], .curve-pt")
+    .forEach((el) => {
+      el.addEventListener("pointerenter", () =>
+        light(el.dataset["step"], true),
+      );
+      el.addEventListener("pointerleave", () =>
+        light(el.dataset["step"], false),
+      );
+    });
+});

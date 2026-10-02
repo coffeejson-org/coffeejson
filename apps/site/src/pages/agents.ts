@@ -1,8 +1,8 @@
 import { guideHtml } from "../lib/agent-guide.mjs";
 import {
   CRAWLERS_UNCHANGED,
-  footerHtml,
   LICENSE_CORPUS,
+  siteFooter,
 } from "../lib/footer.mjs";
 import { siteHeader } from "../lib/site-header.mjs";
 
@@ -19,4 +19,4 @@ export const agentsBody = (): string => `
   <h1>For AI agents</h1>
   ${guideHtml()}
 
-  ${footerHtml(LICENSE_CORPUS, CRAWLERS_UNCHANGED)}`;
+  ${siteFooter(LICENSE_CORPUS, CRAWLERS_UNCHANGED)}`;

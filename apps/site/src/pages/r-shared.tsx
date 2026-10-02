@@ -1,6 +1,7 @@
 import type { DecodedDocument, DecodeError } from "@coffeejson/core";
 import { defaultLabels } from "@coffeejson/core";
 import { useEffect, useRef } from "react";
+import { LICENSE_SITE, PACKAGES, siteFooter } from "../lib/footer.mjs";
 import { saveCta, wireSaveCta } from "../lib/save";
 import { GITHUB_URL, NAV } from "../lib/site-header.mjs";
 
@@ -26,15 +27,25 @@ export const header = (
     <a href="/">
       <strong>CoffeeJSON</strong>
     </a>
-    {NAV.map(([href, label]) => (
-      <a href={href} key={href}>
-        {label}
+    <nav className="site-nav" aria-label="Primary">
+      {NAV.map(([href, label]) => (
+        <a href={href} key={href}>
+          {label}
+        </a>
+      ))}
+      <a href={GITHUB_URL} rel="noopener">
+        GitHub
       </a>
-    ))}
-    <a href={GITHUB_URL} rel="noopener">
-      GitHub
-    </a>
+    </nav>
   </header>
+);
+
+// `siteFooter` builds its markup from constants in `footer.mjs`, nothing a
+// document supplied, so it is safe to set as HTML.
+export const footer = (
+  <div
+    dangerouslySetInnerHTML={{ __html: siteFooter(LICENSE_SITE, PACKAGES) }}
+  />
 );
 
 export type Mode = { kind: "view" } | { kind: "brew"; index: number };
@@ -98,6 +109,7 @@ export function Fail({ kind, detail }: { kind: FailKind; detail?: string }) {
         What is this? <a href="/">CoffeeJSON</a> is an open format for sharing
         coffee recipes as data.
       </p>
+      {footer}
     </>
   );
 }

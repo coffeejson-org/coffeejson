@@ -123,3 +123,51 @@ test("the control strip is the library's, and Back is the site's own", () => {
   expect(labels).toContain("Start over");
   expect(controls!.querySelector("[data-brew='back']")).toBeNull();
 });
+
+test("the curve is a clock: the playhead sits at the elapsed second", () => {
+  const timed = normalize({
+    coffeejson: "1.1",
+    recipes: [
+      {
+        title: "t",
+        coffee: { value: 20, unit: "gram" },
+        steps: [
+          {
+            at_s: 0,
+            to_water: { value: 60, unit: "gram" },
+            instruction: "Bloom",
+          },
+          { at_s: 45, to_water: { value: 300, unit: "gram" } },
+        ],
+        finish_s: 180,
+      },
+    ],
+  }).recipes[0]!;
+  act(() =>
+    root.render(
+      <Brew doc={{ coffeejson: "1.1" }} recipe={timed} onBack={() => {}} />,
+    ),
+  );
+  const figure = container.querySelector<HTMLElement>(".curve")!;
+  expect(figure).not.toBeNull();
+  expect(figure.dataset["playing"]).toBe("");
+  expect(figure.style.getPropertyValue("--p")).toBe("0");
+  const points = [...figure.querySelectorAll(".curve-pt")];
+  expect(points[0]!.classList.contains("is-active")).toBe(true);
+  expect(points[1]!.classList.contains("is-pending")).toBe(true);
+  // What the screen reader hears, shown: the step and its target.
+  expect(container.querySelector(".brew-cue")?.textContent).toBe("Bloom60 g");
+  expect(
+    container.querySelector(".brew-cue")?.getAttribute("aria-hidden"),
+  ).toBe("true");
+});
+
+test("a recipe with no timed pours brews without a curve", () => {
+  act(() =>
+    root.render(
+      <Brew doc={{ coffeejson: "1.0" }} recipe={r} onBack={() => {}} />,
+    ),
+  );
+  expect(container.querySelector(".curve")).toBeNull();
+  expect(container.querySelector(".brew-cue")?.textContent).toBe("Bloom");
+});

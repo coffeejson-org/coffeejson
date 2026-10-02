@@ -25,6 +25,7 @@ import {
   perPourAmounts,
   stepsNonDecreasing,
 } from "../lib/builder";
+import { LICENSE_SITE, PACKAGES, siteFooter } from "../lib/footer.mjs";
 import { documentFromInput } from "../lib/input-document";
 import { saveCta, wireSaveCta } from "../lib/save";
 import { esc, plural } from "../lib/text.mjs";
@@ -465,7 +466,7 @@ function Preview({ state }: { state: PreviewState }) {
       />
       <p>
         <a className="btn" href={`/r/?d=${encodePayload(doc)}`}>
-          Open in /r (brew-along preview)
+          Open in the viewer
         </a>
       </p>
       <SaveCtaBlock doc={doc} />
@@ -509,7 +510,8 @@ function renderAll(): void {
       ${jsonPanelHtml()}
       <section class="card gen-preview" aria-label="Preview"><h2>Preview</h2><div id="preview"></div></section>
       <div id="formhost" class="gen-form">${formHtml()}</div>
-    </div>`;
+    </div>
+    ${siteFooter(LICENSE_SITE, PACKAGES)}`;
   previewRoot = createRoot(app.querySelector<HTMLElement>("#preview")!);
   wireJsonPanel();
   wireForm();

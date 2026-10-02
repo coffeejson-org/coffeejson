@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#fdfdfc" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#141414" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f4efe7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#150f0c" media="(prefers-color-scheme: dark)" />
     <title>CoffeeJSON — the interchange format for coffee</title>
     <meta name="description" content="A coffee recipe that opens anywhere: write it in one app, open it in the next, print it on a bag, paste it in a message, keep it as a file. Dose, water, temperature and every timed pour arrive as numbers." />
     <meta property="og:type" content="website" />
@@ -25,6 +25,8 @@
   </head>
   <body>
     <main id="app"></main>
+    <script type="module" src="/src/lib/live-document.ts"></script>
+    <script type="module" src="/src/lib/draw-on-entry.ts"></script>
     <script type="module" src="/src/lib/analytics.ts"></script>
   </body>
 </html>

@@ -165,3 +165,45 @@ test("a brew-only publication says so, rather than promising a bag it has not go
   expect(html).toContain("Take this brew on its own");
   expect(html).not.toContain("Take this brew and the bag");
 });
+
+const timed = {
+  coffeejson: "1.1",
+  recipes: [
+    {
+      title: "Timed",
+      coffee: { value: 15, unit: "gram" },
+      water: { value: 250, unit: "gram" },
+      steps: [
+        { at_s: 0, to_water: { value: 50, unit: "gram" } },
+        { at_s: 45, to_water: { value: 250, unit: "gram" } },
+      ],
+      finish_s: 180,
+    },
+  ],
+};
+
+test("a recipe with timed pours shows its curve, whole", () => {
+  const html = renderToStaticMarkup(
+    <App doc={timed} initialMode={{ kind: "view" }} />,
+  );
+  expect((html.match(/<figure class="curve"/g) ?? []).length).toBe(1);
+  expect(html).toContain('style="--p:1"');
+  // Above the card it belongs to, inside the same block.
+  expect(html.indexOf('class="curve"')).toBeLessThan(
+    html.indexOf("cj-recipe-card"),
+  );
+});
+
+test("a recipe with nothing to plot shows no curve rather than an empty one", () => {
+  const html = renderToStaticMarkup(
+    <App doc={pourOver} initialMode={{ kind: "view" }} />,
+  );
+  const plottable = (pourOver.recipes[0].steps ?? []).filter(
+    (s: { at_s?: number; to_water?: unknown }) =>
+      s.at_s !== undefined && s.to_water,
+  ).length;
+  expect(html.includes('class="curve"')).toBe(plottable >= 2);
+  expect(
+    renderToStaticMarkup(<App doc={bag} initialMode={{ kind: "view" }} />),
+  ).not.toContain('class="curve"');
+});

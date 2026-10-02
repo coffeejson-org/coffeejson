@@ -16,13 +16,22 @@ export const NAV = [
 
 /** `current` is the page's own href — "/" at home, and a path with no nav entry
  *  (a corpus page, `/beans/`) simply matches nothing. */
+// A recipe page and a bag page sit under Browse without being it: the link
+// stays a link and is marked as the section, not as the page.
+const inSection = (href, current) =>
+  href === "/recipes/" &&
+  current !== href &&
+  (current.startsWith("/recipes/") || current.startsWith("/beans/"));
+
 export const siteHeader = (current) =>
-  `<header class="site-header">${
+  `<a class="skip" href="#content">Skip to content</a><header class="site-header">${
     current === "/"
       ? "<strong>CoffeeJSON</strong>"
       : '<a href="/"><strong>CoffeeJSON</strong></a>'
-  }${NAV.map(([href, label]) =>
+  }<nav class="site-nav" aria-label="Primary">${NAV.map(([href, label]) =>
     href === current
       ? `<span aria-current="page">${label}</span>`
-      : `<a href="${href}">${label}</a>`,
-  ).join("")}<a href="${GITHUB_URL}" rel="noopener">GitHub</a></header>`;
+      : `<a href="${href}"${inSection(href, current) ? ' aria-current="true"' : ""}>${label}</a>`,
+  ).join(
+    "",
+  )}<a href="${GITHUB_URL}" rel="noopener">GitHub</a></nav></header><span id="content" tabindex="-1"></span>`;

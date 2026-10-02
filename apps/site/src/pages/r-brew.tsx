@@ -1,7 +1,8 @@
 import type { DecodedDocument, NormalizedRecipe } from "@coffeejson/core";
-import { fmtClock } from "@coffeejson/core";
+import { fmtClock, fmtMeasurement } from "@coffeejson/core";
 import { BrewControls, RecipeCard, useBrewAlong } from "@coffeejson/react";
 import { useEffect, useRef } from "react";
+import { PourCurve } from "./r-curve";
 import { SaveCta } from "./r-shared";
 
 export function Brew({
@@ -45,6 +46,29 @@ export function Brew({
     };
   }, [brew.running, brew.state.finished]);
 
+  // The view was replaced by this screen: focus goes to its first control, so a
+  // keyboard reader is on Pause rather than back at the top of the page.
+  const stage = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    stage.current?.parentElement
+      ?.querySelector<HTMLElement>(".brew-controls button")
+      ?.focus();
+  }, []);
+
+  // Space pauses and resumes, the way every timer does — unless a control has
+  // focus, where Space is already that control's own key.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== " " || brew.state.finished) return;
+      if ((e.target as HTMLElement | null)?.closest("button, a, input")) return;
+      e.preventDefault();
+      if (brew.running) brew.pause();
+      else brew.resume();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [brew.running, brew.state.finished, brew.pause, brew.resume]);
+
   // Vibrate cues: once per active-step change (skipping the null "no active step
   // yet" state), and a distinct pattern the moment the brew finishes.
   useEffect(() => {
@@ -76,6 +100,22 @@ export function Brew({
           .join(" ")
       : "";
 
+  // The one thing a brew timer has to say besides the time: what happens
+  // next, and how long until it does.
+  const upcoming =
+    brew.state.nextTimedIndex !== null
+      ? recipe.steps[brew.state.nextTimedIndex]!
+      : null;
+  const countdown = (to: number) =>
+    fmtClock(Math.max(0, Math.ceil(to - brew.elapsedS)));
+  const next = brew.state.finished
+    ? ""
+    : upcoming && upcoming.atS !== null
+      ? `Next: ${upcoming.text || "pour"} in ${countdown(upcoming.atS)}`
+      : recipe.finishS !== null
+        ? `Finish in ${countdown(recipe.finishS)}`
+        : "";
+
   return (
     <>
       <header className="site-header">
@@ -84,31 +124,54 @@ export function Brew({
         </a>
       </header>
       <h1>{recipe.title}</h1>
-      <div className="clock" aria-live="off">
-        {fmtClock(brew.elapsedS)}
+      <div
+        ref={stage}
+        className="brew-stage"
+        data-paused={!brew.running && !brew.state.finished ? "" : undefined}
+      >
+        <div className="brew-now">
+          <div className="clock" aria-live="off">
+            {fmtClock(brew.elapsedS)}
+          </div>
+          {/* What the announcement says, for the eye. Hidden from assistive
+              technology: the live region below is the one that speaks. */}
+          <p className="brew-cue" aria-hidden="true">
+            {brew.state.finished ? (
+              "Brew finished."
+            ) : step ? (
+              <>
+                {step.text}
+                {step.toWater ? (
+                  <span className="brew-target">
+                    {fmtMeasurement(step.toWater)}
+                  </span>
+                ) : null}
+              </>
+            ) : (
+              "Ready."
+            )}
+          </p>
+          <p className="brew-next num" aria-hidden="true">
+            {!brew.running && !brew.state.finished ? "Paused" : next}
+          </p>
+        </div>
+        <PourCurve recipe={recipe} elapsedS={brew.elapsedS} />
       </div>
       <p className="visually-hidden" role="status" aria-live="polite">
         {announcement}
       </p>
-      <div className="row">
+      <div className="row brew-controls">
         <BrewControls brew={brew} variant="text" />
         <button
           type="button"
-          className="btn btn--ghost"
+          className="btn btn--ghost btn--lg"
           data-brew="back"
           onClick={onBack}
         >
           Back
         </button>
       </div>
-      <div className="muted">
-        {recipe.finishS !== null
-          ? `Finish at ${fmtClock(recipe.finishS)}`
-          : brew.state.nextTimedIndex !== null
-            ? `Next cue at ${fmtClock(recipe.steps[brew.state.nextTimedIndex]!.atS!)}`
-            : ""}
-      </div>
-      <div className="cj-brewing">
+      <div className="cj-view cj-brewing">
         <RecipeCard recipe={recipe} activeStepIndex={brew.state.currentIndex} />
       </div>
       {brew.state.finished ? <SaveCta doc={doc} prominent /> : null}

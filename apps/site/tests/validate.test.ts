@@ -155,3 +155,31 @@ describe("what a note actually says", () => {
     expect(lintDocument({ ...recipe(unknown), coffeejson: "1.7" })).toEqual([]);
   });
 });
+
+describe("messages a person can act on", () => {
+  const issues = validateDocument({
+    coffeejson: "1.1",
+    recipes: [
+      { title: "No water, no ratio", coffee: { value: 15, unit: "gram" } },
+    ],
+  });
+  const said = issues.map((i) => i.message);
+
+  test("a choice between members reads as one line naming both", () => {
+    expect(said).toContain("must have one of: water, ratio");
+    // The two branches it replaces contradicted each other.
+    expect(said.join("\n")).not.toMatch(/required property '(water|ratio)'/);
+  });
+
+  test("no line names only a schema keyword", () => {
+    expect(said.join("\n")).not.toMatch(/must match|anyOf/);
+  });
+
+  test("a member that is simply missing is still named", () => {
+    const missing = validateDocument({
+      coffeejson: "1.1",
+      recipes: [{ title: "No dose", water: { value: 250, unit: "gram" } }],
+    }).map((i) => i.message);
+    expect(missing).toContain("must have required property 'coffee'");
+  });
+});

@@ -27,6 +27,7 @@ import {
   originLine,
   processLine,
   recipeJsonLd,
+  regionLabel,
   scopeToRecipe,
   vocabularyLabel,
 } from "@coffeejson/core";
@@ -41,14 +42,23 @@ import addFormats from "ajv-formats";
 // The page footers, shared with the hand-written pages so the license and
 // privacy wording has exactly one source across generated and authored HTML.
 import { guideMarkdown } from "../src/lib/agent-guide.mjs";
+import { originStrip } from "../src/lib/bean-figure.mjs";
 import {
   CORRECTIONS,
   CRAWLERS_UNCHANGED,
-  footerHtml,
   LICENSE_CORPUS,
   PRIVACY,
   QUOTED_PROSE,
+  siteFooter,
 } from "../src/lib/footer.mjs";
+import {
+  corpusScale,
+  curveFigure,
+  pourSeries,
+  ratioFigure,
+  recipeGlyph,
+} from "../src/lib/pour-curve.mjs";
+import { roastMark } from "../src/lib/roast-mark.mjs";
 import { siteHeader } from "../src/lib/site-header.mjs";
 import { esc, slugify } from "../src/lib/text.mjs";
 
@@ -80,6 +90,8 @@ export const SITE_URL = "https://coffeejson.org";
 // `/r?d=` still works, because the parser reads `location.search` only. A host
 // detail: the spec's transport form stays `https://<host>/r?d=`.
 export const SHARE_PATH = "/r/?d=";
+/** The corpus document the landing page plays back. */
+export const HERO_SLUG = "tetsu-kasuya-4-6-basic";
 
 // A payload this long makes a dense QR, which a phone camera reads slowly or not
 // at all. A warning, never a truncation: a shortened document is a wrong one.
@@ -117,6 +129,9 @@ export const PAGE_SOURCES = {
   "/": [
     "apps/site/index.html",
     "apps/site/src/pages/landing.ts",
+    "apps/site/src/lib/live-document.ts",
+    "apps/site/src/lib/draw-on-entry.ts",
+    "apps/site/src/lib/json-lines.ts",
     "apps/site/src/lib/faq.mjs",
     "apps/site/src/lib/sample.ts",
     "recipes",
@@ -130,6 +145,7 @@ export const PAGE_SOURCES = {
     "apps/site/src/pages/r.tsx",
     "apps/site/src/pages/r-shared.tsx",
     "apps/site/src/pages/r-brew.tsx",
+    "apps/site/src/pages/r-curve.tsx",
   ],
   "/recipes/": [
     "apps/site/recipes/index.html",
@@ -146,10 +162,12 @@ export const PAGE_SOURCES = {
     "apps/site/src/pages/agents.ts",
     "apps/site/src/lib/agent-guide.mjs",
     "apps/site/src/lib/agent-examples.mjs",
+    "apps/site/src/lib/copy-blocks.ts",
   ],
   "/implementations/": [
     "apps/site/implementations/index.html",
     "apps/site/src/pages/implementations.ts",
+    "apps/site/src/lib/cell-caption.ts",
   ],
   "/beans/": [
     "apps/site/beans/index.html",
@@ -332,7 +350,7 @@ const docUrl = (p) => `${SITE_URL}/${p}`;
 export const GITHUB_BLOB =
   "https://github.com/coffeejson-org/coffeejson/blob/main";
 
-// The agent skills live in a sibling repository, not on this host — the one
+// The agent skills live in a separate repository, not on this host — the one
 // place llms.txt points off-site. `tests/llms.test.ts` allows exactly these.
 const SKILLS_REPO = "https://github.com/coffeejson-org/skills";
 export const SKILLS_LINKS = [
@@ -754,6 +772,19 @@ export function buildIndex(corpus = readCorpus()) {
         temp: fmt(n.waterTemp),
         totalTime: n.finishS !== null ? fmtClock(n.finishS) : "",
         stepCount: n.steps.length,
+        // What the card's glyph is drawn from: the timed pours where the recipe
+        // states them, the bare ratio where it does not.
+        curve: pourSeries(n),
+        ratioValue: n.ratio,
+        // The two weights as numbers, for a glyph drawn to scale. Only where the
+        // recipe states a single dose: a window names no one weight. The brew is
+        // the stated water or yield, or what the stated ratio makes of the dose.
+        dose: n.coffee?.value ?? null,
+        brewAmount:
+          (n.isEspresso ? n.yield : n.water)?.value ??
+          (n.coffee?.value !== undefined && n.ratio !== null
+            ? Math.round(n.coffee.value * n.ratio)
+            : null),
         attribution: {
           source_url: r.based_on,
           source_label: entry.attribution.source_label,
@@ -855,11 +886,16 @@ const partyEntry = (p) => ({ name: p.name, ...(p.url ? { url: p.url } : {}) });
 
 // Items join with " + " (a blend reads as a sum) while the facts inside an item
 // join with " · ", so the two levels stay tellable apart.
-const originOf = (nb) =>
+const originsOf = (nb) =>
   (nb?.originItems ?? [])
     .map((it) => originLine(it, defaultLabels))
-    .filter(Boolean)
-    .join(" + ");
+    .filter(Boolean);
+const originOf = (nb) => originsOf(nb).join(" + ");
+/** One origin component per line. */
+const originList = (lines) =>
+  lines.length
+    ? `<ul class="origins">${lines.map((l) => `<li>${esc(l)}</li>`).join("")}</ul>`
+    : "";
 
 const roastOf = (nb, withDate) =>
   [
@@ -948,7 +984,20 @@ export function buildBeansIndex(corpus = readCorpus()) {
       roaster: partyEntry(nb.roaster),
       ...(nb.url ? { url: nb.url } : {}),
       origin: originOf(nb),
+      // The same origin, one entry per component: a blend reads as a list.
+      origins: originsOf(nb),
+      // And as shares, for the origin strip: what each component is called, and
+      // how much of the bag it is where the source says.
+      components: (nb?.originItems ?? []).map((it) => ({
+        label:
+          [it.name, it.country !== null ? regionLabel(it.country) : null]
+            .filter(Boolean)
+            .join(", ") || "Unnamed",
+        share: it.percentage,
+        altitude: fmt(it.altitude),
+      })),
       process: processLine(nb?.process ?? [], defaultLabels),
+      roastLevel: nb?.roastLevel ?? null,
       roast: roastOf(nb, true),
       notes: (nb?.roasterNotes ?? []).join(" · "),
       slug: beanPageSlug(
@@ -995,8 +1044,8 @@ export function buildDocuments(
 const pageHead = ({ title, description, url, ld }) => `<head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#fdfdfc" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#141414" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f4efe7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#150f0c" media="(prefers-color-scheme: dark)" />
     <title>${esc(title)}</title>
     <meta name="description" content="${esc(description)}" />
     <meta property="og:type" content="article" />
@@ -1033,7 +1082,7 @@ export const allIndexableUrls = (
   beans = buildBeansIndex(),
 ) => [...indexableUrls(), ...corpusPageUrls(index), ...beanPageUrls(beans)];
 
-const factsOf = (n) => {
+const factsListOf = (n) => {
   const out =
     fmt(n.coffee) +
     (n.isEspresso
@@ -1052,26 +1101,43 @@ const factsOf = (n) => {
     fmt(n.waterTemp),
     n.finishS !== null ? `${fmtClock(n.finishS)} total` : "",
     grindSize ? `${grindSize} grind` : "",
-  ]
-    .filter(Boolean)
-    .join(" · ");
+  ].filter(Boolean);
 };
+const factsOf = (n) => factsListOf(n).join(" · ");
+/** The same facts for the page, each one unbreakable item. */
+const figuresHtml = (n) =>
+  `<p class="figures">${factsListOf(n)
+    .map((f) => `<span>${esc(f)}</span>`)
+    .join(" ")}</p>`;
 
 const stepsHtml = (n) =>
   n.steps.length === 0
     ? ""
     : `<ol class="steps">${n.steps
-        .map((s) => {
+        .map((s, i) => {
           const when = s.atS !== null ? fmtClock(s.atS) : "";
           const to = fmt(s.toWater);
           const body = s.text || label(defaultLabels.stepKinds, s.kind);
+          // A list with no timed step has no time column to keep empty.
+          const timed = n.steps.some((x) => x.atS !== null);
           return (
-            `<li><span class="t">${esc(when)}</span><span>${esc(body)}</span>` +
+            `<li data-step="${i}">${timed ? `<span class="t">${esc(when)}</span>` : ""}<span>${esc(body)}</span>` +
             (to ? `<span class="to muted">${esc(to)}</span>` : "") +
             `</li>`
           );
         })
         .join("")}</ol>`;
+
+// The drawing a recipe earns: its pour curve where it states one, its dose
+// against its water where it does not. A recipe stating neither has none.
+const curveOf = (n) => {
+  const series = pourSeries(n);
+  if (series) return curveFigure(series);
+  const brew = n.isEspresso ? n.yield : n.water;
+  return n.ratio !== null && n.coffee
+    ? ratioFigure(n.ratio, fmt(n.coffee), brew ? fmt(brew) : "")
+    : "";
+};
 
 const beanHtml = (b) => {
   if (!b) return "";
@@ -1080,15 +1146,14 @@ const beanHtml = (b) => {
   const who = nb?.roaster?.url
     ? `<a href="${esc(nb.roaster.url)}" rel="noopener">${esc(roasterName)}</a>`
     : esc(roasterName);
-  const origin = originOf(nb);
   const rest = [
     processLine(nb?.process ?? [], defaultLabels),
     roastOf(nb, false),
   ].filter(Boolean);
   return `<section class="card bean-card"><h2>The bag</h2>
     <p><strong>${esc(nb?.name ?? "")}</strong>${who ? ` — ${who}` : ""}</p>
-    ${origin ? `<p>${esc(origin)}</p>` : ""}
-    ${rest.length ? `<p>${esc(rest.join(" · "))}</p>` : ""}
+    ${originList(originsOf(nb))}
+    ${rest.length ? `<p>${roastMark(nb?.roastLevel)} ${esc(rest.join(" · "))}</p>` : ""}
     ${
       (nb?.roasterNotes ?? []).length
         ? `<p class="muted"><em>${esc(nb.roasterNotes.join(" · "))}</em></p>`
@@ -1161,12 +1226,20 @@ export function buildCorpusPage(entry, doc) {
     )
     .filter(Boolean);
 
+  // The whole publication's share, in the one place a page has for it. A
+  // single-recipe page has no other, so it sits beside the recipe; a page of
+  // several keeps it under them all.
+  const wholeSlot = `<div data-share-slot data-payload="${esc(payload)}" data-file="${esc(entry.slug)}"
+        data-slug="${esc(entry.slug)}"${multi ? ` data-label="Take the whole publication — all ${recipes.length} brews"` : ""}></div>`;
+
   const sections = recipes
     .map((_, i) => {
       const n = projected[i];
+      const schedule = `${curveOf(n)}${stepsHtml(n)}`;
       return `
-    <section${multi ? ` id="recipe-${i + 1}"` : ""}>
+    <section class="recipe${schedule ? "" : " recipe--plain"}"${multi ? ` id="recipe-${i + 1}"` : ""}>
       ${multi ? `<h2>${esc(n.title)}</h2>` : ""}
+      <div class="recipe-top">
       <p class="muted">${esc(n.author?.name ?? "")} · ${esc(method(n.method))}${
         // A gear reference with no label or brand falls back to its id, which for
         // a plain french press IS the method name. Name the brewer only when it
@@ -1176,20 +1249,23 @@ export function buildCorpusPage(entry, doc) {
           ? ` · ${esc(n.brewerLabel)}`
           : ""
       }</p>
-      <p>${esc(factsOf(n))}</p>
+      ${figuresHtml(n)}
       ${n.description ? `<p>${esc(n.description)}</p>` : ""}
-      ${stepsHtml(n)}
-      ${n.notes ? `<p class="muted">${esc(n.notes)}</p>` : ""}
-      <p class="attribution">Transcribed from
-        <a href="${esc(n.basedOn)}" rel="noopener">${esc(entry.attribution.source_label)}</a>
-        on ${esc(entry.attribution.transcribed)}</p>
       ${
         multi
           ? `<div data-share-slot data-payload="${esc(encodePayload(scopeToRecipe(doc, i)))}"
         data-file="${esc(entry.slug)}-${i + 1}" data-slug="${esc(entry.slug)}" data-i="${i + 1}"
         data-label="Take this brew${(doc.beans ?? []).length ? " and the bag" : " on its own"}"></div>`
-          : ""
+          : wholeSlot
       }
+      </div>
+      ${schedule ? `<div class="recipe-main">${schedule}</div>` : ""}
+      <div class="recipe-notes">
+      ${n.notes ? `<p class="muted">${esc(n.notes)}</p>` : ""}
+      <p class="attribution">Transcribed from
+        <a href="${esc(n.basedOn)}" rel="noopener">${esc(entry.attribution.source_label)}</a>
+        on ${esc(entry.attribution.transcribed)}</p>
+      </div>
     </section>`;
     })
     .join("");
@@ -1210,13 +1286,14 @@ export function buildCorpusPage(entry, doc) {
   <body>
     <main id="app" data-slug="${esc(entry.slug)}">
       ${siteHeader(`/recipes/${entry.slug}/`)}
+      <div class="page-title${multi ? " page-title--kicker" : ""}">
       <h1>${esc(multi ? corpusPageMeta(entry, doc).title.replace(/ — CoffeeJSON$/, "") : projected[0].title)}</h1>
+      </div>
       ${sections}
-      <div data-share-slot data-payload="${esc(payload)}" data-file="${esc(entry.slug)}"
-        data-slug="${esc(entry.slug)}"${multi ? ` data-label="Take the whole publication — all ${recipes.length} brews"` : ""}></div>
+      ${multi ? wholeSlot : ""}
       ${beanHtml(doc.beans?.[0])}
       ${related}
-      ${footerHtml(LICENSE_CORPUS, QUOTED_PROSE, CORRECTIONS)}
+      ${siteFooter(LICENSE_CORPUS, QUOTED_PROSE, CORRECTIONS)}
     </main>
     <script type="module" src="/src/pages/corpus.ts"></script>
     <script type="module" src="/src/lib/analytics.ts"></script>
@@ -1231,7 +1308,14 @@ export function buildCorpusPage(entry, doc) {
  * listing under Sources, and the node says the same to a machine (`sameAs`),
  * asserting no sale at any price — the price lives on the listing.
  */
-export function buildBeanPage(bean) {
+export function buildBeanPage(bean, index = []) {
+  // A brew listed here is drawn the way the directory draws it, to the same
+  // scale, so the two never disagree about what a recipe looks like.
+  const scale = index.length ? corpusScale(index) : {};
+  const glyphOf = (r) => {
+    const e = index.find((x) => x.slug === r.slug && x.title === r.title);
+    return e ? recipeGlyph(e, scale) : "";
+  };
   const url = `${SITE_URL}${beanPagePath(bean.slug)}`;
   // Decoded from the card's own payload rather than carried beside it: the index
   // ships to the browser, and a second copy of every bean would ride with it.
@@ -1256,15 +1340,17 @@ export function buildBeanPage(bean) {
     ? `<a href="${esc(bean.roaster.url)}" rel="noopener">${esc(roasterName)}</a>`
     : esc(roasterName);
 
+  const fact = (k, html) =>
+    html ? `<div class="spec-row"><dt>${k}</dt><dd>${html}</dd></div>` : "";
   const facts = [
-    ["Origin", bean.origin],
-    ["Process", bean.process],
-    ["Roast", bean.roast],
-    ["Roaster's notes", bean.notes],
-  ]
-    .filter(([, v]) => v)
-    .map(([k, v]) => `<p><span class="muted">${k}</span> — ${esc(v)}</p>`)
-    .join("");
+    fact("Origin", originList(bean.origins)),
+    fact("Process", esc(bean.process)),
+    fact(
+      "Roast",
+      bean.roast ? `${roastMark(bean.roastLevel)} ${esc(bean.roast)}` : "",
+    ),
+    fact("Roaster's notes", esc(bean.notes)),
+  ].join("");
 
   // Grouped by the document that states them, so a reader sees WHICH publication
   // said what rather than a flat list that merges two sources.
@@ -1277,7 +1363,7 @@ export function buildBeanPage(bean) {
           rs
             .map(
               (r) =>
-                `<li><a href="${esc(corpusPagePath(slug))}">${esc(r.title)}</a>
+                `<li><span class="row-glyph">${glyphOf(r)}</span><a href="${esc(corpusPagePath(slug))}">${esc(r.title)}</a>
           <span class="muted">${esc(r.methodLabel)}</span></li>`,
             )
             .join(""),
@@ -1309,17 +1395,22 @@ export function buildBeanPage(bean) {
       ${siteHeader(beanPagePath(bean.slug))}
       <h1>${esc(bean.name)}</h1>
       <p class="muted">${who}</p>
-      <section class="card">${facts}</section>
+      <div class="bag">
+        <div class="bag-main">
+          ${originStrip(bean.components)}
+          ${brews}
+        </div>
+        ${facts ? `<dl class="spec">${facts}</dl>` : ""}
+      </div>
       <div data-share-slot data-payload="${esc(bean.payload)}" data-file="${esc(bean.slug)}"
         data-label="Take the bag"></div>
-      ${brews}
       ${sources}
       <nav class="row" aria-label="Related">
         <a href="/beans/?roaster=${encodeURIComponent(slugify(roasterName))}">More from ${esc(roasterName)}</a>
         <a href="/beans/">All bags</a>
         <a href="/recipes/">All recipes</a>
       </nav>
-      ${footerHtml(LICENSE_CORPUS, QUOTED_PROSE, CORRECTIONS)}
+      ${siteFooter(LICENSE_CORPUS, QUOTED_PROSE, CORRECTIONS)}
     </main>
     <script type="module" src="/src/pages/corpus.ts"></script>
     <script type="module" src="/src/lib/analytics.ts"></script>
@@ -1333,7 +1424,7 @@ export const beanPageSlugs = (beans = buildBeansIndex()) =>
 export const beanPageUrls = (beans = buildBeansIndex()) =>
   beanPageSlugs(beans).map((s) => `${SITE_URL}${beanPagePath(s)}`);
 
-export function buildBeanPages(beans = buildBeansIndex()) {
+export function buildBeanPages(beans = buildBeansIndex(), index = []) {
   // Run at BUILD time rather than trusted: the gear registry's "curation catches
   // them at registration" does not apply, because nobody registers a bag.
   const seen = new Map();
@@ -1353,7 +1444,7 @@ export function buildBeanPages(beans = buildBeansIndex()) {
   return beans.map((b) => ({
     slug: b.slug,
     path: beanPagePath(b.slug),
-    html: buildBeanPage(b),
+    html: buildBeanPage(b, index),
   }));
 }
 
@@ -1424,6 +1515,54 @@ if (isMain) {
         `${counts.beans} beans · ${counts.roasters} roasters`,
     );
 
+    // The landing page plays one corpus document back from its own bytes: the
+    // file as committed, its payload, and where it lives on this site.
+    const heroText = readFileSync(
+      join(repo, "recipes", `${HERO_SLUG}.json`),
+      "utf8",
+    );
+    writeFileSync(
+      join(site, "src/generated/hero-document.json"),
+      `${JSON.stringify(
+        {
+          slug: HERO_SLUG,
+          text: heroText.trimEnd(),
+          payload: encodePayload(JSON.parse(heroText)),
+        },
+        null,
+        2,
+      )}\n`,
+    );
+    console.log(`gen: hero-document.json — ${HERO_SLUG}`);
+
+    // What an implementation is checked against, as data: each fixture and each
+    // scan vector by name and by what it expects. The implementations page
+    // draws these, so its picture of the corpus cannot be out of date.
+    const fixtureNames = (dir) =>
+      readdirSync(join(repo, "fixtures", dir))
+        .filter((f) => f.endsWith(".json"))
+        .map((f) => basename(f, ".json"))
+        .sort();
+    const vectors = JSON.parse(
+      readFileSync(join(repo, "fixtures/transport/scan-vectors.json"), "utf8"),
+    ).vectors;
+    const conformance = {
+      valid: fixtureNames("valid"),
+      invalid: fixtureNames("invalid"),
+      scan: vectors.map((v) => ({
+        name: v.name,
+        accepts: v.expect === "document",
+      })),
+    };
+    writeFileSync(
+      join(site, "src/generated/conformance.json"),
+      `${JSON.stringify(conformance, null, 2)}\n`,
+    );
+    console.log(
+      `gen: conformance.json — ${conformance.valid.length} valid · ` +
+        `${conformance.invalid.length} invalid · ${conformance.scan.length} scan vectors`,
+    );
+
     // Schema at its $id path — exact bytes, plus a convenience alias. The
     // authoring (strict) variant is what a GENERATING consumer wants: it rejects
     // unknown keys apart from the reserved `ext`, so a typo fails loudly instead
@@ -1488,7 +1627,7 @@ if (isMain) {
     );
 
     // Written into the source tree like the corpus pages, and for the same reason.
-    const beanPages = buildBeanPages(beans);
+    const beanPages = buildBeanPages(beans, index);
     for (const p of beanPages) {
       mkdirSync(join(site, "beans", p.slug), { recursive: true });
       writeFileSync(join(site, "beans", p.slug, "index.html"), p.html);

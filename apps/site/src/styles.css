@@ -1,157 +1,340 @@
 /* Design system: DESIGN.md at this app's root, in the google-labs-code/design.md
    format — tokens, components, and the do's and don'ts. Edit that file and
    this sheet together; `npx @google/design.md lint` checks it. */
+@import "@fontsource-variable/bricolage-grotesque/opsz.css";
+@import "@fontsource/commit-mono/latin-400.css";
+
+/* `--p` is how much of a brew has happened, 0–1. Registered so it can
+   transition: brew-along ticks once a second and the playhead should glide. */
+@property --p {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1;
+}
+
 :root {
-  --bg: #fdfdfc;
-  --fg: #1a1a1a;
-  --muted: #5b5b5b;
-  --line: #d9d9d9;
+  --bg: oklch(95.5% 0.012 80);
+  --card: oklch(98.2% 0.008 80);
+  --sunk: oklch(93% 0.014 80);
+  --fg: oklch(23.5% 0.025 45);
+  --muted: oklch(47% 0.02 55);
+  --line: oklch(87% 0.015 75);
   /* `line` is decorative (rules, separators); `line-strong` is the boundary a
      control is IDENTIFIED by — inputs, chips, the dropzone. WCAG 1.4.11 wants
-     3:1 there, and `line` is 1.39:1. Measured: 3.39:1 light, 3.61:1 dark. */
-  --line-strong: #8a8a8a;
-  --accent: #0c5964;
-  --accent-fg: #ffffff;
-  --card: #f7f6f4;
-  --error: #a4262c;
-  --mono: ui-monospace, SFMono-Regular, Menlo, monospace;
-  /* The site's one curve. Named so the single transition below isn't left on
-     the browser's default `ease`. */
+     3:1 there. Measured: 3.47:1 light, 4.06:1 dark. */
+  --line-strong: oklch(60% 0.02 65);
+  --accent: oklch(43% 0.072 210);
+  --accent-fg: oklch(98% 0.008 80);
+  --error: oklch(45% 0.16 25);
+  /* The other half of a ratio. A data color only: it fills the coffee's share
+     of a ratio bar and the cells of a roast mark, nothing else. */
+  --coffee: oklch(40% 0.055 50);
+  --roast-light: oklch(74% 0.07 70);
+  --roast-dark: oklch(27% 0.035 45);
+  /* Water is the accent, spent on the one thing that is literally water. */
+  --water: var(--accent);
+  --water-fill: color-mix(in oklch, var(--accent) 16%, transparent);
+  --tint: color-mix(in oklch, var(--accent) 8%, var(--card));
+  /* A QR is scanned, so its ground stays light in both schemes. */
+  --qr-ground: oklch(98.2% 0.008 80);
+  --shadow:
+    0 1px 2px oklch(23.5% 0.025 45 / 0.06),
+    0 12px 32px -12px oklch(23.5% 0.025 45 / 0.18);
+
+  --font-display:
+    "Bricolage Grotesque Variable", "Arial Narrow", system-ui, sans-serif;
+  --font-body:
+    "Bricolage Grotesque Variable", system-ui, -apple-system, "Segoe UI",
+    sans-serif;
+  --mono: "Commit Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --text-xs: 0.78rem;
+  --text-sm: 0.875rem;
+  --text-md: 1.0625rem;
+  --text-lg: 1.25rem;
+  --text-xl: clamp(1.4rem, 1.2rem + 0.9vw, 1.75rem);
+  --text-2xl: clamp(1.85rem, 1.2rem + 2.6vw, 3rem);
+  --text-page: clamp(2.1rem, 1.5rem + 2.6vw, 3.5rem);
+  --text-display: clamp(2.9rem, 1rem + 6.4vw, 6rem);
+
+  --space-3xs: 0.125rem;
+  --space-2xs: 0.25rem;
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2.5rem;
+  --space-2xl: 4rem;
+  --space-3xl: 6rem;
+  --space-4xl: 9rem;
+
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-full: 999px;
+
+  --shell: 76rem;
+  --measure: 42rem;
+  --gutter: clamp(1rem, 4vw, 3rem);
+
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-micro: 120ms;
+  --dur-short: 240ms;
+  --dur-long: 600ms;
+
   color-scheme: light dark;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #141414;
-    --fg: #ececec;
-    --muted: #a3a3a3;
-    --line: #3a3a3a;
-    --line-strong: #6e6e6e;
-    --accent: #4cb6c2;
-    --accent-fg: #10201c;
-    --card: #1e1e1e;
-    --error: #ff8389;
+    --bg: oklch(17.5% 0.012 50);
+    --card: oklch(21.5% 0.013 50);
+    --sunk: oklch(14.5% 0.01 50);
+    --fg: oklch(92% 0.015 60);
+    --muted: oklch(73% 0.02 60);
+    --line: oklch(31% 0.012 50);
+    --line-strong: oklch(56% 0.018 55);
+    --accent: oklch(76% 0.09 205);
+    --accent-fg: oklch(18% 0.02 205);
+    --error: oklch(76% 0.14 22);
+    --coffee: oklch(62% 0.06 60);
+    --water-fill: color-mix(in oklch, var(--accent) 26%, transparent);
+    /* On a dark ground depth is lightness, never a halo. */
+    --shadow: none;
   }
 }
-* {
+
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 html,
 body {
   overflow-x: clip;
 }
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
 body {
   margin: 0;
   background: var(--bg);
   color: var(--fg);
-  font:
-    16px / 1.55 system-ui,
-    -apple-system,
-    "Segoe UI",
-    sans-serif;
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+img,
+svg {
+  max-width: 100%;
 }
 img {
-  max-width: 100%;
   height: auto;
 }
+
+/* One shell for every page, so the masthead never moves between them. Prose
+   keeps a reading measure inside it; anything that is not prose opts out. */
 main {
-  max-width: 52rem;
+  max-width: var(--shell);
   margin: 0 auto;
-  padding: 1.25rem 1rem 4rem;
+  padding: var(--space-md) var(--gutter) var(--space-2xl);
 }
+main
+  > :where(
+    p,
+    ul,
+    ol,
+    dl,
+    h2,
+    h3,
+    pre,
+    details,
+    form,
+    textarea,
+    .banner,
+    .error,
+    .notes
+  ):not(.wide, .cards, .ledger, .facts) {
+  max-width: var(--measure);
+}
+
 a {
   color: var(--accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-style: normal;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+  min-width: 0;
 }
 h1 {
-  font-size: 1.6rem;
-  margin: 0.5rem 0;
+  font-size: var(--text-page);
+  font-weight: 650;
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  margin: var(--space-xl) 0 var(--space-md);
 }
 /* The landing page is the one surface with a voice rather than a job, so it is
-   the one h1 allowed to break the scale. Tool pages stay at 1.6rem. */
+   the one h1 allowed to break the scale. */
 h1.display {
-  font-size: clamp(2.1rem, 6vw, 3rem);
-  line-height: 1.08;
-  letter-spacing: -0.02em;
-  margin: 1rem 0 0.75rem;
-  overflow-wrap: anywhere;
+  font-size: var(--text-display);
+  font-weight: 700;
+  line-height: 0.94;
+  letter-spacing: -0.022em;
+  margin: 0;
 }
-/* The sentence the landing h1 hands off to. One step above body so the drop
-   from display size isn't a cliff, and held to a shorter measure than `main`
-   so the first thing on the page is a line rather than a full-width block. */
+/* The sentence a display heading hands off to. One per page, and only on a
+   page that argues. */
+main > h1 {
+  max-width: 60rem;
+}
 p.lede {
-  font-size: 1.12rem;
-  line-height: 1.5;
-  max-width: 42rem;
-  margin: 0 0 1.25rem;
+  font-size: var(--text-lg);
+  line-height: 1.45;
+  margin: 0 0 var(--space-lg);
+  text-wrap: pretty;
 }
 h2 {
-  font-size: 1.15rem;
-  margin: 1.4rem 0 0.5rem;
+  font-size: var(--text-xl);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  margin: var(--space-xl) 0 var(--space-xs);
 }
-/* Sectional rhythm: `pull` opens more space above a heading that starts a new
-   movement, so a page's sections aren't all metrically identical. */
+/* `pull` opens more space above a heading that starts a new movement. */
 h2.pull {
-  margin-top: 2.6rem;
+  margin-top: var(--space-2xl);
+}
+h3 {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  margin: var(--space-lg) 0 var(--space-2xs);
+}
+p {
+  margin: 0 0 var(--space-md);
+  text-wrap: pretty;
 }
 code,
-pre {
+pre,
+kbd {
   font-family: var(--mono);
+  font-size: 0.88em;
+}
+pre {
+  background: var(--sunk);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  overflow-x: auto;
+  line-height: 1.55;
+  tab-size: 2;
+  /* Code wider than its box scrolls, and says so: a shadow at whichever edge
+     has more. */
+  background-image:
+    linear-gradient(to right, var(--sunk) 30%, transparent),
+    linear-gradient(to left, var(--sunk) 30%, transparent),
+    linear-gradient(to right, var(--line-strong), transparent),
+    linear-gradient(to left, var(--line-strong), transparent);
+  background-position:
+    left center,
+    right center,
+    left center,
+    right center;
+  background-repeat: no-repeat;
+  background-size:
+    2rem 100%,
+    2rem 100%,
+    0.6rem 100%,
+    0.6rem 100%;
+  background-attachment: local, local, scroll, scroll;
+}
+.muted {
+  color: var(--muted);
+}
+/* A quantity is always set in mono with tabular figures: the format's promise
+   is that a number arrives as a number, and the page says so in type. */
+.figures,
+.num {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
   font-size: 0.9em;
 }
-pre {
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 0.9rem;
-  overflow-x: auto;
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
-/* Masthead, not the wordmark-plus-links row every site ships: the rule under it
-   is a 2px ink bar rather than a hairline, and the wordmark carries a size of
-   its own, so the header reads as this site's own furniture. Still one flex row
-   that wraps — five destinations fit on two lines at 320px. */
+
+.skip {
+  position: absolute;
+  left: var(--gutter);
+  top: var(--space-xs);
+  z-index: 20;
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-full);
+  background: var(--fg);
+  color: var(--bg);
+  text-decoration: none;
+  transform: translateY(-300%);
+}
+.skip:focus-visible {
+  transform: none;
+}
+
+/* ── Masthead ──────────────────────────────────────────────────────────────
+   The rule under it is a 2px ink bar rather than a hairline, which is what
+   makes it a masthead and not chrome. */
 .site-header {
   display: flex;
-  gap: 1rem;
+  gap: var(--space-xs) var(--space-lg);
   align-items: baseline;
   flex-wrap: wrap;
-  padding-bottom: 0.6rem;
+  padding-bottom: var(--space-sm);
   border-bottom: 2px solid var(--fg);
+  view-transition-name: masthead;
 }
 /* `color` is explicit because the wordmark is a bare <strong> on the landing
-   page and wrapped in <a href="/"> everywhere else, so it inherited `fg` on
-   one page and the link `accent` on the other six — and the mark below paints
-   in currentColor, which would have made the logo change color page to page.
-   The brand reads as the brand in both places; the nav links keep the accent,
-   and a logo that goes home is convention enough without a color cue. */
+   page and wrapped in <a href="/"> everywhere else, and the mark below paints
+   in currentColor. */
 .site-header strong {
-  font-size: 1.05rem;
-  letter-spacing: 0.01em;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   color: var(--fg);
   position: relative;
-  padding-left: 1.67em;
+  padding-left: 1.5em;
 }
-/* The mark, set as decoration on the wordmark rather than as markup. A CSS
-   mask and not an <img>, for two reasons: it paints in `currentColor`, which
-   is the rule the mark follows anywhere it sits beside running text; and it
-   reaches every page — including the 53 generated corpus pages — without
-   touching a single page module. Sized in `em` so it tracks the wordmark.
-   Decorative: the name is carried by the text next to it.
-
-   Absolutely positioned, and that is load-bearing. The header is
-   `align-items: baseline`, and making `strong` a flex container instead
-   handed its baseline to this pseudo-element — which has no text in it, so
-   the browser fell back to its bottom edge and the wordmark floated ~6px
-   above the nav. Out of flow, `strong` stays an ordinary inline box and keeps
-   its own text baseline; `padding-left` (mark 1.17em + 0.5em gap) reserves
-   the space. */
+/* The mark, as a mask on the wordmark: it paints in `currentColor` and reaches
+   every page without touching a page module. Absolutely positioned, and that
+   is load-bearing — in flow it hands the header's baseline to a box with no
+   text in it. */
 .site-header strong::before {
   content: "";
   position: absolute;
   left: 0;
   top: 50%;
   transform: translateY(-50%);
-  width: 1.17em;
-  height: 1.43em;
+  width: 1.05em;
+  height: 1.28em;
   background: currentColor;
   -webkit-mask: url(/mark-small.svg) no-repeat center / contain;
   mask: url(/mark-small.svg) no-repeat center / contain;
@@ -159,148 +342,125 @@ pre {
 .site-header a {
   text-decoration: none;
 }
-/* Six destinations do not wrap the way four did. Left alone, the header lands
-   in FOUR lines and 119px at 320px and 375px — a third of a phone viewport
-   spent on chrome before the page says anything. Below 34rem the links step
-   down a notch and the row tightens, which puts it back to two.
-   The wordmark is excluded on purpose: it is the one item in the row that is
-   not a destination, and shrinking it with the links makes the masthead read
-   as a nav with a label rather than as a masthead. It is selected by the
-   `strong` it wraps, because on the landing page the wordmark is a bare
-   `<strong>` and everywhere else an `<a>` around one. */
-@media (max-width: 34rem) {
-  .site-header {
-    gap: 0.4rem 0.7rem;
-  }
-  .site-header > :is(a:not(:has(strong)), span) {
-    font-size: 0.92rem;
-  }
+.site-nav {
+  display: flex;
+  flex: 1;
+  gap: var(--space-2xs) var(--space-lg);
+  flex-wrap: wrap;
+  align-items: baseline;
+  font-size: var(--text-sm);
 }
-.site-header [aria-current="page"] {
-  font-weight: 600;
+.site-nav > * {
+  color: var(--fg);
+  white-space: nowrap;
+  padding-block: var(--space-2xs);
+  background:
+    linear-gradient(currentColor, currentColor) no-repeat left bottom / 0 2px;
+  transition: background-size var(--dur-short) var(--ease-out);
 }
-/* Accent as a hairline all round plus a tinted fill — not a 4px left stripe,
-   which is the same shape as the decorative side-stripe card and reads that way
-   whatever it's marking. The tint carries the signal; the border carries the
-   edge. */
-.banner {
-  background: color-mix(in srgb, var(--accent) 7%, var(--card));
-  border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--line));
-  border-radius: 8px;
-  padding: 0.6rem 0.9rem;
-  margin: 1rem 0;
+.site-nav > a:hover,
+.site-nav > [aria-current] {
+  background-size: 100% 2px;
 }
-.muted {
+/* The current page is marked by the rule alone. A heavier weight would widen
+   the word and shift every link after it from one page to the next. */
+.site-nav > :last-child {
+  margin-left: auto;
   color: var(--muted);
 }
-.error {
-  color: var(--error);
-  border: 1px solid var(--error);
-  border-radius: 8px;
-  padding: 0.75rem 1rem;
-  overflow-wrap: anywhere;
+/* Six destinations do not fit a phone on one line beside the wordmark. Below
+   46rem they take a row of their own, GitHub stays up beside the wordmark, and
+   each link is a full-height target. */
+@media (max-width: 46rem) {
+  .site-header {
+    position: relative;
+    padding-bottom: 0;
+  }
+  .site-nav {
+    flex: 1 1 100%;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    gap: 0 var(--space-xs);
+    overflow-x: auto;
+    scrollbar-width: none;
+    font-size: 0.78rem;
+  }
+  .site-nav > * {
+    padding-block: var(--space-sm);
+  }
+  .site-nav > :last-child {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding-block: var(--space-xs);
+  }
 }
-/* Authoring notes are the third state the format itself does not have: the
-   document is valid and a consumer must ignore what they name. Deliberately not
-   `--error` — colouring a producer lint like a defect is how a reader concludes
-   the document should be rejected, which is the forward-compatibility contract
-   exactly inverted. */
-.notes {
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  margin: 1rem 0;
-  padding: 0.75rem 1rem;
-  overflow-wrap: anywhere;
+
+/* ── Footer ─────────────────────────────────────────────────────────────── */
+footer {
+  margin-top: var(--space-3xl);
+  padding-top: var(--space-lg);
+  border-top: 2px solid var(--fg);
+  font-size: var(--text-sm);
 }
-.notes > :first-child {
-  margin-top: 0;
-}
-.notes > :last-child {
-  margin-bottom: 0;
-}
-.cards {
-  display: grid;
-  gap: 0.9rem;
-  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
-  padding: 0;
-  list-style: none;
-}
-.card {
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 0.9rem 1rem;
-}
-/* A grid that holds one or two cards rather than a corpus. `auto-fill` sizes
-   every track whether or not anything is in it, so a single card lands as a
-   15rem stub against 37rem of nothing; `auto-fit` collapses the empty tracks
-   and the 24rem ceiling stops the survivor stretching the full column. Used by
-   the implementations list on /showcase, so a short list reads as a statement
-   rather than as a gap. */
-.cards--few {
-  grid-template-columns: repeat(auto-fit, minmax(15rem, 24rem));
-}
-/* A recipe or bag title is arbitrary transcribed text in a 15rem grid track —
-   let it break inside a word rather than push the card sideways. */
-.card h3 {
-  margin: 0 0 0.3rem;
-  font-size: 1.02rem;
-  overflow-wrap: anywhere;
-  min-width: 0;
-}
-.card h2 {
-  margin: 0 0 0.5rem;
-}
-/* An implementer's own icon beside its name on /showcase. 56px is the App
-   Store list size; the 22% radius is the iOS mask, so a square export reads as
-   the icon it is rather than as a tile. */
-.card-head {
-  display: flex;
-  gap: 0.75rem;
-  align-items: center;
-  margin-bottom: 0.5rem;
-  min-width: 0;
-}
-.card-head h3,
-.card-head p {
+footer p {
+  max-width: var(--measure);
   margin: 0;
 }
-.card-icon {
-  flex: none;
-  width: 56px;
-  height: 56px;
-  border-radius: 22%;
+.site-footer nav {
+  margin-bottom: var(--space-sm);
+  color: var(--muted);
 }
+.site-footer nav a {
+  color: var(--fg);
+  white-space: nowrap;
+}
+
+/* ── Controls ───────────────────────────────────────────────────────────── */
 .btn {
-  display: inline-block;
-  background: var(--accent);
-  color: var(--accent-fg);
-  border: none;
-  border-radius: 8px;
-  padding: 0.5rem 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  min-height: 2.6rem;
+  background: var(--fg);
+  color: var(--bg);
+  border: 1px solid var(--fg);
+  border-radius: var(--radius-full);
+  padding: 0 1.15rem;
   font: inherit;
   font-size: 0.95rem;
+  font-weight: 550;
+  line-height: 1;
+  white-space: nowrap;
   cursor: pointer;
   text-decoration: none;
+  transition:
+    background-color var(--dur-micro) var(--ease-out),
+    border-color var(--dur-micro) var(--ease-out),
+    transform var(--dur-micro) var(--ease-out);
+}
+.btn--lg {
+  min-height: 3rem;
+  padding-inline: 1.5rem;
+  font-size: 1rem;
 }
 .btn--ghost {
   background: transparent;
-  color: var(--accent);
-  border: 1px solid var(--accent);
+  color: var(--fg);
+  border-color: var(--line-strong);
 }
-/* Pointer feedback: instant shades (no transition — the site has no motion system).
-   Mixing toward fg darkens in light mode and brightens in dark mode for free. */
 .btn:hover {
-  background: color-mix(in srgb, var(--accent) 85%, var(--fg) 15%);
+  background: color-mix(in oklch, var(--fg) 82%, var(--bg));
+  border-color: color-mix(in oklch, var(--fg) 82%, var(--bg));
 }
 .btn:active {
-  background: color-mix(in srgb, var(--accent) 72%, var(--fg) 28%);
+  transform: translateY(1px);
 }
 .btn--ghost:hover {
-  background: color-mix(in srgb, var(--accent) 12%, transparent);
-}
-.btn--ghost:active {
-  background: color-mix(in srgb, var(--accent) 20%, transparent);
+  background: color-mix(in oklch, var(--fg) 8%, transparent);
+  border-color: var(--fg);
 }
 /* Unavailable and in-flight. A button whose handler is awaiting a file read or
    the clipboard has to say so, and must not take a second click. */
@@ -308,71 +468,151 @@ pre {
 .btn[aria-disabled="true"] {
   opacity: 0.5;
   cursor: not-allowed;
+  transform: none;
 }
 .btn:disabled:hover,
 .btn[aria-disabled="true"]:hover {
-  background: var(--accent);
+  background: var(--fg);
+  border-color: var(--fg);
 }
 .btn--ghost:disabled:hover,
 .btn--ghost[aria-disabled="true"]:hover {
   background: transparent;
+  border-color: var(--line-strong);
 }
 .btn[aria-busy="true"] {
   cursor: progress;
 }
-:is(a, button, input, select, textarea, summary):focus-visible {
+.btn[aria-expanded="true"] {
+  background: color-mix(in oklch, var(--fg) 10%, transparent);
+  color: var(--fg);
+  border-color: var(--fg);
+}
+/* The ring appears at once: a keyboard reader must not wait on a transition. */
+:is(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
-/* File-upload buttons are labels wrapping a visually-hidden input — surface its focus. */
+/* File-upload buttons are labels wrapping a visually-hidden input. */
 label.btn:has(input:focus-visible) {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 .row {
   display: flex;
-  gap: 0.5rem;
+  gap: var(--space-xs);
   flex-wrap: wrap;
   align-items: center;
-  margin: 0.6rem 0;
+  margin: var(--space-sm) 0;
 }
 .row h2 {
   margin: 0;
 }
+nav.row {
+  gap: var(--space-xs) var(--space-lg);
+  margin-top: var(--space-xl);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--line);
+  font-size: var(--text-sm);
+}
 .chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
   border: 1px solid var(--line-strong);
-  background: var(--card);
+  background: transparent;
   color: var(--fg);
-  border-radius: 999px;
-  padding: 0.2rem 0.75rem;
+  border-radius: var(--radius-full);
+  padding: 0 0.8rem;
   font: inherit;
-  font-size: 0.85rem;
+  font-size: var(--text-sm);
+  white-space: nowrap;
+  text-decoration: none;
   cursor: pointer;
+  transition:
+    background-color var(--dur-micro) var(--ease-out),
+    border-color var(--dur-micro) var(--ease-out),
+    color var(--dur-micro) var(--ease-out);
+}
+.chip .num {
+  margin-left: 0.4em;
+  font-size: 0.85em;
+  color: var(--muted);
+}
+.chip--on .num {
+  color: inherit;
+  opacity: 0.7;
+}
+.chip:disabled {
+  border-style: dashed;
+  color: var(--muted);
+  cursor: not-allowed;
 }
 .chip--on {
-  background: var(--accent);
-  color: var(--accent-fg);
-  border-color: var(--accent);
+  background: var(--fg);
+  color: var(--bg);
+  border-color: var(--fg);
 }
-.chip:hover {
+.chip:hover:not(:disabled) {
   border-color: var(--fg);
 }
 .chip--on:hover {
-  background: color-mix(in srgb, var(--accent) 85%, var(--fg) 15%);
-  border-color: color-mix(in srgb, var(--accent) 85%, var(--fg) 15%);
+  background: color-mix(in oklch, var(--fg) 82%, var(--bg));
 }
 .field {
   width: 100%;
-  padding: 0.55rem 0.7rem;
+  padding: 0.6rem 0.8rem;
   border: 1px solid var(--line-strong);
-  border-radius: 8px;
-  background: var(--bg);
+  border-radius: var(--radius-sm);
+  background: var(--card);
   color: var(--fg);
   font: inherit;
+  transition: border-color var(--dur-micro) var(--ease-out);
+}
+.field:hover {
+  border-color: var(--fg);
+}
+.field::placeholder {
+  color: var(--muted);
+}
+:is(input, select).field {
+  height: 2.75rem;
+}
+select.field {
+  appearance: none;
+  padding-right: 2.2rem;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--fg) 50%),
+    linear-gradient(135deg, var(--fg) 50%, transparent 50%);
+  background-position:
+    right 1.05rem center,
+    right 0.75rem center;
+  background-size: 0.3rem 0.3rem;
+  background-repeat: no-repeat;
+}
+input[type="checkbox"] {
+  width: 1.15rem;
+  height: 1.15rem;
+  accent-color: var(--fg);
+}
+summary {
+  cursor: pointer;
 }
 textarea.field {
-  min-height: 12rem;
+  white-space: pre;
+  overflow: auto;
+  min-height: 14rem;
   font-family: var(--mono);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  resize: vertical;
+}
+.tool textarea.field {
+  min-height: 30rem;
+}
+input[type="search"].field {
+  border-radius: var(--radius-full);
+  padding-inline: 1.1rem;
 }
 /* Width modifiers for the short inputs on /generate, so those widths live in
    the sheet rather than as inline literals scattered through markup. */
@@ -385,14 +625,1703 @@ textarea.field {
 .field--md {
   max-width: 8rem;
 }
+
+/* ── Notices ───────────────────────────────────────────────────────────────
+   A tinted fill and a hairline all round — never a thick stripe down one
+   edge, which reads as decoration whatever it marks. */
+.banner {
+  background: var(--tint);
+  border: 1px solid color-mix(in oklch, var(--accent) 40%, var(--line));
+  border-radius: var(--radius-md);
+  padding: var(--space-sm) var(--space-md);
+  margin: var(--space-md) 0;
+}
+.error {
+  color: var(--error);
+  border: 1px solid var(--error);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm) var(--space-md);
+  overflow-wrap: anywhere;
+}
+/* Authoring notes are the third state the format itself does not have: the
+   document is valid and a consumer must ignore what they name. Deliberately
+   not `--error` — coloring a producer lint like a defect is how a reader
+   concludes the document should be rejected. */
+.notes {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  margin: var(--space-md) 0;
+  padding: var(--space-sm) var(--space-md);
+  overflow-wrap: anywhere;
+}
+:is(.banner, .error, .notes) > :first-child {
+  margin-top: 0;
+}
+:is(.banner, .error, .notes) > :last-child {
+  margin-bottom: 0;
+}
+
+/* ── The pour curve ────────────────────────────────────────────────────────
+   Cumulative water against time, drawn from a recipe's own steps. The plot
+   stretches to its box; labels are HTML placed by percentage so they never
+   stretch with it. */
+.curve {
+  margin: var(--space-lg) 0;
+}
+.curve-plot {
+  position: relative;
+  height: var(--curve-h, 12rem);
+  margin-top: 1.9rem;
+  border-bottom: 1px solid var(--line-strong);
+  container-type: inline-size;
+}
+.curve-svg,
+.spark {
+  display: block;
+  width: 100%;
+  overflow: visible;
+}
+.curve-svg {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+}
+.curve-line {
+  fill: none;
+  stroke: var(--water);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+.curve-area {
+  fill: var(--water-fill);
+}
+/* What has not been poured yet: the same staircase as a dashed outline. */
+.curve-svg--ghost .curve-line {
+  stroke: var(--line-strong);
+  stroke-width: 1;
+  stroke-dasharray: 2 4;
+}
+.curve-svg--ghost .curve-area {
+  fill: none;
+}
+.curve-svg--done {
+  clip-path: inset(-2rem calc((1 - var(--p)) * 100%) -1px -1px);
+}
+.curve-pt {
+  position: absolute;
+  left: var(--x);
+  bottom: var(--y);
+  width: 0.56rem;
+  height: 0.56rem;
+  margin: 0 0 -0.28rem -0.28rem;
+  border-radius: 50%;
+  background: var(--water);
+  box-shadow: 0 0 0 2px var(--bg);
+  transition:
+    background-color var(--dur-short) var(--ease-out),
+    transform var(--dur-short) var(--ease-out);
+}
+.curve-pt-w {
+  position: absolute;
+  left: 0.2rem;
+  bottom: 0.75rem;
+  font-family: var(--mono);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--fg);
+  transition: color var(--dur-short) var(--ease-out);
+}
+/* A label with room only in a wide plot goes when the plot is a phone's. */
+@container (max-width: 30rem) {
+  .curve-pt-w--wide {
+    display: none;
+  }
+}
+.curve-pt--left .curve-pt-w {
+  left: auto;
+  right: 0.2rem;
+}
+.curve-pt.is-pending {
+  background: var(--line-strong);
+}
+.curve-pt.is-pending .curve-pt-w {
+  color: var(--muted);
+}
+.curve-pt.is-active {
+  transform: scale(1.5);
+}
+.curve-pt.is-active .curve-pt-w {
+  transform: scale(0.667);
+  transform-origin: left bottom;
+}
+.curve-pt--left.is-active .curve-pt-w {
+  transform-origin: right bottom;
+}
+/* The leading edge of the water, not a line across the plot: it stands only as
+   high as the water does, so it never crosses a label above a plateau. */
+.curve-playhead {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  height: calc(var(--h, 0) * 100%);
+  margin-left: -1px;
+  background: var(--water);
+  transform: translateX(calc(var(--p) * 100cqi));
+  opacity: 0;
+}
+.curve[data-playing] .curve-playhead {
+  opacity: 1;
+}
+.curve-axis {
+  position: relative;
+  height: 1.3rem;
+  margin: var(--space-xs) 0 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--mono);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+.curve-axis li {
+  position: absolute;
+  left: var(--x);
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+.curve-axis li:first-child {
+  transform: none;
+}
+.curve-axis li:last-child {
+  transform: translateX(-100%);
+}
+.curve figcaption {
+  margin-top: var(--space-xs);
+  font-size: var(--text-sm);
+}
+.spark {
+  height: 2.9rem;
+}
+.spark .curve-line {
+  stroke-width: 1.5;
+}
+.ratio-coffee {
+  fill: var(--coffee);
+}
+
+/* The proportion at full size: the dose and what it makes, to scale. */
+.ratio {
+  margin: var(--space-lg) 0;
+}
+.ratio-bar {
+  display: grid;
+  grid-template-columns: var(--c) minmax(0, 1fr);
+  height: 4.5rem;
+  border-bottom: 1px solid var(--line-strong);
+}
+.ratio-bar > :first-child {
+  background: var(--coffee);
+}
+.ratio-bar > :last-child {
+  background: var(--water-fill);
+  border-top: 2px solid var(--water);
+}
+.ratio-legend {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-md);
+  margin: var(--space-xs) 0 0;
+  font-family: var(--mono);
+  font-size: var(--text-xs);
+  color: var(--muted);
+}
+
+/* A bag's origin as a strip: a segment per component, as wide as its share. */
+.strip {
+  margin: 0;
+}
+.strip ol {
+  display: flex;
+  gap: 3px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.strip li {
+  flex: var(--share) 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xs);
+  font-size: var(--text-sm);
+  overflow-wrap: anywhere;
+}
+.strip-bar {
+  height: 4.5rem;
+  margin-bottom: var(--space-xs);
+  border-top: 2px solid var(--coffee);
+  background: color-mix(
+    in oklch,
+    var(--coffee) calc(78% - var(--k) * 26%),
+    var(--bg)
+  );
+}
+.strip figcaption {
+  margin-top: var(--space-sm);
+  font-size: var(--text-sm);
+}
+.bag {
+  display: grid;
+  gap: var(--space-xl);
+  margin: var(--space-lg) 0 var(--space-xl);
+}
+.bag > * {
+  min-width: 0;
+  margin: 0;
+}
+.bag-main > :first-child {
+  margin-top: 0;
+}
+@media (min-width: 60rem) {
+  .bag {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    align-items: start;
+  }
+  .bag > .spec {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* The conformance corpus, one cell per case: what an implementation must
+   accept, then what it must refuse. Every cell is a link to its case. */
+.conformance {
+  margin: var(--space-lg) 0 var(--space-xl);
+}
+.tally + .tally {
+  margin-top: var(--space-xl);
+}
+.tally h3 {
+  margin: 0 0 var(--space-sm);
+}
+.tally dl {
+  display: grid;
+  gap: var(--space-md);
+  margin: 0;
+}
+.tally dt {
+  margin-bottom: var(--space-xs);
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+.tally dd {
+  margin: 0;
+}
+.cells {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.cell {
+  display: block;
+  width: 0.95rem;
+  height: 1.6rem;
+  border-radius: 2px;
+  transition: transform var(--dur-micro) var(--ease-out);
+}
+.cell:hover {
+  transform: scaleY(1.25);
+}
+.accept {
+  background: var(--water);
+}
+/* A case to refuse is as solid as one to accept — it is not an unfinished
+   one — in the other data color. */
+.refuse {
+  background: var(--coffee);
+}
+/* On a touch screen a cell is a picture, not a hundred targets the size of a
+   grain: the prose beside the figure links both corpora. */
+@media (pointer: coarse) {
+  .cell {
+    pointer-events: none;
+  }
+}
+.cell-caption {
+  min-height: 1.5em;
+  margin: var(--space-sm) 0 0;
+  font-size: var(--text-sm);
+}
+
+/* A code block someone is meant to copy carries the button for it. */
+.copyable {
+  position: relative;
+  max-width: var(--measure);
+}
+.copyable > pre {
+  padding-top: 2.9rem;
+}
+.copy {
+  position: absolute;
+  top: var(--space-xs);
+  right: var(--space-xs);
+  min-height: 1.9rem;
+  padding: 0 0.7rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-full);
+  background: var(--card);
+  color: var(--fg);
+  font: inherit;
+  font-size: var(--text-xs);
+  cursor: pointer;
+  transition: border-color var(--dur-micro) var(--ease-out);
+}
+.copy:hover {
+  border-color: var(--fg);
+}
+
+/* ── Cards ──────────────────────────────────────────────────────────────── */
+.cards {
+  display: grid;
+  gap: var(--space-md);
+  grid-template-columns: repeat(auto-fill, minmax(min(19rem, 100%), 1fr));
+  padding: 0;
+  margin: var(--space-lg) 0;
+  list-style: none;
+}
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: var(--space-md) var(--space-lg) var(--space-lg);
+  min-width: 0;
+}
+main > .card,
+.save-panel {
+  margin-top: var(--space-xl);
+}
+/* A directory is read by who made the thing: one section per author or
+   roaster, its count beside the name. */
+.group {
+  margin-top: var(--space-2xl);
+}
+.group > h2 {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-sm);
+  margin: 0;
+  padding-bottom: var(--space-sm);
+  border-bottom: 2px solid var(--fg);
+  font-size: var(--text-xl);
+}
+.group > h2 .num {
+  font-size: var(--text-sm);
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.facet {
+  position: relative;
+  margin: var(--space-xs) 0;
+}
+.facet:has(.facet-label) {
+  padding-left: 5rem;
+}
+@media (max-width: 40rem) {
+  .facet {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    margin-right: calc(var(--gutter) * -1);
+    padding-right: calc(var(--gutter) * 2);
+    mask-image: linear-gradient(to left, transparent, var(--bg) 3rem);
+  }
+}
+.facet-label {
+  position: absolute;
+  left: 0;
+  top: 0.35rem;
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+.empty {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-sm);
+  margin: var(--space-xl) 0;
+  padding: var(--space-xl) 0;
+  border-block: 1px solid var(--line);
+}
+.empty p {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 600;
+}
+.count {
+  font-size: var(--text-sm);
+}
+/* Recipes, as an index: the curve, the name, four numbers in columns that line
+   up down the page, one action. On a phone a row is the curve beside the name,
+   with the numbers running under it. */
+.rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.recipe-row {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr) auto;
+  gap: var(--space-2xs) var(--space-md);
+  align-items: center;
+  padding: var(--space-md) 0;
+  border-bottom: 1px solid var(--line);
+}
+.row-glyph {
+  grid-row: span 2;
+  align-self: start;
+  border-bottom: 1px solid var(--line-strong);
+}
+.row-glyph .spark {
+  height: 3.2rem;
+}
+.spark--weights .curve-line {
+  stroke-width: 1.5;
+}
+.row-main > * {
+  margin: 0;
+}
+.row-main h3 {
+  font-size: var(--text-md);
+  letter-spacing: -0.005em;
+}
+.row-main h3 a {
+  color: var(--fg);
+  text-decoration: none;
+}
+/* The title's link covers the row, so the whole row is the target; the row's
+   other links sit above it. */
+.recipe-row {
+  position: relative;
+}
+/* The hover tint bleeds past the row; the row's rule does not. */
+.recipe-row::before {
+  content: "";
+  position: absolute;
+  inset: 0 calc(var(--space-sm) * -1);
+  z-index: -1;
+  border-radius: var(--radius-sm);
+  background: color-mix(in oklch, var(--fg) 5%, transparent);
+  opacity: 0;
+  transition: opacity var(--dur-micro) var(--ease-out);
+}
+.row-main h3 a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.recipe-row :is(.row-link, .btn) {
+  position: relative;
+  z-index: 1;
+}
+.row-figs {
+  grid-column: 2 / -1;
+  margin: 0;
+}
+.row-figs > :empty {
+  display: none;
+}
+.recipe-row > .btn {
+  grid-column: 3;
+  grid-row: 1;
+  min-height: 2.1rem;
+  padding: 0 0.9rem;
+  font-size: var(--text-sm);
+}
+/* The source is on every row, and it is a link — but sixty-four underlined
+   teal lines made the list about its footnotes. It reads as text and answers
+   as a link. */
+.row-link {
+  color: inherit;
+  text-decoration-color: var(--line-strong);
+}
+.row-link:hover {
+  color: var(--accent);
+}
+.rows-head {
+  display: none;
+}
+@media (min-width: 62rem) {
+  .rows-head {
+    display: grid;
+    grid-template-columns:
+      7rem minmax(0, 1fr) 12rem 4.75rem 8.25rem 2.75rem
+      4.5rem;
+    gap: 0 var(--space-md);
+    margin: var(--space-xl) 0 calc(var(--space-xl) * -1);
+    font-size: var(--text-xs);
+    color: var(--muted);
+  }
+  .rows-head > :nth-child(n + 3) {
+    text-align: right;
+  }
+}
+.recipe-row.is-on::before {
+  opacity: 1;
+}
+.row-source {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+/* Count and legend share the line that heads the list. */
+.list-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2xs) var(--space-xl);
+  margin: var(--space-lg) 0 0;
+}
+.list-head > * {
+  margin: 0;
+}
+.intro {
+  font-size: 0.95rem;
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs) var(--space-lg);
+  margin: var(--space-xs) 0 0;
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+.legend .spark {
+  display: inline-block;
+  width: 2.6rem;
+  height: 1.1rem;
+  margin-right: var(--space-2xs);
+  vertical-align: -0.15rem;
+}
+/* On a phone a row is two tracks: the glyph, and everything else under the
+   name. The action sits at the end of the figures, not beside the text. */
+@media (max-width: 40rem) {
+  .recipe-row {
+    grid-template-columns: 4.25rem minmax(0, 1fr);
+  }
+  .recipe-row > .btn {
+    display: none;
+  }
+  .figures.row-figs {
+    grid-column: 2;
+    display: grid;
+    grid-template-columns: repeat(2, max-content);
+    gap: 0 var(--space-lg);
+  }
+}
+@media (hover: hover) {
+  .recipe-row:hover::before {
+    opacity: 1;
+  }
+  .recipe-row:hover h3 a {
+    color: var(--accent);
+  }
+  /* The curve redraws under the pointer: the row answers with its own data. */
+  .recipe-row:hover .spark,
+  .wall-link:hover .spark {
+    animation: wipe 700ms var(--ease-out);
+  }
+}
+@media (min-width: 62rem) {
+  .recipe-row {
+    /* Sized for the widest value a column holds: a dose and a brew that are
+       both ranges, and a temperature window to a tenth of a degree. */
+    grid-template-columns:
+      7rem minmax(0, 1fr) 12rem 4.75rem 8.25rem 2.75rem
+      4.5rem;
+    gap: 0 var(--space-md);
+  }
+  .row-glyph {
+    grid-row: auto;
+    align-self: center;
+  }
+  /* The four numbers become four cells of the row's own grid. */
+  .figures.row-figs {
+    display: contents;
+  }
+  /* A recipe that states no temperature still has a temperature column, and
+     numerals sit against their track's right edge so the gutters are even. */
+  .figures.row-figs > span {
+    display: block;
+    text-align: right;
+  }
+
+  .recipe-row > .btn {
+    grid-column: auto;
+    grid-row: auto;
+  }
+}
+
+/* Bags, as an index rather than cards: a name and three facts per line. */
+.index {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.index > li {
+  display: grid;
+  gap: var(--space-3xs) var(--space-lg);
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.95rem;
+}
+.index-link {
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+  font-weight: 600;
+  color: var(--fg);
+  text-decoration: none;
+}
+.index-link {
+  word-break: keep-all;
+  line-break: strict;
+  overflow-wrap: anywhere;
+}
+.index-link:hover {
+  color: var(--accent);
+}
+/* A roast level as a mark: one cell per level the vocabulary has. */
+.roast {
+  display: inline-flex;
+  gap: 2px;
+  margin-right: var(--space-2xs);
+  vertical-align: -0.05em;
+}
+.roast > i {
+  width: 0.5rem;
+  height: 0.8rem;
+  border-radius: 1px;
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+}
+@media (prefers-color-scheme: dark) {
+  .roast > i {
+    box-shadow: inset 0 0 0 1px var(--line-strong);
+  }
+}
+.roast > .on {
+  background: color-mix(
+    in oklch,
+    var(--roast-dark) calc(var(--k) * 20%),
+    var(--roast-light)
+  );
+}
+/* A blend's components, one per line. */
+.origins {
+  margin: var(--space-2xs) 0;
+  padding: 0;
+  list-style: none;
+}
+.index .origins {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+@media (min-width: 52rem) {
+  .index > li {
+    grid-template-columns:
+      minmax(0, 4fr) minmax(0, 6fr) minmax(0, 2.5fr) minmax(0, 2.5fr)
+      4.5rem;
+    align-items: baseline;
+  }
+  .index > li > :last-child {
+    text-align: right;
+  }
+}
+.origins > * + * {
+  margin-top: var(--space-3xs);
+}
+
+/* A grid that holds one or two cards rather than a corpus: `auto-fit`
+   collapses the empty tracks and the ceiling stops the survivor stretching. */
+.cards--few {
+  grid-template-columns: repeat(auto-fit, minmax(min(19rem, 100%), 26rem));
+}
+.card h3 {
+  margin: 0 0 var(--space-2xs);
+}
+.card h2 {
+  margin: 0 0 var(--space-xs);
+}
+.card p {
+  margin: var(--space-xs) 0;
+}
+.card h3 a,
+.card h2 a {
+  color: var(--fg);
+  text-decoration: none;
+  background:
+    linear-gradient(currentColor, currentColor) no-repeat left bottom / 0 1px;
+  transition: background-size var(--dur-short) var(--ease-out);
+}
+.card h3 a:hover,
+.card h2 a:hover {
+  background-size: 100% 1px;
+}
+/* Each figure is one unbreakable item, set apart by space rather than a
+   separator: a dot stranded at the end of a wrapped line is a typesetting
+   error, and it would be repeated on every row. */
+.figures {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.3em;
+}
+.figures > span {
+  white-space: nowrap;
+}
+.card .btn {
+  min-height: 2.1rem;
+  padding: 0 0.8rem;
+  font-size: var(--text-sm);
+}
+/* An implementer's own icon beside its name on /showcase. 56px is the App
+   Store list size; the 22% radius is the iOS mask. */
+.card-head {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: center;
+  margin-bottom: var(--space-xs);
+  min-width: 0;
+}
+.card-head h3,
+.card-head p {
+  margin: 0;
+}
+.card-icon {
+  flex: none;
+  width: 56px;
+  height: 56px;
+  border-radius: 22%;
+}
+.attribution {
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+.bean-card > p {
+  margin: var(--space-2xs) 0;
+}
+.bean-recipes,
+.bean-sources {
+  margin: var(--space-xs) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.bean-recipes li {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr) auto;
+  gap: var(--space-md);
+  align-items: center;
+}
+.bean-recipes li,
+.bean-sources li {
+  padding: var(--space-xs) 0;
+  border-top: 1px solid var(--line);
+}
+.card .bean-recipes {
+  font-size: var(--text-sm);
+}
+
+/* Every schedule on one pair of axes. A line is quiet until its row, or the
+   pointer, picks it out. */
+.overlay {
+  margin: var(--space-xl) 0 0;
+}
+.overlay-plot {
+  position: relative;
+  height: clamp(11rem, 26vw, 19rem);
+  margin-left: 3rem;
+  border-bottom: 1px solid var(--line-strong);
+}
+.overlay svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.ov-grid {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.ov-line {
+  fill: none;
+  stroke: var(--water);
+  stroke-width: 1.5;
+  stroke-opacity: 0.55;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  transition: stroke-opacity var(--dur-micro) var(--ease-out);
+}
+.ov-hit {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 12;
+  vector-effect: non-scaling-stroke;
+  pointer-events: stroke;
+}
+.overlay.has-on .ov-line {
+  stroke-opacity: 0.12;
+}
+.overlay.has-on .ov-line.is-on {
+  stroke-opacity: 1;
+  stroke-width: 2.5;
+}
+.overlay-levels {
+  position: absolute;
+  inset: 0 100% 0 auto;
+  width: 3rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--mono);
+  font-size: var(--text-xs);
+  color: var(--muted);
+}
+.overlay-levels li {
+  position: absolute;
+  right: var(--space-xs);
+  bottom: var(--y);
+  transform: translateY(50%);
+  white-space: nowrap;
+}
+.overlay-axis {
+  margin-left: 3rem;
+}
+.overlay figcaption {
+  margin: var(--space-xs) 0 0 3rem;
+  font-size: var(--text-sm);
+}
+
+/* ── Steps ──────────────────────────────────────────────────────────────── */
+.steps {
+  padding-left: 0;
+  list-style: none;
+}
+.steps li {
+  display: flex;
+  gap: var(--space-sm);
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--line);
+  transition: background-color var(--dur-micro) var(--ease-out);
+}
+.steps li.is-active {
+  background: var(--water-fill);
+}
+.steps .t {
+  min-width: 3.2rem;
+  font-family: var(--mono);
+  font-size: 0.9em;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+/* The cumulative-water cell: pushed to the row's end so the numbers read as a
+   column. */
+.steps .to {
+  margin-left: auto;
+  padding-left: var(--space-sm);
+  font-family: var(--mono);
+  font-size: 0.9em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.clock {
+  font-family: var(--mono);
+  font-size: clamp(3.5rem, 2rem + 9vw, 7rem);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin: var(--space-md) 0;
+}
+
+/* ── Share ──────────────────────────────────────────────────────────────── */
+/* Named `panel`, not `modal`: it renders inline, traps nothing, and carries
+   disclosure semantics rather than dialog ones. */
+.qr-panel {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  background: var(--card);
+  max-width: 20rem;
+  margin-top: var(--space-sm);
+  animation: rise var(--dur-short) var(--ease-out);
+}
+.qr-panel svg {
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-sm);
+}
+/* The encoder draws black on white; here it is the page's ink on its paper,
+   the same in both schemes because a code is scanned, not read. */
+.qr-panel svg path:first-child {
+  fill: var(--qr-ground);
+}
+.qr-panel svg path:last-child {
+  stroke: oklch(23.5% 0.025 45);
+}
+/* The per-card share on a bag-to-brew page: indented under the card it belongs
+   to and set a size down, so four of them read as four offers, not four
+   panels. */
+.scoped-share {
+  margin: var(--space-xs) 0 var(--space-lg);
+  padding-left: var(--space-md);
+  border-left: 1px solid var(--line);
+}
+.scoped-share > .muted {
+  margin: 0 0 var(--space-xs);
+  font-size: var(--text-sm);
+}
+.scoped-share .btn {
+  min-height: 2.1rem;
+  font-size: var(--text-sm);
+  padding: 0 0.8rem;
+}
+/* The publication's own share on a corpus page: full size and unindented. */
+.whole-share {
+  margin: var(--space-xl) 0 var(--space-lg);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--line);
+}
+.whole-share > .muted {
+  margin: 0 0 var(--space-xs);
+}
+/* One action row, one size, wherever a document is offered. */
+:is(.whole-share, .scoped-share, .save-panel) .btn {
+  min-height: 2.25rem;
+  padding: 0 0.85rem;
+  font-size: var(--text-sm);
+}
+:is(.whole-share, .scoped-share, .save-panel) .row {
+  gap: var(--space-2xs);
+}
+.qr-figure {
+  margin: 0;
+}
+.qr-figure img {
+  display: block;
+  width: 100%;
+  background: var(--qr-ground);
+  border-radius: var(--radius-sm);
+}
+
+/* ── Landing ───────────────────────────────────────────────────────────────
+   The headline and the live document share the first screen: the claim on one
+   side, the thing itself on the other. Everything after is a movement between
+   hairlines. No section carries a numbered eyebrow. */
+.hero {
+  display: grid;
+  gap: var(--space-lg) var(--space-2xl);
+  padding: clamp(1.25rem, 3vw, 2.5rem) 0 var(--space-xl);
+}
+.hero > * {
+  min-width: 0;
+}
+.hero .lede {
+  max-width: 34rem;
+}
+.hero .row {
+  margin: 0;
+}
+@media (min-width: 64rem) {
+  .hero {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    align-items: end;
+  }
+  .hero .lede {
+    font-size: var(--text-md);
+    margin-bottom: var(--space-md);
+  }
+  .hero > .live {
+    grid-column: 1 / -1;
+  }
+}
+/* On a phone the pitch is small type and the buttons sit side by side, so the
+   curve is still on the first screen under them. */
+@media (max-width: 63.99rem) {
+  .hero .lede {
+    font-size: 1rem;
+    margin-bottom: var(--space-md);
+  }
+  .hero .row {
+    flex-wrap: nowrap;
+    gap: var(--space-2xs);
+  }
+  .hero .row .btn {
+    flex: 1 1 0;
+    min-height: 2.6rem;
+    padding-inline: var(--space-xs);
+    font-size: var(--text-sm);
+  }
+}
+
+/* The live document: everything one real file says, played back over the file
+   itself. The only object on the site that sits above the page. */
+.live {
+  display: grid;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.live > * {
+  min-width: 0;
+}
+.live-stage {
+  padding: var(--space-lg) var(--space-lg) var(--space-md);
+  --curve-h: clamp(9rem, 18vw, 13rem);
+}
+@media (min-width: 64rem) {
+  .live {
+    grid-template-columns: minmax(0, 8fr) minmax(0, 5fr);
+  }
+  .live-stage {
+    padding: var(--space-xl) var(--space-xl) var(--space-lg);
+  }
+  /* The file is as tall as the stage beside it and scrolls inside that: its
+     own length must not set the card's, or the stage is left with a void. */
+  .live > .live-doc {
+    display: flex;
+    flex-direction: column;
+    contain: size;
+    border-top: 0;
+    border-left: 1px solid var(--line);
+  }
+  .live .live-json {
+    flex: 1 1 0;
+    height: auto;
+    min-height: 0;
+  }
+}
+.live-stage .curve {
+  margin: var(--space-xs) 0 0;
+}
+.live-doc {
+  border-top: 1px solid var(--line);
+  background: var(--sunk);
+}
+.live-file {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0 var(--space-md);
+  margin: 0;
+  padding: var(--space-sm) var(--space-lg);
+  border-bottom: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: var(--text-xs);
+  color: var(--muted);
+}
+.live-file-link {
+  color: var(--fg);
+}
+.live-json {
+  /* Positioned so each line's `offsetTop` is measured from the pane: the
+     player scrolls the pane to the line being poured. */
+  position: relative;
+  margin: 0;
+  /* Seven lines exactly, so the pane never cuts a line of the file in half. */
+  height: calc(7 * 1.6em + 2 * var(--space-sm));
+  padding: var(--space-sm) 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  overflow: auto;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--muted);
+  scrollbar-width: thin;
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    var(--bg) 1.2em calc(100% - 1.6em),
+    transparent
+  );
+}
+/* One span per line of the file. Wrapped lines hang under their own indent. */
+.ln {
+  display: block;
+  padding: 0 var(--space-lg) 0 calc(var(--space-lg) + (var(--i, 0) + 2) * 1ch);
+  text-indent: -2ch;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  transition: background-color var(--dur-short) var(--ease-out);
+}
+.ln .k {
+  color: var(--fg);
+}
+.ln .n {
+  color: var(--accent);
+}
+.ln.is-active {
+  background: var(--water-fill);
+  color: var(--fg);
+}
+.readout {
+  display: flex;
+  gap: var(--space-xl);
+  align-items: flex-end;
+  margin: 0;
+}
+.readout > div {
+  display: flex;
+  flex-direction: column-reverse;
+}
+.readout dt {
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+.readout dd {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: clamp(2.2rem, 1.4rem + 2.6vw, 3.5rem);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+.live-controls {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: center;
+  margin-top: var(--space-sm);
+}
+.live-controls[hidden] {
+  display: none;
+}
+.live-controls .btn {
+  min-width: 5.4rem;
+  min-height: 2.25rem;
+  font-size: var(--text-sm);
+}
+.live-controls input[type="range"] {
+  flex: 1;
+  min-width: 0;
+  accent-color: var(--accent);
+}
+.live-hint {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-md);
+  margin: var(--space-xs) 0 0;
+  font-size: var(--text-sm);
+}
+/* Said only once the module has made it true. */
+.live:not([data-ready]) .live-hint {
+  display: none;
+}
+.link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  cursor: pointer;
+}
+.link:hover {
+  text-decoration-thickness: 2px;
+}
+/* Once the document is live, a pour is a handle: larger, and it says so. */
+.live[data-ready] .curve-pt {
+  width: 1rem;
+  height: 1rem;
+  margin: 0 0 -0.5rem -0.5rem;
+  cursor: grab;
+  touch-action: none;
+}
+/* Once, after the playback: the middle pour lifts and settles, to say a pour
+   can be moved. Not while the reader has asked for less motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .live[data-played]:not([data-edited]) .curve-pt:nth-child(5) {
+    animation: nudge 900ms var(--ease-in-out) 400ms 2;
+  }
+}
+.live[data-ready] .curve-pt::after {
+  content: "";
+  position: absolute;
+  inset: -0.8rem;
+}
+.live[data-ready] .curve-pt:active {
+  cursor: grabbing;
+}
+.live[data-ready] .curve-pt-w {
+  bottom: 1.15rem;
+}
+.curve-pt-w.is-off {
+  display: none;
+}
+.curve-pt.is-active .curve-pt-w.is-off {
+  display: block;
+}
+/* Here the pour being played or edited is ringed rather than enlarged: a
+   larger dot would sit on its own label. */
+.live[data-ready] .curve-pt:is(:hover, .is-active) {
+  transform: none;
+  box-shadow:
+    0 0 0 2px var(--card),
+    0 0 0 4px var(--water);
+}
+.live[data-ready] .curve-pt:is(:hover, .is-active) .curve-pt-w {
+  transform: none;
+}
+/* The pour being played or edited wears its weight as a tag, above its
+   neighbors' labels: two pours a step apart would otherwise print one number
+   into the other. */
+.live[data-ready] .curve-pt.is-active .curve-pt-w {
+  z-index: 2;
+  bottom: 1.25rem;
+  padding: 0.2rem 0.4rem;
+  border-radius: var(--radius-sm);
+  background: var(--fg);
+  color: var(--bg);
+}
+
+/* A number set in mono carries a full-width word space before its unit, which
+   at display size reads as the unit drifting away. */
+.unit {
+  margin-left: 0.14em;
+  font-size: 0.5em;
+  letter-spacing: 0;
+  color: var(--muted);
+}
+
+.mv {
+  padding-block: clamp(2.5rem, 7vw, 4.5rem);
+  border-top: 1px solid var(--line);
+}
+.hero + .mv {
+  margin-top: var(--space-xl);
+}
+.mv h2 {
+  font-size: var(--text-2xl);
+  font-weight: 650;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  margin: 0 0 var(--space-lg);
+  max-width: 16ch;
+}
+.mv p {
+  max-width: var(--measure);
+}
+.mv--quiet {
+  padding-block: var(--space-xl);
+}
+.mv--quiet > h2 {
+  font-size: var(--text-xl);
+  letter-spacing: -0.015em;
+}
+.mv-split > section + section {
+  margin-top: var(--space-2xl);
+}
+@media (min-width: 60rem) {
+  .mv-head {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: var(--space-xl);
+    align-items: start;
+  }
+  .mv-split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--space-2xl);
+  }
+  .mv-split > section + section {
+    margin-top: 0;
+  }
+}
+
+/* One document, three carriers — each a real artifact, not a picture of one.
+   Three columns of one ruled strip rather than three boxes: the artifacts are
+   different heights, and a box drawn round each showed the difference as
+   empty space. */
+.carriers {
+  display: grid;
+  gap: var(--space-xl);
+  margin: var(--space-xl) 0 0;
+  padding: var(--space-lg) 0 0;
+  list-style: none;
+  border-top: 2px solid var(--fg);
+}
+.carriers > li {
+  min-width: 0;
+}
+.carriers h3 {
+  margin: 0 0 var(--space-md);
+}
+.carriers pre {
+  margin: 0 0 var(--space-sm);
+  font-size: 0.84rem;
+}
+.carriers .qr-figure {
+  margin-bottom: var(--space-sm);
+}
+.qr {
+  display: block;
+  width: 100%;
+  max-width: 15rem;
+  height: auto;
+  border-radius: var(--radius-sm);
+  background: var(--qr-ground);
+  color: oklch(23.5% 0.025 45);
+  fill: currentColor;
+}
+.share-url {
+  display: block;
+  margin-bottom: var(--space-sm);
+  font-family: var(--mono);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  color: var(--muted);
+  text-decoration: none;
+}
+.share-url b {
+  font-weight: 400;
+  color: var(--fg);
+}
+.share-url:hover b {
+  color: var(--accent);
+}
+@media (min-width: 46rem) {
+  .carriers {
+    grid-template-columns: minmax(0, 6fr) minmax(0, 3fr) minmax(0, 4fr);
+  }
+  .carriers > li + li {
+    padding-left: var(--space-xl);
+    border-left: 1px solid var(--line);
+  }
+}
+
+/* Countable facts. Not a stat bar: each figure is a link to the page that
+   proves it, and the counts are computed at build time, never typed. */
+.facts {
+  display: grid;
+  gap: 0 var(--space-lg);
+  margin: 0;
+  padding: 0;
+  grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
+  border-top: 2px solid var(--fg);
+}
+.facts > div {
+  padding: var(--space-sm) 0 var(--space-md);
+}
+.facts dt {
+  font-family: var(--mono);
+  font-size: clamp(2.2rem, 1.4rem + 2.6vw, 3.5rem);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.05em;
+  line-height: 1;
+}
+.facts dd {
+  margin: var(--space-xs) 0 0;
+  color: var(--muted);
+  font-size: var(--text-sm);
+  line-height: 1.4;
+}
+
+/* Every recipe in the corpus as its own glyph — small multiples, each a link.
+   The proof behind the count above it, and the one picture of what the format
+   holds. */
+.wall {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-lg) var(--space-md);
+  margin: var(--space-xl) 0 var(--space-lg);
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 40rem) {
+  .wall {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+@media (min-width: 64rem) {
+  .wall {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+.wall-link {
+  display: block;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color var(--dur-micro) var(--ease-out);
+}
+.wall .spark {
+  height: 3.4rem;
+  border-bottom: 1px solid var(--line-strong);
+}
+.wall span {
+  display: -webkit-box;
+  /* Two lines whether a name needs them or not: the rows keep one height. */
+  min-height: 2.7em;
+  margin-top: var(--space-2xs);
+  overflow: hidden;
+  font-size: var(--text-xs);
+  line-height: 1.35;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.wall-link:hover,
+.wall-link:focus-visible {
+  color: var(--fg);
+}
+
+/* The spec's five documents as a shelf: a row of spines, not a second list. */
+.shelf {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(11rem, 100%), 1fr));
+  gap: 0 var(--space-lg);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 2px solid var(--fg);
+}
+.shelf li {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  padding: var(--space-md) 0 0;
+}
+.shelf > * > :first-child::after {
+  content: " →";
+  font-family: var(--mono);
+  font-weight: 400;
+  color: var(--muted);
+}
+.shelf > * > :first-child {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--fg);
+  text-decoration: none;
+}
+.shelf > * > :first-child:hover {
+  color: var(--accent);
+}
+.shelf span {
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+/* The page ends where it began: the same recipe's curve, the same promise. */
+.outro {
+  position: relative;
+  margin-top: var(--space-2xl);
+  padding: clamp(3rem, 9vw, 7rem) 0 var(--space-xl);
+  border-top: 1px solid var(--line);
+  overflow: hidden;
+}
+/* The curve rises on the far side of the line, never under it. */
+.outro-curve {
+  position: absolute;
+  inset: var(--space-xl) 0 0 58%;
+}
+.outro-curve .spark {
+  height: 100%;
+}
+.outro > :not(.outro-curve) {
+  position: relative;
+}
+.outro-line {
+  max-width: 14ch;
+  margin: 0 0 var(--space-lg);
+  font-family: var(--font-display);
+  font-size: var(--text-display);
+  font-weight: 700;
+  line-height: 0.94;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+.outro + footer {
+  margin-top: 0;
+}
+@media (prefers-color-scheme: dark) {
+  .outro-curve {
+    opacity: 1;
+  }
+  .live {
+    border-color: var(--line-strong);
+  }
+}
+/* A footer link is a tap target on a phone. */
+@media (pointer: coarse) {
+  .site-footer nav a {
+    display: inline-block;
+    padding-block: var(--space-xs);
+  }
+}
+
+/* Questions and their answers, two across: each pair is short enough to be
+   read whole, and a single column left half the page empty beside them. */
+.qa {
+  margin: 0;
+  padding: var(--space-md) 0 0;
+  list-style: none;
+  border-top: 1px solid var(--line-strong);
+}
+.qa > li {
+  break-inside: avoid;
+  padding-bottom: var(--space-lg);
+}
+.qa h3 {
+  margin: 0 0 var(--space-xs);
+}
+.qa p {
+  margin: 0;
+}
+@media (min-width: 52rem) {
+  .qa {
+    columns: 2;
+    column-gap: var(--space-2xl);
+  }
+}
+.mv-split h3 {
+  margin-top: var(--space-xl);
+}
+.mv-split h2 {
+  max-width: none;
+  font-size: clamp(1.85rem, 1.2rem + 1.9vw, 2.5rem);
+}
+
+/* A ruled list: a term and what it means, one row each. Used where a grid of
+   identical cards would say less. */
+.ledger {
+  margin: var(--space-lg) 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line-strong);
+}
+.mv-head > .ledger {
+  margin: 0;
+}
+.ledger > li {
+  padding: var(--space-md) 0;
+  border-bottom: 1px solid var(--line);
+}
+.ledger h3 {
+  margin: 0 0 var(--space-2xs);
+}
+.ledger p {
+  margin: 0;
+}
+@media (min-width: 46rem) {
+  .ledger:not(.ledger--stacked) > li {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    gap: var(--space-lg);
+    align-items: baseline;
+  }
+  .ledger:not(.ledger--stacked) h3 {
+    margin: 0;
+  }
+}
+/* A row with a drawing: the drawing takes a narrow first track. */
+.ledger.ledger--drawn > li {
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 1fr);
+  gap: 0 var(--space-lg);
+  align-items: start;
+}
+.glyph {
+  grid-row: span 2;
+  width: 100%;
+  height: auto;
+  color: var(--fg);
+}
+@media (min-width: 46rem) {
+  .ledger.ledger--drawn > li {
+    grid-template-columns: 6.5rem minmax(0, 4fr) minmax(0, 8fr);
+    align-items: center;
+  }
+  .ledger.ledger--drawn .glyph {
+    grid-row: auto;
+  }
+}
+.glyph .ink {
+  fill: none;
+  stroke: currentColor;
+  vector-effect: non-scaling-stroke;
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.glyph .wet {
+  fill: var(--water-fill);
+  stroke: var(--water);
+  vector-effect: non-scaling-stroke;
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+.guarantees {
+  margin: var(--space-lg) 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line-strong);
+}
+.guarantees > * {
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--line);
+}
+
+/* ── Tools ──────────────────────────────────────────────────────────────── */
+.dropzone {
+  border-style: dashed;
+  border-color: var(--line-strong);
+  background: transparent;
+  text-align: center;
+}
+.tool {
+  display: grid;
+  gap: var(--space-lg);
+  margin-top: var(--space-lg);
+}
+.tool > * {
+  min-width: 0;
+}
+.tool-result > :first-child {
+  margin-top: 0;
+}
+.tool-result:empty::before {
+  content: "The result appears here.";
+  display: block;
+  padding: var(--space-lg);
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius-md);
+  color: var(--muted);
+}
+@media (min-width: 60rem) {
+  .tool {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+  }
+}
 .gen-field {
   display: block;
-  margin: 0.6rem 0;
+  margin: var(--space-sm) 0;
 }
 .gen-field > .muted {
   display: block;
-  margin-bottom: 0.2rem;
-  font-size: 0.85rem;
+  margin-bottom: var(--space-2xs);
+  font-size: var(--text-sm);
 }
 .gen-step {
   flex-wrap: wrap;
@@ -404,182 +2333,14 @@ textarea.field {
 .gen-step :is(.field--xs, .field--sm, .field--md) {
   flex: 0 1 auto;
 }
-.steps {
-  padding-left: 0;
-  list-style: none;
-}
-.steps li {
-  display: flex;
-  gap: 0.75rem;
-  padding: 0.45rem 0;
-  border-bottom: 1px solid var(--line);
-}
-.steps .t {
-  min-width: 3.2rem;
-  font-variant-numeric: tabular-nums;
-  color: var(--muted);
-}
-/* The cumulative-water cell on a corpus page's statically-rendered step list.
-   Pushed to the row's end so the numbers read as a column; the /r renderer
-   reaches the same result with subgrid, which needs a component this page
-   deliberately does not load. */
-.steps .to {
-  margin-left: auto;
-  padding-left: 0.75rem;
-  font-variant-numeric: tabular-nums;
-}
-.clock {
-  font-size: 3rem;
-  font-variant-numeric: tabular-nums;
-  text-align: center;
-  margin: 0.5rem 0;
-}
-/* Named `panel`, not `modal`: it renders inline, traps nothing, and carries
-   disclosure semantics (aria-expanded / aria-controls) rather than dialog ones. */
-.qr-panel {
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 1rem;
-  background: var(--bg);
-  color: var(--fg);
-  max-width: 20rem;
-}
-.qr-panel svg {
-  width: 100%;
-  height: auto;
-}
-.attribution {
-  font-size: 0.85rem;
-  color: var(--muted);
-}
-/* The per-card share on a bag-to-brew page: the same buttons as the panel,
-   indented under the card they belong to and set a size down, so a page with
-   four of them reads as four offers rather than four panels. Only rendered
-   when the document holds more than one thing worth taking on its own. */
-.scoped-share {
-  margin: 0.4rem 0 1.2rem;
-  padding-left: 0.9rem;
-  border-left: 1px solid var(--line);
-}
-.scoped-share > .muted {
-  margin: 0 0 0.4rem;
-  font-size: 0.85rem;
-}
-.scoped-share .btn {
-  font-size: 0.85rem;
-  padding: 0.35rem 0.7rem;
-}
-/* The publication's own share on a corpus page: full size and unindented, so
-   the last row on a three-brew page does not read as a fourth brew. */
-.whole-share {
-  margin: 1.6rem 0 1.2rem;
-  padding-top: 1.2rem;
-  border-top: 1px solid var(--line);
-}
-.whole-share > .muted {
-  margin: 0 0 0.5rem;
-}
-/* Bean cards on /recipes' bean lens: a bag plus the corpus recipes brewed with
-   it. The member list is the card's payload, so it sits flush under its label
-   with no bullet furniture competing with the recipe titles. */
-.bean-card > p {
-  margin: 0.35rem 0;
-}
-.bean-recipes {
-  margin: 0.2rem 0 0;
-  padding: 0;
-  list-style: none;
-  font-size: 0.92rem;
-}
-.bean-recipes li {
-  padding: 0.15rem 0;
-}
-.qr-figure {
-  max-width: 16rem;
-  margin: 1rem 0;
-}
-/* The smallest document beside a real one carried in a QR — the landing page's
-   one visual moment, and both halves are genuine artifacts rather than a
-   mockup, so it owes the reader nothing it isn't already showing. Two tracks
-   where there is room and one where there isn't; `minmax(0, 1fr)` on both
-   because the left track holds a `pre`, whose min-content width is a line of
-   JSON and would otherwise refuse to shrink and push the page sideways. The
-   figure drops its own 16rem cap here — inside the pair the grid track is what
-   sizes it. */
-.demo-pair {
-  display: grid;
-  gap: 1.25rem;
-  align-items: start;
-  grid-template-columns: minmax(0, 1fr);
-  margin: 0.75rem 0 0;
-}
-.demo-pair > * {
-  min-width: 0;
-}
-/* The QR fills its track instead of sitting at the file's natural 256px: this
-   is a 2 KB payload, so the code is dense, and a dense code wants every pixel
-   it can get in front of a phone camera. */
-.demo-pair .qr-figure {
-  max-width: none;
-  margin: 0;
-}
-.demo-pair .qr-figure img {
-  width: 100%;
-}
-@media (min-width: 46rem) {
-  .demo-pair {
-    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
-  }
-}
-/* Countable facts, and the one place on the page where the eye is meant to
-   stop. Deliberately NOT a stat bar: the figures sit at h1 size rather than
-   display size, over hairlines rather than in filled tiles, and each one is a
-   link to the page that proves it. Every number here is checkable by clicking
-   it, so the design should read as a spec sheet and not as a claim — which is
-   also why the counts are computed from the generated indexes in
-   `pages/landing.ts` rather than typed into the copy. */
-.facts {
-  display: grid;
-  gap: 0 1.5rem;
-  margin: 1rem 0 1.25rem;
-  padding: 0;
-  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
-  border-top: 1px solid var(--line);
-}
-.facts > div {
-  padding: 0.7rem 0;
-  border-bottom: 1px solid var(--line);
-}
-.facts dt {
-  font-size: 1.6rem;
-  line-height: 1.1;
-  font-variant-numeric: tabular-nums;
-}
-.facts dd {
-  margin: 0.2rem 0 0;
-  color: var(--muted);
-  font-size: 0.9rem;
-  line-height: 1.4;
-}
-.dropzone {
-  border-style: dashed;
-  border-color: var(--line-strong);
-  text-align: center;
-}
-/* /generate lays the document out beside the form. It stays inside the site's
-   52rem column to do it: `.site-header` is a child of `main`, so a page-level
-   width override moves the masthead links, and the nav visibly jumped every
-   time this one page was opened. A page is allowed its own layout; it is not
-   allowed its own chrome position.
-   A preview last in the DOM, under a form several screens tall, tells you
-   nothing about whether a pasted document was read correctly until you scroll
-   past every field to find out. So the preview is a sticky second column on a
-   wide screen, and on a narrow one it sits directly
-   under the JSON panel — either way it is on screen at the moment a document
-   lands, which is the moment it answers a question. */
+/* /generate lays the document out beside the form, inside the site's shell: a
+   page is allowed its own layout; it is not allowed its own chrome position.
+   The preview is a sticky second column on a wide screen, and on a narrow one
+   it sits directly under the JSON panel — on screen at the moment a document
+   lands. */
 .gen-layout {
   display: grid;
-  gap: 1rem;
+  gap: var(--space-md);
   grid-template-areas: "json" "preview" "form";
 }
 .gen-json {
@@ -590,126 +2351,397 @@ textarea.field {
 }
 .gen-form {
   grid-area: form;
+  display: grid;
+  gap: var(--space-md);
+}
+.gen-form > *,
+.gen-layout > * {
+  min-width: 0;
+  margin: 0;
+}
+.gen-form > .btn {
+  justify-self: start;
+}
+/* A recipe's fields sit in columns: sixteen stacked full-width inputs made the
+   form several screens tall for a dozen short values. */
+.gen-form > .card {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(11rem, 100%), 1fr));
+  gap: 0 var(--space-md);
+  align-items: end;
+}
+.gen-form > .card > :not(.gen-field),
+.gen-form .gen-field:first-of-type {
+  grid-column: 1 / -1;
+}
+/* The preview is already a panel; what it holds does not need a second box. */
+.gen-preview :is(.cj-card, .card) {
+  padding: 0;
+  border: 0;
+  background: none;
+}
+.gen-preview .card {
+  margin-top: var(--space-lg);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+}
+.gen-layout summary {
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 600;
 }
 @media (min-width: 62rem) {
   .gen-layout {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 19rem);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 24rem);
     grid-template-areas: "json preview" "form preview";
     align-items: start;
   }
-  /* Bounded and scrollable in its own right: a long bag-to-brew document renders
-     taller than the viewport, and a sticky box taller than the screen stops
-     being sticky at the bottom of itself. */
+  /* Bounded and scrollable in its own right: a sticky box taller than the
+     screen stops being sticky at the bottom of itself. */
   .gen-preview {
     position: sticky;
-    top: 1rem;
-    max-height: calc(100vh - 2rem);
+    top: var(--space-md);
+    max-height: calc(100dvh - 2rem);
     overflow-y: auto;
   }
-  /* The step schedule renders four columns — time, instruction, pour, total —
-     and they do not fit a 19rem preview: the flexible instruction track
-     collapsed to 23px and set "second pour" one word per line. The per-pour
-     amount is the column to drop, because it is the only one a reader can
-     recompute from what is left (each total minus the one above it). Hiding it
-     alone is not enough: the subgrid rule keys off `:has(.cj-step-delta)`, and
-     `:has()` still matches an element set to `display: none`, so the track has
-     to go with it or the row keeps an empty gutter where it was. */
+  /* The step schedule's four columns do not fit the preview. The per-pour
+     amount is the one to drop — a reader can recompute it. `:has()` still
+     matches a `display: none` element, so the track goes with it. */
   .gen-preview .cj-step-delta {
     display: none;
   }
   .gen-preview .cj-steps:has(.cj-step-delta) {
     grid-template-columns: max-content minmax(0, 1fr) max-content;
-    column-gap: 0.75rem;
+    column-gap: var(--space-sm);
   }
 }
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
 
-/* The site's two tables — the wrong/right/why table on /agents and the
-   SDK + registry tables on /implementations — are the same object and share one
-   skin. Both scroll inside their own box on narrow screens rather than forcing
-   the page sideways. The fill is scoped to `thead th` rather than every `th`,
-   because /implementations uses `<th scope="row">` for the package name and a
-   filled first column would read as a second header. */
+/* The site's tables share one skin, and scroll inside their own box on a
+   narrow screen. The fill is scoped to `thead th`: /implementations uses
+   `<th scope="row">` for the package name. */
 :is(.pitfalls, .impl) {
   width: 100%;
   border-collapse: collapse;
   display: block;
   overflow-x: auto;
-  margin: 0.75rem 0;
+  margin: var(--space-md) 0;
+  font-size: 0.95rem;
 }
 :is(.pitfalls, .impl) :is(th, td) {
-  border: 1px solid var(--line);
-  padding: 0.45rem 0.6rem;
+  border-bottom: 1px solid var(--line);
+  padding: var(--space-sm) var(--space-md) var(--space-sm) 0;
   text-align: left;
   vertical-align: top;
 }
 :is(.pitfalls, .impl) thead th {
-  background: var(--card);
-  font-weight: 600;
+  border-bottom: 1px solid var(--line-strong);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--muted);
+}
+:is(.pitfalls, .impl) tbody th {
+  font-weight: 400;
+  white-space: nowrap;
 }
 .pitfalls code {
   white-space: pre;
 }
+/* Three columns do not fit a phone: the last one ran a word to a line. Below
+   46rem each row is a block and each cell carries its own column's name. */
+@media (max-width: 46rem) {
+  :is(.pitfalls, .impl) thead {
+    display: none;
+  }
+  :is(.pitfalls, .impl) :is(tbody, tr, th, td) {
+    display: block;
+  }
+  :is(.pitfalls, .impl) tr {
+    padding: var(--space-sm) 0;
+    border-bottom: 1px solid var(--line);
+  }
+  :is(.pitfalls, .impl) tbody :is(th, td) {
+    padding: var(--space-3xs) 0;
+    border: 0;
+    white-space: normal;
+  }
+  :is(.pitfalls, .impl) [data-label]::before {
+    content: attr(data-label);
+    display: block;
+    font-size: var(--text-xs);
+    color: var(--muted);
+  }
+  .pitfalls code {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+}
+@media (max-width: 40rem) {
+  main pre:not(.live-json) {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font-size: 0.78rem;
+  }
+}
+/* Prose set as a block — a prompt to copy — wraps; it has no columns to keep. */
+pre.prose {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
 
-/* @coffeejson/react cards on /r — re-tint the default skin to the site palette.
-   Aliased to the site's own custom properties (see :root above) so light/dark
-   mode keeps working for free via the existing prefers-color-scheme block. */
-.cj-view {
+/* ── @coffeejson/react on /r, the validator and the generator ──────────────
+   The package skin re-tinted to the site palette through its own custom
+   properties, so light and dark keep working through the block at the top. */
+main .cj-view {
   --cj-accent: var(--accent);
   --cj-fg: var(--fg);
   --cj-muted: var(--muted);
   --cj-bg: var(--card);
   --cj-border: var(--line);
+  --cj-radius: var(--radius-md);
   --cj-font: inherit;
+  margin-top: var(--space-lg);
+  container-type: inline-size;
+}
+.cj-view .cj-card {
+  padding: var(--space-lg);
+}
+.cj-view .cj-title {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+}
+.cj-view .cj-badge {
+  color: var(--accent-fg);
+  font-family: var(--font-body);
+  letter-spacing: 0;
+}
+.cj-view .cj-fact {
+  display: grid;
+  grid-template-columns: 6.5rem minmax(0, 1fr);
+  gap: var(--space-sm);
+  margin: 0;
+  padding: var(--space-xs) 0;
+  border-top: 1px solid var(--line);
+}
+.cj-view .cj-fact-label {
+  margin: 0;
+  font-size: var(--text-sm);
+}
+.cj-view .cj-fact-value {
+  font-family: var(--mono);
+  font-size: 0.92em;
+  font-variant-numeric: tabular-nums;
+}
+.cj-view .cj-steps {
+  margin-top: var(--space-md);
+  padding: var(--space-sm) 0 0;
+  border-top: 1px solid var(--line-strong);
+  list-style: none;
+}
+.cj-view .cj-step-time,
+.cj-view .cj-step-delta,
+.cj-view .cj-step-target {
+  font-family: var(--mono);
+  font-size: 0.9em;
 }
 .cj-recipe-block {
   display: grid;
-  gap: 0.5rem;
+  gap: var(--space-md);
+}
+.cj-recipe-block > p {
+  margin: 0;
+}
+.curve-card {
+  padding: var(--space-xs) var(--space-lg) var(--space-md);
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  --curve-h: clamp(8rem, 20vw, 13rem);
+}
+.curve-card .curve {
+  margin: 0;
+}
+.cj-view .cj-step-target {
+  font-weight: 400;
+}
+/* A page headed by its one recipe does not print the title twice. */
+.cj-view[data-solo] .cj-title {
+  display: none;
 }
 
-/* /r brew-along: highlight the active step (RecipeCard adds cj-step--active),
-   dim DONE steps (those before the active one) via the general-sibling combinator.
-   (.clock is already styled above — not redeclared here.) */
+/* While brewing the card is its schedule; the facts were read before starting. */
+.cj-brewing :is(.cj-title, .cj-subtitle, .cj-fact, .cj-notes) {
+  display: none;
+}
+.cj-view.cj-brewing .cj-recipe-card:has(.cj-steps) {
+  display: block;
+}
+.cj-view.cj-brewing .cj-steps {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+.cj-view[data-solo] .cj-recipe-card > .cj-steps {
+  grid-row: 2 / span 24;
+}
+/* The mono face has one weight: the active row is marked by color. */
+.cj-view .cj-step--active :is(.cj-step-time, .cj-step-delta, .cj-step-target) {
+  font-weight: 400;
+}
+.cj-view ~ .muted {
+  margin-top: var(--space-lg);
+}
+.cj-view .cj-notes {
+  margin: var(--space-lg) 0 0;
+  max-width: var(--measure);
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+/* Given room, the card reads as a spec sheet beside its schedule: the facts in
+   one column, the steps in the other. A container query, because the same card
+   sits in a full-width viewer and in a half-width validator pane. The row span is deliberately
+   generous — a card has six to a dozen facts, and unused rows are empty. */
+@container (min-width: 46rem) {
+  .cj-view .cj-recipe-card:has(.cj-steps) {
+    display: grid;
+    grid-template-columns: minmax(0, 20rem) minmax(0, 1fr);
+    column-gap: var(--space-2xl);
+    align-content: start;
+  }
+  .cj-view .cj-recipe-card:has(.cj-steps) > * {
+    grid-column: 1;
+  }
+  .cj-view
+    .cj-recipe-card:has(.cj-steps)
+    > :is(.cj-title, .cj-subtitle, .cj-notes) {
+    grid-column: 1 / -1;
+  }
+  .cj-view .cj-recipe-card > .cj-steps {
+    grid-column: 2;
+    grid-row: 3 / span 24;
+    align-self: start;
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+  }
+}
+
+/* /r brew-along: the active step is the only one at full strength; done steps
+   dim through the general-sibling combinator. */
+.cj-brewing {
+  margin-top: var(--space-lg);
+}
+.brew-stage {
+  display: grid;
+  gap: var(--space-md) var(--space-xl);
+  --curve-h: clamp(8rem, 24vw, 13rem);
+}
+.brew-stage > * {
+  min-width: 0;
+}
+.brew-now .clock {
+  margin: 0;
+}
+.brew-cue {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2xs) var(--space-md);
+  margin: var(--space-sm) 0 0;
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+}
+.brew-target {
+  font-family: var(--mono);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: var(--accent);
+}
+@media (min-width: 60rem) {
+  .brew-stage {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    align-items: end;
+  }
+}
+.brew-next {
+  min-height: 1.5em;
+  margin: var(--space-xs) 0 0;
+  color: var(--muted);
+}
+.brew-controls {
+  margin: var(--space-lg) 0;
+  align-items: stretch;
+}
+/* "Pause" and "Resume" are different widths; the button is not. */
+.brew-controls .cj-brew-btn:first-child {
+  min-width: 7rem;
+}
+.brew-stage[data-paused] .clock {
+  color: var(--muted);
+}
+.brew-stage[data-paused] .curve-playhead {
+  background: var(--muted);
+}
+.cj-brew-controls {
+  display: contents;
+}
+.brew-controls .cj-brew-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding: 0 1.4rem;
+  border: 1px solid var(--fg);
+  border-radius: var(--radius-full);
+  background: var(--fg);
+  color: var(--bg);
+  font: inherit;
+  font-weight: 550;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-micro) var(--ease-out),
+    transform var(--dur-micro) var(--ease-out);
+}
+.brew-controls .cj-brew-btn:hover {
+  background: color-mix(in oklch, var(--fg) 82%, var(--bg));
+}
+.brew-controls .cj-brew-btn:active {
+  transform: translateY(1px);
+}
+.brew-controls .cj-brew-btn--ghost {
+  background: transparent;
+  color: var(--fg);
+  border-color: var(--line-strong);
+}
+.brew-controls .cj-brew-btn--ghost:hover {
+  background: color-mix(in oklch, var(--fg) 8%, transparent);
+}
+
 .cj-brewing .cj-step {
-  opacity: 0.5;
-  transition: opacity 0.2s var(--ease-out);
+  opacity: 0.45;
+  transition: opacity var(--dur-short) var(--ease-out);
 }
 .cj-brewing .cj-step--active,
 .cj-brewing .cj-step--active ~ .cj-step {
   opacity: 1;
 }
-@media (prefers-reduced-motion: reduce) {
-  .cj-brewing .cj-step {
-    transition: none;
-  }
-}
-
-/* Step schedule as aligned Time · Pour · Total columns. For a multi-pour recipe
-   RecipeCard renders sibling spans after the body — the per-pour amount
-   (cj-step-delta) then the running total (cj-step-target). Per-row `auto` tracks
-   can't line those up across rows, so the step list (cj-steps) owns shared tracks
-   and each row (cj-step) is a subgrid spanning all four. Scoped two ways:
-   - to the two places a RecipeCard step list appears — the /r view (.cj-view)
-     and brew-along (.cj-brewing) — so these win over @coffeejson/react's
-     default .cj-steps skin regardless of stylesheet order;
-   - to lists that actually grew a Pour column (:has(.cj-step-delta)) — a
-     recipe without one (espresso, single pour, untargeted) keeps the package
-     skin's layout instead of inheriting two empty guttered tracks.
-   display:grid is declared here on purpose — the shared tracks must not
-   depend on the package skin also making cj-steps a grid. */
+/* Step schedule as aligned Time · Pour · Total columns: the list owns shared
+   tracks and each row is a subgrid. Scoped to lists that actually grew a Pour
+   column, and declared `display: grid` here so the tracks do not depend on the
+   package skin. */
 .cj-view .cj-steps:has(.cj-step-delta),
 .cj-brewing .cj-steps:has(.cj-step-delta) {
   display: grid;
   grid-template-columns: max-content minmax(0, 1fr) max-content max-content;
-  column-gap: 1rem;
+  column-gap: var(--space-md);
 }
 .cj-view .cj-steps:has(.cj-step-delta) .cj-step,
 .cj-brewing .cj-steps:has(.cj-step-delta) .cj-step {
@@ -718,13 +2750,195 @@ textarea.field {
   grid-template-columns: subgrid;
   align-items: baseline;
 }
-/* Right-align the two numeric columns so Pour and Total read as columns; tabular
-   figures keep the digits aligned row to row. Rows without water spans just leave
-   the trailing tracks empty. */
 .cj-view .cj-step-delta,
 .cj-view .cj-step-target,
 .cj-brewing .cj-step-delta,
 .cj-brewing .cj-step-target {
   justify-self: end;
   font-variant-numeric: tabular-nums;
+}
+
+/* In a narrow card the per-pour column goes: a reader can recompute it, and
+   with it the instruction wrapped to a word a line. */
+@container (max-width: 30rem) {
+  .cj-view .cj-step-delta {
+    display: none;
+  }
+  .cj-view .cj-steps:has(.cj-step-delta) {
+    grid-template-columns: max-content minmax(0, 1fr) max-content;
+    column-gap: var(--space-sm);
+  }
+}
+
+/* ── Recipe and bag pages ─────────────────────────────────────────────────
+   A recipe with a schedule reads in two columns: the curve and its steps, and
+   beside them what the recipe is, how to take it, and where it came from. On a
+   phone the same three blocks stack in reading order. */
+.recipe {
+  display: grid;
+  gap: var(--space-md) var(--space-2xl);
+}
+.recipe > * {
+  min-width: 0;
+}
+.recipe + .recipe {
+  margin-top: var(--space-2xl);
+  padding-top: var(--space-lg);
+  border-top: 2px solid var(--fg);
+}
+.recipe > h2 {
+  margin: 0;
+  font-size: var(--text-page);
+  font-weight: 650;
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+}
+/* A page of several recipes is named for the document, quietly: each recipe's
+   own heading is the one that reads as a title. */
+.page-title--kicker h1 {
+  margin: var(--space-xl) 0 var(--space-lg);
+  padding-bottom: var(--space-sm);
+  border-bottom: 2px solid var(--fg);
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.4;
+  color: var(--muted);
+}
+.recipe .figures {
+  font-size: var(--text-md);
+}
+.recipe-top > :first-child,
+.recipe-main > .curve:first-child {
+  margin-top: 0;
+}
+.recipe-top .whole-share,
+.recipe-top .scoped-share {
+  margin: var(--space-lg) 0 0;
+  padding: 0;
+  border: 0;
+}
+.recipe-notes {
+  max-width: var(--measure);
+  font-size: 0.95rem;
+}
+.recipe--plain {
+  max-width: var(--measure);
+}
+@media (min-width: 60rem) {
+  .recipe:not(.recipe--plain) {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    grid-template-areas:
+      "head head"
+      "main top"
+      "main notes";
+    grid-template-rows: auto auto 1fr;
+  }
+  .recipe > h2 {
+    grid-area: head;
+  }
+  .recipe:not(.recipe--plain) > .recipe-main {
+    grid-area: main;
+  }
+  .recipe:not(.recipe--plain) > .recipe-top {
+    grid-area: top;
+  }
+  .recipe:not(.recipe--plain) > .recipe-notes {
+    grid-area: notes;
+  }
+}
+.spec {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(14rem, 100%), 1fr));
+  gap: 0 var(--space-lg);
+  max-width: 60rem;
+  margin: var(--space-lg) 0;
+  border-top: 1px solid var(--line-strong);
+}
+.spec-row {
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--line);
+}
+.spec dt {
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+.spec dd {
+  margin: 0;
+}
+
+/* ── Motion ────────────────────────────────────────────────────────────────
+   One orchestrated entrance, on the landing page. After that content is just
+   there: nothing fades in on scroll. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+@keyframes nudge {
+  50% {
+    transform: translateY(-0.5rem);
+  }
+}
+@keyframes wipe {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0);
+  }
+}
+@keyframes draw {
+  from {
+    --p: 0;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 180ms;
+    animation-timing-function: var(--ease-out);
+  }
+  .hero > * {
+    animation: rise var(--dur-long) var(--ease-out) backwards;
+    animation-delay: calc(var(--n, 0) * 90ms);
+  }
+  .hero > :nth-child(2) {
+    --n: 1;
+  }
+  .hero > :nth-child(3) {
+    --n: 2;
+  }
+  /* Below the hero the curves draw when they are scrolled to: on a clock, so
+     one is never left half-drawn. `wait` and `in` are set by a module; with no
+     module the curves are simply there. */
+  [data-draw="wait"]:not(.outro) .spark,
+  [data-draw="wait"] .outro-curve {
+    clip-path: inset(0 100% 0 0);
+  }
+  [data-draw="in"]:not(.outro) .spark {
+    animation: wipe 800ms var(--ease-out) backwards;
+    animation-delay: calc(var(--k, 0) * 45ms);
+  }
+  [data-draw="in"] .outro-curve {
+    animation: wipe 1400ms var(--ease-in-out) backwards;
+  }
+  /* A recipe page's own curve draws once, on arrival. */
+  main[data-slug] .curve {
+    animation: draw 900ms var(--ease-in-out) 150ms backwards;
+  }
+}
+/* Every duration on the site is one of three tokens, so asking for less motion
+   is three assignments rather than an override on every rule. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-micro: 1ms;
+    --dur-short: 1ms;
+    --dur-long: 1ms;
+  }
 }

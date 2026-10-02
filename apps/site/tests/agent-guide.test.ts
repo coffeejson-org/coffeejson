@@ -53,10 +53,15 @@ describe("the two agent surfaces render one guide", () => {
     expect(md).toContain(SYSTEM_PROMPT);
   });
 
+  // The page prints a backticked name as code; the Markdown keeps the backticks.
+  // Same words either way, so the page is compared with its tags taken out.
+  const words = html.replace(/<\/?code>/g, "");
+  const said = (s: string) => esc(s.replace(/`/g, ""));
+
   it("teaches both every example, document included", () => {
     for (const e of EXAMPLES) {
       expect(html, e.prompt).toContain(esc(e.prompt));
-      expect(html, e.prompt).toContain(esc(e.note));
+      expect(words, e.prompt).toContain(said(e.note));
       expect(html, e.prompt).toContain(esc(JSON.stringify(e.doc, null, 2)));
       expect(md, e.prompt).toContain(`### ${e.prompt}`);
       expect(md, e.prompt).toContain(e.note);
@@ -66,10 +71,11 @@ describe("the two agent surfaces render one guide", () => {
 
   it("warns both about every pitfall", () => {
     for (const p of PITFALLS) {
-      for (const field of [p.wrong, p.right, p.why]) {
+      for (const field of [p.wrong, p.right])
         expect(html, p.wrong).toContain(esc(field));
+      expect(words, p.wrong).toContain(said(p.why));
+      for (const field of [p.wrong, p.right, p.why])
         expect(md, p.wrong).toContain(field);
-      }
     }
     // A table row per pitfall, plus the header and the separator.
     expect(md.split("\n").filter((l) => l.startsWith("| ")).length).toBe(

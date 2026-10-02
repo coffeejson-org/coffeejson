@@ -114,3 +114,16 @@ test("the wordmark is pinned to fg, not the link color", () => {
   // mark paints in currentColor.
   expect(styles).toMatch(/\.site-header strong\s*\{[^}]*color:\s*var\(--fg\)/);
 });
+
+test("a recipe or bag page marks Browse as its section, and stays a link", () => {
+  for (const current of ["/recipes/some-slug/", "/beans/", "/beans/a-bag/"]) {
+    const html = siteHeader(current);
+    expect(html, current).toContain(
+      '<a href="/recipes/" aria-current="true">Browse</a>',
+    );
+    expect((html.match(/aria-current/g) ?? []).length, current).toBe(1);
+  }
+  // The directory itself is the page, not a section of itself.
+  expect(siteHeader("/recipes/")).not.toContain('aria-current="true"');
+  expect(siteHeader("/validator/")).not.toContain('aria-current="true"');
+});

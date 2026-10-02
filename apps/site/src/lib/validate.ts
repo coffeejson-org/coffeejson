@@ -20,6 +20,7 @@ export interface ValidationIssue {
 
 interface AjvError {
   instancePath: string;
+  schemaPath?: string;
   message?: string;
   keyword?: string;
   params?: Record<string, unknown>;
@@ -35,13 +36,58 @@ function phrase(e: AjvError): string {
     e.keyword === "additionalProperties"
       ? e.params?.additionalProperty
       : undefined;
-  return typeof member === "string" ? `${message}: ${member}` : message;
+  if (typeof member === "string") return `${message}: ${member}`;
+  // For `enum` ajv says "one of the allowed values" and keeps the values in
+  // `params`. A wrong unit is the commonest mistake there is; the line that
+  // reports it should say what the right ones are.
+  const allowed =
+    e.keyword === "enum" ? e.params?.["allowedValues"] : undefined;
+  return Array.isArray(allowed) && allowed.length <= 12
+    ? `${message}: ${allowed.join(", ")}`
+    : message;
+}
+
+// ajv reports a failed `anyOf` as one error per branch plus one for the
+// keyword, so "state the water or the ratio" arrives as three lines, two of
+// which contradict each other. And a failed `if` adds a line that names only
+// the keyword. Neither says anything the reader can act on, so branches that
+// are each one missing member fold into a single "one of", and the bare `if`
+// goes. Nothing is dropped that is the only thing said.
+function readable(errors: AjvError[]): AjvError[] {
+  const folded = new Set<AjvError>();
+  const out: AjvError[] = [];
+  for (const e of errors) {
+    if (e.keyword === "if") continue;
+    if (e.keyword === "anyOf" && e.schemaPath) {
+      const branches = errors.filter(
+        (b) =>
+          b.keyword === "required" &&
+          b.instancePath === e.instancePath &&
+          b.schemaPath?.startsWith(`${e.schemaPath}/`),
+      );
+      const names = branches
+        .map((b) => b.params?.["missingProperty"])
+        .filter((n): n is string => typeof n === "string");
+      if (names.length >= 2 && names.length === branches.length) {
+        for (const b of branches) folded.add(b);
+        out.push({
+          instancePath: e.instancePath,
+          keyword: "anyOf",
+          message: `must have one of: ${names.join(", ")}`,
+        });
+        continue;
+      }
+    }
+    out.push(e);
+  }
+  const kept = out.filter((e) => !folded.has(e));
+  return kept.length ? kept : errors;
 }
 
 function issuesFrom(validator: {
   errors?: AjvError[] | null;
 }): ValidationIssue[] {
-  return (validator.errors ?? []).map((e) => ({
+  return readable(validator.errors ?? []).map((e) => ({
     path: e.instancePath || "/",
     message: phrase(e),
   }));

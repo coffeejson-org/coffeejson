@@ -1,13 +1,16 @@
 import type { CoffeeJSONDocument } from "@coffeejson/core";
-import { FORMAT_VERSION } from "@coffeejson/core";
+import { FORMAT_VERSION, normalize } from "@coffeejson/core";
 import { CoffeeJSONView } from "@coffeejson/react";
 import { createRoot } from "react-dom/client";
 import "@coffeejson/react/styles.css";
+import hero from "../generated/hero-document.json";
+import { LICENSE_SITE, PACKAGES, siteFooter } from "../lib/footer.mjs";
 import { documentFromInput } from "../lib/input-document";
 import { siteHeader } from "../lib/site-header.mjs";
 import { plural } from "../lib/text.mjs";
 import type { ValidationIssue } from "../lib/validate";
 import { lintDocument, validateDocument } from "../lib/validate";
+import { PourCurve } from "./r-curve";
 
 const app = document.querySelector<HTMLElement>("#app")!;
 app.innerHTML = `
@@ -17,10 +20,18 @@ app.innerHTML = `
   <code>.json</code> file. Validation runs entirely in your browser against the
   <a href="/schema/1.0">1.x JSON Schema</a>, then lints whatever passes against the stricter
   <a href="/schema/authoring/1.0">authoring schema</a> — nothing is uploaded anywhere.</p>
-  <p><label class="btn btn--ghost">Upload file<input type="file" id="file" class="visually-hidden" accept=".json,application/json"></label></p>
-  <textarea id="input" class="field" placeholder='{"coffeejson": "${FORMAT_VERSION}", …}  or  https://coffeejson.org/r?d=…'></textarea>
-  <p><button class="btn" id="check">Validate</button></p>
-  <div id="result"></div>`;
+  <div class="tool wide">
+    <div>
+      <textarea id="input" class="field" aria-label="CoffeeJSON document or share URL" placeholder='{"coffeejson": "${FORMAT_VERSION}", …}  or  https://coffeejson.org/r?d=…'></textarea>
+      <div class="row">
+        <button class="btn" id="check">Validate</button>
+        <label class="btn btn--ghost">Upload file<input type="file" id="file" class="visually-hidden" accept=".json,application/json"></label>
+        <button class="btn btn--ghost" id="example">Load the example</button>
+      </div>
+    </div>
+    <div id="result" class="tool-result" aria-live="polite"></div>
+  </div>
+  ${siteFooter(LICENSE_SITE, PACKAGES)}`;
 
 const input = document.querySelector<HTMLTextAreaElement>("#input")!;
 
@@ -75,6 +86,9 @@ function ValidationResult({ outcome }: { outcome: Outcome | null }) {
           </ul>
         </div>
       )}
+      {normalize(d).recipes.map((r, k) => (
+        <PourCurve recipe={r} key={k} />
+      ))}
       <CoffeeJSONView doc={d} />
     </>
   );
@@ -112,6 +126,14 @@ function run(): void {
 
 const check = document.querySelector<HTMLButtonElement>("#check")!;
 check.addEventListener("click", run);
+// A corpus document as committed, so the first thing a visitor validates is
+// real — and the page opens on it, validated, rather than on an empty box.
+const example = (): void => {
+  input.value = hero.text;
+  run();
+};
+document.querySelector("#example")!.addEventListener("click", example);
+example();
 document
   .querySelector<HTMLInputElement>("#file")!
   .addEventListener("change", async (e) => {

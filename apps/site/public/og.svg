@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630"
-     font-family="Helvetica Neue, Helvetica, Arial, sans-serif">
-  <rect width="1200" height="630" fill="#fdfdfc"/>
+     font-family="Bricolage Grotesque Variable, Bricolage Grotesque, Helvetica Neue, Arial, sans-serif">
+  <rect width="1200" height="630" fill="#f4efe7"/>
   <defs>
     <mask id="m">
       <rect x="-1" y="-1" width="102" height="124" fill="#fff"/>
@@ -15,15 +15,25 @@
     </mask>
   </defs>
 
-  <!-- mark, espresso, optically centered on the text block -->
-  <g color="#241813" transform="translate(96,181) scale(2.2)">
-    <ellipse cx="50" cy="61" rx="50" ry="61" fill="currentColor" mask="url(#m)"/>
+  <!-- A real schedule: Tetsu Kasuya's 4:6 — five pours to 300 g over 3:30. -->
+  <path fill="#085a66" fill-opacity="0.16"
+        d="M0 630V580H257V530H514V480H743V430H914V380H1200V630Z"/>
+  <path fill="none" stroke="#085a66" stroke-width="4" stroke-linejoin="round"
+        d="M0 630V580H257V530H514V480H743V430H914V380H1200"/>
+  <g fill="#085a66" stroke="#f4efe7" stroke-width="4">
+    <circle cx="257" cy="530" r="9"/><circle cx="514" cy="480" r="9"/>
+    <circle cx="743" cy="430" r="9"/><circle cx="914" cy="380" r="9"/>
+  </g>
+  <g font-family="Commit Mono, ui-monospace, Menlo, monospace" font-size="22" fill="#281a14">
+    <text x="24" y="562">60 g</text><text x="275" y="512">120 g</text>
+    <text x="532" y="462">180 g</text><text x="761" y="412">240 g</text>
+    <text x="932" y="362">300 g</text>
   </g>
 
-  <text x="368" y="288" font-size="86" font-weight="700" fill="#1a1a1a" letter-spacing="-1.5">CoffeeJSON</text>
-  <text x="368" y="352" font-size="35" fill="#5b5b5b">The interchange format for coffee</text>
-  <rect x="370" y="392" width="72" height="5" fill="#0c5964"/>
-  <text x="368" y="452" font-size="27" fill="#0c5964" letter-spacing="0.5">coffeejson.org</text>
-
-  <text x="96" y="566" font-size="23" fill="#5b5b5b">Open · CC0 · small enough to ride inside a QR code</text>
+  <g color="#281a14" transform="translate(96,84) scale(1.45)">
+    <ellipse cx="50" cy="61" rx="50" ry="61" fill="currentColor" mask="url(#m)"/>
+  </g>
+  <text x="280" y="186" font-size="104" font-weight="700" fill="#281a14" letter-spacing="-4">CoffeeJSON</text>
+  <text x="284" y="246" font-size="36" font-weight="500" fill="#645850" letter-spacing="-0.5">The interchange format for coffee</text>
+  <text x="96" y="330" font-family="Commit Mono, ui-monospace, Menlo, monospace" font-size="22" fill="#645850">Open · CC0 · small enough to ride inside a QR code</text>
 </svg>

@@ -171,21 +171,24 @@ const htmlRun = (run) => {
 };
 
 const htmlRuns = (runs) => runs.map(htmlRun).join("");
+// A note and a pitfall's reason are single strings written the way the Markdown
+// renderer prints them, backticks included. On the page those are code.
+const inlineCode = (s) => esc(s).replace(/`([^`]+)`/g, "<code>$1</code>");
 const jsonBlock = (v) => esc(JSON.stringify(v, null, 2));
 
 const htmlBlock = (b) => {
   if (b.p) return `<p${b.muted ? ' class="muted"' : ""}>${htmlRuns(b.p)}</p>`;
   if (b.ol)
     return `<ol>${b.ol.map((li) => `<li>${htmlRuns(li)}</li>`).join("")}</ol>`;
-  if (b.code) return `<pre><code>${esc(b.code)}</code></pre>`;
+  if (b.code) return `<pre class="prose"><code>${esc(b.code)}</code></pre>`;
   if (b.examples)
     return EXAMPLES.map(
       (e) =>
-        `<h3>${esc(e.prompt)}</h3><p class="muted">${esc(e.note)}</p><pre><code>${jsonBlock(e.doc)}</code></pre>`,
+        `<h3>${esc(e.prompt)}</h3><p class="muted">${inlineCode(e.note)}</p><pre><code>${jsonBlock(e.doc)}</code></pre>`,
     ).join("");
   return `<table class="pitfalls"><thead><tr><th>Wrong</th><th>Right</th><th>Why</th></tr></thead><tbody>${PITFALLS.map(
     (p) =>
-      `<tr><td><code>${esc(p.wrong)}</code></td><td><code>${esc(p.right)}</code></td><td>${esc(p.why)}</td></tr>`,
+      `<tr><td data-label="Wrong"><code>${esc(p.wrong)}</code></td><td data-label="Right"><code>${esc(p.right)}</code></td><td data-label="Why">${inlineCode(p.why)}</td></tr>`,
   ).join("")}</tbody></table>`;
 };
 

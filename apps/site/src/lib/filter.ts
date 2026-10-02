@@ -1,3 +1,4 @@
+import type { PourSeries } from "./pour-curve.mjs";
 import { slugify } from "./text.mjs";
 
 export interface IndexEntry {
@@ -23,6 +24,13 @@ export interface IndexEntry {
   temp: string;
   totalTime: string;
   stepCount: number;
+  /** The recipe's timed pours, when it states at least two. */
+  curve: PourSeries | null;
+  ratioValue: number | null;
+  /** Grams of coffee, where the recipe states one weight. */
+  dose: number | null;
+  /** Grams of water or yield, stated or made by the ratio. */
+  brewAmount: number | null;
   attribution: {
     source_url: string;
     source_label: string;
@@ -38,12 +46,19 @@ export interface IndexEntry {
 export interface BeanEntry {
   /** `slugify(roaster.name)/slugify(name)` — the dedupe identity. */
   key: string;
+  /** The bag's own page, `/beans/<slug>/`. */
+  slug: string;
   name: string;
   roaster: { name: string; url?: string };
   /** The bag's own page, where the transcription named one. */
   url?: string;
   origin: string;
+  /** `origin`, one entry per component. */
+  origins: string[];
+  /** The components as shares of the bag, for the origin strip. */
+  components: { label: string; share: number | null; altitude: string }[];
   process: string;
+  roastLevel: string | null;
   roast: string;
   notes: string;
   /** Corpus recipes brewed with this bag, in catalog order. */

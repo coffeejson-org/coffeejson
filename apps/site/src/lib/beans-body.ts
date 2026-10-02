@@ -1,4 +1,6 @@
 import beans from "../generated/beans-index.json";
+import counts from "../generated/corpus-counts.json";
+import { BAGS_INTRO, bagSections } from "./bag-rows";
 import {
   CORRECTIONS,
   LICENSE_SITE,
@@ -38,32 +40,16 @@ export const beansBody = (selected: string | null = null): string => {
     return `<a class="chip${on ? " chip--on" : ""}" href="${href}"${on ? ' aria-current="true"' : ""}>${esc(label)}</a>`;
   };
 
-  const card = (b: Bean) => {
-    const facts = [b.origin, b.process, b.roast].filter(Boolean).join(" · ");
-    return `
-    <article class="card">
-      <h2><a href="/beans/${esc(b.slug)}/">${esc(b.name)}</a></h2>
-      <p class="muted">${esc(b.roaster.name)}</p>
-      ${facts ? `<p>${esc(facts)}</p>` : ""}
-      ${b.notes ? `<p class="muted"><em>${esc(b.notes)}</em></p>` : ""}
-      ${
-        b.recipes.length
-          ? `<p class="muted">${b.recipes.length} transcribed brew${b.recipes.length === 1 ? "" : "s"}</p>`
-          : ""
-      }
-    </article>`;
-  };
-
   return `
   ${siteHeader("/beans/")}
 
+  <div class="row" role="group" aria-label="Browse by">
+    <a class="chip" href="/recipes/">Recipes (${counts.recipes})</a><span class="chip chip--on" aria-current="page">Bags (${beans.length})</span>
+  </div>
   <h1>Bags</h1>
-  <p>Every coffee in the corpus as an identity of its own — one page per bag,
-  whether one published source describes it or three. Each names and links the
-  source it was transcribed from; corrections welcome.</p>
-  <p class="muted"><a href="/recipes/">Browse the recipes instead</a></p>
+  <p class="muted intro">${BAGS_INTRO} ${CORRECTIONS}</p>
 
-  <nav class="row chips" aria-label="Filter by roaster">
+  <nav class="row facet" aria-label="Filter by roaster">
     ${chip(null, `All ${beans.length}`)}
     ${roasters.map(([slug, name]) => chip(slug, name)).join("")}
   </nav>
@@ -74,7 +60,7 @@ export const beansBody = (selected: string | null = null): string => {
       : ""
   }</p>
 
-  ${shown.length ? shown.map(card).join("") : `<p>No bag matches that roaster.</p>`}
+  ${shown.length ? bagSections(shown) : `<p>No bag matches that roaster.</p>`}
 
   ${siteFooter(LICENSE_SITE, QUOTED_PROSE, CORRECTIONS)}`;
 };

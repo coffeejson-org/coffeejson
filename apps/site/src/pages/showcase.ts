@@ -1,5 +1,5 @@
 import registry from "../../../../registries/implementations.json";
-import { footerHtml, LICENSE_SITE, PACKAGES } from "../lib/footer.mjs";
+import { LICENSE_SITE, PACKAGES, siteFooter } from "../lib/footer.mjs";
 import { siteHeader } from "../lib/site-header.mjs";
 import { esc } from "../lib/text.mjs";
 
@@ -64,29 +64,73 @@ const implCard = (i: Impl) => `
     <p>${does(i)}.</p>
   </li>`;
 
-// No per-card status line: five copies of one fact make the grid read as a
-// progress report. It is said once, in prose, under the grid.
-const SURFACES: { title: string; body: string }[] = [
+// Each surface gets a small drawing, and every one of them holds the same
+// thing: the staircase a recipe's pours make. The carrier changes from row to
+// row; what it carries does not, which is the page's whole argument.
+const stair = (x: number, y: number, w: number, h: number): string => {
+  const sw = w / 4;
+  const sh = h / 4;
+  let d = `M${x} ${y + h}`;
+  for (let i = 0; i < 4; i++) d += `v${-sh}h${sw}`;
+  return `<path class="wet" d="${d}V${y + h}Z"/>`;
+};
+const drawing = (inner: string): string =>
+  `<svg class="glyph" viewBox="0 0 96 56" aria-hidden="true">${inner}</svg>`;
+
+const GLYPHS = {
+  apps: drawing(
+    `<rect class="ink" x="3" y="10" width="34" height="36" rx="7"/>
+     <rect class="ink" x="59" y="10" width="34" height="36" rx="7"/>
+     ${stair(9, 20, 22, 18)}${stair(65, 20, 22, 18)}
+     <path class="ink" d="M42 28h12M50 24l4 4-4 4"/>`,
+  ),
+  bag: drawing(
+    `<path class="ink" d="M30 12h36l5 6v30H25V18z M25 18h46"/>
+     ${stair(36, 26, 24, 16)}`,
+  ),
+  link: drawing(
+    `<rect class="ink" x="3" y="17" width="90" height="22" rx="11"/>
+     <path class="ink" d="M13 28h20M38 28h6"/>
+     ${stair(58, 22, 24, 12)}`,
+  ),
+  page: drawing(
+    `<rect class="ink" x="20" y="5" width="56" height="46" rx="3"/>
+     <path class="ink" d="M20 14h56M27 22h20M27 28h14"/>
+     ${stair(27, 34, 42, 12)}`,
+  ),
+  file: drawing(
+    `<path class="ink" d="M28 5h28l12 12v34H28z M56 5v12h12"/>
+     ${stair(35, 27, 26, 18)}`,
+  ),
+};
+
+// No per-row status line: five copies of one fact make the list read as a
+// progress report. It is said once, in prose, under the list.
+const SURFACES: { title: string; body: string; glyph: string }[] = [
   {
     title: "Between two apps",
+    glyph: GLYPHS.apps,
     body: `Someone leaves your app with two years of brews and comes back later with
       more. You write one importer instead of one per vendor whose share codes you
       reverse-engineered yourself.`,
   },
   {
     title: "On a bag of coffee",
+    glyph: GLYPHS.bag,
     body: `Print a QR on the bag. Your customer scans it in their kitchen and their
       phone walks them through your method — your dose, your grind, your pours. No app
       to build, no account for them to make, no link that expires.`,
   },
   {
     title: "In a link",
+    glyph: GLYPHS.link,
     body: `Paste a recipe into a message and it arrives whole. The document rides
       inside the URL, so nothing is stored and nothing is looked up — and it still opens
       after whoever hosted it is gone.`,
   },
   {
     title: "On a web page",
+    glyph: GLYPHS.page,
     body: `Publish your method as data instead of a picture of a table. A reader can
       send it straight to their timer, and it exports to schema.org <code>Recipe</code>,
       so search engines read the actual steps. A bag exports the same way, as a
@@ -94,14 +138,16 @@ const SURFACES: { title: string; body: string }[] = [
   },
   {
     title: "In files you keep",
+    glyph: GLYPHS.file,
     body: `Your brew log is plain <code>.json</code> on your own disk. When an app shuts
       down or changes its pricing, you already have everything — no export deadline,
       nothing to rescue.`,
   },
 ];
 
-const surfaceCard = (s: (typeof SURFACES)[number]) => `
-  <li class="card">
+const surfaceRow = (s: (typeof SURFACES)[number]) => `
+  <li>
+    ${s.glyph}
     <h3>${esc(s.title)}</h3>
     <p>${s.body}</p>
   </li>`;
@@ -114,7 +160,7 @@ export const showcaseBody = (): string => `
   <p class="lede">One document — a title, a dose, a pour schedule, the bean. Here is what
   it does once you have it.</p>
 
-  <ul class="cards">${SURFACES.map(surfaceCard).join("")}</ul>
+  <ul class="ledger ledger--drawn">${SURFACES.map(surfaceRow).join("")}</ul>
   <p class="muted">Four of these run on this site today. The bag is the one nobody has
   shipped — its <a href="${TRANSPORT}" rel="noopener">transport</a> is specified and
   working.</p>
@@ -140,4 +186,4 @@ export const showcaseBody = (): string => `
     <a href="/">What CoffeeJSON is</a>
   </nav>
 
-  ${footerHtml(LICENSE_SITE, PACKAGES)}`;
+  ${siteFooter(LICENSE_SITE, PACKAGES)}`;
