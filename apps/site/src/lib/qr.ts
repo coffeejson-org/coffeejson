@@ -37,21 +37,66 @@ export async function qrCode(url: string, margin = 1): Promise<QrCode | null> {
 export const qrSvg = async (url: string): Promise<string | null> =>
   (await qrCode(url))?.svg ?? null;
 
+/** The quiet zone of a downloaded or printed code, in modules. */
+export const PRINT_QUIET = 4;
+/** The least width a downloaded PNG is drawn at, in pixels. */
+const PNG_MIN_PX = 1024;
+
 /**
- * The panel a QR button opens — the code, its caption, and a download. `svg` is
- * `qrSvg`'s result, so `null` is the answer for a document no code can hold: the
- * link still works, and saying so beats an empty panel.
+ * Pixels per module in a downloaded PNG. A whole number, so every module edge
+ * falls on a pixel edge and none is antialiased.
+ */
+export const pngScale = (modules: number): number =>
+  Math.max(1, Math.ceil(PNG_MIN_PX / (modules + 2 * PRINT_QUIET)));
+
+export interface QrFiles {
+  svg: string;
+  /** A data URL, or `null` where the browser could not draw one. */
+  png: string | null;
+}
+
+/**
+ * The code as files to download. A file is placed in a design or printed, so
+ * it keeps the print quiet zone and is black on white, whatever the page shows.
+ * `null` when no code can hold the link.
+ */
+export async function qrFiles(url: string): Promise<QrFiles | null> {
+  const code = await qrCode(url, PRINT_QUIET);
+  if (!code) return null;
+  let png: string | null = null;
+  try {
+    png = await QRCode.toDataURL(url, {
+      errorCorrectionLevel: code.level,
+      margin: PRINT_QUIET,
+      scale: pngScale(code.modules),
+    });
+  } catch {
+    /* no canvas to draw on, so the SVG is the one download */
+  }
+  return { svg: code.svg, png };
+}
+
+/**
+ * The panel a QR button opens — the code, its caption, and its downloads. `svg`
+ * is `qrSvg`'s result and `files` is `qrFiles`'s, so `null` stands for a
+ * document no code can hold. The link still works, and the panel says so
+ * instead of showing nothing.
  */
 export const qrPanel = (
   svg: string | null,
+  files: QrFiles | null,
   {
     fileName,
     caption,
     tooLargeNoun,
   }: { fileName: string; caption: string; tooLargeNoun: string },
 ): string =>
-  svg === null
+  svg === null || files === null
     ? `<p class="muted">This ${esc(tooLargeNoun)} is too large to fit in a QR code — use Copy link instead.</p>`
     : `<div class="qr-panel">${svg}<p class="muted">${esc(caption)}</p>
         <a class="btn btn--ghost" download="${esc(fileName)}-qr.svg"
-           href="data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}">Download SVG</a></div>`;
+           href="data:image/svg+xml;charset=utf-8,${encodeURIComponent(files.svg)}">Download SVG</a>${
+             files.png
+               ? ` <a class="btn btn--ghost" download="${esc(fileName)}-qr.png" href="${files.png}">Download PNG</a>`
+               : ""
+}</div>`;

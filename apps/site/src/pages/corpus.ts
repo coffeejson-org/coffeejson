@@ -1,5 +1,5 @@
 import { decodePayload, MEDIA_TYPE } from "@coffeejson/core";
-import { qrPanel, qrSvg } from "../lib/qr";
+import { qrFiles, qrPanel, qrSvg } from "../lib/qr";
 import { flash } from "../lib/save";
 import { esc } from "../lib/text.mjs";
 
@@ -78,8 +78,9 @@ function wire(slot: HTMLElement): void {
     // outgrows the code's capacity, and a printed square cannot degrade
     // gracefully. `&i=` keeps a scoped slot's code on its own recipe.
     const svg = await qrSvg(qrTarget);
+    const files = await qrFiles(qrTarget);
     qrBtn.removeAttribute("aria-busy");
-    panel.innerHTML = qrPanel(svg, {
+    panel.innerHTML = qrPanel(svg, files, {
       fileName: file,
       caption:
         "Scan to open on a phone (short link — Copy link gives the self-contained form)",

@@ -1,7 +1,7 @@
 import type { DecodedDocument } from "@coffeejson/core";
 import { encodePayload, MEDIA_TYPE, normalize } from "@coffeejson/core";
 import registry from "../../../../registries/implementations.json";
-import { qrPanel, qrSvg } from "./qr";
+import { qrFiles, qrPanel, qrSvg } from "./qr";
 import { esc } from "./text.mjs";
 
 export const shareUrlFor = (doc: unknown): string =>
@@ -134,7 +134,7 @@ async function runSave(
         slot.innerHTML = "";
         break;
       }
-      slot.innerHTML = qrPanel(await qrSvg(url), {
+      slot.innerHTML = qrPanel(await qrSvg(url), await qrFiles(url), {
         fileName: slugFor(doc),
         caption: "Scan to open this recipe",
         tooLargeNoun: noun(doc),

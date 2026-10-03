@@ -3,7 +3,7 @@ import { decodePayload } from "@coffeejson/core";
 import { compressPayload } from "./compress-payload";
 import { labelDocument } from "./label-document";
 import type { QrCode } from "./qr";
-import { qrCode } from "./qr";
+import { PRINT_QUIET, qrCode } from "./qr";
 import type { PaperId, SheetLayout } from "./sheet-layout";
 import { moduleMm, PAPERS, sheetLayout } from "./sheet-layout";
 import { esc, plural } from "./text.mjs";
@@ -14,7 +14,7 @@ export const LABEL_VIEWER = "https://coffeejson.org/r/";
 /** Below this printed width a module is too fine for a phone camera on a bag. */
 export const MIN_MODULE_MM = 0.35;
 /** The blank margin a printed code keeps, in modules. */
-const QUIET = 4;
+const QUIET = PRINT_QUIET;
 /** The strip under a code for its roast date. */
 const TEXT_MM = 5;
 /** The date line's type size, and how wide one of its characters sets. */
