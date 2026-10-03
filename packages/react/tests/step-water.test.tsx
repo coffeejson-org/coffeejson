@@ -43,7 +43,7 @@ const noDeltas = recipeOf({
   ],
 });
 
-// Espresso: no to_water anywhere → no targets, no column.
+// Espresso has no to_water anywhere, so no targets and no column.
 const espresso = recipeOf({
   title: "Monarch",
   method: "espresso",

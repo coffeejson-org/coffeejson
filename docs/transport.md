@@ -86,7 +86,7 @@ Two general rules regardless of binding:
 
 ### Accepting links from any host
 
-The rules above are the producer's side. The consumer's mirror image: a
+The rules above are the producer's side. A
 consumer that scans QR codes or accepts pasted or shared links **SHOULD**
 attempt payload extraction on **any** `http(s)` URL. It parses the URL, reads
 the `d` query parameter, and decodes per [Encoding](#encoding), regardless of

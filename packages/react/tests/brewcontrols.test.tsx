@@ -59,8 +59,8 @@ test("tapDone button only when awaitingTap", () => {
   ).toContain('aria-label="Done, next step"');
 });
 
-// The text variant is the same three buttons with their labels visible instead of
-// an icon plus an accessible name — same conditions, handlers and classes.
+// The text variant is the same three buttons with visible labels instead of an
+// icon plus an accessible name — same conditions, handlers and classes.
 test("the text variant renders labels as button text, with no aria-label", () => {
   const html = renderToStaticMarkup(
     <BrewControls brew={brewOf({ running: true })} variant="text" />,

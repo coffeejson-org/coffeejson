@@ -20,7 +20,7 @@ function wire(slot: HTMLElement): void {
 
   const qrTarget = `${location.origin}/r/?s=${encodeURIComponent(slug)}${i ? `&i=${i}` : ""}`;
   const panelId = `qr-${file}`;
-  // A scoped slot is indented under its brew and the publication's is not: without
+  // A scoped slot is indented under its brew and the publication's is not. Without
   // that, a three-brew page reads as four identical offers, one of which differs.
   if (i) slot.classList.add("scoped-share");
   else slot.classList.add("whole-share");
@@ -74,7 +74,7 @@ function wire(slot: HTMLElement): void {
       return;
     }
     qrBtn.setAttribute("aria-busy", "true");
-    // The short `?s=` form for the reason the cards use it: an enriched document
+    // The short `?s=` form, for the reason the cards use it. An enriched document
     // outgrows the code's capacity, and a printed square cannot degrade
     // gracefully. `&i=` keeps a scoped slot's code on its own recipe.
     const svg = await qrSvg(qrTarget);
@@ -102,8 +102,8 @@ function wire(slot: HTMLElement): void {
 
 document.querySelectorAll<HTMLElement>("[data-share-slot]").forEach(wire);
 
-// A step and its point on the curve light together. Pointer-only, and nothing
-// is hidden behind it: both already show their numbers.
+// A step and its point on the curve light together. Pointer-only, and it
+// reveals nothing new, because both already show their numbers.
 document.querySelectorAll<HTMLElement>(".recipe").forEach((section) => {
   const light = (step: string | undefined, on: boolean): void => {
     if (step === undefined) return;

@@ -1,6 +1,6 @@
-// "Implementations", not "Built with CoffeeJSON": one question, how do you
-// implement this. Where the format is used is `/showcase`. A page headed "built
-// with" listing one app reads as a claim.
+// "Implementations", not "Built with CoffeeJSON", because the page answers one
+// question, how to implement the format. Where the format is used is
+// `/showcase`. A page headed "built with" listing one app reads as a claim.
 
 import conformance from "../generated/conformance.json";
 import { LICENSE_SITE, PACKAGES, siteFooter } from "../lib/footer.mjs";
@@ -14,8 +14,8 @@ const GUIDE = `${REPO}/blob/main/docs/integration-guide.md`;
 
 const FIXTURES = `${REPO}/blob/main/fixtures`;
 
-// The conformance corpus, one cell per case and each a link to it: what an
-// implementation must accept beside what it must refuse. Drawn from the
+// The conformance corpus, one cell per case and each a link to it, with what
+// an implementation must accept beside what it must refuse. Drawn from the
 // fixtures on disk at build time, so the picture is the corpus.
 const cells = (
   names: string[],
@@ -24,8 +24,8 @@ const cells = (
 ): string =>
   names
     .map(
-      // Out of the tab order: a hundred and forty stops between two paragraphs
-      // is a wall. The prose above links both corpora for a keyboard reader.
+      // Out of the tab order, because a hundred and forty stops between two
+      // paragraphs is too many. The prose above links both corpora for a keyboard reader.
       (n) =>
         `<li><a class="cell ${accepts ? "accept" : "refuse"}" tabindex="-1" href="${href(n)}" rel="noopener" title="${esc(n)}"><span class="visually-hidden">${esc(n)}</span></a></li>`,
     )

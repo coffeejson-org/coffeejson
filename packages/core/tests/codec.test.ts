@@ -170,7 +170,7 @@ describe("the compressed form", () => {
   });
   test("decodes a small-window stream, which does not begin 0x78", () => {
     const p = compress(minimal, { windowBits: 9 });
-    expect(Buffer.from(p, "base64url")[0]).not.toBe(0x78); // the whole point
+    expect(Buffer.from(p, "base64url")[0]).not.toBe(0x78);
     expect(Buffer.from(p, "base64url")[0]! & 0x0f).toBe(8);
     const r = decodePayload(p);
     expect(r.ok && r.document).toEqual(minimal);

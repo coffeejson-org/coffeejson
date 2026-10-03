@@ -96,9 +96,9 @@ function issuesFrom(validator: {
 const minor = (v: string): number => Number(v.split(".")[1]);
 
 /**
- * Whether the strict schema is entitled to an opinion. It knows one minor, and
- * a document from a later one carries members it cannot know about — every one
- * of which it would report as a probable typo. Silence is the honest answer.
+ * Whether the strict schema applies. The schema defines one minor, and a
+ * document from a later minor carries members it does not define. The lint
+ * would report every one of them as a probable typo, so it reports nothing.
  */
 function lintable(doc: unknown): boolean {
   const stated = (doc as { coffeejson?: unknown })?.coffeejson;

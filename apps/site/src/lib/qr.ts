@@ -12,7 +12,7 @@ export interface QrCode {
 // Level M while the payload fits its 2,331-byte capacity, else L, so a dense
 // self-contained link still gets a code. Past L at version 40 there is no QR at
 // all (byte mode caps at 2,953 bytes) — a fact about the URL, so the result is
-// `null`, which every caller must answer for. `margin` is the quiet zone in
+// `null`, which every caller must handle. `margin` is the quiet zone in
 // modules: 1 on a screen, where the page around the code is already blank, and
 // 4 in print, which is what the symbology asks for.
 export async function qrCode(url: string, margin = 1): Promise<QrCode | null> {

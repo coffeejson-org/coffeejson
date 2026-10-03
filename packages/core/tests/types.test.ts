@@ -35,7 +35,7 @@ test("wire types compile and accept a minimal document", () => {
 
 // A wire type that cannot name a published field forces the consumer to cast,
 // which is the same as having no types at all. Throughout this file `tsc` is the
-// real assertion; the runtime expectations only keep vitest honest it ran.
+// real assertion; the runtime expectations only show that the test ran.
 test("wire types name every field the published schema defines", () => {
   const step: Step = { kind: "pour", at_s: 30, action_duration_s: 12 };
   const r: Recipe = {

@@ -25,8 +25,8 @@ export function Brew({
     }
   };
 
-  // Once the brew finishes, hold NEITHER — otherwise it keeps nagging "leave
-  // site?" and pinning the screen awake.
+  // Once the brew finishes, hold NEITHER — otherwise the page keeps asking
+  // "leave site?" and keeping the screen awake.
   useEffect(() => {
     if (brew.state.finished) return;
     if (brew.running) void requestWakeLock();
@@ -69,8 +69,8 @@ export function Brew({
     return () => document.removeEventListener("keydown", onKey);
   }, [brew.running, brew.state.finished, brew.pause, brew.resume]);
 
-  // Vibrate cues: once per active-step change (skipping the null "no active step
-  // yet" state), and a distinct pattern the moment the brew finishes.
+  // Vibrate once per active-step change (skipping the null "no active step
+  // yet" state), and in a distinct pattern when the brew finishes.
   useEffect(() => {
     if (brew.state.currentIndex !== null) navigator.vibrate?.(200);
   }, [brew.state.currentIndex]);
@@ -79,8 +79,8 @@ export function Brew({
   }, [brew.state.finished]);
 
   // The haptic cue says "something happened", not what to do, so the STEP is
-  // announced. The clock stays aria-live="off": a per-second ticker read aloud is
-  // unusable.
+  // announced. The clock stays aria-live="off", because a per-second ticker read
+  // aloud is unusable.
   const step =
     brew.state.currentIndex !== null
       ? recipe.steps[brew.state.currentIndex]
@@ -100,8 +100,8 @@ export function Brew({
           .join(" ")
       : "";
 
-  // The one thing a brew timer has to say besides the time: what happens
-  // next, and how long until it does.
+  // Besides the time, a brew timer shows one thing, which is what happens
+  // next and how long until it does.
   const upcoming =
     brew.state.nextTimedIndex !== null
       ? recipe.steps[brew.state.nextTimedIndex]!
@@ -134,7 +134,7 @@ export function Brew({
             {fmtClock(brew.elapsedS)}
           </div>
           {/* What the announcement says, for the eye. Hidden from assistive
-              technology: the live region below is the one that speaks. */}
+              technology, because the live region below is the one announced. */}
           <p className="brew-cue" aria-hidden="true">
             {brew.state.finished ? (
               "Brew finished."

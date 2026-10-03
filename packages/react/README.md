@@ -14,7 +14,7 @@ consumer's, and the projection is there to build it on.
 npm install @coffeejson/react @coffeejson/core
 ```
 
-`react` is a peer dependency. This package's version is its own: it says
+`react` is a peer dependency. This package's version is its own. It says
 nothing about the `coffeejson` version a document declares
 ([Versioning](https://coffeejson.org/docs/spec/07-versioning.md)).
 
@@ -118,7 +118,7 @@ reason, for a page that reports one).
 label — `light_medium` reads "Light-medium", never "light medium" — and each
 table is keyed by its vocabulary, so a token the format grows is a compile error
 rather than a slug on a card. Re-word or localize one by token; a table merges by
-token, and you may name a token this build has not heard of.
+token, and you may name a token this build does not know.
 
 ```tsx
 <BeanCard bean={bean} config={{
@@ -285,5 +285,5 @@ const brew = useBrewAlong(recipe.steps, recipe.finishS);
 `variants.controls` switches the whole strip between labeled buttons and icons.
 
 Style via the frozen `cj-brew*` / `cj-stepcard*` / `cj-countdown*` / `cj-timeline*`
-/ `cj-steplist*` / `cj-pourcounter*` classes — import the default skin or roll your
+/ `cj-steplist*` / `cj-pourcounter*` classes — import the default skin or write your
 own, same as the cards.

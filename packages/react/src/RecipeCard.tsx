@@ -47,8 +47,8 @@ function StepItem({
     ? `${cx("step", rc)} ${cx("stepActive", rc)}`
     : cx("step", rc);
 
-  // Plain rendering, the target nested inside the body: every row of a recipe with
-  // no increment beyond its initial fill takes this.
+  // Plain rendering, for every row of a recipe with no increment beyond its
+  // initial fill. The target nests inside the body.
   if (!columnar) {
     return (
       <li className={liClass} data-step={index}>
@@ -67,8 +67,8 @@ function StepItem({
     );
   }
 
-  // Columnar rendering: delta and target are siblings of stepBody, not nested, so a
-  // consumer can grid them into aligned Pour · Total columns. Only targeted rows.
+  // Columnar rendering, for targeted rows only. Delta and target are siblings of
+  // stepBody, not nested, so a consumer can grid them into Pour · Total columns.
   let water: ReactNode = null;
   if (step.toWater) {
     const target = (

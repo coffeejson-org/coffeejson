@@ -14,7 +14,7 @@ import {
 
 /**
  * CoffeeJSON → schema.org `Recipe` JSON-LD, for `<script type="application/ld+json">`.
- * `Recipe` is a `HowTo` subtype, which legitimizes `tool` and `performTime`.
+ * `Recipe` is a `HowTo` subtype, which makes `tool` and `performTime` valid.
  * Absent data stays absent — nothing is fabricated for a search feature, and
  * document mechanics (`generator`, `bean_ref`, `recommended`) never export.
  */
@@ -27,8 +27,8 @@ export function recipeJsonLd(
   },
 ): Record<string, unknown> | null {
   if (!isObj(doc)) return null;
-  // Indexed against the RAW array: `recipeIndex` addresses a position in the
-  // caller's own document, so filtering unreadable entries would shift it.
+  // Indexed against the RAW array, because `recipeIndex` is a position in the
+  // caller's own document and filtering unreadable entries would shift it.
   const r = arr(doc["recipes"])[recipeIndex];
   if (!isObj(r)) return null;
   const name = str(r["title"])?.trim();
@@ -67,8 +67,8 @@ export function recipeJsonLd(
 
   const grind = isObj(r["grind"]) ? r["grind"] : null;
   const tool = [r["brewer"], r["basket"], grind ? grind["grinder"] : undefined]
-    // Arrow, not a bare reference: gearLabel takes an optional label map as its
-    // second argument and Array.map would hand it the index.
+    // An arrow, not a bare reference, because gearLabel takes an optional label
+    // map as its second argument and Array.map would pass it the index.
     .map((g) => gearLabel(g))
     .filter(Boolean)
     .map((toolName) => ({ "@type": "HowToTool", name: toolName }));
@@ -81,7 +81,7 @@ export function recipeJsonLd(
 function partyNode(v: unknown): Record<string, unknown> | undefined {
   const name = partyName(v);
   if (!name || !isObj(v)) return undefined;
-  // Absent/unknown `type` falls back by role: a recipe author reads as a person.
+  // An absent or unknown `type` falls back by role, so a recipe author is typed as a person.
   const node: Record<string, unknown> = {
     "@type": str(v["type"]) === "organization" ? "Organization" : "Person",
     name,
@@ -130,7 +130,7 @@ function ingredientStrings(
 
 // The `instruction`, else the pour-target derivation ("Pour to 250 g"); a step
 // with neither is skipped, never padded. Derived labels serialize as absent, so
-// any `label` present is the author's and rides as the step `name`.
+// any `label` present is the author's and is exported as the step `name`.
 function stepNode(s: Record<string, unknown>): Record<string, unknown> | null {
   const target = fmtMeasurement(measurement(s["to_water"]));
   const text =
@@ -145,10 +145,10 @@ function stepNode(s: Record<string, unknown>): Record<string, unknown> | null {
 /**
  * CoffeeJSON bean → schema.org `Product` JSON-LD, for `<script type="application/ld+json">`.
  * A bean is a coffee a roaster sells, and `Product` is the type that says so —
- * but the node carries **no `offers`**: price, stock and lot size live in the
- * roaster's own listing (principle 4), which `sameAs` points at. The identity
- * rides as `additionalProperty` under the CoffeeJSON member names with the
- * wire values verbatim, so a reader that knows the format reads it back.
+ * but the node carries **no `offers`**, because price, stock and lot size belong
+ * to the roaster's own listing (principle 4), which `sameAs` points at. The
+ * identity is exported as `additionalProperty` under the CoffeeJSON member names,
+ * with the wire values verbatim, so a reader that implements the format can read it back.
  * Absent data stays absent, and `id` / `lang` / `localizations` never export.
  * A lot member the node cannot attribute to a named component never exports
  * either, except where the bag itself is the only component.
@@ -159,9 +159,9 @@ export function beanJsonLd(
   options?: {
     /**
      * The page's canonical URL — page knowledge, not document data. Pass it only
-     * where this bean is the page's subject: two nodes from one page must not
-     * both claim the same address. For a page listing several bags, omit it and
-     * let each bag's own `sameAs` carry its listing.
+     * where this bean is the page's subject, because two nodes from one page must
+     * not both claim the same address. For a page listing several bags, omit it,
+     * and each bag's own `sameAs` names its listing.
      */
     url?: string;
   },
@@ -179,7 +179,7 @@ export function beanJsonLd(
     name,
   };
   if (options?.url) ld["url"] = options.url;
-  // The roaster's listing is where the offer lives. When the page IS the listing
+  // The roaster's listing is where the offer is. When the page IS the listing
   // (the roaster embedding this on their own product page), `url` already says so.
   const listing = str(b["url"]);
   if (listing && listing !== options?.url) ld["sameAs"] = listing;
@@ -196,7 +196,7 @@ export function beanJsonLd(
       items.map((it) => str(it["country"])).filter((c): c is string => !!c),
     ),
   ];
-  // The code rides as `identifier`, never as `name`: an alpha-2 code is not what
+  // The code is exported as `identifier`, never as `name`. An alpha-2 code is not what
   // the country is called, the format carries no display name for one, and
   // inventing "Colombia" would fabricate a string in a language the document
   // never chose. A consumer that wants a name maps the code itself.
@@ -234,7 +234,7 @@ export function beanJsonLd(
   };
   // A member the bag does not state may still be stated by its lots. One lot IS
   // the bag, so both members fall back to it. Across several, only `process`
-  // unions: `processList` says that a multi-process list stated at bag level
+  // unions. `processList` says that a multi-process list stated at bag level
   // means the bag contains coffee of each, so the union is a reading the format
   // already sanctions. No such reading exists for `varietals`, and every lot's
   // varieties flattened into one list describes no coffee in the bag.

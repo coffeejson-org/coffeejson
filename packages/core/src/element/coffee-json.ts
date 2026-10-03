@@ -14,7 +14,7 @@ export { ELEMENT_STYLES } from "./styles.js";
 
 const UNITS: readonly UnitSystem[] = ["as-authored", "metric", "imperial"];
 
-/** Why no document is on show: a decoder's reason, or a `src` that did not answer. */
+/** Why no document is on show, either a decoder's reason or a `src` that did not respond. */
 type ElementError = DecodeError | { kind: "fetch_failed"; detail?: string };
 
 /**
@@ -25,7 +25,7 @@ type ElementError = DecodeError | { kind: "fetch_failed"; detail?: string };
  * fallback. They show until a document renders, and stay when none does. On a
  * failure the element carries `data-error` with the failure's name and fires
  * `coffeejson-error`; on success it fires `coffeejson-load`. Both events bubble
- * and cross shadow boundaries, so one listener on the page hears every tag.
+ * and cross shadow boundaries, so one listener on the page serves every tag.
  */
 export class CoffeeJsonElement extends HTMLElement {
   static observedAttributes = ["src", "d", "lang", "units", "viewer", "jsonld"];
@@ -91,7 +91,7 @@ export class CoffeeJsonElement extends HTMLElement {
         return;
       }
       // The document decoded and holds no bean or recipe that can be drawn. A
-      // page showing its fallback needs to hear why.
+      // page showing its fallback needs the reason.
       error = { kind: "empty_document" };
     } else error = result.error;
     this.#doc = null;
@@ -128,7 +128,7 @@ export class CoffeeJsonElement extends HTMLElement {
     }
   }
 
-  /** Draw the document in hand, or the fallback. Says whether a document was drawn. */
+  /** Draw the document in hand, or the fallback. Returns whether a document was drawn. */
   #paint(): boolean {
     this.#jsonLd?.remove();
     this.#jsonLd = null;

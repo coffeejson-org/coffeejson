@@ -20,7 +20,8 @@ export const round1 = (n: number): number => Math.round(n * 10) / 10;
 const GRAMS_PER_OUNCE = 28.349523125;
 const METERS_PER_FOOT = 0.3048;
 
-// Unrounded: formatters own display rounding, not the derivations calling this.
+// Unrounded, because display rounding belongs to the formatters, not to the
+// derivations calling this.
 export function convertMassValue(
   value: number,
   from: string,
@@ -74,8 +75,8 @@ export function convertMeasurement(
       return toMetric ? mapMagnitudes(m, (n) => n * METERS_PER_FOOT, METER) : m;
     case METER:
       return toMetric ? m : mapMagnitudes(m, (n) => n / METERS_PER_FOOT, FOOT);
-    // milliliter has no defined mass conversion: water's density varies with
-    // temperature, so it passes through in every system, like bar.
+    // milliliter has no defined mass conversion, because water's density varies
+    // with temperature, so it passes through in every system, like bar.
     default:
       return m;
   }

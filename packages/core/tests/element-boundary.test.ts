@@ -5,8 +5,8 @@ import { expect, test } from "vitest";
 
 // The package's main entry runs where there is no DOM: a server, a worker, a
 // React Native bundle. The element is the one part that needs a browser, so it
-// lives in its own directory, compiled by its own project, and nothing outside
-// that directory may reach into it.
+// has its own directory, compiled by its own project, and nothing outside that
+// directory may import from it.
 const src = fileURLToPath(new URL("../src", import.meta.url));
 const outside = readdirSync(src, { withFileTypes: true })
   .filter((f) => f.isFile() && f.name.endsWith(".ts"))

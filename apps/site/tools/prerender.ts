@@ -7,10 +7,9 @@ import { implementationsBody } from "../src/pages/implementations";
 import { landingBody } from "../src/pages/landing";
 import { showcaseBody } from "../src/pages/showcase";
 
-// The corpus and bean pages have always been written as complete HTML by
-// `gen.mjs`. These five were not: they assembled themselves in the browser, so
-// anything that runs no JavaScript — which is most crawlers that are not Google —
-// received a 2 KB shell with an empty <main> and no page in it.
+// `gen.mjs` writes the corpus and bean pages as complete HTML. Left to assemble
+// themselves in the browser, these pages reach a reader that runs no JavaScript
+// — most crawlers other than Google — as a 2 KB shell with an empty <main>.
 //
 // They are documents. None of them has an event listener, and the one with view
 // state (the bags hub, `?roaster=`) keeps its module to re-render for that case.
@@ -18,7 +17,7 @@ import { showcaseBody } from "../src/pages/showcase";
 //
 // The recipe directory is here too, and it is the only one whose module still
 // re-renders: its filter state lives in the URL. The build writes the unfiltered
-// view — what a bare `/recipes/` asks for — and the module attaches behaviour to
+// view — what a bare `/recipes/` asks for — and the module attaches behavior to
 // it rather than rebuilding an identical page. The two must agree exactly, or
 // hydration wires listeners onto markup the module disagrees with, so a test
 // compares them.
@@ -31,13 +30,13 @@ export const PRERENDERED: Record<string, () => string> = {
   "recipes/index.html": () => recipesBody(filtersFromSearch("")),
 };
 
-/** The empty element the build fills. A shell that stops matching gets caught. */
+/** The empty element the build fills. `fill` throws on a shell that stops matching. */
 export const SLOT = '<main id="app"></main>';
 const HEAD_SLOT = "</head>";
 
-/** Structured data a page wants in its STATIC head, keyed the same way. The
- *  recipe directory used to build this in the browser, where no reader running
- *  none of it could ever see the corpus's schema.org Recipe data. */
+/** Structured data for a page's STATIC head, keyed the same way. Built in the
+ *  browser, the corpus's schema.org Recipe data never reaches a reader that
+ *  runs no JavaScript. */
 export const HEAD_JSONLD: Record<string, () => unknown[]> = {
   "recipes/index.html": recipesJsonLd,
 };

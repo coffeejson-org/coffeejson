@@ -28,8 +28,8 @@ import { SAMPLE_DOC, SAMPLE_TEXT } from "../lib/sample";
 import { siteHeader } from "../lib/site-header.mjs";
 import { esc } from "../lib/text.mjs";
 
-// Every figure in the facts strip is derived by `tools/gen.mjs`, because a
-// hand-typed "65 recipes" goes stale the next time the corpus grows. It imports the
+// `tools/gen.mjs` derives every figure in the facts strip, because a hand-typed
+// "65 recipes" goes stale the next time the corpus grows. This module imports the
 // COUNTS file, not the indexes, because vite modulepreloads whatever a page imports.
 
 const samplePayload = encodePayload(SAMPLE_DOC);
@@ -41,8 +41,8 @@ const GUIDE =
 /** How much faster than the recipe the landing page plays it. */
 export const PLAYBACK_SPEED = 15;
 
-// The hero plays a corpus document from its own bytes. Nothing in it is typed
-// here: the curve, the clock and the totals are all read out of `hero.text`.
+// The hero plays a corpus document from its own bytes. The curve, the clock
+// and the totals are all read from `hero.text`, and none is typed here.
 function heroSeries() {
   const recipe = normalize(JSON.parse(hero.text)).recipes[0]!;
   const series = pourSeries(recipe);
@@ -78,9 +78,9 @@ function liveDocument(): string {
   </div>`;
 }
 
-// The sample document's own share link as a QR, drawn here at build time: this
-// module never reaches a browser, so the encoder does not either. Inline SVG in
-// `currentColor`, so the code is ink on the page's own ground.
+// The sample document's share link as a QR, drawn at build time. This module
+// never reaches a browser, so the encoder does not either. Inline SVG in
+// `currentColor`, so the code takes the page's text color.
 function qrSvg(text: string, label: string): string {
   const { modules } = QRCode.create(text, { errorCorrectionLevel: "M" });
   const n = modules.size;
@@ -100,12 +100,12 @@ const unitTail = (text: string): string => {
 };
 
 // Every pour schedule in the corpus as its own curve, each a link to its
-// page. Only recipes that state one: a wall half made of identical ratio bars
-// said less than the count beside it. The index is imported here and nowhere
-// the browser loads — this module runs at build time only.
+// page. Only recipes that state one, because a wall half made of identical
+// ratio bars said less than the count beside it. The index is imported here and
+// nowhere the browser loads — this module runs at build time only.
 const timed = (rawIndex as IndexEntry[]).filter((e) => e.curve);
 // All drawn in one box — the longest brew wide, the largest tall — so the wall
-// can be read across: a short brew is a short curve.
+// reads across and a short brew is a short curve.
 const { domain } = corpusScale(rawIndex as IndexEntry[]);
 // A row's own author is the group it would sit in on the directory; on the
 // wall it is the part of the title a reader already knows.

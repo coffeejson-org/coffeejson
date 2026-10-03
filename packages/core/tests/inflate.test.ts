@@ -104,9 +104,9 @@ describe("corpus round-trip", () => {
   const recipes = jsonIn("recipes");
   const corpus = [...recipes, ...jsonIn("fixtures/valid")];
 
-  // No literal count: the corpus grows and shrinks, and a number here would be
-  // one more place to edit for it. The catalog is the corpus's own manifest, so
-  // agreeing with it is both the stronger check and the maintenance-free one.
+  // No literal count, because the corpus grows and shrinks. The catalog is the
+  // corpus's own manifest, so agreeing with it is the stronger check and needs
+  // no upkeep.
   test("the recipe corpus is all there", () => {
     const catalog: { recipes: { slug: string }[] } = JSON.parse(
       readFileSync(join(root, "recipes/catalog.json"), "utf8"),

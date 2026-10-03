@@ -5,7 +5,7 @@ import { describe, expect, test } from "vitest";
 import { beanJsonLd, documentJsonLd, recipeJsonLd } from "../src/jsonld";
 import type { CoffeeJSONDocument } from "../src/types";
 
-// The documented full example (design sample): every mapped field at once.
+// The full example, with every mapped field at once.
 const FULL: CoffeeJSONDocument = {
   coffeejson: "1.0",
   beans: [
@@ -423,7 +423,6 @@ test("a non-numeric finish_s exports no performTime rather than a malformed dura
   ).toHaveProperty("performTime", "PT0S");
 });
 
-// A non-array `beans`.
 test("a non-array beans leaves the recipe unlinked rather than throwing", () => {
   const ld = recipeJsonLd(
     {

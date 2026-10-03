@@ -18,9 +18,8 @@ export interface BagRow {
   recipes: unknown[];
 }
 
-// A bag is one line of an index, not a card: there are dozens, each a name and
-// three facts, and a wall of boxes holding one sentence apiece says less than a
-// list a reader can run an eye down.
+// A bag is one line of an index, not a card. There are dozens, each a name and
+// three facts, and a list is quicker to scan than a grid of one-sentence boxes.
 // Fixed columns: origin, process, roast, brews. Each fact has one place.
 const row = (b: BagRow): string => `
       <li>

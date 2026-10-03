@@ -30,10 +30,10 @@ export interface RecipeFormState {
   grindSetting: string;
   filterMaterial: string;
   filterLabel: string;
-  // Where the recipe was PUBLISHED, not the producing app — that is the
-  // document's `generator`, which no hand-authoring form asks a human to fill in.
   steps: StepFormState[];
   finish_s: string;
+  // Where the recipe was PUBLISHED, not the producing app — that is the
+  // document's `generator`, which no hand-authoring form asks a human to fill in.
   basedOn: string;
   recommended: boolean;
 }
@@ -190,8 +190,8 @@ export function buildRecipe(form: RecipeFormState): Recipe {
     const r = num(form.ratio);
     if (r !== undefined) recipe.ratio = r;
   }
-  // A label with no material is not a filter, so it drops rather than emitting
-  // a hollow object.
+  // A label with no material is not a filter, so it is dropped rather than
+  // emitted as an empty object.
   if (form.filterMaterial) {
     const label = form.filterLabel.trim();
     recipe.filter = label

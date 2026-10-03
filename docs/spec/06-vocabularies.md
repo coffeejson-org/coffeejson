@@ -605,8 +605,8 @@ Japanese writes `ゲイシャ`, `ブルボン`, `ティピカ` and gives no Lati
 A document that records what the page said is then unreachable by a consumer
 that filters for Geisha, Bourbon or Typica. The alias map closes that gap
 without anyone translating. **The document keeps the source's own value**, and
-matching happens against the registry. That distinction matters. A
-transliteration at transcription time would be authoring, and it is lossy in
+matching happens against the registry. A transliteration at transcription
+time would be authoring, and it is lossy in
 one direction (katakana cannot round-trip a producer's accents). So it is the
 consumer's lookup that normalizes, never the producer's pen.
 

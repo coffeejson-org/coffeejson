@@ -25,8 +25,8 @@ test("fmtClock", () => {
   expect(fmtClock(135)).toBe("2:15");
 });
 
-// One definition on purpose: three render surfaces print a step's time column,
-// and a placeholder defined three times is three chances to drift.
+// One definition on purpose. Three render surfaces print a step's time column,
+// and a placeholder defined three times can drift three ways.
 test("fmtStepTime renders the clock for a timed step", () => {
   expect(fmtStepTime(0)).toBe("0:00");
   expect(fmtStepTime(135)).toBe("2:15");
@@ -146,8 +146,8 @@ test("gearLabel: a stated label takes the variant only when it does not name it"
 });
 
 test("gearLabelsFor: a language tag narrows before it falls back", () => {
-  // `en` is the only set the registry can supply today; the shape is what makes
-  // adding `ja` a data change rather than a reshape.
+  // `en` is the only set the registry can supply today. The shape makes adding
+  // `ja` a data change, not a reshape.
   expect(gearLabelsFor("en")["hario-v60"]).toBe("Hario V60");
   expect(gearLabelsFor("ja")["hario-v60"]).toBe("Hario V60");
   expect(gearLabelsFor("ja-JP")["hario-v60"]).toBe("Hario V60");

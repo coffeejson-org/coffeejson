@@ -41,8 +41,8 @@ export function fmtMeasurement(
   return span === "" ? "" : `${span} ${u}`;
 }
 
-// A window renders as a window ("18.5–19"), never as a midpoint: the spec
-// forbids presenting a derived point as the author's number.
+// A window renders as a window ("18.5–19"), never as a midpoint, because the
+// spec forbids presenting a derived point as the author's number.
 function fmtSpan(m: Measurement, format: (n: number) => string): string {
   if (m.value !== undefined) return format(m.value);
   if (m.min !== undefined && m.max !== undefined)
@@ -81,7 +81,6 @@ export function formatRatio(ratio: number | null): string {
   return `1 : ${n}`;
 }
 
-// Tolerant: `normalize` feeds it untrusted gear objects straight off the wire.
 /** Whether `text` already names `variant`, bounded so a run of letters or digits
  *  around the match is a different word. */
 function namesVariant(text: string, variant: string): boolean {
@@ -89,6 +88,8 @@ function namesVariant(text: string, variant: string): boolean {
   return new RegExp(`(?<![A-Za-z0-9])${escaped}(?![A-Za-z0-9])`).test(text);
 }
 
+// Tolerant, because `normalize` passes it untrusted gear objects straight off
+// the wire.
 export function gearLabel(
   g: unknown,
   labels: Readonly<Record<string, string>> = gearLabelsFor(),
@@ -102,28 +103,28 @@ export function gearLabel(
   const brand = typeof o["brand"] === "string" ? o["brand"] : null;
   const model = typeof o["model"] === "string" ? o["model"] : null;
   const brandModel = [brand, model].filter(Boolean).join(" ");
-  // Spec order, 03-recipe.md § Gear object: a KNOWN id resolves to the consumer's
+  // Spec order (03-recipe.md § Gear object). A KNOWN id resolves to the consumer's
   // own label first, because the id is the wire form and the display string is the
   // edge — a document naming registered gear carries none. Only `custom` and an
   // unrecognized id use what the producer wrote. A stated label is shown as
   // written, because it can already contain the variant.
   // An own-property check, because a caller may pass a plain object as `labels` and
   // an `id` off the wire can name a member `Object.prototype` supplies. Spelled the
-  // long way: `Object.hasOwn` needs a newer `lib` than this package targets.
+  // long way because `Object.hasOwn` needs a newer `lib` than this package targets.
   const own = Object.prototype.hasOwnProperty;
   const known =
     id && id !== "custom" && own.call(labels, id) ? labels[id] : undefined;
   if (known === undefined && label !== null) {
     // A stated label often already names the variant, so it is added only when the
-    // label leaves it out. The match is bounded: an `S` inside "Switch" is not the
-    // variant `S`.
+    // label leaves it out. The match is bounded, so an `S` inside "Switch" is not
+    // the variant `S`.
     const stated = typeof o["variant"] === "string" ? o["variant"] : "";
     return stated && !namesVariant(label, stated)
       ? `${label} ${stated}`
       : label;
   }
-  // `custom` is the escape hatch for off-registry gear, never a product name, so it
-  // is the one id never shown as one.
+  // `custom` marks off-registry gear and is never a product name, so it is the
+  // one id never shown as one.
   const base = known ?? (brandModel || (id === "custom" ? "" : id));
   if (!base) return "";
   // The registry names the family; `variant` names which one of it, and no lookup
@@ -137,8 +138,8 @@ export function gearLabel(
 
 /**
  * One closed vocabulary's label for a token off the wire, which may name a value
- * this build has never heard of. The fallback is the table's own answer, not a
- * policy stated here: a set defining `other` gives it, and one that does not —
+ * this build does not know. The fallback comes from the table, not from a policy
+ * stated here. A set defining `other` gives it, and one that does not —
  * `roast_level`, grind `size` — gives the empty string, which callers drop.
  */
 export const vocabularyLabel = (
@@ -180,8 +181,8 @@ export function regionLabel(code: string): string {
   }
 }
 
-// Card text, not a transcript: round to one decimal, and skip a measurement the
-// display layer cannot render rather than reduce it to a bare magnitude.
+// Card text, not a transcript, so round to one decimal and skip a measurement
+// the display layer cannot render rather than reduce it to a bare magnitude.
 const part = (m: Measurement | null): string | null =>
   m === null ? null : fmtMeasurement(roundMeasurement(m)) || null;
 
@@ -210,7 +211,7 @@ export const processLine = (
 
 /**
  * Everyone credited with growing a lot. A role goes beside the name, never
- * instead of it: an entry the source left roleless is as real as a roled one,
+ * instead of it. An entry the source left roleless is as real as a roled one,
  * and an unrecognized role still shows.
  */
 export const producerLine = (

@@ -1,5 +1,5 @@
-// A `.mjs` with a `.d.mts` beside it, matching `footer.mjs`: the page modules
-// are TypeScript built by vite, and `tools/gen.mjs` is plain Node.
+// A `.mjs` with a `.d.mts` beside it, as `footer.mjs` is, because the page
+// modules are TypeScript built by vite and `tools/gen.mjs` is plain Node.
 
 import { esc } from "./text.mjs";
 

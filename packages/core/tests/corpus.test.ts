@@ -45,8 +45,8 @@ test("every corpus recipe yields a non-empty summary", () => {
 });
 
 // Any object carrying a string `unit` is a measurement, wherever it sits in the
-// tree. Walking the raw JSON, not the view-model: normalize() drops what it
-// cannot read, and the question is what the display layer cannot show.
+// tree. This walks the raw JSON, not the view-model, because normalize() drops
+// what it cannot read and the question is what the display layer cannot show.
 function unitsIn(value: unknown, into: Set<string>): Set<string> {
   if (Array.isArray(value)) {
     for (const v of value) unitsIn(v, into);

@@ -11,12 +11,12 @@ import { axisHtml, curveParts } from "./pour-curve.mjs";
 // and the line of the file being poured is lit. And it edits: drag a pour and
 // the file beside it changes, because the picture and the file are one thing.
 // Everything it shows is read back out of the markup the build wrote, so it
-// cannot disagree with it. It plays once and stops — a loop would pull the eye
-// for as long as the page is open.
+// cannot disagree with it. It plays once and stops — a loop would distract for
+// as long as the page is open.
 
 const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
 
-/** A step as it travels, as far as an edit touches it. */
+/** A step in its wire form, as far as an edit touches it. */
 interface WireStep {
   at_s?: number;
   to_water?: { value?: number };
@@ -143,7 +143,7 @@ function play(root: HTMLElement): void {
     running = false;
     if (t >= end) {
       delete figure.dataset["playing"];
-      // Read by the sheet: after the first full playback one pour nudges, once.
+      // Read by the stylesheet: after the first full playback one pour nudges, once.
       root.dataset["played"] = "";
     }
     label();

@@ -73,10 +73,10 @@ describe("served docs carry no relative links", () => {
   }
 
   // `agents.md` advertises surfaces as bare `GET <url>` code spans rather than
-  // markdown links, so the loop above never sees them. They are the whole point
-  // of the file — an agent reads it precisely to learn what it may fetch — and
-  // a rename that leaves one behind is exactly what this branch did to
-  // `/for-ai-agents/`. Placeholders (`<slug>`) stand for a set, not a path.
+  // markdown links, so the loop above never sees them. They are the point of
+  // the file — an agent reads it to learn what it may fetch — and a rename once
+  // left `/for-ai-agents/` behind. Placeholders (`<slug>`) stand for a set, not
+  // a path.
   it("agents.md advertises only surfaces the build actually writes", () => {
     const agents = readFileSync(pub("agents.md"), "utf8");
     const urls = [...agents.matchAll(/`GET ([^`]+)`/g)].map((m) => m[1] ?? "");

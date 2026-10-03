@@ -1,6 +1,6 @@
-// A synchronous zlib (RFC 1950) inflate, no dependency: a share payload must
-// render in the first frame a page paints, and DecompressionStream is
-// asynchronous. Producers use CompressionStream, so no encoder lives here.
+// A synchronous zlib (RFC 1950) inflate with no dependency, because a share
+// payload must render in the first frame a page paints and DecompressionStream
+// is asynchronous. Producers use CompressionStream, so there is no encoder here.
 // Output is bounded before each write — a 1 KB payload can inflate to megabytes.
 
 export type InflateError = "bad_header" | "too_large" | "corrupt";
@@ -10,8 +10,8 @@ export type InflateResult =
 
 const fail = (error: InflateError): InflateResult => ({ ok: false, error });
 
-// Errors surface from deep inside the bit reader, so they travel as a tagged
-// throw. Anything else that escapes is untrusted input, and reads as corrupt.
+// Errors arise deep inside the bit reader, so they are thrown tagged. Any other
+// exception comes from untrusted input and is reported as corrupt.
 const bail = (error: InflateError): never => {
   throw { inflateError: error };
 };

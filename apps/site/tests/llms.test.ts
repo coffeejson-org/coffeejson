@@ -44,13 +44,13 @@ describe("llms.txt", () => {
 
   // The failure this file exists to prevent. Pages publishes apps/site/dist, so
   // the repo's docs/ is not reachable at the canonical host unless gen copies it
-  // in. A front door for machines that 404s is worse than no front door.
+  // in. An llms.txt whose links 404 is worse than none.
   it("has no dead links — every target is a file gen emits or a real page", () => {
     const dead: string[] = [];
     const offsite = new Set(SKILLS_LINKS.map(([, u]) => u));
     for (const { url } of links) {
       // The skills repository is the one resource that does not live here. It is
-      // listed explicitly so a typo cannot smuggle another off-host link in.
+      // listed explicitly so a typo cannot add another off-host link.
       if (offsite.has(url)) continue;
       expect(
         url.startsWith(SITE_URL),

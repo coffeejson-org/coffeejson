@@ -4,8 +4,8 @@ import { expect, test } from "vitest";
 import registry from "../../../registries/implementations.json";
 
 // An `icon` is a path /showcase renders as an <img>. A listing whose icon is
-// not under public/ would ship a broken image on the format's public face —
-// and a registry pull request is the one change nobody previews in a browser.
+// not under public/ would ship a broken image on a public page — and a
+// registry pull request is the one change nobody previews in a browser.
 test("every registry icon is a /showcase/ path to a file under public/", () => {
   for (const i of registry.implementations) {
     const icon = (i as { icon?: string }).icon;

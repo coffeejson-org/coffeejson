@@ -1,5 +1,5 @@
-// A `.mjs` with a `.d.mts` beside it, matching `footer.mjs`: the page modules
-// are TypeScript built by vite, and `tools/gen.mjs` is plain Node.
+// A `.mjs` with a `.d.mts` beside it, as `footer.mjs` is, because the page
+// modules are TypeScript built by vite and `tools/gen.mjs` is plain Node.
 
 import { fmtClock, fmtMeasurement, formatRatio } from "@coffeejson/core";
 import { esc } from "./text.mjs";
@@ -29,8 +29,8 @@ export function pourSeries(recipe) {
   const first = points[0][0];
   const last = points[points.length - 1][0];
   if (last === first) return null;
-  // With no stated finish the last plateau is drawn one average interval long:
-  // long enough to read, and no claim about when the brew ends.
+  // With no stated finish the last plateau is drawn one average interval long,
+  // which is long enough to read and claims nothing about when the brew ends.
   const end =
     recipe.finishS !== null && recipe.finishS > last
       ? recipe.finishS
@@ -90,8 +90,8 @@ export const sparklineSvg = (series, domain) => {
 
 /**
  * What a card shows when the recipe has no timed pours: the dose against the
- * water, to scale, drawn in the curve's own language — a filled area under a
- * stroked top edge. Every card carries a glyph drawn from its own numbers.
+ * water, to scale, drawn as the curve is — a filled area under a stroked top
+ * edge. So every card carries a glyph drawn from its own numbers.
  *
  * @param {number} ratio parts water (or yield) to one part coffee
  */
@@ -173,8 +173,8 @@ export const recipeGlyph = (entry, scale = {}) => {
   return entry.ratioValue ? ratioBarSvg(entry.ratioValue) : "";
 };
 
-// Labels are HTML positioned by percentage, not SVG text: the plot stretches to
-// any width, and text inside a stretched viewBox would stretch with it.
+// Labels are HTML positioned by percentage, not SVG text, because the plot
+// stretches to any width and text inside a stretched viewBox stretches with it.
 
 /**
  * Percent of the plot's width a weight label needs clear beside its point: in
@@ -256,7 +256,7 @@ export function curveParts(series, opts = {}) {
   const { line, area, x, y } = curvePaths(series);
   const pts = series.points.map(([t, w, i]) => ({ t, w, i, x: x(t), y: y(w) }));
   const sides = placeLabels(pts, LABEL_ROOM.wide);
-  // The same question asked of a phone-width plot. A label that would sit
+  // The same placement for a phone-width plot. A label that would sit
   // somewhere else there, or nowhere, is marked for wide plots only.
   const narrow = placeLabels(pts, LABEL_ROOM.narrow);
   return {

@@ -19,9 +19,9 @@ export const DECODE_ERROR_KINDS = [
   "no_payload",
   /** Characters outside the base64url alphabet. */
   "malformed_base64",
-  /** The first byte is neither `{` nor a zlib header: an encoding we do not define. */
+  /** The first byte is neither `{` nor a zlib header, an encoding the format does not define. */
   "unrecognized_encoding",
-  /** A zlib stream that did not survive the wire — bad frame or failed checksum. */
+  /** A damaged zlib stream — bad frame or failed checksum. */
   "damaged_compression",
   /** The document exceeds the 8192-byte cap, as sent or after inflating. */
   "too_large",
@@ -46,7 +46,7 @@ export type DecodeError = {
   detail?: string;
 };
 /**
- * What a decode establishes and no more: an envelope past the version gate,
+ * All that a decode establishes is an envelope past the version gate,
  * carrying a non-empty `beans` or `recipes`. Nothing inside a collection was
  * read, so its elements are `unknown` — `normalize` is the typed read, and it
  * takes an unchecked value. A `CoffeeJSONDocument` is one of these; a decode
@@ -70,7 +70,7 @@ const err = (kind: DecodeError["kind"], detail?: string): DecodeResult => ({
 });
 
 /**
- * The encoding discriminator: one byte, decided once, never retried. A plain
+ * The encoding discriminator is one byte, decided once and never retried. A plain
  * payload begins `{`; a zlib stream carries CM 8 in the low nibble and passes the
  * modulo-31 header check, which `0x7B` cannot. Testing `0x78` exactly would
  * reject a legal smaller window.
@@ -98,7 +98,8 @@ function payloadBody(
           ? undefined
           : `first byte 0x${b0.toString(16).toUpperCase().padStart(2, "0")}`,
     };
-  // Bounded here: base64 length bounds a plain payload, compression severs that.
+  // Bounded here, because base64 length bounds a plain payload and does not
+  // bound an inflated one.
   const out = inflateZlib(bytes, MAX_PAYLOAD_BYTES);
   if (out.ok) return { bytes: out.bytes };
   return out.error === "too_large"
@@ -119,7 +120,7 @@ export function decodePayload(raw: string): DecodeResult {
   }
   const doc = payloadBody(bytes);
   if ("kind" in doc) return err(doc.kind, doc.detail);
-  // Two failures, not one: the scan vectors name them separately.
+  // Two failures, not one, because the scan vectors name them separately.
   let text: string;
   try {
     text = new TextDecoder("utf-8", { fatal: true }).decode(doc.bytes);
@@ -153,9 +154,9 @@ export function decodeDocumentText(text: string): DecodeResult {
 /**
  * The envelope check on already-parsed JSON — a POST body, an uploaded file, a
  * paste. Same rules and same reason vocabulary as a decoded share link, so two
- * paths into one app do not answer differently: a JSON object carrying a
- * `coffeejson` version of a major this build reads, naming at least one
- * non-empty `beans` or `recipes`. Nothing past that; see `DecodeError`.
+ * paths into one app do not answer differently. It accepts a JSON object
+ * carrying a `coffeejson` version of a major this build reads, naming at least
+ * one non-empty `beans` or `recipes`. Nothing past that; see `DecodeError`.
  */
 export function checkEnvelope(value: unknown): DecodeResult {
   if (typeof value !== "object" || value === null || Array.isArray(value))
@@ -169,7 +170,8 @@ export function checkEnvelope(value: unknown): DecodeResult {
     return err("unsupported_version", version);
   // Absent and empty are one claim, and a `tastings`-only document is the same
   // rejection — a tasting evaluates something the document must also carry.
-  // After the version gate on purpose: a newer major's envelope is not ours to judge.
+  // After the version gate on purpose, because this build cannot judge a newer
+  // major's envelope.
   const collections = value as Record<string, unknown>;
   const carries = (key: string): boolean => {
     const item = collections[key];
@@ -181,7 +183,7 @@ export function checkEnvelope(value: unknown): DecodeResult {
 
 // The linking members, by collection. Association is a byte-exact match, so a
 // producer MUST emit these in NFC or the same visible id in two normalization
-// forms silently fails to link. Human text is the producer's own and travels
+// forms silently fails to link. Human text is the producer's own and is left
 // unchanged.
 const LINKING_KEYS: Record<string, readonly string[]> = {
   beans: ["id"],
@@ -189,7 +191,7 @@ const LINKING_KEYS: Record<string, readonly string[]> = {
   tastings: ["id", "recipe_ref", "bean_ref"],
 };
 
-// On a copy: encoding a document never rewrites the caller's.
+// Works on a copy, so encoding a document never rewrites the caller's.
 function withNormalizedIds(doc: unknown): unknown {
   if (!isObj(doc)) return doc;
   const out: Record<string, unknown> = { ...doc };
@@ -227,19 +229,20 @@ export function payloadFromLocation(search: string): string | null {
   return new URLSearchParams(search).get("d");
 }
 
-/**
- * A scanned string in, a document or a stated reason out — the whole share-link
- * binding in one call, pinned by `fixtures/transport/scan-vectors.json`. Accepts
- * a link from ANY host: a share link is self-contained, the host never consulted.
- */
-// Module-local, not in `globals.d.ts`: a declaration this minimal would shadow
-// the real `URL` everywhere it exists.
+// Module-local, not in `globals.d.ts`, where a declaration this minimal would
+// shadow the real `URL` everywhere it exists.
 type MinimalURL = {
   readonly protocol: string;
   readonly searchParams: { get(name: string): string | null };
 };
 declare const URL: { new (url: string): MinimalURL };
 
+/**
+ * A scanned string in, a document or a stated reason out — the whole share-link
+ * binding in one call, pinned by `fixtures/transport/scan-vectors.json`. Accepts
+ * a link from ANY host, because a share link is self-contained and the host is
+ * never consulted.
+ */
 export function decodeScanned(input: string): DecodeResult {
   let url: MinimalURL;
   try {

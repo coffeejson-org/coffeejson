@@ -142,7 +142,7 @@ test("autoStart=false holds idle at 0 until start() is called", () => {
   expect(el().getAttribute("data-elapsed")).toBe("0");
   act(() => {
     el().click();
-  }); // start()
+  });
   act(() => {
     vi.advanceTimersByTime(3000);
   });

@@ -3,8 +3,8 @@ import { useEffect, useMemo, useRef } from "react";
 import { curveAt, curveFigure, pourSeries } from "../lib/pour-curve.mjs";
 
 /**
- * The recipe's pour curve. With `elapsedS` it is a clock: the playhead sits at
- * that second and the pours it has passed are filled. Without, it is the whole
+ * The recipe's pour curve. With `elapsedS` it is a clock, with the playhead at
+ * that second and the pours it has passed filled. Without, it is the whole
  * schedule. Renders nothing for a recipe with no timed pours.
  */
 export function PourCurve({

@@ -4,11 +4,11 @@
 // `fixtures/README.md` already says why each invalid document must fail, and
 // `check-fixture-catalog.mjs` already proves every file has a row. Neither
 // proves the file still fails for that reason. A fixture edited so that some
-// OTHER rule catches it first is a passing test that has quietly stopped
-// testing its subject — the corpus stays green and covers less every year.
+// OTHER rule catches it first is a passing test that no longer tests its
+// subject — the corpus stays green and covers less every year.
 //
-// The `Fails on` column is that missing link: an ajv keyword, optionally
-// narrowed to the member it fired on.
+// The `Fails on` column supplies that proof. It holds an ajv keyword,
+// optionally narrowed to the member it fired on.
 //
 //     required:recipes.title    a missing `title` under a recipe
 //     enum:coffee.unit          a bad `unit` on the `coffee` measurement

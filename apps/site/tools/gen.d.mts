@@ -115,7 +115,7 @@ export declare const SKILLS_LINKS: readonly (readonly [
   string,
   string,
 ])[];
-/** Every markdown path served under /docs/ — the set link rewriting keeps relative-free. */
+/** Every markdown path served under /docs/ — link rewriting leaves no relative link in any of them. */
 export declare const SERVED_MD: readonly string[];
 export declare function rewriteDocLinks(
   markdown: string,

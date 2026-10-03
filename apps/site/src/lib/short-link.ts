@@ -2,7 +2,7 @@
 // the code stays sparse. A HOST FEATURE, NOT TRANSPORT: `?d=` stays the canonical
 // self-contained binding, and `?s=` resolves only while this site serves the
 // corpus. `&i=N` names ONE recipe, 1-based to match the card's `slug#n` id, and
-// rides `?s=` because a modifier on `?d=` would change what a link yields for
+// attaches to `?s=` because a modifier on `?d=` would change what a link yields for
 // consumers that ignore it.
 
 export interface CorpusEntry {

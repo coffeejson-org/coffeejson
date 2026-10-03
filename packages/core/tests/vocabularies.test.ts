@@ -160,8 +160,8 @@ test("every unit identifier the five measurement enums define is in UNITS, once"
   expect(UNITS.length).toBe(new Set(UNITS).size);
 });
 
-// The sets the schema does NOT declare are as load-bearing as the ones it does:
-// a dose stated in millilitres is invalid, deliberately.
+// The sets the schema does NOT declare matter as much as the ones it does. A
+// dose stated in milliliters is invalid, deliberately.
 test("only brew water accepts a volume", () => {
   expect(WATER_UNITS).toContain("milliliter");
   for (const tokens of [

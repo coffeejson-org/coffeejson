@@ -28,9 +28,10 @@ export interface BrewAlongProps {
   variants?: BrewAlongVariants;
 }
 
-// Pure and props-driven: it never touches window/document/navigator, so
-// `renderToStaticMarkup` works in any worker or edge runtime. A different
-// arrangement composes the same primitives over `useBrewAlong` directly.
+// Never touches window/document/navigator, so `renderToStaticMarkup` works in
+// any worker or edge runtime. A different layout composes the same components
+// (`StepCard`, `Countdown`, `Timeline`, `BrewControls`) with `useBrewAlong`
+// directly.
 export function BrewAlong({ recipe, brew, config, variants }: BrewAlongProps) {
   const rc = resolveConfig(config);
   const { state, elapsedS, running } = brew;

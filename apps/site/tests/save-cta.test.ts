@@ -46,7 +46,6 @@ test("the QR button explains itself when the document is too large to encode", a
   const slot = root.querySelector("[data-qr-slot]")!;
   await vi.waitFor(() => expect(slot.textContent).toMatch(/too (large|big)/i));
   expect(slot.innerHTML).not.toContain("<svg");
-  // The reader is left somewhere to go — the link still works, only the QR
-  // cannot be drawn.
+  // The reader still has the link — only the QR cannot be drawn.
   expect(slot.textContent).toMatch(/copy link/i);
 });

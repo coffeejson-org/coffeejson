@@ -85,7 +85,7 @@ test("every vocabulary label set names every token of its vocabulary", () => {
 
 // Every set a renderer PRINTS has labels, not every set: a table nothing reads is
 // a second place for the vocabulary to drift. Stated as a test so adding the
-// display and forgetting the labels is a conversation, not a silent slug.
+// display and forgetting the labels fails here instead of printing a slug.
 test("bean `form` has no label set, because nothing renders it", () => {
   expect(BEAN_FORMS).toContain("drip_bag");
   expect(Object.keys(defaultLabels)).not.toContain("beanForms");

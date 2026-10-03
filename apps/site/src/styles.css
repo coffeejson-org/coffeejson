@@ -5,7 +5,8 @@
 @import "@fontsource/commit-mono/latin-400.css";
 
 /* `--p` is how much of a brew has happened, 0–1. Registered so it can
-   transition: brew-along ticks once a second and the playhead should glide. */
+   transition, because brew-along ticks once a second and the playhead should
+   move smoothly between ticks. */
 @property --p {
   syntax: "<number>";
   inherits: true;
@@ -31,7 +32,7 @@
   --coffee: oklch(40% 0.055 50);
   --roast-light: oklch(74% 0.07 70);
   --roast-dark: oklch(27% 0.035 45);
-  /* Water is the accent, spent on the one thing that is literally water. */
+  /* Water is the accent, used only for what is literally water. */
   --water: var(--accent);
   --water-fill: color-mix(in oklch, var(--accent) 16%, transparent);
   --tint: color-mix(in oklch, var(--accent) 8%, var(--card));
@@ -242,8 +243,8 @@ pre {
   overflow-x: auto;
   line-height: 1.55;
   tab-size: 2;
-  /* Code wider than its box scrolls, and says so: a shadow at whichever edge
-     has more. */
+  /* Code wider than its box scrolls, and a shadow marks whichever edge has
+     more. */
   background-image:
     linear-gradient(to right, var(--sunk) 30%, transparent),
     linear-gradient(to left, var(--sunk) 30%, transparent),
@@ -323,9 +324,9 @@ pre {
   position: relative;
   padding-left: 1.5em;
 }
-/* The mark, as a mask on the wordmark: it paints in `currentColor` and reaches
-   every page without touching a page module. Absolutely positioned, and that
-   is load-bearing — in flow it hands the header's baseline to a box with no
+/* The mark is a mask on the wordmark, so it paints in `currentColor` and
+   reaches every page without touching a page module. It must stay absolutely
+   positioned — in flow the header takes its baseline from a box with no
    text in it. */
 .site-header strong::before {
   content: "";
@@ -615,7 +616,7 @@ input[type="search"].field {
   padding-inline: 1.1rem;
 }
 /* Width modifiers for the short inputs on /generate, so those widths live in
-   the sheet rather than as inline literals scattered through markup. */
+   the sheet rather than as inline literals in markup. */
 .field--xs {
   max-width: 4rem;
 }
@@ -734,7 +735,7 @@ input[type="search"].field {
   color: var(--fg);
   transition: color var(--dur-short) var(--ease-out);
 }
-/* A label with room only in a wide plot goes when the plot is a phone's. */
+/* A label that fits only a wide plot is hidden at phone width. */
 @container (max-width: 30rem) {
   .curve-pt-w--wide {
     display: none;
@@ -947,7 +948,7 @@ input[type="search"].field {
   background: var(--coffee);
 }
 /* On a touch screen a cell is a picture, not a hundred targets the size of a
-   grain: the prose beside the figure links both corpora. */
+   grain. The prose beside the figure links both corpora. */
 @media (pointer: coarse) {
   .cell {
     pointer-events: none;
@@ -1109,7 +1110,7 @@ main > .card,
 .recipe-row {
   position: relative;
 }
-/* The hover tint bleeds past the row; the row's rule does not. */
+/* The hover tint extends past the row; the row's rule does not. */
 .recipe-row::before {
   content: "";
   position: absolute;
@@ -1144,8 +1145,8 @@ main > .card,
   font-size: var(--text-sm);
 }
 /* The source is on every row, and it is a link — but sixty-four underlined
-   teal lines made the list about its footnotes. It reads as text and answers
-   as a link. */
+   teal lines made the list about its footnotes. It is styled as text and
+   behaves as a link. */
 .row-link {
   color: inherit;
   text-decoration-color: var(--line-strong);
@@ -1821,7 +1822,7 @@ main > .card,
   margin: var(--space-xs) 0 0;
   font-size: var(--text-sm);
 }
-/* Said only once the module has made it true. */
+/* Shown only once the module has made it true. */
 .live:not([data-ready]) .live-hint {
   display: none;
 }
@@ -1882,9 +1883,9 @@ main > .card,
 .live[data-ready] .curve-pt:is(:hover, .is-active) .curve-pt-w {
   transform: none;
 }
-/* The pour being played or edited wears its weight as a tag, above its
-   neighbors' labels: two pours a step apart would otherwise print one number
-   into the other. */
+/* The pour being played or edited shows its weight as a tag above its
+   neighbors' labels, because two pours a step apart would otherwise print one
+   number over the other. */
 .live[data-ready] .curve-pt.is-active .curve-pt-w {
   z-index: 2;
   bottom: 1.25rem;
@@ -2603,8 +2604,9 @@ main .cj-view {
 }
 /* Given room, the card reads as a spec sheet beside its schedule: the facts in
    one column, the steps in the other. A container query, because the same card
-   sits in a full-width viewer and in a half-width validator pane. The row span is deliberately
-   generous — a card has six to a dozen facts, and unused rows are empty. */
+   sits in a full-width viewer and in a half-width validator pane. The row span
+   is deliberately generous — a card has six to a dozen facts, and unused rows
+   are empty. */
 @container (min-width: 46rem) {
   .cj-view .cj-recipe-card:has(.cj-steps) {
     display: grid;
@@ -2733,8 +2735,8 @@ main .cj-view {
 .cj-brewing .cj-step--active ~ .cj-step {
   opacity: 1;
 }
-/* Step schedule as aligned Time · Pour · Total columns: the list owns shared
-   tracks and each row is a subgrid. Scoped to lists that actually grew a Pour
+/* Step schedule as aligned Time · Pour · Total columns: the list defines shared
+   tracks and each row is a subgrid. Scoped to lists that have a Pour
    column, and declared `display: grid` here so the tracks do not depend on the
    package skin. */
 .cj-view .cj-steps:has(.cj-step-delta),
@@ -2869,8 +2871,8 @@ main .cj-view {
 }
 
 /* ── Motion ────────────────────────────────────────────────────────────────
-   One orchestrated entrance, on the landing page. After that content is just
-   there: nothing fades in on scroll. */
+   One orchestrated entrance, on the landing page. After that, nothing fades in
+   on scroll. */
 @keyframes rise {
   from {
     opacity: 0;

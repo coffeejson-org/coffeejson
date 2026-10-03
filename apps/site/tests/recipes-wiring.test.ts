@@ -6,7 +6,7 @@ import { index, recipesBody } from "../src/lib/recipes-body";
 
 // The directory's module attaches behavior to markup the build wrote. These
 // drive it the way a reader does — one click — because the failure it once had
-// was invisible to every test of the markup: each control was wired twice, so a
+// was invisible to every test of the markup. Each control was wired twice, so a
 // chip toggled on and straight off again and the first click did nothing.
 
 beforeAll(async () => {
@@ -57,7 +57,7 @@ test("switching lens keeps one listener per control", () => {
   expect(cards()).toBeLessThan(index.length);
 });
 
-// An author with no bag is not a filter the bag lens can show: carried across,
+// An author with no bag is not a filter the bag lens can show. Carried across,
 // it emptied the list with no chip lit to say why.
 test("switching lens drops an author the other lens has no chip for", async () => {
   const { settle } = await import("../src/lib/recipes-body");

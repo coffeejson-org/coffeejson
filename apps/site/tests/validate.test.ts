@@ -34,15 +34,15 @@ describe("cross-implementation parity with the fixture corpus", () => {
 
 // The page runs the strict schema over whatever the open one accepts. These two
 // fixtures exist to prove runtime leniency at the CURRENT minor, so they are
-// exactly the documents the lint must speak up about; every other valid document
-// must pass both in silence.
+// exactly the documents the lint must flag; every other valid document must
+// pass both with no note.
 const lenient = new Set([
   "forward-compat-unknown-fields.json",
   "images-empty.json",
 ]);
 
 // A later minor is not lenience, it is a document this build cannot judge. Its
-// unknown members are real fields, so the lint has to stay out of it.
+// unknown members are real fields, so the lint must report nothing.
 const newerMinor = "newer-minor-version.json";
 
 describe("the authoring lint over documents the runtime schema accepts", () => {
@@ -148,7 +148,7 @@ describe("what a note actually says", () => {
 
   // The same document twice, differing only in the minor it states. At 1.0 the
   // member is a typo this build can judge; at 1.7 it is a field this build has
-  // never heard of, and calling it a typo would be a lie.
+  // never heard of, and calling it a typo would be false.
   test("a later minor silences the lint, the current one does not", () => {
     const unknown = { hypothetical_field: "x" };
     expect(lintDocument(recipe(unknown)).length).toBeGreaterThan(0);

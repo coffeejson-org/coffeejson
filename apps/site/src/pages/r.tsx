@@ -31,8 +31,8 @@ export function App({
   /**
    * One share row per card, offered only where its projection DIFFERS from the
    * document and only when the normalized view and the raw document agree on the
-   * recipe count: `normalize` drops non-object entries, and a row pointing one
-   * recipe off would be a silent lie.
+   * recipe count. `normalize` drops non-object entries, and a row pointing one
+   * recipe off would share the wrong recipe unannounced.
    */
   const scoped = useMemo(() => {
     const aligned =
@@ -48,7 +48,7 @@ export function App({
     };
   }, [doc, n.beans.length, n.recipes.length]);
 
-  // Deliberately without a `url`: this page's address is either a
+  // Deliberately without a `url`, because this page's address is either a
   // robots-disallowed `?d=` payload or a `?s=` short link, and the shell
   // canonicalizes both to bare `/r/`.
   useEffect(() => {
@@ -61,9 +61,9 @@ export function App({
     if (title) document.title = `${title} — CoffeeJSON`;
   }, [doc]);
 
-  // Coming back from a brew puts focus on the button that started it: the
-  // screen was replaced under a keyboard reader, and without this they are
-  // returned to the top of the page.
+  // Coming back from a brew puts focus on the button that started it. The
+  // screen was replaced under a keyboard reader, who would otherwise land at
+  // the top of the page.
   const cameFrom = useRef<number | null>(null);
   useEffect(() => {
     if (mode.kind !== "view" || cameFrom.current === null) return;
@@ -86,8 +86,8 @@ export function App({
     );
   }
 
-  // A document that is one recipe is headed by it, and the card's own copy of
-  // the title steps aside. Anything larger has no single name to put there.
+  // A document that is one recipe takes the recipe's title as its heading, and
+  // the card omits its own copy. Anything larger has no single name to put there.
   const solo = n.recipes.length === 1 && n.beans.length === 0;
 
   return (

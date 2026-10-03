@@ -1,5 +1,5 @@
-<!-- Two files rather than the SVG: GitHub strips the media query an adaptive
-     SVG would need, so the dark variant is served by <picture> instead. -->
+<!-- Two files rather than one SVG, because GitHub strips the media query an
+     adaptive SVG would need. -->
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="apps/site/public/mark-on-dark.png">
   <img src="apps/site/public/mark.png" alt="" width="76" height="76">
@@ -12,7 +12,7 @@
 CoffeeJSON is an open JSON format for a brew and the coffee it was made from.
 Write a recipe in one app and open it in another — as a file, a share link, or
 a QR code — and it arrives intact: dose, water, temperature, grind, and the
-pour schedule, in the reader's own units and language. Small enough to ride
+pour schedule, in the reader's own units and language. Small enough to fit
 inside a QR code. Public domain.
 
 - **Status:** 1.1, early — settled in shape, and still open to change while there is one implementation ([what you can rely on today](docs/spec/07-versioning.md#what-you-can-rely-on-today)). Second implementations and field reports wanted.
@@ -57,7 +57,7 @@ for turning a published source into a document — live in
 ## Contributing
 
 Field proposals, registry entries, spec-ambiguity reports, and the checks that
-gate every change: [CONTRIBUTING.md](CONTRIBUTING.md).
+gate every change are in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 

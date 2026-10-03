@@ -6,8 +6,8 @@ import { FAQ, faqJsonLd } from "../src/lib/faq.mjs";
 // The FAQ is published twice — as prose the landing page renders in the browser,
 // and as FAQPage JSON-LD sitting in the static head of index.html so a reader
 // that runs no JavaScript still gets it. Google treats a mismatch between the two
-// as a reason to drop the rich result, and a second hand-kept copy is exactly how
-// a mismatch arrives. So the head is compared against the array both come from.
+// as a reason to drop the rich result, and a second hand-kept copy is how a
+// mismatch arrives, so the head is compared against the array both come from.
 const site = fileURLToPath(new URL("..", import.meta.url));
 const index = readFileSync(`${site}index.html`, "utf8");
 

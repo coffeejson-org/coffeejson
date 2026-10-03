@@ -1,7 +1,7 @@
 // @coffeejson/core — types, validation-adjacent helpers, and exporters for
 // the CoffeeJSON format (https://coffeejson.org).
-// Every type reachable from an exported signature is itself exported: a consumer
-// holding a value must be able to name its type without an indexed access.
+// Every type reachable from an exported signature is itself exported, so a
+// consumer holding a value can name its type without an indexed access.
 // `json.ts`, `association.ts` and `inflate.ts` are absent — implementation, not surface.
 
 export type { DecodedDocument, DecodeError, DecodeResult } from "./codec.js";

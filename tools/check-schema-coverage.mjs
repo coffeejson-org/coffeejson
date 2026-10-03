@@ -97,8 +97,8 @@ const READS = {
     const b = body(source, new RegExp(`export (?:interface|type) ${name}\\b`));
     return !!b && new RegExp(`(^|[\\s{;])${key}\\??\\s*:`, "m").test(b);
   },
-  // `public` is load-bearing: every wire property is public and no local binding
-  // is, so a `let name` inside a custom `init(from:)` cannot count.
+  // The pattern requires `public`. Every wire property is public and no local
+  // binding is, so a `let name` inside a custom `init(from:)` cannot count.
   swift: (source, name, key) => {
     const b = body(
       source,

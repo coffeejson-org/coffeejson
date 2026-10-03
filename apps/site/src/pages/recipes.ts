@@ -47,8 +47,8 @@ function wire(): void {
         ?.focus();
     });
   });
-  // `[data-kind]` scopes this to the facet chips — the view toggle wears the
-  // same pill skin but is a lens, not a filter, and has its own handler above.
+  // `[data-kind]` scopes this to the facet chips — the view toggle shares the
+  // pill styling but is a lens, not a filter, and has its own handler above.
   document
     .querySelectorAll<HTMLButtonElement>(".chip[data-kind]")
     .forEach((c) => {

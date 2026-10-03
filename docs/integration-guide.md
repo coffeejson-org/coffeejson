@@ -1,16 +1,16 @@
 # Integrating CoffeeJSON
 
-How to make an application speak CoffeeJSON: read documents in, write them
-out, and behave well beside other implementations. This guide is
+How to make an application read CoffeeJSON documents, write them, and
+interoperate with other implementations. This guide is
 **non-normative**. Every rule here links to its normative home in the
 [specification](README.md).
 
 Two roles are defined in the [Overview](spec/01-overview.md#conformance-language).
 A **consumer** reads documents. A **producer** emits them. Most
-implementations are both, but the roles are independent. Importing well is
-valuable on its own, and so is exporting well. What conformance requires of
-each is specified in [Versioning § Conformance](spec/07-versioning.md#conformance).
-This guide walks the same ground in build order.
+implementations are both, but the roles are independent. What conformance
+requires of each is specified in
+[Versioning § Conformance](spec/07-versioning.md#conformance). This guide
+covers the same rules in build order.
 
 ## Consuming — the import checklist
 
@@ -78,7 +78,7 @@ rules](spec/06-vocabularies.md) govern import, not validation. See
 
 **6 · Ignore the unknown, and fall back per vocabulary.** The
 [forward-compatibility contract](spec/01-overview.md#the-forward-compatibility-contract-summary)
-is the one rule everything else leans on. Ignore members you do not
+is the rule every other step depends on. Ignore members you do not
 recognize, at any depth. Never reject a document over them. Unknown *values*
 of known fields follow each vocabulary's stated fallback, and the [index
 table in Vocabularies](spec/06-vocabularies.md#index) lists every one. They
@@ -119,10 +119,10 @@ carry, and you say so. The round-trip / re-author distinction is
 **1 · Emit canonical, locale-neutral identifiers.** Emit machine ids for
 everything enumerable (`pour_over`, `washed`, `gram`). The consumer renders
 localized labels. Emit URL-valued fields in URI form. Emit the linking
-members — `id`, `bean_ref`, `recipe_ref` — in Unicode **NFC**, which is
-load-bearing for `bean_ref` ↔ `id` matching, and human text in NFC too where
-you can. Emit derived
-step labels as absent. The compact statement of all producer obligations is
+members — `id`, `bean_ref`, `recipe_ref` — in Unicode **NFC**, which
+`bean_ref` ↔ `id` matching depends on, and human text in NFC too where you
+can. Emit derived step labels as absent. The compact statement of all producer
+obligations is
 [Versioning § Conformant producer](spec/07-versioning.md#conformant-producer).
 
 **2 · Lint your output with the authoring schema.** The [authoring
@@ -172,14 +172,14 @@ The [fixture corpus](../fixtures/README.md) is the executable contract:
 Reference implementations live beside the spec. `@coffeejson/core`
 (TypeScript: types, codec, a total `normalize`) and `@coffeejson/react`
 (renderer components) are in this repository's `packages/`. `coffeejson-swift`
-covers Apple platforms. They track the format and follow semver on
-their own clock. See
+covers Apple platforms. They track the format and version independently
+under semver. See
 [Versioning & conformance](spec/07-versioning.md#what-you-can-rely-on-today).
 
 ## List your implementation
 
 [`registries/implementations.json`](../registries/implementations.json) lists
-what speaks CoffeeJSON (apps, hosted services, libraries, machines) and the
+what implements CoffeeJSON (apps, hosted services, libraries, machines) and the
 transport surfaces each one `reads` and `writes`. Fallback pages use the
 reading half to offer "open in your app" handoffs. Something that only
 *publishes* documents belongs there as much as something that only imports

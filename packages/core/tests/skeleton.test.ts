@@ -18,7 +18,7 @@ test("core is publishable, and publishes public (standing guard)", () => {
 
 // `decodeDocumentText` was documented in the README and absent from the barrel
 // through 1.0.0, so a reader following the README could not import it. Prose and
-// surface drift apart silently; this makes them fail together.
+// exports drift apart silently; this test fails when they do.
 test("every function the README names is importable (standing guard)", async () => {
   const readme = readFileSync(new URL("../README.md", import.meta.url), "utf8");
   // A code span whose text is an identifier followed by "(" is a call, so the

@@ -77,7 +77,7 @@ const recipes: RecipeFormState[] = sampleRecipes();
 let previewRoot: Root | undefined;
 
 // A TWO-WAY view: form edits write into the textarea and textarea edits parse back
-// into the form. `jsonFocused` stops the two fighting — while the caret is in the
+// into the form. `jsonFocused` settles the conflict — while the caret is in the
 // textarea the form never overwrites what is being typed.
 let jsonText = "";
 let jsonNotice = "";
@@ -89,8 +89,8 @@ const prettyDoc = (doc: unknown): string => JSON.stringify(doc, null, 2);
 // An untouched form shows the preview's empty state rather than six schema errors.
 // One capture-phase listener on the page root covers every field and is attached
 // once, because `app` outlives re-renders. Only the TRANSITION matters, and it must
-// redraw: a non-parsing keystroke never reaches refreshFeedback().
-let touched = true; // the page opens pre-filled, so the empty state would be a lie
+// redraw, because a non-parsing keystroke never reaches refreshFeedback().
+let touched = true; // the page opens pre-filled, so the empty state would be wrong
 const markTouched = () => {
   if (!touched) {
     touched = true;
@@ -119,7 +119,7 @@ function loadDocumentIntoForm(
   // A loaded document is another coffee, so a sheet date picked for the last
   // one does not carry over.
   resetLabelDate();
-  // The spec's re-authoring honesty rule, applied to our own builder: editing here
+  // The spec's re-authoring honesty rule, applied to our own builder. Editing here
   // re-authors the document without whatever the form cannot carry.
   const rebuilt = buildDocument({
     beanForms: state.beanForms.slice(0, 1),
@@ -172,7 +172,7 @@ function tryLoad(text: string, fromJson: boolean): void {
 
 // A dropped file, paste or file pick is re-serialized pretty-printed, because a
 // share URL or a minified blob is not something a person can edit. Typing takes the
-// other branch: text reflowed under the cursor is its own kind of unusable.
+// other branch, because text reflowed under the cursor is unusable too.
 function loadFromSource(text: string): void {
   jsonText = text;
   const { doc } = documentFromInput(text, "Nothing to import yet.");
@@ -184,7 +184,7 @@ function loadFromSource(text: string): void {
 
 // "Did it read my document correctly" is the one question a paste asks, and on a
 // phone the preview sits a screen down. A no-op on a wide viewport. Only source
-// loads scroll; typing must never yank the page out from under a caret.
+// loads scroll; typing must never scroll the page away from the caret.
 function revealPreview(): void {
   const el = app.querySelector<HTMLElement>(".gen-preview");
   if (!el) return;
@@ -198,7 +198,7 @@ function paintJsonNotice(): void {
   if (el) el.innerHTML = jsonNotice;
 }
 
-// Skipped while the caret is in the field — the whole reason both directions can
+// Skipped while the caret is in the field — that is what lets both directions
 // coexist.
 function syncJsonFromForm(): void {
   if (jsonFocused) return;
@@ -231,8 +231,8 @@ function wireJsonPanel(): void {
     jsonFocused = false;
     syncJsonFromForm();
   });
-  // Debounced: rebuilding the form on every keystroke would fight a half-typed
-  // number, and every intermediate state of a hand-edited document is invalid.
+  // Debounced, because rebuilding the form on every keystroke would overwrite a
+  // half-typed number, and every intermediate state of a hand-edited document is invalid.
   input.addEventListener("input", () => {
     jsonText = input.value;
     if (jsonTimer) clearTimeout(jsonTimer);
@@ -552,8 +552,8 @@ function renderForm(): void {
   refreshFeedback();
 }
 
-// `touched` included: an empty form carrying six validation errors is an
-// accusation, not feedback.
+// `touched` included, because six validation errors on an empty form are not
+// feedback.
 function replaceState(
   recipeForms: RecipeFormState[],
   nowTouched: boolean,

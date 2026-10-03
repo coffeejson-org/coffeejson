@@ -168,7 +168,7 @@ and how easy the format is to adopt.
    real, common, and verifiable. *Reserve the rest by name* (principle 7)
    instead of half-building it. Refuse abstractions that would emit
    confidently-wrong data. The format captures a grind setting as stated. It
-   will not pretend to convert one grinder's scale to another's. A small
+   does not convert one grinder's scale to another's. A small
    format that ships and interoperates beats a general one that does neither.
    When in doubt, leave it out. An optional field can always be added later,
    but it can never be cleanly removed.

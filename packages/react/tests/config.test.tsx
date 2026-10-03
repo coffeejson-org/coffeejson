@@ -203,7 +203,7 @@ test("a malformed locale falls back instead of throwing", () => {
   ).not.toThrow();
 });
 
-// A card must still render correctly with a malformed locale, end to end.
+// End to end, a card still renders with a malformed locale.
 test("a malformed locale does not break a card render", () => {
   const html = renderToStaticMarkup(
     <RecipeCard recipe={espresso} config={{ locale: "en_US" }} />,

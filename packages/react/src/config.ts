@@ -113,7 +113,7 @@ export interface CoffeeJSONConfig {
   locale?: string;
   /** Deep-merged over `@coffeejson/core`'s English `defaultLabels`. */
   labels?: PartialLabels;
-  /** Additive class per frozen `cj-*` part — appended alongside the frozen class, never replacing it. */
+  /** A class per frozen `cj-*` part — appended to the frozen class, never replacing it. */
   classNames?: Partial<Record<CjPart, string>>;
   /** Swap how individual leaf parts render — see {@link CoffeeJSONComponents}. */
   components?: CoffeeJSONComponents;
@@ -223,7 +223,7 @@ const FROZEN_CLASS: Record<CjPart, string> = {
   pourCounterN: "cj-pourcounter-n",
 };
 
-// Never replaces the frozen class — `classNames` is purely additive.
+// Never replaces the frozen class — `classNames` only appends.
 export function cx(part: CjPart, rc: ResolvedConfig): string {
   const frozen = FROZEN_CLASS[part];
   const extra = rc.classNames[part];

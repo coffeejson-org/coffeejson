@@ -2,17 +2,18 @@ import { associatedMember, associatedMembers } from "./association.js";
 import type { DecodedDocument } from "./codec.js";
 import { arr, isObj, str } from "./json.js";
 
-// Projections: part of a document as a document of its own. Nothing is invented
-// or rewritten; every member travels byte-verbatim. The input is unchecked past
-// the envelope, so every read goes through a tolerant reader.
+// Projections, each a part of a document as a document of its own. Nothing is
+// invented or rewritten, and every member is copied byte-verbatim. The input is
+// unchecked past the envelope, so every read goes through a tolerant reader.
 const isDocument = (v: unknown): v is Record<string, unknown> =>
   isObj(v) && typeof v["coffeejson"] === "string";
 
 // Every member comes through, unknown ones included and in source key order,
 // because a consumer preserves what it does not recognize on re-share. A `null`
-// or `[]` replacement drops the member: `"beans": []` claims "no coffee". The
-// result is a `DecodedDocument` and no more — `coffeejson` is a string by the
-// guard, each collection is an array or absent, and every element travels unread.
+// or `[]` replacement drops the member, because `"beans": []` claims "no
+// coffee". The result is a `DecodedDocument` and no more — `coffeejson` is a
+// string by the guard, each collection is an array or absent, and every element
+// passes through unread.
 function project(
   doc: Record<string, unknown>,
   replacements: Record<string, unknown[] | null>,
@@ -54,8 +55,8 @@ function beansFor(
   return beans.filter((b) => wanted.has(b));
 }
 
-// Singular where `beansFor` is plural: carrying a tasting whose subject was
-// dropped mints a dangling reference in a document that still validates.
+// Singular where `beansFor` is plural, because carrying a tasting whose subject
+// was dropped creates a dangling reference in a document that still validates.
 function tastingsFor(
   doc: Record<string, unknown>,
   refKey: "recipe_ref" | "bean_ref",
@@ -78,8 +79,8 @@ export function scopeToRecipe(
   index: number,
 ): DecodedDocument | null {
   if (!isDocument(doc)) return null;
-  // Indexed against the RAW array: `index` is a position in the caller's own
-  // document, so dropping unreadable entries would shift every later one.
+  // Indexed against the RAW array, because `index` is a position in the caller's
+  // own document and dropping unreadable entries would shift every later one.
   const recipe = arr(doc["recipes"])[index];
   if (!isObj(recipe)) return null;
   const tastings = tastingsFor(doc, "recipe_ref", arr(doc["recipes"]), recipe);
@@ -93,7 +94,7 @@ export function scopeToRecipe(
 /**
  * One bean of a document, as a document — the bag without any way to brew it;
  * recipes are dropped, not emptied. This coffee's tastings come along and the
- * other coffees' do not: a lineup would hand over every opinion of every bag.
+ * other coffees' do not, or a lineup would hand over every opinion of every bag.
  */
 export function scopeToBean(
   doc: unknown,

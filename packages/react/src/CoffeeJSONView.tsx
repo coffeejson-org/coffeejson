@@ -23,8 +23,8 @@ export function CoffeeJSONView({
   config,
 }: CoffeeJSONViewProps) {
   // normalize() builds fresh arrays that are handed on as props, so re-running it
-  // on an unchanged `doc` denies everything downstream a stable identity to
-  // memoize on — and a view above a running clock re-renders four times a second.
+  // on an unchanged `doc` leaves nothing downstream a stable identity to memoize
+  // on — and a view above a running clock re-renders four times a second.
   const n = useMemo(() => normalize(doc), [doc]);
   if (n.beans.length === 0 && n.recipes.length === 0) {
     return <>{renderEmpty ? renderEmpty() : null}</>;

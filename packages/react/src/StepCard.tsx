@@ -11,7 +11,7 @@ export interface StepCardProps {
   config?: CoffeeJSONConfig;
 }
 
-// Pure: it reads `state.currentIndex` and never keeps a clock.
+// Reads `state.currentIndex` and keeps no clock.
 export function StepCard({
   recipe,
   state,

@@ -1,18 +1,18 @@
 import type { CaptureResult } from "posthog-js";
 
-// Page views only, no identity, no cookies. The whole install lives here so the
-// footer sentence every page prints has one place to be checked against: anything
-// this file turns on, that sentence has to survive.
+// Page views only, no identity, no cookies. The whole install is in this file, so
+// the privacy sentence every footer prints is checked against one place. Whatever
+// this file turns on, that sentence must stay true.
 
 /**
  * PostHog's client key is designed to ship in page source — it can only write
- * events into one project, never read them — so no build-time secret plumbing.
+ * events into one project, never read them — so it needs no build-time secret.
  */
 export const POSTHOG_TOKEN = "phc_tcmDYMLBsqwDRHVkuNni7eLUACqkgfCb2dvASkPrVbfQ";
 
 /**
- * The ingestion host, and the seam: when coffeejson.org serves a first-party
- * ingestion path, this one string changes and nothing else does.
+ * The ingestion host. When coffeejson.org serves a first-party ingestion path,
+ * this one string changes and nothing else does.
  */
 export const POSTHOG_HOST = "https://us.i.posthog.com";
 
@@ -44,7 +44,7 @@ const carriesUrl = (key: string): boolean =>
   );
 
 /**
- * Second belt, over the whole property bag rather than the one address.
+ * A second pass, over every property rather than the one address.
  * `$referrer` is the reason it exists: a reader moving from a share link to any
  * other page would otherwise carry that link's payload along as the referrer.
  */

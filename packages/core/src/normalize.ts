@@ -18,9 +18,9 @@ export interface NormalizedStep {
   atS: number | null;
   toWater: Measurement | null;
   /**
-   * Per-pour increment: cumulative `to_water` against the last cumulative seen,
-   * so a non-pour step does not break the chain and the first targeted step fills
-   * from 0. Null when the delta is not strictly positive. Unrounded.
+   * The per-pour increment, cumulative `to_water` against the last cumulative
+   * seen, so a non-pour step does not break the chain and the first targeted step
+   * fills from 0. Null when the delta is not strictly positive. Unrounded.
    */
   pourDelta: Measurement | null;
   text: string;
@@ -29,13 +29,13 @@ export interface NormalizedGrind {
   grinderLabel: string;
   setting: string | null;
   micronsApprox: number | null;
-  /** Qualitative coarseness, as authored: an unrecognized token is carried for
-   *  `vocabularyLabel` to drop, the way every closed set is handled. */
+  /** Qualitative coarseness, as authored. An unrecognized token is carried for
+   *  `vocabularyLabel` to drop, as with every closed set. */
   size: string | null;
 }
 /** A credited party. `role` is an open registry, so an unrecognized one is
  *  carried for display beside the name rather than dropped with the party.
- *  `url` travels as authored: it goes through `safeUrl` where it becomes an
+ *  `url` is carried as authored and goes through `safeUrl` where it becomes an
  *  `href`, like every other link. */
 export interface NormalizedParty {
   name: string;
@@ -53,8 +53,8 @@ export interface NormalizedOriginItem {
   altitude: Measurement | null;
   /** This component's own varieties, for a blend whose components differ. */
   varietals: string[];
-  /** The wire shape: `process` is a set, because a coffee often has more than
-   *  one to state. Empty when the source names none. */
+  /** A set, as on the wire, because a coffee often states more than one. Empty
+   *  when the source names none. */
   process: string[];
   harvestTime: string | null;
   percentage: number | null;
@@ -79,7 +79,7 @@ export interface NormalizedAddition {
   kind: "ice" | "other";
   amount: Measurement | null;
 }
-/** The brew filter as stated: the material is what travels, the label names the product. */
+/** The brew filter as stated. The material is what the wire carries, and the label names the product. */
 export interface NormalizedFilter {
   material: string;
   label: string | null;
@@ -130,7 +130,7 @@ export interface NormalizedPerceived {
   strength: number | null;
 }
 /** What an instrument read. Kept apart from the impression so no renderer can
- *  present one as the other — the seam the entity exists to mark. */
+ *  present one as the other — the distinction the entity exists to mark. */
 export interface NormalizedMeasured {
   /** Total dissolved solids, percent by mass. */
   tds: number | null;
@@ -165,7 +165,7 @@ export interface NormalizedDoc {
   generator: NormalizedGenerator | null;
 }
 
-// A party is its name: an entry naming nobody credits nobody. The role travels
+// An entry naming nobody credits nobody, so it is dropped. The role is carried
 // whatever it says, because the spec makes showing an unrecognized one a MUST.
 const parties = (v: unknown): NormalizedParty[] => {
   const out: NormalizedParty[] = [];
@@ -190,8 +190,8 @@ const filterOf = (v: unknown): NormalizedFilter | null => {
   return material ? { material, label: str(v["label"]) } : null;
 };
 
-// A window scales bound by bound and stays a window; a measurement with no
-// magnitude at all states nothing, and a scaled nothing is still nothing.
+// A window scales bound by bound and stays a window. A measurement with no
+// magnitude states nothing, so it scales to null.
 const scaleMagnitudes = (m: Measurement, by: number): Measurement | null =>
   m.value === undefined && m.min === undefined && m.max === undefined
     ? null
@@ -232,7 +232,7 @@ function pourDeltaFor(
   lastCumulative: Measurement | null,
 ): Measurement | null {
   if (toWater === null) return null;
-  // No prior cumulative: the first targeted step fills from an implicit 0.
+  // With no prior cumulative, the first targeted step fills from an implicit 0.
   const prevMagnitude = magnitude(lastCumulative);
   const prevInCurrentUnit =
     lastCumulative === null
@@ -333,7 +333,8 @@ function normalizeRecipe(
       : null;
   // A recipe states its water or the ratio it follows from, so each fixes the
   // other and "20 g at 1:15" renders with water. A windowed dose derives a
-  // windowed water: a midpoint would publish a number the author never wrote.
+  // windowed water, because a midpoint would publish a number the author never
+  // wrote.
   const waterFromRatio =
     !isEspresso &&
     water === null &&
@@ -383,7 +384,8 @@ function normalizeRecipe(
   };
 }
 
-// A `perceived` stating neither axis says nothing: absent, not a row of nulls.
+// A `perceived` stating neither axis says nothing, so it is absent, not a row
+// of nulls.
 function perceivedOf(v: unknown): NormalizedPerceived | null {
   if (!isObj(v)) return null;
   const extraction = num(v["extraction"]);
@@ -434,9 +436,10 @@ function normalizeTasting(
   beans: NormalizedBean[],
 ): NormalizedTasting {
   // The two references resolve independently, and the tasting's own `bean_ref`
-  // wins over the referenced recipe's: brewing someone else's recipe with your own
-  // bag is a case the format expresses, not a conflict. `recipe_ref` has no
-  // co-location fall-back — that rule triggers on a single BEAN and links a coffee.
+  // wins over the referenced recipe's, because brewing someone else's recipe with
+  // your own bag is a case the format expresses, not a conflict. `recipe_ref` has
+  // no co-location fall-back — that rule triggers on a single BEAN and links a
+  // coffee.
   const recipeRef = str(v["recipe_ref"]);
   const recipe =
     recipeRef === null
@@ -457,10 +460,10 @@ function normalizeTasting(
   };
 }
 
-// THE crash-safety boundary: a total function — any JSON value in, well-typed
+// THE crash-safety boundary, a total function — any JSON value in, well-typed
 // view-model out. Invalid fragments are dropped, not repaired, and downstream code
-// never re-checks. No version gate (the codec owns the wire) and no schema
-// validation (rendering is tolerant).
+// never re-checks. No version gate (that is the codec's) and no schema validation
+// (rendering is tolerant).
 export function normalize(input: unknown): NormalizedDoc {
   if (!isObj(input))
     return { beans: [], recipes: [], tastings: [], generator: null };
@@ -479,7 +482,7 @@ export function normalize(input: unknown): NormalizedDoc {
   };
 }
 
-// `name` is the whole identity: a generator naming no software states nothing.
+// A generator naming no software states nothing, so it is absent.
 function generatorOf(v: unknown): NormalizedGenerator | null {
   if (!isObj(v)) return null;
   const name = str(v["name"]);

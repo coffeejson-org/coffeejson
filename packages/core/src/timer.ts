@@ -15,7 +15,7 @@ export function timerState(
   acked: ReadonlySet<number>,
 ): TimerState {
   // Everything before the latest fired cue is done, auto-acknowledging untimed
-  // steps in between: array order is authoritative.
+  // steps in between, because array order is authoritative.
   let lastFired = -1;
   steps.forEach((s, i) => {
     if (s.atS !== null && s.atS <= elapsedS) lastFired = i;
@@ -25,7 +25,7 @@ export function timerState(
   for (let i = 0; i < steps.length; i++)
     if (i < lastFired || acked.has(i)) done.add(i);
 
-  // The clock owns the fired timed step; an untimed successor takes over until
+  // The clock decides the fired timed step; an untimed successor is current until
   // tapped, but only up to the next (future) timed cue.
   let currentIndex: number | null =
     lastFired >= 0 && !done.has(lastFired) ? lastFired : null;

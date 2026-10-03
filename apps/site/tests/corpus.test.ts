@@ -130,7 +130,7 @@ test("siblings equals the number of index entries sharing a document slug", () =
   const perSlug = new Map<string, number>();
   for (const e of index) perSlug.set(e.slug, (perSlug.get(e.slug) ?? 0) + 1);
   for (const e of index) expect(e.siblings, e.id).toBe(perSlug.get(e.slug));
-  // And the multi-recipe case is genuinely exercised, not just handled.
+  // The corpus must also exercise the multi-recipe case.
   expect(
     [...perSlug.values()].some((n) => n > 1),
     "no multi-recipe document",

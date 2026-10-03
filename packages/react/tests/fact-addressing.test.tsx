@@ -9,9 +9,9 @@ const recipeOf = (r: object) =>
 const beanOf = (b: object) =>
   normalize({ coffeejson: "1.0", beans: [b] }).beans[0]!;
 
-// Every fact row carries a stable `data-cj-fact` id, so a consumer hides or
-// restyles one fact with CSS alone — `[data-cj-fact="grind"] { display: none }` —
-// and needs no config knob.
+// Every fact row has a stable `data-cj-fact` id, so a consumer hides or restyles
+// one fact with CSS alone — `[data-cj-fact="grind"] { display: none }` — and
+// needs no config option.
 
 test("recipe fact rows carry stable data-cj-fact ids", () => {
   const html = renderToStaticMarkup(

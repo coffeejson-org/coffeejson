@@ -69,8 +69,8 @@ export interface LabelSet {
   /**
    * Every closed vocabulary a renderer prints, keyed by its union so a token the
    * format grows is a compile error here rather than a slug on screen. A
-   * component never spells a token: it reads one of these. The spec's two
-   * fallbacks fall out of the tables themselves — see `vocabularyLabel`.
+   * component never spells a token and reads one of these instead. The spec's
+   * two fallbacks come from the tables themselves — see `vocabularyLabel`.
    */
   methods: Record<BrewMethod, string>;
   processes: Record<Process, string>;
@@ -142,8 +142,9 @@ export const defaultLabels: LabelSet = {
     done: "Done",
     seconds: "s",
   },
-  // Null-proto: these slugs come off the wire, and a JSON-legal key like
-  // "__proto__" would otherwise resolve through Object.prototype to a non-string.
+  // Null-prototype, because these slugs come off the wire and a JSON-legal key
+  // like "__proto__" would otherwise resolve through Object.prototype to a
+  // non-string.
   methods: Object.assign(Object.create(null) as Record<string, string>, {
     pour_over: "Pour-over",
     immersion: "Immersion",
@@ -168,8 +169,8 @@ export const defaultLabels: LabelSet = {
     wet_hulled: "Wet-hulled",
     other: "Other",
   }),
-  // Imperatives, because a step kind tags an instruction: "[Close valve] shut
-  // the switch". A card suppresses the `pour` tag — it is the kind a step means
+  // Imperatives, because a step kind tags an instruction, as in "[Close valve]
+  // shut the switch". A card omits the `pour` tag — it is the kind a step means
   // when it states none, so tagging every one of them says nothing.
   stepKinds: Object.assign(Object.create(null) as Record<string, string>, {
     pour: "Pour",
@@ -264,8 +265,8 @@ const vocabulary = <T extends Record<string, string>>(
   overrides?: Record<string, string>,
 ): T => Object.assign(Object.create(null) as T, base, overrides);
 
-// Deep-merge over the English defaults: `facts` key-by-key, a vocabulary by
-// token, so an unnamed default survives either way.
+// Deep-merges over the English defaults, `facts` key by key and a vocabulary
+// token by token, so a default the overrides do not name is kept.
 export function mergeLabels(overrides?: PartialLabels): LabelSet {
   return {
     facts: { ...defaultLabels.facts, ...overrides?.facts },

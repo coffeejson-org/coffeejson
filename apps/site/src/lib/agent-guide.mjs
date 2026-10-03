@@ -14,8 +14,8 @@ import { esc } from "./text.mjs";
 //   inline  "text" | {code} | {strong} | {em} | {text, href} | {text, href, code}
 //   block   {p, muted?, htmlOnly?} | {ol} | {code} | {examples} | {pitfalls}
 //
-// A site-relative href renders relative in HTML and absolute in markdown: the
-// markdown is read detached from the site, where `/validator/` resolves nowhere.
+// A site-relative href renders relative in HTML and absolute in markdown, because
+// the markdown is read away from the site, where `/validator/` resolves nowhere.
 // `htmlOnly` is for page furniture — the markdown is wrapped by `gen.mjs` in an
 // agent-instructions document that already routes to those places properly.
 
@@ -146,7 +146,7 @@ export const GUIDE = [
   },
 ];
 
-/** Every href BOTH surfaces carry — the test that keeps the renderers level. */
+/** Every href BOTH surfaces carry — for the test that holds the two renderers equal. */
 export const guideHrefs = () =>
   GUIDE.flatMap((s) => s.blocks)
     .filter((b) => !b.htmlOnly)

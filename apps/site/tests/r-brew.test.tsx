@@ -6,7 +6,7 @@ import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { Brew } from "../src/pages/r-brew";
 
-// Structure and control wiring, not the 250 ms tick loop: performance.now() is not
+// Structure and control wiring, not the 250 ms tick loop. performance.now() is not
 // faked, so advancing vi's fake setTimeout clock alone would not move elapsed.
 // Step advancement is covered by core's timer.test.ts and react's
 // use-brew-along.test.tsx.
@@ -106,7 +106,7 @@ test("Back invokes onBack", () => {
   expect(onBack).toHaveBeenCalledOnce();
 });
 
-// The strip the package vends, not a copy of it: the site's own control is Back,
+// The strip the package vends, not a copy of it. Back is the site's only control,
 // and every brew control — "Start over" included — comes from `<BrewControls>`.
 test("the control strip is the library's, and Back is the site's own", () => {
   act(() =>

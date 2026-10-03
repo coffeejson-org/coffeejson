@@ -38,8 +38,8 @@ is malformed. Such an element is **not** an unknown member the
 tells a consumer to ignore; it is a slot that claims to hold an entity and does
 not. What a consumer does next depends on its role. One that imports into a
 store **SHOULD** reject the document and name the collection. One that only
-renders **MAY** skip the element and render the rest. Both are conformant; a
-consumer picks by what it is, not by reading this rule twice.
+renders **MAY** skip the element and render the rest. Both are conformant, and
+a consumer picks by its role.
 
 ### Why always-array, not singular + plural
 

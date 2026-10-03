@@ -56,7 +56,7 @@ pnpm check:ci    # the same, read-only — what CI runs
 `pnpm validate:doc path/to/document.json` checks one document. CI runs the same
 commands on every pull request.
 
-Code is formatted and linted by [Biome](https://biomejs.dev); `biome.json` is the
+[Biome](https://biomejs.dev) formats and lints the code, and `biome.json` is the
 whole configuration. **The formatter does not touch documents.** `fixtures/`,
 `recipes/`, `registries/` and `docs/schema/` are written by hand in a house style
 a formatter cannot express — leaf objects stay on one line, and key order is

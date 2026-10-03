@@ -164,7 +164,7 @@ export const UNITS: readonly Unit[] = [
 // the values the format recommends so two producers describing the same thing use
 // the same word; a consumer shows anything else generically.
 
-/** Recommended `addition.type` values. `ice` is the one with a defined effect: it marks the recipe iced. */
+/** Recommended `addition.type` values. `ice` is the one with a defined effect, marking the recipe iced. */
 export const RECOMMENDED_ADDITION_TYPES = [
   "ice",
   "milk",

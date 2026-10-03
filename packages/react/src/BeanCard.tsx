@@ -9,8 +9,8 @@ import type { CoffeeJSONConfig, ResolvedConfig } from "./config.js";
 import { cx, fmt, resolveConfig } from "./config.js";
 import { Fact, FactShell } from "./Fact.js";
 
-// The origin line is the format's, and altitude is a measurement: it renders
-// through the config like every other one, so `units` and `locale` reach it.
+// The origin line is the format's. Altitude is a measurement, so it renders
+// through the config like every other one and `units` and `locale` reach it.
 const originText = (it: NormalizedOriginItem, rc: ResolvedConfig): string =>
   originLine(it, rc.labels, (m) => fmt(m, rc));
 
@@ -26,8 +26,8 @@ export function BeanCard({ bean: b, config }: BeanCardProps) {
   const href = safeUrl(b.roaster?.url) || safeUrl(b.url);
   const roasterText = b.roaster?.name ?? b.url ?? "";
   const roastLine = [
-    // `roast_level` has no `other` to fall back to: an unrecognized value is
-    // ignored in favor of `roast_agtron`, so it drops out of the line here.
+    // `roast_level` has no `other` to fall back to, so an unrecognized value is
+    // ignored in favor of `roast_agtron` and drops out of the line here.
     vocabularyLabel(rc.labels.roastLevels, b.roastLevel),
     b.roastAgtron !== null ? `${rc.labels.facts.agtron} ${b.roastAgtron}` : "",
     b.roastDate ?? "",
@@ -57,8 +57,8 @@ export function BeanCard({ bean: b, config }: BeanCardProps) {
           ))}
         </FactShell>
       ) : null}
-      {/* `drying_method` is a free string, not a vocabulary: the spec says pass it
-          through verbatim, so it is the roaster's word and not this card's. */}
+      {/* `drying_method` is a free string, not a vocabulary. The spec says to pass
+          it through verbatim, so it is the roaster's word and not this card's. */}
       <Fact
         id="process"
         label={rc.labels.facts.process}

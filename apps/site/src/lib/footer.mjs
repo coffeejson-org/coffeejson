@@ -14,11 +14,10 @@ export const PACKAGES = "Packages: Apache-2.0.";
 /** Wherever a page can show quoted roaster copy, the quotation's owner is named. */
 export const QUOTED_PROSE = "Quoted roaster prose remains its author’s.";
 /**
- * Naming the owner is half of it; the other half is a way to reach us. Every
- * page that shows quoted material carries this, including the per-recipe and
- * per-bag pages a search engine sends someone to directly — those are where a
- * roaster meets their own words, and a promise they have to leave the site to
- * find is not one they will find.
+ * How to reach us, which naming the owner does not give. Every page that shows
+ * quoted material carries this, including the per-recipe and per-bag pages a
+ * search engine links to directly — a roaster meets their own words there, and
+ * will not find a promise printed on another page.
  */
 export const CORRECTIONS =
   "Spot an error, or want your material corrected or removed? " +

@@ -73,9 +73,9 @@
   font-variant-numeric: tabular-nums;
 }
 /* When a recipe has a pour increment beyond its initial fill, each step's
-   delta + target render as siblings of cj-step-body rather than nested inside
+   delta and target render as siblings of cj-step-body rather than nested inside
    it (the nested cj-step-target of the plain single-pour rendering needs no
-   gap) — give the siblings a small left gap off whatever precedes them. */
+   gap) — the siblings take a small left gap. */
 .cj-step-body ~ .cj-step-target,
 .cj-step-body ~ .cj-step-delta {
   margin-left: 0.35rem;
@@ -89,12 +89,12 @@
   color: var(--cj-fg);
 }
 
-/* Brew timer (§3 interactive) — large-type, current-action focused: pour is the
-   accent-prominent number, total is muted, time keeps a fixed slot. Drives the
-   frozen cj-brew-, cj-stepcard-, cj-countdown-, and cj-timeline- classes off
+/* Brew timer — large type, focused on the current action: pour is the
+   accent-prominent number, total is muted, time keeps a fixed slot. Styles the
+   frozen cj-brew-, cj-stepcard-, cj-countdown-, and cj-timeline- classes from
    the same --cj- custom properties as the cards, so a consumer's theme
-   carries over. (No asterisks in this comment: a star-slash pair inside a CSS
-   comment terminates it.) */
+   carries over. (No asterisks in this comment, because a star-slash pair
+   inside a CSS comment terminates it.) */
 .cj-brew {
   display: grid;
   gap: var(--cj-space);
@@ -219,11 +219,11 @@
 }
 
 /* Step list — a four-column row (marker, cue time, label, pour) with a vertical
-   connector behind the markers. The connector is one pseudo-element per row whose
-   fill comes from a two-stop gradient driven by the --cj-fill custom property the
-   component sets per row, so progress animates with the clock without any JS
-   touching styles. Status lives on the row class, so a consumer restyling one
-   state overrides one selector. */
+   connector behind the markers. The connector is one pseudo-element per row,
+   filled by a two-stop gradient at the --cj-fill custom property the component
+   sets per row, so progress animates with the clock and no JS touches styles.
+   Status is on the row class, so a consumer restyling one state overrides one
+   selector. */
 .cj-steplist {
   margin: 0;
   padding: 0;

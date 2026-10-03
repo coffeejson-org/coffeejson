@@ -23,9 +23,9 @@ const md = guideMarkdown(SITE_URL);
 const agentsMd = buildAgentsMd();
 
 // `/agents/` and `/agents.md` are the same guide twice. The guide is authored
-// once, in `agent-guide.mjs`, precisely so they cannot disagree — this file is
-// what makes that true rather than merely intended. A section, a link, an
-// example or a pitfall that reaches one surface and not the other is the bug.
+// once, in `agent-guide.mjs`, so they cannot disagree — this file enforces
+// it. A section, a link, an example or a pitfall that reaches one surface and
+// not the other is the bug.
 describe("the two agent surfaces render one guide", () => {
   it("gives both the same sections, in the same order", () => {
     const headings = guideHeadings();
@@ -36,7 +36,7 @@ describe("the two agent surfaces render one guide", () => {
     expect(inMd).toEqual(headings);
   });
 
-  // The one deliberate difference: a relative href resolves nowhere in a file
+  // The one deliberate difference. A relative href resolves nowhere in a file
   // an agent fetched on its own, so markdown carries the canonical host.
   it("points both at the same targets, absolute only in markdown", () => {
     const hrefs = guideHrefs();
@@ -107,7 +107,7 @@ describe("/agents.md is this site, described for an agent", () => {
     expect(agentsMd).toContain(SYSTEM_PROMPT);
   });
 
-  // Every surface it advertises has to be one the build actually writes; a
+  // Every surface it advertises has to be one the build writes; a
   // description that sends an agent to a 404 is worse than no description.
   it("advertises only surfaces on the canonical host", () => {
     const gets = [...agentsMd.matchAll(/`GET ([^`]+)`/g)].map(

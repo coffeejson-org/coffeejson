@@ -2,9 +2,9 @@
  * The association rule, shared by `recipe.bean_ref`, `tasting.bean_ref`,
  * `tasting.recipe_ref` and `scope.ts`. A reference present → the member whose
  * `id` matches, unresolved leaving the referrer unlinked rather than erroring.
- * A reference absent → EVERY member: co-location links only a single bean, so
- * narrowing a multi-bean document to one would invent a link the source never
- * stated.
+ * A reference absent → EVERY member, because co-location links only a single
+ * bean and narrowing a multi-bean document to one would invent a link the source
+ * never stated.
  */
 export function associatedMembers<T>(
   members: readonly T[],

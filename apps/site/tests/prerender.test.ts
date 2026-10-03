@@ -60,7 +60,7 @@ test("a prerendered page loads no module that would rebuild what the build wrote
 });
 
 // The recipe directory is the only page whose module hydrates markup it did not
-// write. If the two ever produce different HTML for the same filters, listeners
+// write. If the two produce different HTML for the same filters, listeners
 // attach to a DOM the module disagrees with — a page that looks right and
 // misbehaves on the first click, which is worse than the blank page it replaced.
 test("the recipe directory's build output is what its module would render", () => {

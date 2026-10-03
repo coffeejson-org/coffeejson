@@ -27,8 +27,8 @@ Read in order; each chapter is self-contained enough to cite on its own.
 ## Transport binding
 
 - [**Transport**](transport.md) — a document as a file, inside a share URL,
-  or in a QR code. Normative for the binding only: the data model defines no
-  transport, and an implementation may ignore this entirely. Its share-URL
+  or in a QR code. Normative for the binding only. The data model defines no
+  transport, and an implementation may ignore the binding entirely. Its share-URL
   rules are executable as
   [`fixtures/transport/scan-vectors.json`](../fixtures/README.md#transport).
 

@@ -17,7 +17,7 @@ import { siteHeader } from "./site-header.mjs";
 import { esc, slugify } from "./text.mjs";
 
 // The recipe directory's markup, as a value. The build writes the unfiltered
-// view into the shell and the page module attaches behaviour to it, so this
+// view into the shell and the page module attaches behavior to it, so this
 // file must stay reachable from Node: no `location`, no `document`, no state of
 // its own. Everything that reads the URL or touches the DOM is in
 // `pages/recipes.ts`, which is the only reason the two are separate files.
@@ -37,7 +37,7 @@ const authors = [
 const methods = [
   ...new Map(index.map((e) => [e.method, e.methodLabel])).entries(),
 ];
-// The bean view's chips are roasters, but they ride the same `author` filter key
+// The bean view's chips are roasters, but they use the same `author` filter key
 // and the same slug space — which is what lets a chip survive a view switch.
 const roasters = [
   ...new Map(beans.map((b) => [slugify(b.roaster.name), b.roaster])).entries(),
@@ -64,10 +64,6 @@ function viewToggle(filters: Filters): string {
     ${btn("recipes", "Recipes", index.length)}${btn("beans", "Bags", beans.length)}</div>`;
 }
 
-// A recipe is one row of an index: its curve, its name, its four numbers in
-// columns that line up down the page, and one action. The source stays on the
-// row — every transcription names where it came from, wherever it is listed.
-// What a reader does with a recipe (QR, copy, download) lives on its page.
 // A source is often titled "<author> — <what>". Under that author's heading the
 // name is said already, so the link reads as the part that tells rows apart;
 // its title keeps the label whole.
@@ -81,6 +77,10 @@ const sourceText = (e: IndexEntry): string => {
 
 const ROWS_HEAD = `<p class="rows-head wide" aria-hidden="true"><span></span><span>Recipe</span><span>Dose → water</span><span>Ratio</span><span>Temp</span><span>Time</span><span></span></p>`;
 
+// A recipe is one row of an index: its curve, its name, its four numbers in
+// columns that line up down the page, and one action. The source stays on the
+// row — every transcription names where it came from, wherever it is listed.
+// What a reader does with a recipe (QR, copy, download) is on its page.
 function row(e: IndexEntry): string {
   const cell = (label: string, value: string) =>
     `<span data-label="${label}">${esc(value)}</span>`;
@@ -143,8 +143,9 @@ const CORRECTIONS = `Quoted text stays the roasters’ — structure and
 
 /** Every corpus recipe as schema.org Recipe, for the shell's static head. */
 export function recipesJsonLd(): unknown[] {
-  // `url`: the share link is disallowed in robots.txt and `/r/` canonicalizes to
-  // bare `/r/`, so naming it would declare an address we forbid crawling.
+  // No `url` is passed. The share link is disallowed in robots.txt and `/r/`
+  // canonicalizes to bare `/r/`, so naming it would declare an address we forbid
+  // crawling.
   return index.flatMap((e) => {
     const result = decodePayload(e.payload);
     return result.ok ? docJsonLd(result.document) : [];

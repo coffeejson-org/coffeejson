@@ -153,8 +153,6 @@ page scale.
 
 ## Typography
 
-Two faces, each with a job.
-
 - **Bricolage Grotesque** (`typography.h1`, `typography.h1-display`, `typography.h2`,
   `typography.body`) — variable, with optical sizing on, so one family carries a 90px
   headline and 17px prose. Headings are always roman: emphasis inside a heading is
@@ -230,7 +228,7 @@ with a 22% radius, the iOS mask.
   labeled; when any does not, only the first and last are — the step list carries every
   number. Room is judged twice, for a plot as wide as a column and for one as narrow as
   a phone, and a label that fits only the first is hidden in the second. In the live
-  document the pour being played or edited wears its weight as a tag. Three
+  document the pour being played or edited shows its weight as a tag. Three
   sizes: the **sparkline** on a directory row, the **figure** on a recipe page and in the viewer,
   and the **live document** on the landing page. A recipe with no timed pours gets a
   **ratio bar** at full size on its page, with both sides named, and on its row its two

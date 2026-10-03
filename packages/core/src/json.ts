@@ -19,7 +19,7 @@ export const strArr = (v: unknown): string[] =>
   arr(v).filter((x): x is string => typeof x === "string");
 
 /**
- * A date-only member: `YYYY-MM-DD` naming a day the Gregorian calendar has. A
+ * A date-only member, `YYYY-MM-DD` naming a day the Gregorian calendar has. A
  * string outside that states no day, so a consumer that showed it would be
  * asserting one.
  */

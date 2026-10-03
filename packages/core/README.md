@@ -32,9 +32,8 @@ for (const s of recipe.steps)
 npm install @coffeejson/core
 ```
 
-This package's version is its own: it says nothing about the `coffeejson`
-version a document declares, and a document states the format version it
-conforms to
+This package's version is its own. It says nothing about the `coffeejson`
+version a document declares
 ([Versioning](https://coffeejson.org/docs/spec/07-versioning.md)).
 
 From a checkout of this repository, `pnpm install && pnpm -r build` produces
@@ -59,18 +58,18 @@ From a checkout of this repository, `pnpm install && pnpm -r build` produces
   differently. `decodeDocumentText(text)` is that path from file text: it
   discards a leading byte-order mark, which the File binding says a consumer
   tolerates rather than rejects, then hands the parsed value to
-  `checkEnvelope`. Reach for it wherever you would otherwise call `JSON.parse`
+  `checkEnvelope`. Use it wherever you would otherwise call `JSON.parse`
   on a file, because `JSON.parse` throws on a mark some editors write without
   asking.
 
-  Success is a `DecodedDocument`: the envelope past the version gate, carrying
-  a non-empty collection, with nothing read inside one — its elements are
-  `unknown`, and `normalize` is the typed read. `CoffeeJSONDocument` is the
+  Success is a `DecodedDocument`: an envelope that passed the version gate and
+  carries a non-empty collection. Nothing inside a collection has been read —
+  its elements are `unknown`, and `normalize` is the typed read. `CoffeeJSONDocument` is the
   producer shape, what `encodePayload` takes.
 
   `DECODE_ERROR_KINDS` enumerates those reasons, and
-  `defaultLabels.decodeErrors` words each one, so a UI owes a reader nothing it
-  has not already been given. These are the rejections a *consumer's* intake
+  `defaultLabels.decodeErrors` words each one, so a UI has a message for every
+  reason without writing any. These are the rejections a *consumer's* intake
   gives; `fixtures/invalid/` is a different corpus — it breaks the **producer**
   gate, so most of it decodes cleanly and fails schema validation instead. The
   consumer's intake is exercised by `fixtures/transport/scan-vectors.json`.
@@ -92,15 +91,15 @@ From a checkout of this repository, `pnpm install && pnpm -r build` produces
   const reads = `CoffeeJSON ${SUPPORTED_MAJOR}.x`;
   ```
 - **`normalize(unknown) → NormalizedDoc`** — a total function: any JSON value in,
-  well-typed view-model out. Invalid fragments are dropped; associated-bean
-  pairing and ratio derivation are resolved. Untrusted payloads cannot crash a
-  renderer built on it. A **projection** is the view model a renderer gets: the
+  well-typed view-model out. It drops invalid fragments and resolves
+  associated-bean pairing and ratio derivation, so an untrusted payload cannot
+  crash a renderer built on it. A **projection** is the view model a renderer gets: the
   members it needs, in the shapes it needs them, with the format's derivations
   already applied. It projects all three collections, including `tastings`
   — which `@coffeejson/react` does not render, so a tasting UI is the
   consumer's to build on this projection. It projects **a chosen subset of each
-  entity, not the whole document**:
-  what a card renders. Left on the wire, and read from the document itself — a
+  entity, not the whole document**: what a card renders. It leaves these on the
+  wire, for a consumer to read from the document itself — a
   recipe's `images` and `localizations`; a bean's `certifications`, `decaf`,
   `form`, `images`, `lang`, `localizations`, `preferred_extraction`,
   `production_roaster` and `rest_days`; an origin's `type`; an addition's
@@ -273,7 +272,7 @@ subtype, which is what legitimizes `tool` and `performTime`.
 | `coffee` + the associated bean | `recipeIngredient[0]` | `"15 g coffee — Nano Challa (Example Roastery)"`; the bean resolves per the [association rules](https://coffeejson.org/docs/spec/02-envelope.md#association-explicit-reference) (`bean_ref`, else single-bean co-location); unlinked → `"15 g coffee"` |
 | `water` | `recipeIngredient[]` | `"250 g water"` |
 | `additions[]` | `recipeIngredient[]` | one per addition, the registry value verbatim — `"120 g ice"`, `"100 g milk (oat)"` (`note` in parentheses) |
-| `steps[]` | `recipeInstructions[]` | one `HowToStep` per step with something human to say: `text` = `instruction`, else the pour-target derivation (`"Pour to 250 g"`); a step with neither is skipped. An author-customized `label` rides as the step `name` |
+| `steps[]` | `recipeInstructions[]` | one `HowToStep` per step with something human to say: `text` = `instruction`, else the pour-target derivation (`"Pour to 250 g"`); a step with neither is skipped. An author-customized `label` is exported as the step `name` |
 | `brewer` / `basket` / `grind.grinder` | `tool[]` | `HowToTool`, named by `label`, else brand + model, else the id |
 
 The optional `url` option is the page's canonical URL — page knowledge, not
@@ -294,7 +293,7 @@ const ld = beanJsonLd(doc, 0, { url: "https://example-roastery.com/products/nano
 The node carries **no `offers`**. Price, stock and lot size are the listing's
 facts, not the coffee's ([Overview § Design principles](https://coffeejson.org/docs/spec/01-overview.md#design-principles),
 principle 4); a roaster's page already has an offer, and a page that is not
-the listing points at it with `sameAs`. The identity rides as
+the listing points at it with `sameAs`. The identity is exported as
 `additionalProperty` under the CoffeeJSON member names with the wire values
 verbatim, so a reader that knows the format reads it straight back.
 
@@ -305,7 +304,7 @@ verbatim, so a reader that knows the format reads it straight back.
 | `description` | `description` | verbatim |
 | `images` | `image` | the array, verbatim |
 | `roaster` | `brand` | `Organization`/`Person` by the party's `type`; absent `type` reads as `Organization` (the roaster role's default); a party without a usable `name` is omitted |
-| `origin.items[].country` | `countryOfOrigin` | one `Country` node per distinct code, in stated order; a single-country origin exports one node, not an array. The code rides as `identifier`, never as `name` — an alpha-2 code is not what a country is called, and the format carries no display name to put there |
+| `origin.items[].country` | `countryOfOrigin` | one `Country` node per distinct code, in stated order; a single-country origin exports one node, not an array. The code is exported as `identifier`, never as `name` — an alpha-2 code is not what a country is called, and the format carries no display name to put there |
 | `roast_date` | `productionDate` | verbatim (both ISO 8601 calendar dates) |
 | a **single lot**'s `region` · `producers[]` · `altitude` · `harvest_time` | `additionalProperty[]` | one `PropertyValue` each (`producer` per named party; `altitude` as `value` or `minValue`/`maxValue` with UN/CEFACT `unitCode` `MTR`/`FOT`). Exported only when the origin has exactly one item: a blend's per-component facts belong to a component the node cannot name, so a blend exports its countries and nothing finer |
 | `process` · `drying_method` · `varietals` · `roast_level` · `roast_agtron` · `rest_days` · `production_roaster` · `decaf` · `form` · `preferred_extraction` · `certifications` · `roaster_notes` | `additionalProperty[]` | one `PropertyValue` each, `name` = the member name, `value` = the wire value verbatim (arrays stay arrays; `rest_days` as `minValue`/`maxValue` with `unitText: "day"`) |

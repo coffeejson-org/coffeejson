@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Every relative link in the repo's Markdown resolves: a dead anchor renders
+// Every relative link in the repo's Markdown resolves. A dead anchor renders
 // nothing and throws nothing, so only a check catches it. Slugs follow GitHub's
 // rule — lowercase, drop non-word characters except space and hyphen, spaces to
 // hyphens, runs NOT collapsed (`### Espresso (dose : yield)` → `#espresso-dose--yield`).

@@ -1,7 +1,7 @@
 /**
- * A quantity on the wire: a single `value`, or a `min`/`max` window when the
- * source published one (an espresso yield of 32-34 g). At least one of the three
- * is present; the spec forbids stating both a point and a window.
+ * A quantity on the wire. It states a single `value`, or a `min`/`max` window
+ * when the source published one (an espresso yield of 32-34 g). At least one of
+ * the three is present, and the spec forbids stating both a point and a window.
  */
 export interface Measurement {
   value?: number;
@@ -43,8 +43,8 @@ export interface Step {
 export interface Addition {
   /** What is added — an open registry (`ice` marks the recipe iced; unknown values are handled generically). */
   type: string;
-  /** Optional: an unquantified addition still states its kind — `ice` with no
-   *  amount marks the recipe iced. */
+  /** Optional, because an unquantified addition still states its kind — `ice`
+   *  with no amount marks the recipe iced. */
   amount?: Measurement;
   /** Temperature of the added liquid, where meaningful (e.g. milk). */
   temperature?: Measurement;
@@ -118,7 +118,7 @@ export interface Party {
   role?: string;
 }
 
-/** One place a coffee grew: the whole of a single origin, or one part of a blend. */
+/** One place a coffee grew, either the whole of a single origin or one part of a blend. */
 export interface OriginItem {
   name?: string;
   country?: string;
@@ -176,7 +176,7 @@ export interface RecipeLocalization {
   title?: string;
   description?: string;
   notes?: string;
-  /** Positional against the base `steps`: entry i translates step i, `{}`
+  /** Positional against the base `steps`. Entry i translates step i, and `{}`
    *  leaves it untranslated. A length mismatch means the whole array is
    *  ignored — a misaligned instruction is worse than an untranslated one. */
   steps?: StepLocalization[];
@@ -192,7 +192,7 @@ export interface StepLocalization {
 export interface BeanLocalization {
   name?: string;
   description?: string;
-  /** Replaced whole, never matched item by item: descriptor lists are
+  /** Replaced whole, never matched item by item, because descriptor lists are
    *  rewritten in translation rather than mapped one-to-one. */
   roaster_notes?: string[];
 }
@@ -202,7 +202,8 @@ export interface BeanLocalization {
  *  TypeScript's built-in `Generator`; the wire member is still `generator`. */
 export interface DocumentGenerator {
   /** The software's name — an app, a hosted service, a script, a language
-   *  model. Required on the wire: a generator naming nothing states nothing. */
+   *  model. Required on the wire, because a generator naming nothing states
+   *  nothing. */
   name: string;
   version?: string;
   url?: string;
@@ -239,20 +240,21 @@ export interface Tasting {
   /** The `id` of the recipe in this document this cup was brewed from. */
   recipe_ref?: string;
   /** The `id` of the bean in this document that was brewed. Wins over the
-   *  referenced recipe's own `bean_ref`: brewing someone else's recipe with your
-   *  own coffee is a case the format expresses, not a conflict. */
+   *  referenced recipe's own `bean_ref`, because brewing someone else's recipe
+   *  with your own coffee is a case the format expresses, not a conflict. */
   bean_ref?: string;
   /** 1-5, how much the drinker liked this cup. A producer on another scale maps
    *  to the nearest whole value; one that cannot map omits the field. */
   rating?: number;
   perceived?: PerceivedAxes;
   /** What the drinker tasted, in their own words. Display text carried verbatim,
-   *  not ids: two match when equal after folding case and trimming surrounding
+   *  not ids. Two match when equal after folding case and trimming surrounding
    *  whitespace, and by no looser rule. */
   descriptors?: string[];
   note?: string;
   /** BCP-47 tag hinting the language of `note` and `descriptors`. There is no
-   *  `localizations` counterpart: nobody translates their own tasting note. */
+   *  `localizations` counterpart, because nobody translates their own tasting
+   *  note. */
   lang?: string;
   measured?: MeasuredCup;
 }

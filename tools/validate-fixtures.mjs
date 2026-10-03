@@ -227,8 +227,8 @@ readFileSync(AUTHORING_SCHEMA_PATH, "utf8") === renderAuthoringSchema(runtime)
     );
 const validateAuthoring = ajv.compile(buildAuthoringSchema(runtime));
 
-// The bundled gear labels are generated. Nothing else notices when they go stale,
-// and a stale map silently renders yesterday's name — or a raw slug for a new entry.
+// The bundled gear labels are generated, and no other check compares them to the
+// registry. A stale map renders the old name — or a raw slug for a new entry.
 const { renderGearLabels } = await import("./gen-gear-labels.mjs");
 readFileSync(join(root, "packages/core/src/gear-labels.ts"), "utf8") ===
 renderGearLabels(
@@ -296,8 +296,8 @@ validateAuthoring(typoProbe)
 
 // The reserved vendor member is admitted by name at every depth, not only on the
 // top-level entities, because the runtime schema accepts it anywhere and a lint
-// that disagreed would reject a conforming document. Admitting it must not blunt
-// the lint: a typo sitting beside `ext` in the same object is still a typo.
+// that disagreed would reject a conforming document. Admitting it must not weaken
+// the lint, so a typo beside `ext` in the same object still fails.
 const vendorTypoProbe = {
   coffeejson: "1.0",
   beans: [
@@ -465,7 +465,7 @@ for (const { label, error } of parityFindings(runtime, proseDocs)) {
   error ? fail(`parity ${label}`, error) : ok(`parity ${label}`);
 }
 
-// The parity layer must itself be proven to bite: without seeded drifts, a green
+// Seeded drifts prove the parity layer fails when it should. Without them a green
 // run proves nothing.
 const probes = [
   [
@@ -552,7 +552,7 @@ for (const { label, error } of coverageFindings(runtime, { ts: coreTypes }))
   error ? fail(`coverage ${label}`, error) : ok(`coverage ${label}`);
 
 // Decoding skips an undeclared key in silence, so no other test here can fail on
-// one — which makes these probes load-bearing rather than ceremonial.
+// one — so these probes are the only proof that the coverage check does.
 const ghosted = structuredClone(runtime);
 ghosted.$defs.tasting.properties.ghost_key = { type: "string" };
 coverageFindings(ghosted, { ts: coreTypes }).some((f) =>
@@ -621,7 +621,7 @@ linkProblems.length === 0
     )
   : null;
 
-// Proven to bite, and proven not to bite on the shape that looks broken and is not.
+// Must fail on a dead anchor, and must pass the shape that looks broken and is not.
 const seededDead = new Map([
   ["a.md", "[x](b.md#nope)"],
   ["b.md", "# Real heading"],
@@ -914,7 +914,7 @@ consistencyFindings("probe", {
       "consistency probe: an inverted min/max window is caught",
       "seeded document produced no finding",
     );
-// `rest_days` is a window with no unit, so a unit-gated sweep would walk straight past it.
+// `rest_days` is a window with no unit, so a unit-gated sweep would skip it.
 consistencyFindings("probe", {
   beans: [{ name: "x", rest_days: { min: 30, max: 14 } }],
 }).some((f) => f.error?.includes("empty window"))
@@ -997,8 +997,8 @@ const decodeShareUrl = (input) => {
       return { rejected: "decoded payload exceeds the 8192-byte cap" };
     payload = bytes;
   } else if (zlibHeader) {
-    // Base64 length no longer bounds the document: a kilobyte can inflate to
-    // megabytes, so stop at the cap and reject.
+    // Base64 length does not bound a compressed document. A kilobyte can inflate
+    // to megabytes, so stop at the cap and reject.
     try {
       payload = inflateSync(bytes, { maxOutputLength: 8192 });
     } catch (e) {

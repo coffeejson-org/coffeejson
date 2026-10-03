@@ -1,4 +1,4 @@
-// Lowest-common-denominator platform globals, deliberately not lib.dom.d.ts:
+// Lowest-common-denominator platform globals, deliberately not lib.dom.d.ts, so
 // adding a name here is a portability decision.
 declare function atob(data: string): string;
 declare function btoa(data: string): string;

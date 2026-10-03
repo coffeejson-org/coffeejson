@@ -22,7 +22,7 @@ export function PourCounter({ recipe, state, config }: PourCounterProps) {
     s.toWater !== null ? [i] : [],
   );
   if (pourAt.length === 0) return null;
-  // Before the first pour the count reads 1: that is the pour being counted toward.
+  // Before the first pour the count reads 1, the pour being counted toward.
   const current = state.currentIndex ?? -1;
   const n = Math.max(1, pourAt.filter((i) => i <= current).length);
   return (

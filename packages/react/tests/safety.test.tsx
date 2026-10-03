@@ -93,8 +93,8 @@ test("field-substitution battery: render never throws, never emits an unsafe hre
     }
 });
 
-// Every place a document-supplied string becomes an href: a bean's own page, and
-// the document's generator link.
+// The two places a document-supplied string becomes an href: a bean's own page
+// and the document's generator link.
 test("no unsafe URL scheme becomes an href (bean.url or generator.url)", () => {
   for (const u of [
     "javascript:alert(1)",

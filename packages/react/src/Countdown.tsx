@@ -13,8 +13,8 @@ export interface CountdownProps {
   config?: CoffeeJSONConfig;
 }
 
-// Pure: it keeps no clock, so when a cue fires the hook advances `state` and the
-// value jumps to the following interval.
+// It keeps no clock, so when a cue fires the hook advances `state` and the value
+// jumps to the following interval.
 export function Countdown({
   recipe,
   state,

@@ -3,14 +3,14 @@
 //
 // JSON Schema validates each member against its own rules. It cannot compare
 // two siblings, so a document can satisfy every rule and still say something
-// that cannot be true. Two of those live in this format.
+// that cannot be true. This format has two such cases.
 //
 //   1. `ratio` against `coffee` and `water`. Recipe § Ratio makes the
 //      measurements authoritative and the ratio a convenience, so a document
 //      whose ratio disagrees is CONFORMANT — `fixtures/valid/recipe-ratio-
 //      disagrees-with-water.json` exists to say so. What is not conformant is
 //      a document WE authored disagreeing with itself, which is a
-//      transcription bug wearing a legal shape. Hence the exemption list.
+//      transcription bug that still validates. Hence the exemption list.
 //
 //   2. `min` against `max` on any window. Folding the window into the object
 //      is what stops a range splitting its unit across two ends; it never

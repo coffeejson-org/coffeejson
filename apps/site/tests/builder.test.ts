@@ -154,7 +154,6 @@ describe("buildBean", () => {
     });
     expect(b.roast_level).toBe("dark");
   });
-  // The schema enum is "single" | "blend", not "single_origin".
   test('a single-item origin array emits origin.type "single" (not "single_origin")', () => {
     const f: BeanFormState = {
       ...emptyBeanForm(),
@@ -295,7 +294,7 @@ describe("documentToState (edit mode) round-trips through buildDocument", () => 
   });
 });
 
-// Import honesty. Two halves: units convert (a consumer act — never
+// Import honesty has two halves. Units convert (a consumer act — never
 // reinterpret a bare number under the form's unit label), and the drop-differ
 // names exactly what the round trip loses.
 describe("import unit conversion (documentToState)", () => {

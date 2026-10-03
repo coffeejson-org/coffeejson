@@ -23,9 +23,8 @@ const PAGES: [string, string][] = [
 ];
 
 // A minimal robots matcher for the `User-agent: *` group. Deliberately literal
-// prefix matching, which is what the spec says Disallow does — the sibling
-// site's outage came from *assuming* `/r` meant only `/r`, when as a prefix it
-// also shadowed `/recipes`.
+// prefix matching, which is what the spec says Disallow does — as a prefix,
+// `/r` also shadows `/recipes`.
 function disallowedForAll(path: string): boolean {
   const lines = robots.split("\n").map((l) => l.trim());
   const start = lines.findIndex((l) => l.toLowerCase() === "user-agent: *");
@@ -179,7 +178,7 @@ describe("canonical URLs", () => {
 describe("social preview", () => {
   // Without og:image every share of this site renders as a bare text link. These
   // also pin the declared dimensions to the ACTUAL file: a regenerated image at a
-  // different size leaves the numbers lying, and no crawler will tell you.
+  // different size leaves the numbers wrong, and no crawler reports it.
   const OG = "og.png";
   const png = readFileSync(join(site, "public", OG));
 

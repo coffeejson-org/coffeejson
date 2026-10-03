@@ -108,7 +108,7 @@ test("an unrecognized process reads as Other; an unrecognized roast level drops 
 
 test("a region without a country renders alone, with no orphaned separator", () => {
   // A roaster may state a region broader than any country ("East Africa") and name
-  // no country: the two are independently optional, and the ", " joining them must
+  // no country. The two are independently optional, and the ", " joining them must
   // not dangle.
   const html = renderToStaticMarkup(
     <BeanCard

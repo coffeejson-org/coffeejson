@@ -60,7 +60,7 @@ source files to `PAGE_SOURCES`. The sitemap `<lastmod>` comes from their git
 history.
 
 Three more lists are hardcoded, and a page missing from them ships with **no
-test failing** — the silent gap, so add the page to all three: `PAGES` in
+test failing** — so add the page to all three: `PAGES` in
 `tests/seo-furniture.test.ts` (canonical, Open Graph, title and description),
 `entryPages()` in `tests/analytics.test.ts` (the footer's privacy sentence), and
 `documents` in `tests/served-links.test.ts` if the page also emits markdown.

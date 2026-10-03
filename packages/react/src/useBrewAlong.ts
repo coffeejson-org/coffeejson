@@ -13,8 +13,8 @@ export interface BrewAlongState {
   tapDone: () => void;
 }
 
-// The steps before the recipe's first timed cue are acknowledged from the start:
-// nothing is counting toward them, so the clock must not wait to be tapped past them.
+// The steps before the recipe's first timed cue are acknowledged from the start.
+// Nothing counts toward them, so the clock must not wait to be tapped past them.
 const leadingUntimed = (steps: readonly NormalizedStep[]): Set<number> => {
   const first = steps.findIndex((s) => s.atS !== null);
   return new Set(Array.from({ length: first === -1 ? 0 : first }, (_, i) => i));
@@ -22,9 +22,9 @@ const leadingUntimed = (steps: readonly NormalizedStep[]): Set<number> => {
 
 // A 250 ms clock over the pure `timerState`, owning time-keeping ONLY — wake lock,
 // vibrate and unload guard stay with the consumer. The clock does NOT depend on
-// `steps` or `finishS`: a consumer calling normalize() in a component body passes a
-// new array every render, and an effect listing it would restart every render. The
-// inputs live in a ref and the effect depends on `running` alone.
+// `steps` or `finishS`, because a consumer calling normalize() in a component body
+// passes a new array every render and an effect listing it would restart each
+// time. The inputs live in a ref and the effect depends on `running` alone.
 export function useBrewAlong(
   steps: NormalizedStep[],
   finishS: number | null,
@@ -58,8 +58,8 @@ export function useBrewAlong(
     if (startedAt.current === null) startedAt.current = performance.now();
     const anchor = startedAt.current;
     let live = true;
-    // Typed off `setTimeout` itself: this file compiles under configurations that
-    // disagree about what a timer handle is.
+    // Typed off `setTimeout` itself, because this file compiles under
+    // configurations that disagree about what a timer handle is.
     let handle: ReturnType<typeof setTimeout> | null = null;
     const tick = () => {
       if (!live) return;
@@ -111,8 +111,8 @@ export function useBrewAlong(
     }
   }, []);
   const reset = useCallback(() => rewind(false), [rewind]);
-  // One identity for the life of the component: depending on `elapsed` would
-  // re-render every consumer holding it four times a second.
+  // One identity for the life of the component, because depending on `elapsed`
+  // would re-render every consumer holding it four times a second.
   const tapDone = useCallback(() => {
     const { steps: s, finishS: f, elapsed: e } = inputs.current;
     const st = timerState(s, f, e, acked.current!);

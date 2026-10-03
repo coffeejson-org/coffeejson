@@ -94,9 +94,9 @@ export function bareNumbers(schema) {
     // An applicator names no member of its own, so the path does not deepen.
     for (const sub of subschemas(node)) walk(sub, path, inMeasurement);
   };
-  // A Measurement def is walked like any other, carrying the flag that spares
-  // its own magnitude members — never skipped, or a bare number beside `value`
-  // would be the one place this check does not look.
+  // A Measurement def is walked like any other, with the flag that exempts its
+  // own magnitude members — never skipped, or a bare number beside `value` would
+  // go unchecked.
   for (const [name, def] of Object.entries(schema.$defs ?? {}))
     walk(def, name, isMeasurement(def));
   walk(schema, "", false);

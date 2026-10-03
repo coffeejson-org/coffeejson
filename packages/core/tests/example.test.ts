@@ -8,8 +8,8 @@ import {
   normalize,
 } from "../src/index";
 
-// The README's end-to-end example, run. A sample nobody executes rots into a
-// sample that does not compile, and this is the one a first integration copies.
+// The README's end-to-end example, run. A sample nobody executes stops
+// compiling unnoticed, and this is the one a first integration copies.
 test("decode a share link and read a recipe", () => {
   const link = `https://coffeejson.org/r?d=${encodePayload({
     coffeejson: "1.0",

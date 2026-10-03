@@ -13,7 +13,6 @@ import { validateDocument } from "./validate";
 export const LABEL_VIEWER = "https://coffeejson.org/r/";
 /** Below this printed width a module is too fine for a phone camera on a bag. */
 export const MIN_MODULE_MM = 0.35;
-/** The blank margin a printed code keeps, in modules. */
 const QUIET = PRINT_QUIET;
 /** The strip under a code for its roast date. */
 const TEXT_MM = 5;
@@ -289,7 +288,7 @@ export function mountLabelPanel(
           void updateLabelPanel(root, getDoc());
         },
       );
-      // A number out of range is clamped, and the box says what the sheet
+      // A number out of range is clamped, and the box shows the value the sheet
       // uses. On `change`, not `input`, because rewriting a field on every
       // keystroke would replace what the reader is still typing.
       if (el.type === "number")

@@ -4,8 +4,8 @@
 export const FORMAT_VERSION = "1.1";
 
 /**
- * The major this build reads. Minors are forward-compatible by contract: a `1.7`
- * document is a `1.0` consumer's to read, mapping members and enum values it does
+ * The major this build reads. Minors are forward-compatible by contract, so a
+ * `1.0` consumer reads a `1.7` document, mapping members and enum values it does
  * not know to their fallbacks. A different major is a different format.
  */
 export const SUPPORTED_MAJOR = "1";

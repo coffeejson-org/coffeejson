@@ -91,7 +91,7 @@ export const EXAMPLES = [
   },
 ];
 
-/** The mistakes a generating model actually makes, worth stating as anti-examples. */
+/** Mistakes a generating model makes, stated as anti-examples. */
 export const PITFALLS = [
   {
     wrong: `"coffee": 15`,

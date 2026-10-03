@@ -101,7 +101,7 @@ test("an origin item shows its producers, their roles, and its altitude", () => 
 });
 
 test("documents carrying no beans contribute nothing", () => {
-  // Bean-less recipe documents come in two flavors and both must stay out of
+  // Bean-less recipe documents come in two kinds and both must stay out of
   // the bean lens: a creator's technique (Kasuya, Hoffmann — no bag at all) and
   // a roaster's own brew guide, which names a publisher but no coffee (April's
   // per-line base recipes, Sightglass's V60 guide). Derived from the corpus

@@ -11,8 +11,8 @@ import {
 } from "node:fs";
 import { basename, dirname, join, posix } from "node:path";
 import { fileURLToPath } from "node:url";
-// The one workspace import here, and no new dependency: `src/pages/recipes.ts`
-// imports the same package. Reimplementing the exporter would be worse — the
+// The only workspace import, and no new dependency, because
+// `src/pages/recipes.ts` imports the same package. Both use one exporter — the
 // corpus pages and `/r` must emit the same Recipe for the same document.
 import {
   beanJsonLd,
@@ -31,18 +31,18 @@ import {
   scopeToRecipe,
   vocabularyLabel,
 } from "@coffeejson/core";
-// The schema through the package, not a path into the repo: the same offline,
-// version-locked bytes any adopter gets.
+// The schema comes through the package, not a path into the repo, so these are
+// the offline, version-locked bytes any adopter gets.
 import runtimeSchema from "@coffeejson/core/schema" with { type: "json" };
 import authoringSchema from "@coffeejson/core/schema/authoring" with {
   type: "json",
 };
 import Ajv2020 from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
-// The page footers, shared with the hand-written pages so the license and
-// privacy wording has exactly one source across generated and authored HTML.
 import { guideMarkdown } from "../src/lib/agent-guide.mjs";
 import { originStrip } from "../src/lib/bean-figure.mjs";
+// The footers are shared with the hand-written pages, so the license and
+// privacy wording has one source across generated and authored HTML.
 import {
   CORRECTIONS,
   CRAWLERS_UNCHANGED,
@@ -73,9 +73,9 @@ const ajv = new Ajv2020({ allErrors: true });
 addFormats(ajv);
 const validate = ajv.compile(runtimeSchema);
 
-// Through `@coffeejson/core`, never a table kept here: a local unit table is a
-// copy of a vocabulary the schema defines, and one without `milliliter` renders
-// a volume-water recipe with no Water row. A quantity is a point OR a range, and
+// Through `@coffeejson/core`, never a table kept here. A local unit table copies
+// a vocabulary the schema defines, and one without `milliliter` renders a
+// volume-water recipe with no Water row. A quantity is a point OR a range, and
 // a point-only reader prints every roaster's dial-in window as "undefined g".
 const fmt = fmtMeasurement;
 // `methodLabel` returns "" for an absent method and "Other" for one this build
@@ -85,16 +85,16 @@ const method = (m) => methodLabel(m) || "Other";
 
 export const SITE_URL = "https://coffeejson.org";
 
-// The TRAILING-SLASH form: Pages 301s bare `/r`, and a printed QR should not
-// depend on a redirect that costs a round trip and can drop the payload. Inbound
-// `/r?d=` still works, because the parser reads `location.search` only. A host
-// detail: the spec's transport form stays `https://<host>/r?d=`.
+// The TRAILING-SLASH form, because Pages 301s bare `/r`, and a printed QR should
+// not depend on a redirect that costs a round trip and can drop the payload.
+// Inbound `/r?d=` still works, because the parser reads `location.search` only.
+// This is a host detail, and the spec's transport form stays `https://<host>/r?d=`.
 export const SHARE_PATH = "/r/?d=";
 /** The corpus document the landing page plays back. */
 export const HERO_SLUG = "tetsu-kasuya-4-6-basic";
 
 // A payload this long makes a dense QR, which a phone camera reads slowly or not
-// at all. A warning, never a truncation: a shortened document is a wrong one.
+// at all. It warns and never truncates, because a shortened document is a wrong one.
 const warnDense = (subject, urlLength) => {
   if (urlLength > 2500)
     console.warn(
@@ -102,10 +102,10 @@ const warnDense = (subject, urlLength) => {
     );
 };
 
-// ONE source of truth for the sitemap and the robots test: a page advertised in
-// the sitemap while robots.txt blocks it is what a prefix `Disallow` causes, one
-// line shadowing a whole collection. Paths carry the trailing slash Pages serves,
-// and the canonical tags use exactly these URLs.
+// The ONE source for the sitemap and the robots test. One prefix `Disallow`
+// blocks a whole collection, and the test catches a page the sitemap advertises
+// while robots.txt blocks it. Paths carry the trailing slash Pages serves, and
+// the canonical tags use exactly these URLs.
 export const INDEXABLE_PATHS = [
   "/",
   "/validator/",
@@ -279,8 +279,8 @@ export function buildSitemap(urls = indexableUrls(), lastmods = new Map()) {
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${body}\n</urlset>\n`;
 }
 
-// The machine-readable front door, per llmstxt.org: an H1, a blockquote summary,
-// then link sections. Both files are DERIVED — llms.txt from the doc registry
+// The llmstxt.org format: an H1, a blockquote summary, then link sections. Both
+// files are DERIVED — llms.txt from the doc registry
 // below, llms-full.txt from the markdown on disk — because a hand-maintained copy
 // of a spec goes stale silently.
 
@@ -525,15 +525,15 @@ export function buildLlmsTxt() {
   ].join("\n");
 }
 
-// `/agents.md`, per the convention the name carries: not a teaching document
-// about the format but a description of THIS SITE for an agent — what it serves,
-// what it can be asked for, and what it asks back. The emission guide is inlined
-// rather than linked, because emitting a valid document is the thing an agent
-// comes here to do, and a file it already fetched beats a second round trip.
+// `/agents.md` follows the convention its name carries. It does not teach the
+// format. It describes THIS SITE for an agent — what it serves, what it can be
+// asked for, and what it asks back. The emission guide is inlined rather than
+// linked, because emitting a valid document is what an agent comes here to do,
+// and a file it already fetched saves a second round trip.
 //
 // `llms.txt` stays the llmstxt.org link index rather than a mirror of this. The
 // two answer different questions — "what is published here" and "how do I act
-// here" — and collapsing them would cost the index without improving this.
+// here" — and merging them would lose the index without improving this file.
 export function buildAgentsMd(guide = guideMarkdown(SITE_URL)) {
   const doc = (title, path, description) =>
     `- **${title}** — \`GET ${path}\`. ${description}`;
@@ -628,7 +628,7 @@ export function buildAgentsMd(guide = guideMarkdown(SITE_URL)) {
     "- **Swift** — `coffeejson-swift`, at https://github.com/coffeejson-org/coffeejson-swift.",
     `- **In a browser** — ${SITE_URL}/validator/ checks a pasted document entirely client-side, and ${SITE_URL}/generate/ builds one from a form.`,
     "",
-    // The wrapper owns the document's structure, so the heading over the guide
+    // The wrapper sets the document's structure, so the heading over the guide
     // is here rather than in `GUIDE` — the page has an `<h1>` saying it already.
     "## Emitting a document",
     "",
@@ -666,7 +666,7 @@ export function buildLlmsFullTxt(
 }
 
 // The corpus, read once in catalog order and validated. Both projections below
-// — the recipe index and the bean index — walk this same list, so the two views
+// — the recipe index and the bean index — read this same list, so the two views
 // of /recipes can never disagree about which documents exist or what they say.
 function readCorpus() {
   const dir = join(repo, "recipes");
@@ -697,14 +697,14 @@ function readCorpus() {
 }
 
 export function buildIndex(corpus = readCorpus()) {
-  // ONE CARD PER RECIPE, not per document: a roaster's product page routinely
+  // ONE CARD PER RECIPE, not per document. A roaster's product page routinely
   // publishes one bag with three brew methods, and every field below except the
   // payload is a property of the recipe. Reading `recipes[0]` drops the rest
   // silently, and /r would render three where the directory advertised one.
   return corpus.flatMap(({ entry, doc }) => {
     const recipes = doc.recipes ?? [];
-    // A product page publishing a bag and no method is a complete transcription:
-    // no recipe card, surfacing through the bean lens, and still owing an
+    // A product page publishing a bag and no method is a complete transcription.
+    // It gets no recipe card, appears in the bean index, and still owes an
     // attribution pair — asserted on the bean, which has no `author`/`based_on`.
     const beans = doc.beans ?? [];
     if (recipes.length === 0) {
@@ -727,11 +727,11 @@ export function buildIndex(corpus = readCorpus()) {
       return [];
     }
     const payload = encodePayload(doc);
-    // Measured on the WHOLE document: scoping shrinks a card, not a publication,
-    // and this warning is about what the publication costs to carry.
+    // Measured on the WHOLE document, because scoping shrinks a card, not a
+    // publication, and this warning is about the publication's size.
     warnDense(entry.slug, `${SITE_URL}${SHARE_PATH}`.length + payload.length);
 
-    // Index-aligned with `recipes`: every corpus document validated above, so
+    // Index-aligned with `recipes`. Every corpus document validated above, so
     // every element is an object and `normalize` drops none of them.
     const projected = normalize(doc).recipes;
     if (projected.length !== recipes.length)
@@ -743,7 +743,7 @@ export function buildIndex(corpus = readCorpus()) {
       const n = projected[i];
       // Attribution lives in the documents; the catalog holds only what they cannot.
       // Every corpus recipe is a transcription, so both are required of EVERY recipe
-      // in the document, not merely the first one anybody looked at.
+      // in the document, not only the first.
       if (!r.author?.name)
         die(
           `${entry.slug}.json recipe ${i} carries no author — corpus recipes are transcriptions and must credit one`,
@@ -777,7 +777,7 @@ export function buildIndex(corpus = readCorpus()) {
         curve: pourSeries(n),
         ratioValue: n.ratio,
         // The two weights as numbers, for a glyph drawn to scale. Only where the
-        // recipe states a single dose: a window names no one weight. The brew is
+        // recipe states a single dose, since a window names no one weight. The brew is
         // the stated water or yield, or what the stated ratio makes of the dose.
         dose: n.coffee?.value ?? null,
         brewAmount:
@@ -790,7 +790,7 @@ export function buildIndex(corpus = readCorpus()) {
           source_label: entry.attribution.source_label,
           transcribed: entry.attribution.transcribed,
         },
-        // THIS CARD'S OWN DOCUMENT, not the publication it came from: handing over
+        // THIS CARD'S OWN DOCUMENT, not the publication it came from. Handing over
         // the whole gives a reader recipes they did not ask for. For a single-recipe
         // document the projection is the identity.
         payload: encodePayload(scopeToRecipe(doc, i)),
@@ -799,9 +799,9 @@ export function buildIndex(corpus = readCorpus()) {
   });
 }
 
-// The bean lens: the same corpus, projected by bag instead of by brew. Every card
-// is derived from beans the transcriptions already carry, at build time, so the
-// page stays a dumb renderer and the projection deterministic.
+// The bean index is the same corpus projected by bag instead of by brew. Every
+// card is derived at build time from beans the transcriptions already carry, so
+// the page only renders and the projection is deterministic.
 
 // A bean page is addressed by the bag, not by the document that transcribes it.
 // The slug is `<roaster>-<bean>`, and the roaster half is a TABLE because no rule
@@ -872,12 +872,12 @@ export function beanPageSlug(roasterName, beanName, docSlugs = []) {
 
 export const beanPagePath = (slug) => `/beans/${slug}/`;
 
-// A page never spells a token, it reads a label. The tables live in the package,
+// A page prints a label, never a token. The tables live in the package,
 // held equal to the schema there, so this file cannot drift from what a card shows.
 const label = (table, token) => vocabularyLabel(table, token);
 // Through `normalize`, so a static page and a `BeanCard` render one bag from one
-// projection. `normalize` reads a document's collections, so the bean travels in
-// one; nothing else in the envelope reaches it.
+// projection. `normalize` reads a document's collections, so the bean is passed
+// in one; nothing else in the envelope reaches it.
 const projectBean = (b) => normalize({ beans: [b] }).beans[0] ?? null;
 
 // What a card renders of a credited party. `role` and `type` are the
@@ -885,7 +885,7 @@ const projectBean = (b) => normalize({ beans: [b] }).beans[0] ?? null;
 const partyEntry = (p) => ({ name: p.name, ...(p.url ? { url: p.url } : {}) });
 
 // Items join with " + " (a blend reads as a sum) while the facts inside an item
-// join with " · ", so the two levels stay tellable apart.
+// join with " · ", so the two levels stay distinguishable.
 const originsOf = (nb) =>
   (nb?.originItems ?? [])
     .map((it) => originLine(it, defaultLabels))
@@ -932,7 +932,7 @@ export function buildBeansIndex(corpus = readCorpus()) {
         coffeejson: doc.coffeejson,
         transcribed: entry.attribution?.transcribed ?? "",
       });
-      // The UNION of the documents that describe the bag: an extracted bean has no
+      // The UNION of the documents that describe the bag. An extracted bean has no
       // `author`/`based_on` of its own, so without this a bean page credits nobody
       // while its own recipe pages credit their sources.
       slot(keyOf(bean)).documents.push({
@@ -944,9 +944,9 @@ export function buildBeansIndex(corpus = readCorpus()) {
     }
 
     for (const r of doc.recipes ?? []) {
-      // An unresolved `bean_ref` leaves the recipe unlinked — the spec's rule, and
-      // the honest one: guessing puts a recipe under a card its source never
-      // associated it with. With no `bean_ref` the association is implicit.
+      // An unresolved `bean_ref` leaves the recipe unlinked — the spec's rule.
+      // Guessing puts a recipe under a card its source never associated it with.
+      // With no `bean_ref` the association is implicit.
       const targets =
         r.bean_ref !== undefined
           ? beans.filter((b) => b.id === r.bean_ref)
@@ -960,8 +960,9 @@ export function buildBeansIndex(corpus = readCorpus()) {
     }
   });
 
-  // ONE winning instance, never merged across documents: merging synthesizes a bag
-  // no single source described. Richest first, then newest, then catalog order.
+  // ONE winning instance, never merged across documents, because merging
+  // synthesizes a bag no single source described. Richest first, then newest,
+  // then catalog order.
   return [...byKey.values()].map(({ key, instances, recipes, documents }) => {
     const [{ bean: b, coffeejson }] = [...instances].sort(
       (x, y) =>
@@ -984,7 +985,7 @@ export function buildBeansIndex(corpus = readCorpus()) {
       roaster: partyEntry(nb.roaster),
       ...(nb.url ? { url: nb.url } : {}),
       origin: originOf(nb),
-      // The same origin, one entry per component: a blend reads as a list.
+      // The same origin, one entry per component, so a blend renders as a list.
       origins: originsOf(nb),
       // And as shares, for the origin strip: what each component is called, and
       // how much of the bag it is where the source says.
@@ -1034,13 +1035,14 @@ export function buildDocuments(
   return out;
 }
 
-// ONE PAGE PER DOCUMENT, not per recipe: a page is what can be linked, cited and
+// ONE PAGE PER DOCUMENT, not per recipe. A page is what can be linked, cited and
 // canonicalized — what `?s=` resolves and Download hands over. Multi-recipe
 // documents render recipes as anchored sections. Rendered STATIC, not hydrated by
-// /r: the document is known at build time, and a crawler should not need JS.
-// Every generated page's <head>: only the title, description, canonical and the
-// JSON-LD differ, and a second copy is where an og: tag goes missing on one of
-// the two page kinds.
+// /r, because the document is known at build time and a crawler should not need JS.
+//
+// One <head> for every generated page. Only the title, description, canonical
+// and JSON-LD differ, and a second copy is where an og: tag goes missing on one
+// of the two page kinds.
 const pageHead = ({ title, description, url, ld }) => `<head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -1076,7 +1078,7 @@ export const corpusPageSlugs = (index = buildIndex()) => [
 ];
 export const corpusPageUrls = (index = buildIndex()) =>
   corpusPageSlugs(index).map((s) => `${SITE_URL}${corpusPagePath(s)}`);
-/** Everything the sitemap advertises: the hand-written pages plus every corpus page. */
+/** What the sitemap advertises: the hand-written pages plus every corpus and bean page. */
 export const allIndexableUrls = (
   index = buildIndex(),
   beans = buildBeansIndex(),
@@ -1092,8 +1094,8 @@ const factsListOf = (n) => {
       : n.water
         ? ` → ${fmt(n.water)}`
         : "");
-  // Gated on the LABEL, not the token: the grind scale has no `other` to fall
-  // back to, so an unrecognized token labels as nothing and must print nothing.
+  // Gated on the LABEL, not the token, because the grind scale has no `other` to
+  // fall back to. An unrecognized token has no label and must print nothing.
   const grindSize = label(defaultLabels.grindSizes, n.grind?.size);
   return [
     out,
@@ -1128,7 +1130,7 @@ const stepsHtml = (n) =>
         })
         .join("")}</ol>`;
 
-// The drawing a recipe earns: its pour curve where it states one, its dose
+// The drawing a recipe gets: its pour curve where it states one, its dose
 // against its water where it does not. A recipe stating neither has none.
 const curveOf = (n) => {
   const series = pourSeries(n);
@@ -1164,7 +1166,7 @@ const beanHtml = (b) => {
 /**
  * Assemble a description from whole clauses, most-useful-first, dropping
  * trailing ones past what a result page shows (~155 chars). Never cuts
- * mid-word: an ellipsis reads as machine output.
+ * mid-word, because an ellipsis reads as machine output.
  */
 const clampClauses = (clauses, max = 155) => {
   let out = "";
@@ -1176,7 +1178,7 @@ const clampClauses = (clauses, max = 155) => {
   return out;
 };
 
-/** The page title and meta description a document earns. */
+/** The page title and meta description for a document. */
 export function corpusPageMeta(entry, doc) {
   const recipes = doc.recipes ?? [];
   const projected = normalize(doc).recipes;
@@ -1217,8 +1219,8 @@ export function buildCorpusPage(entry, doc) {
   const recipes = doc.recipes ?? [];
   const projected = normalize(doc).recipes;
   const multi = recipes.length > 1;
-  // The WHOLE publication: `encodePayload(doc)` and not a card's payload, which
-  // is a scoped projection and would share only the first recipe of a multi page.
+  // The WHOLE publication. A card's payload is a scoped projection and would
+  // share only the first recipe of a multi-recipe page.
   const payload = encodePayload(doc);
   const ld = recipes
     .map((_, i) =>
@@ -1318,10 +1320,10 @@ export function buildBeanPage(bean, index = []) {
   };
   const url = `${SITE_URL}${beanPagePath(bean.slug)}`;
   // Decoded from the card's own payload rather than carried beside it: the index
-  // ships to the browser, and a second copy of every bean would ride with it.
+  // ships to the browser, and a second copy of every bean would ship with it.
   const decoded = decodePayload(bean.payload);
-  // This build encoded that payload three lines of call stack ago, so a decode
-  // failure means the encoder broke — not that this bag is unusual. Failing open
+  // This build encoded that payload itself, so a decode failure means the
+  // encoder broke — not that this bag is unusual. Failing open
   // would ship every bean page with no structured data on a green build.
   if (!decoded.ok) {
     const { kind, detail } = decoded.error;
@@ -1425,8 +1427,8 @@ export const beanPageUrls = (beans = buildBeansIndex()) =>
   beanPageSlugs(beans).map((s) => `${SITE_URL}${beanPagePath(s)}`);
 
 export function buildBeanPages(beans = buildBeansIndex(), index = []) {
-  // Run at BUILD time rather than trusted: the gear registry's "curation catches
-  // them at registration" does not apply, because nobody registers a bag.
+  // Checked at BUILD time rather than trusted. The gear registry's "curation
+  // catches them at registration" does not apply, because nobody registers a bag.
   const seen = new Map();
   for (const b of beans) {
     if (!b.slug)
@@ -1453,7 +1455,7 @@ export function buildCorpusPages(
   corpus = readCorpus(),
   index = buildIndex(corpus),
 ) {
-  // A document with no card produced nothing to page: bean-only documents.
+  // A bean-only document has no card, so it gets no page.
   const carded = new Set(index.map((e) => e.slug));
   return corpus
     .filter(({ entry }) => carded.has(entry.slug))
@@ -1497,7 +1499,7 @@ if (isMain) {
         `${beans.reduce((n, b) => n + b.recipes.length, 0)} recipe links`,
     );
 
-    // Just the figures, as their own file: the landing page renders none of the
+    // The counts get their own file. The landing page renders none of the
     // corpus, and importing the two indexes for a `.length` costs it a third of a
     // megabyte that vite then modulepreloads. Derived so the numbers cannot
     // disagree with the pages they link to.
@@ -1588,9 +1590,9 @@ if (isMain) {
       "gen: schema → public/schema/1.0 + /schema/authoring/1.0 (+ aliases)",
     );
 
-    // Every schema must resolve at the address it claims: a `$id` beneath a path
-    // that is itself a file can never exist, and one that 404s invites a consumer
-    // to fetch a URL that will never answer.
+    // Every schema must resolve at the address it claims. A `$id` beneath a path
+    // that is itself a file can never exist, and one that 404s sends a consumer
+    // to a URL that never answers.
     for (const { $id: id } of [runtimeSchema, authoringSchema]) {
       if (!id?.startsWith(`${SITE_URL}/`))
         die(`$id ${id} is not on ${SITE_URL}`);
@@ -1600,7 +1602,7 @@ if (isMain) {
     }
     console.log("gen: verified both schemas resolve at their $id");
 
-    // REPLACED, not written over: a slug that stops existing leaves a directory
+    // REPLACED, not written over. A slug that stops existing leaves a directory
     // vite discovers as an MPA input, publishing a page for a document the corpus
     // no longer has. Only directories go; each hand-written hub is tracked.
     const sweepGenerated = (dir) => {
@@ -1694,8 +1696,8 @@ if (isMain) {
     );
 
     // `/agents.md` — the same guide `/agents/` renders, for an agent that fetches
-    // rather than renders. Derived for the reason above: two hand-kept copies of
-    // one guide diverge, and the copy that drifts is the one nobody looks at.
+    // rather than renders. Derived for the same reason: two hand-kept copies of
+    // one guide diverge.
     writeFileSync(join(site, "public/agents.md"), buildAgentsMd());
     console.log("gen: agents.md → public/agents.md");
 

@@ -7,7 +7,7 @@ import { esc } from "./text.mjs";
 export const shareUrlFor = (doc: unknown): string =>
   `${location.origin}/r/?d=${encodePayload(doc)}`;
 
-/** What the document is called, read the one way a decoded document may be read. */
+/** The document's title, read through `normalize` as a decoded document must be. */
 const docTitle = (doc: DecodedDocument): string | null => {
   const n = normalize(doc);
   return n.recipes[0]?.title ?? n.beans[0]?.name ?? null;
