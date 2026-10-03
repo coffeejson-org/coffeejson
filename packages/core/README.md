@@ -162,6 +162,70 @@ them. Each set's fallback, which the tokens do not carry:
 and asserts every array equals the schema's `enum` exactly, order included, so a
 transcription slip fails the build instead of degrading into "unknown" silently.
 
+## The `<coffee-json>` element
+
+A page that is not a React app can show a document with one tag. The element
+is framework-free, renders the same facts as the
+[`@coffeejson/react`](https://www.npmjs.com/package/@coffeejson/react) cards,
+and ships in this package.
+
+```html
+<script type="module" src="https://cdn.jsdelivr.net/npm/@coffeejson/core@VERSION/dist/element/auto.js"></script>
+
+<coffee-json src="/coffees/nano-challa.json">
+  <a href="/coffees/nano-challa.json">Nano Challa, as CoffeeJSON</a>
+</coffee-json>
+```
+
+Replace `VERSION` with the release you tested, and keep it pinned, because the
+script runs on your page. With a bundler, import it instead:
+
+```ts
+import "@coffeejson/core/element/auto"; // registers <coffee-json>
+// or register it yourself, under any name:
+import { defineCoffeeJson } from "@coffeejson/core/element";
+defineCoffeeJson("brew-card");
+```
+
+Both entries need a browser, because they extend `HTMLElement` when they load. In a
+framework that also renders on a server, import them from code that runs
+only in the browser.
+
+**The children are the fallback.** They show until a document renders, and
+they stay if the script never loads or the document does not decode, so a page
+with JavaScript off keeps a working link.
+
+| Attribute | What it does |
+| --- | --- |
+| `src` | A URL that serves the document. Fetched, then checked like any decoded document. |
+| `d` | A payload, the same string a share link carries after `?d=`. Wins over `src`. Padding is accepted, so a template filter that emits padded URL-safe Base64 produces a valid value. |
+| `units` | `metric`, `imperial` or `as-authored` (the default). |
+| `lang` | A BCP-47 tag for the digits, for example `de` for a decimal comma. |
+| `viewer` | A viewer's URL, absolute or a path on your site, `http` or `https` only. Adds an "Open" link to it with the payload as `?d=`. Without it there is no such link, because the package picks no host for you. |
+| `jsonld` | When present, the element adds the document's schema.org JSON-LD to the page's `<head>`, and removes it when the element goes. When absent, it adds nothing, because your page may already describe the same product. |
+
+When a document cannot be shown, the element sets `data-error` to the
+failure's name and fires `coffeejson-error` with it as `detail.kind`. The
+names are the ones `DECODE_ERROR_KINDS` lists, plus `fetch_failed`
+for a `src` that could not be fetched. A document that decodes and holds no
+bean or recipe the element can draw fails as `empty_document`.
+`coffeejson-load` fires when a document renders, and `element.document` holds
+it. Both events bubble and cross shadow boundaries, so one listener on
+`document` receives the events of every tag on the page.
+
+**Styling.** The element draws the card in a shadow root, so your page's CSS does not
+apply inside it. Theme it with the custom properties `--cj-accent`,
+`--cj-fg`, `--cj-muted`, `--cj-bg`, `--cj-border`, `--cj-radius`, `--cj-space`
+and `--cj-font`, set on the element. Style a single part with `::part()`. Every
+class name the React cards use is a part, for example
+`coffee-json::part(cj-title)` or `coffee-json::part(cj-bean-card)`. A link
+inside a card is `cj-link`, the Download button is `cj-download`, and the
+viewer link is `cj-open`.
+
+**A document is untrusted input.** Every value reaches the page as text, never
+as markup, and a URL becomes a link only when it is `http`, `https` or
+`mailto`.
+
 ## schema.org JSON-LD export
 
 A page that renders a CoffeeJSON recipe can also expose it to search engines
@@ -175,6 +239,10 @@ import { recipeJsonLd } from "@coffeejson/core";
 const ld = recipeJsonLd(doc, 0, { url: "https://example.com/recipes/sunday-v60" });
 // null when the input is unexportable (no recipe at that index, or no usable title)
 ```
+
+`documentJsonLd(doc, { url })` applies both to a whole document, by the rule
+a page wants: every recipe as a `Recipe` node, or, when the document has no
+recipe, every bean as a `Product` node.
 
 The caller serializes and embeds the result:
 

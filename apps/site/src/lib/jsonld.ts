@@ -1,27 +1,13 @@
 import type { DecodedDocument } from "@coffeejson/core";
-import { beanJsonLd, recipeJsonLd } from "@coffeejson/core";
+import { documentJsonLd } from "@coffeejson/core";
 
 /**
- * A document's JSON-LD: every exportable recipe as schema.org Recipe, and — only
- * when the document carries no recipe — every exportable bean as Product. A bean
- * beside a recipe is already inside the Recipe node's ingredient line and has its
- * own page under /beans/; a bean on its own (a roaster's bag, scanned) is the
- * page's whole subject.
+ * A document's JSON-LD for one page. The rule — recipes, or the beans when
+ * there is no recipe — is the package's `documentJsonLd`; this is its call
+ * site, with the page's URL where there is one.
  */
 export function docJsonLd(doc: DecodedDocument, url?: string): unknown[] {
-  const options = url ? { url } : undefined;
-  const recipes = (doc.recipes ?? [])
-    .map((_, i) => recipeJsonLd(doc, i, options))
-    .filter((x): x is Record<string, unknown> => x !== null);
-  // Presence, not exportability: an untitled recipe is still what the page is
-  // about, and a Product node beside it would describe the wrong subject.
-  if ((doc.recipes ?? []).length) return recipes;
-  // One page, one subject. Several bags on a page means no single bag owns its
-  // URL, so each keeps only its own `sameAs`.
-  const beanOptions = (doc.beans ?? []).length === 1 ? options : undefined;
-  return (doc.beans ?? [])
-    .map((_, i) => beanJsonLd(doc, i, beanOptions))
-    .filter((x): x is Record<string, unknown> => x !== null);
+  return documentJsonLd(doc, url ? { url } : undefined);
 }
 
 /** Serialize for a <script> body: `<` escaped so no string member can close the tag. */

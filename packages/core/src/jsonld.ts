@@ -323,3 +323,29 @@ function restDaysNode(v: unknown): Record<string, unknown> | null {
   node["unitText"] = "day";
   return node;
 }
+
+/**
+ * A whole document's JSON-LD, for one page: every exportable recipe as a
+ * `Recipe` node, and — only when the document carries no recipe — every
+ * exportable bean as a `Product` node. A bean beside a recipe is already inside
+ * the recipe's ingredient line; a bean on its own is the page's whole subject.
+ * `url` is the page's canonical URL. Several beans share no one URL, so each
+ * then keeps only its own `sameAs`.
+ */
+export function documentJsonLd(
+  doc: unknown,
+  options?: { url?: string },
+): Record<string, unknown>[] {
+  const recipes = isObj(doc) ? arr(doc["recipes"]) : [];
+  const beans = isObj(doc) ? arr(doc["beans"]) : [];
+  const keep = (
+    x: Record<string, unknown> | null,
+  ): x is Record<string, unknown> => x !== null;
+  // The test is presence, not exportability. An untitled recipe is still what
+  // the page is about, and a Product node beside it would describe the wrong
+  // subject.
+  if (recipes.length)
+    return recipes.map((_, i) => recipeJsonLd(doc, i, options)).filter(keep);
+  const beanOptions = beans.length === 1 ? options : undefined;
+  return beans.map((_, i) => beanJsonLd(doc, i, beanOptions)).filter(keep);
+}

@@ -32,7 +32,7 @@ export {
   vocabularyLabel,
 } from "./format.js";
 export { GEAR_LABELS, gearLabelsFor } from "./gear-labels.js";
-export { beanJsonLd, recipeJsonLd } from "./jsonld.js";
+export { beanJsonLd, documentJsonLd, recipeJsonLd } from "./jsonld.js";
 export type { LabelSet, PartialLabels } from "./labels.js";
 export { defaultLabels, mergeLabels } from "./labels.js";
 export type {

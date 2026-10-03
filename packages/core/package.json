@@ -4,7 +4,9 @@
   "license": "Apache-2.0",
   "description": "Framework-free TypeScript SDK for CoffeeJSON: wire types, payload codec, tolerant normalize, formatters.",
   "type": "module",
-  "sideEffects": false,
+  "sideEffects": [
+    "./dist/element/auto.js"
+  ],
   "keywords": [
     "coffee",
     "coffeejson",
@@ -33,6 +35,16 @@
       "import": "./dist/index.js",
       "default": "./dist/index.js"
     },
+    "./element": {
+      "types": "./dist/element/coffee-json.d.ts",
+      "import": "./dist/element/coffee-json.js",
+      "default": "./dist/element/coffee-json.js"
+    },
+    "./element/auto": {
+      "types": "./dist/element/auto.d.ts",
+      "import": "./dist/element/auto.js",
+      "default": "./dist/element/auto.js"
+    },
     "./schema": "./schema/coffeejson-1.0.schema.json",
     "./schema/authoring": "./schema/coffeejson-1.0.authoring.schema.json"
   },
@@ -45,14 +57,15 @@
     "access": "public"
   },
   "scripts": {
-    "build": "rm -rf dist schema && node tools/sync-schema.mjs && tsc -p tsconfig.build.json",
+    "build": "rm -rf dist schema && node tools/sync-schema.mjs && tsc -p tsconfig.build.json && tsc -p tsconfig.element.build.json",
     "prepack": "pnpm run build",
-    "typecheck": "tsc --noEmit && tsc -p tsconfig.build.json --noEmit",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.build.json --noEmit && tsc -p tsconfig.element.json --noEmit && tsc -p tsconfig.element.build.json --noEmit",
     "pretest": "node tools/sync-schema.mjs",
     "test": "pnpm run typecheck && vitest run"
   },
   "devDependencies": {
     "@types/node": "^26.2.0",
+    "jsdom": "^30.0.1",
     "typescript": "^7.0.2",
     "vitest": "^4.1.11"
   }

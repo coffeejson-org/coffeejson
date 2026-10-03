@@ -3,6 +3,24 @@
 Changes to `@coffeejson/core`. Changes to the format itself are in the
 [root changelog](https://github.com/coffeejson-org/coffeejson/blob/main/CHANGELOG.md).
 
+## [Unreleased]
+
+### Added
+
+- **`<coffee-json>`, a framework-free element**, at `@coffeejson/core/element`.
+  It renders a document's beans and recipes as cards with the same facts and
+  wording as the `@coffeejson/react` cards. The document comes from `src`, a
+  URL that serves one, or `d`, a share-link payload. The element's children
+  are its fallback and stay when no document renders. `units`, `lang`,
+  `viewer` and `jsonld` are its other attributes. Its `coffeejson-load` and
+  `coffeejson-error` events bubble, and every class name is a `::part()`.
+  `@coffeejson/core/element/auto` registers it on import, and
+  `defineCoffeeJson(tag?)` registers it under a name you choose. The package's
+  main entry still imports nothing that needs a DOM.
+- `documentJsonLd(doc, options?)` exports a whole document's JSON-LD: every
+  recipe as a `Recipe` node, or, when the document has no recipe, every bean
+  as a `Product` node.
+
 ## [1.1.0] — 2026-09-11
 
 ### Added

@@ -1,8 +1,8 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { expect, test } from "vitest";
-import { beanJsonLd, recipeJsonLd } from "../src/jsonld";
+import { describe, expect, test } from "vitest";
+import { beanJsonLd, documentJsonLd, recipeJsonLd } from "../src/jsonld";
 import type { CoffeeJSONDocument } from "../src/types";
 
 // The documented full example (design sample): every mapped field at once.
@@ -829,4 +829,55 @@ test("every corpus bean exports a Product carrying its roaster and its listing",
       if (b.url) expect(ld["sameAs"], file).toBe(b.url);
     });
   }
+});
+
+describe("documentJsonLd — one page's worth", () => {
+  const recipeOnly = { coffeejson: "1.1", recipes: FULL.recipes };
+  const bag = (n: number) => ({
+    coffeejson: "1.1",
+    beans: Array.from({ length: n }, (_, i) => ({
+      name: `Coffee ${i + 1}`,
+      roaster: { name: "Example Roastery" },
+    })),
+  });
+
+  test("a document with recipes exports its recipes and no bean", () => {
+    const nodes = documentJsonLd(FULL, { url: "https://example.com/p" });
+    expect(nodes.map((n) => n["@type"])).toEqual(
+      (FULL.recipes ?? []).map(() => "Recipe"),
+    );
+    expect(nodes[0]!["url"]).toBe("https://example.com/p");
+    expect(documentJsonLd(recipeOnly)).toHaveLength(recipeOnly.recipes!.length);
+  });
+
+  test("a bag on its own exports as a Product that owns the page's URL", () => {
+    const [node, ...rest] = documentJsonLd(bag(1), {
+      url: "https://example.com/p",
+    });
+    expect(rest).toEqual([]);
+    expect(node!["@type"]).toBe("Product");
+    expect(node!["url"]).toBe("https://example.com/p");
+  });
+
+  test("several bags share no one URL, so none claims the page's", () => {
+    const nodes = documentJsonLd(bag(2), { url: "https://example.com/p" });
+    expect(nodes).toHaveLength(2);
+    for (const n of nodes) expect("url" in n).toBe(false);
+  });
+
+  test("a recipe that cannot export still keeps the beans out", () => {
+    // An untitled recipe is what the page is about; a Product beside it would
+    // describe the wrong subject.
+    const doc = {
+      ...bag(1),
+      recipes: [{ coffee: { value: 15, unit: "gram" } }],
+    };
+    expect(documentJsonLd(doc)).toEqual([]);
+  });
+
+  test("anything that is not a document exports nothing", () => {
+    expect(documentJsonLd(null)).toEqual([]);
+    expect(documentJsonLd("x")).toEqual([]);
+    expect(documentJsonLd({ coffeejson: "1.1" })).toEqual([]);
+  });
 });
