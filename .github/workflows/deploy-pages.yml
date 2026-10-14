@@ -28,6 +28,10 @@ jobs:
           node-version: 26
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      # /embed/ loads the element from the npm CDN at core's version in this
+      # tree. Until npm serves that version the page would show only fallbacks,
+      # so the deploy stops here and Pages keeps the previous site.
+      - run: node apps/site/tools/check-element-published.mjs
       - run: pnpm --filter coffeejson-site... run build
       - uses: actions/upload-pages-artifact@v3
         with:
