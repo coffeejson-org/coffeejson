@@ -34,6 +34,22 @@ export async function qrCode(url: string, margin = 1): Promise<QrCode | null> {
   return null;
 }
 
+/**
+ * A link as a QR drawn at build time, for a page whose body is prerendered: one
+ * path in `currentColor`, so the code takes the page's text color. Level M,
+ * because a prerendered link is one the site chose. Throws when the link is too
+ * long for it, which fails the build rather than shipping a page without its code.
+ */
+export function inlineQrSvg(text: string, label: string): string {
+  const { modules } = QRCode.create(text, { errorCorrectionLevel: "M" });
+  const n = modules.size;
+  let d = "";
+  for (let y = 0; y < n; y++)
+    for (let x = 0; x < n; x++)
+      if (modules.data[y * n + x]) d += `M${x} ${y}h1v1h-1z`;
+  return `<svg class="qr" viewBox="-2 -2 ${n + 4} ${n + 4}" role="img" aria-label="${esc(label)}" shape-rendering="crispEdges"><path d="${d}"/></svg>`;
+}
+
 export const qrSvg = async (url: string): Promise<string | null> =>
   (await qrCode(url))?.svg ?? null;
 

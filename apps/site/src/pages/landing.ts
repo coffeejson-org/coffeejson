@@ -4,7 +4,6 @@ import {
   fmtMeasurement,
   normalize,
 } from "@coffeejson/core";
-import QRCode from "qrcode";
 import counts from "../generated/corpus-counts.json";
 import hero from "../generated/hero-document.json";
 import rawIndex from "../generated/recipes-index.json";
@@ -24,6 +23,7 @@ import {
   pourSeries,
   sparklineSvg,
 } from "../lib/pour-curve.mjs";
+import { inlineQrSvg } from "../lib/qr";
 import { SAMPLE_DOC, SAMPLE_TEXT } from "../lib/sample";
 import { siteHeader } from "../lib/site-header.mjs";
 import { esc } from "../lib/text.mjs";
@@ -76,19 +76,6 @@ function liveDocument(): string {
       <pre class="live-json" tabindex="0" aria-label="${esc(hero.slug)}.json"><code>${jsonLines(hero.text)}</code></pre>
     </div>
   </div>`;
-}
-
-// The sample document's share link as a QR, drawn at build time. This module
-// never reaches a browser, so the encoder does not either. Inline SVG in
-// `currentColor`, so the code takes the page's text color.
-function qrSvg(text: string, label: string): string {
-  const { modules } = QRCode.create(text, { errorCorrectionLevel: "M" });
-  const n = modules.size;
-  let d = "";
-  for (let y = 0; y < n; y++)
-    for (let x = 0; x < n; x++)
-      if (modules.data[y * n + x]) d += `M${x} ${y}h1v1h-1z`;
-  return `<svg class="qr" viewBox="-2 -2 ${n + 4} ${n + 4}" role="img" aria-label="${esc(label)}" shape-rendering="crispEdges"><path d="${d}"/></svg>`;
 }
 
 /** A measurement with its unit in a span, so the unit can be set smaller. */
@@ -177,7 +164,7 @@ export const landingBody = (): string => `
       </li>
       <li class="carrier--qr">
         <h3>On a bag</h3>
-        <figure class="qr-figure">${qrSvg(`https://coffeejson.org${tryUrl}`, "QR code — scan to open the document beside it")}</figure>
+        <figure class="qr-figure">${inlineQrSvg(`https://coffeejson.org${tryUrl}`, "QR code — scan to open the document beside it")}</figure>
         <p class="muted">The same document again, as a code to print. A whole recipe fits
         too: <a href="/demo/tetsu-kasuya-4-6.svg">Tetsu Kasuya’s 4:6</a>, every timed pour,
         inside one square.</p>
