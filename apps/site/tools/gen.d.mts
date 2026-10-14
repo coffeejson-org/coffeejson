@@ -121,3 +121,8 @@ export declare function rewriteDocLinks(
   markdown: string,
   docPath: string,
 ): string;
+
+/** Every corpus document whole, in catalog order, for `/embed/`'s picker. */
+export declare function buildEmbedDocuments(
+  corpus?: readonly CorpusDoc[],
+): { slug: string; payload: string }[];

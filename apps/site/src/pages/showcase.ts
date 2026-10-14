@@ -134,7 +134,8 @@ const SURFACES: { title: string; body: string; glyph: string }[] = [
     body: `Publish your method as data instead of a picture of a table. A reader can
       send it straight to their timer, and it exports to schema.org <code>Recipe</code>,
       so search engines read the actual steps. A bag exports the same way, as a
-      <code>Product</code> whose identity is the coffee's — never its price.`,
+      <code>Product</code> whose identity is the coffee's — never its price. And one
+      tag <a href="/embed/">shows the document as a card</a> on any page.`,
   },
   {
     title: "In files you keep",

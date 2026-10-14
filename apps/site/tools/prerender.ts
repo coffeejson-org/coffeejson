@@ -3,6 +3,7 @@ import { filtersFromSearch } from "../src/lib/filter";
 import { jsonLdJson } from "../src/lib/jsonld";
 import { recipesBody, recipesJsonLd } from "../src/lib/recipes-body";
 import { agentsBody } from "../src/pages/agents";
+import { embedBody } from "../src/pages/embed";
 import { implementationsBody } from "../src/pages/implementations";
 import { landingBody } from "../src/pages/landing";
 import { showcaseBody } from "../src/pages/showcase";
@@ -24,6 +25,7 @@ import { showcaseBody } from "../src/pages/showcase";
 export const PRERENDERED: Record<string, () => string> = {
   "index.html": landingBody,
   "showcase/index.html": showcaseBody,
+  "embed/index.html": embedBody,
   "implementations/index.html": implementationsBody,
   "agents/index.html": agentsBody,
   "beans/index.html": () => beansBody(),

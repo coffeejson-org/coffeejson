@@ -1,6 +1,7 @@
 import { readdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vite";
+import { elementScript } from "./tools/element-script";
 import { prerender } from "./tools/prerender";
 
 const page = (p: string) => fileURLToPath(new URL(p, import.meta.url));
@@ -23,7 +24,7 @@ const beanPages = Object.fromEntries(
 
 export default defineConfig({
   appType: "mpa",
-  plugins: [prerender()],
+  plugins: [prerender(), elementScript()],
   build: {
     rollupOptions: {
       input: {
@@ -35,6 +36,7 @@ export default defineConfig({
         agents: page("agents/index.html"),
         implementations: page("implementations/index.html"),
         showcase: page("showcase/index.html"),
+        embed: page("embed/index.html"),
         beans: page("beans/index.html"),
         ...corpusPages,
         ...beanPages,

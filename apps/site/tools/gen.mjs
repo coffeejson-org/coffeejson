@@ -116,6 +116,7 @@ export const INDEXABLE_PATHS = [
   "/implementations/",
   "/beans/",
   "/showcase/",
+  "/embed/",
 ];
 export const indexableUrls = () =>
   INDEXABLE_PATHS.map((p) => `${SITE_URL}${p}`);
@@ -179,6 +180,15 @@ export const PAGE_SOURCES = {
     "apps/site/showcase/index.html",
     "apps/site/src/pages/showcase.ts",
     "registries/implementations.json",
+  ],
+  "/embed/": [
+    "apps/site/embed/index.html",
+    "apps/site/src/pages/embed.ts",
+    "apps/site/src/lib/embed-client.ts",
+    "apps/site/src/lib/embed-snippet.ts",
+    "apps/site/src/lib/element-attributes.ts",
+    "packages/core/README.md",
+    "recipes",
   ],
 };
 
@@ -506,6 +516,11 @@ export function buildLlmsTxt() {
       "Showcase",
       `${SITE_URL}/showcase/`,
       "The five places a CoffeeJSON document goes — between two apps, on a bag of coffee as a QR code, inside a share link, on a web page as schema.org Recipe or Product, and as a plain file you keep — plus the software that reads and writes the format today",
+    ),
+    link(
+      "Embed",
+      `${SITE_URL}/embed/`,
+      "The <coffee-json> element: one script tag from the npm CDN and one element show a CoffeeJSON document as a card on any web page, with a copy-ready snippet for any corpus recipe or bag, and the element's attributes",
     ),
     "",
     "## Agent skills",
@@ -1035,6 +1050,15 @@ export function buildDocuments(
   return out;
 }
 
+/** Every corpus document whole, in catalog order, for `/embed/`'s picker. The
+ *  page labels them itself, from the same projection the snippet titles with. */
+export function buildEmbedDocuments(corpus = readCorpus()) {
+  return corpus.map(({ entry, doc }) => ({
+    slug: entry.slug,
+    payload: encodePayload(doc),
+  }));
+}
+
 // ONE PAGE PER DOCUMENT, not per recipe. A page is what can be linked, cited and
 // canonicalized — what `?s=` resolves and Download hands over. Multi-recipe
 // documents render recipes as anchored sections. Rendered STATIC, not hydrated by
@@ -1487,6 +1511,15 @@ if (isMain) {
     );
     console.log(
       `gen: documents-index.json — ${Object.keys(documents).length} publications a card does not already carry whole`,
+    );
+
+    const embedDocuments = buildEmbedDocuments();
+    writeFileSync(
+      join(site, "src/generated/embed-documents.json"),
+      JSON.stringify(embedDocuments, null, 2),
+    );
+    console.log(
+      `gen: embed-documents.json — ${embedDocuments.length} documents for the embed picker`,
     );
 
     const beans = buildBeansIndex();

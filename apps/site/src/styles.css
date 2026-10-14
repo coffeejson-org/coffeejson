@@ -2988,3 +2988,48 @@ main .cj-view {
     --dur-long: 1ms;
   }
 }
+
+/* /embed/ — the live card beside the picker and its snippet, stacked on a phone.
+   The card keeps the element's own look: it is what a host gets. */
+.embed-try {
+  display: grid;
+  gap: var(--space-lg);
+  margin: var(--space-xl) 0;
+}
+@media (min-width: 46rem) {
+  .embed-try {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+  }
+}
+.embed-code {
+  display: grid;
+  gap: var(--space-sm);
+  min-width: 0;
+}
+.embed-code pre {
+  max-height: 18rem;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.embed-steps {
+  margin: 0 0 var(--space-xs);
+  padding-left: 1.25rem;
+}
+.embed-steps li + li {
+  margin-top: var(--space-2xs);
+}
+.embed-check {
+  display: flex;
+  gap: var(--space-xs);
+  align-items: baseline;
+}
+.embed-error {
+  margin: 0;
+  color: var(--error);
+}
+.ledger coffee-json {
+  display: block;
+  margin-top: var(--space-md);
+}

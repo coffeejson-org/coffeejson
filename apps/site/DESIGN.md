@@ -162,12 +162,14 @@ page scale.
   mono with tabular figures. It has no bold; emphasis in mono is color.
 
 Both webfonts are self-hosted from dev dependencies, Latin subset, `font-display: swap`.
-The page fetches nothing from a third party.
+A page fetches nothing from a third party, with one exception: `/embed/` loads the
+`<coffee-json>` element from the npm CDN at the version it pins, because it
+demonstrates what a host gets.
 
 Sizes are fluid `clamp()` steps. `typography.h1-display` is the landing page's alone and
 runs from 2.9rem to 6rem, sized so the headline and the live document share the first
 screen; `typography.h1` is every other page's title. One lede per
-page, and only on a page that argues (`/`, `/showcase/`).
+page, and only on a page that argues (`/`, `/showcase/`, `/embed/`).
 
 ## Layout
 

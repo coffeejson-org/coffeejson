@@ -1,5 +1,6 @@
 import { expect, test } from "vitest";
 import { agentsBody } from "../src/pages/agents";
+import { embedBody } from "../src/pages/embed";
 import { implementationsBody } from "../src/pages/implementations";
 import { landingBody } from "../src/pages/landing";
 import { showcaseBody } from "../src/pages/showcase";
@@ -16,6 +17,7 @@ const pages: [string, () => string][] = [
   ["/implementations/", implementationsBody],
   ["/showcase/", showcaseBody],
   ["/agents/", agentsBody],
+  ["/embed/", embedBody],
 ];
 
 const served = new Set(SERVED_MD.map((p: string) => `/${p}`));

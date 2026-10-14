@@ -480,6 +480,9 @@ function Preview({ state }: { state: PreviewState }) {
         <a className="btn" href={`/r/?d=${encodePayload(doc)}`}>
           Open in the viewer
         </a>
+        <a className="btn btn--ghost" href={`/embed/?d=${encodePayload(doc)}`}>
+          Put it on a page
+        </a>
       </p>
       <SaveCtaBlock doc={doc} />
     </>
