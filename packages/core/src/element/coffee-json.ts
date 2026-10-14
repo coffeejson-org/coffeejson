@@ -28,7 +28,15 @@ type ElementError = DecodeError | { kind: "fetch_failed"; detail?: string };
  * and cross shadow boundaries, so one listener on the page serves every tag.
  */
 export class CoffeeJsonElement extends HTMLElement {
-  static observedAttributes = ["src", "d", "lang", "units", "viewer", "jsonld"];
+  static observedAttributes = [
+    "src",
+    "d",
+    "lang",
+    "units",
+    "viewer",
+    "viewer-label",
+    "jsonld",
+  ];
 
   #root: ShadowRoot;
   #doc: DecodedDocument | null = null;
@@ -204,7 +212,8 @@ export class CoffeeJsonElement extends HTMLElement {
           open.href = u.href;
           open.rel = "noopener";
           open.setAttribute("part", "cj-open");
-          open.textContent = "Open";
+          // The page supplies the words, so the package picks no language either.
+          open.textContent = this.getAttribute("viewer-label") || "Open";
           row.append(open);
         }
       } catch {

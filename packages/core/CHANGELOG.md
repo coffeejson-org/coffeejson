@@ -12,8 +12,9 @@ Changes to `@coffeejson/core`. Changes to the format itself are in the
   wording as the `@coffeejson/react` cards. The document comes from `src`, a
   URL that serves one, or `d`, a share-link payload. The element's children
   are its fallback and stay when no document renders. `units`, `lang`,
-  `viewer` and `jsonld` are its other attributes. Its `coffeejson-load` and
-  `coffeejson-error` events bubble, and every class name is a `::part()`.
+  `viewer`, `viewer-label` and `jsonld` are its other attributes. Its
+  `coffeejson-load` and `coffeejson-error` events bubble, and every class name
+  is a `::part()`.
   `@coffeejson/core/element/auto` registers it on import, and
   `defineCoffeeJson(tag?)` registers it under a name you choose. The package's
   main entry still imports nothing that needs a DOM.

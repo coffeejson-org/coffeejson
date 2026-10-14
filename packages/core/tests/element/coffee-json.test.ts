@@ -219,6 +219,44 @@ describe("attributes that redraw", () => {
     expect(el.shadowRoot!.querySelector(".cj-actions a")).toBeNull();
   });
 
+  test("`viewer-label` is the link's text, and the link says Open without it", async () => {
+    const el = await mount({
+      d: encodePayload(bag),
+      viewer: "https://coffeejson.org/r/",
+    });
+    const link = () =>
+      el.shadowRoot!.querySelector<HTMLAnchorElement>(".cj-actions a")!;
+    expect(link().textContent).toBe("Open");
+    el.setAttribute("viewer-label", "Open in the viewer");
+    expect(link().textContent).toBe("Open in the viewer");
+    expect(link().href).toBe(
+      `https://coffeejson.org/r/?d=${encodePayload(bag)}`,
+    );
+    el.setAttribute("viewer-label", "");
+    expect(link().textContent).toBe("Open");
+    el.removeAttribute("viewer-label");
+    expect(link().textContent).toBe("Open");
+  });
+
+  test("a `viewer-label` is text, never markup", async () => {
+    const el = await mount({
+      d: encodePayload(bag),
+      viewer: "https://coffeejson.org/r/",
+      "viewer-label": "<b>Open</b><img src=x onerror=alert(1)>",
+    });
+    const a = el.shadowRoot!.querySelector(".cj-actions a")!;
+    expect(a.textContent).toBe("<b>Open</b><img src=x onerror=alert(1)>");
+    expect(a.children.length).toBe(0);
+  });
+
+  test("a `viewer-label` without a `viewer` adds no link", async () => {
+    const el = await mount({
+      d: encodePayload(bag),
+      "viewer-label": "Open in the viewer",
+    });
+    expect(el.shadowRoot!.querySelector(".cj-actions a")).toBeNull();
+  });
+
   test("a `viewer` that does not parse adds no link and breaks nothing", async () => {
     const el = await mount({ d: encodePayload(bag), viewer: "https://" });
     expect(title(el)).toBe("Nano Challa");

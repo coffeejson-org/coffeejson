@@ -201,6 +201,7 @@ with JavaScript off keeps a working link.
 | `units` | `metric`, `imperial` or `as-authored` (the default). |
 | `lang` | A BCP-47 tag for the digits, for example `de` for a decimal comma. |
 | `viewer` | A viewer's URL, absolute or a path on your site, `http` or `https` only. Adds an "Open" link to it with the payload as `?d=`. Without it there is no such link, because the package picks no host for you. |
+| `viewer-label` | The text of that link, in your page's words and language. The default is "Open". The value is shown as text, never as markup. Without `viewer` it does nothing. |
 | `jsonld` | When present, the element adds the document's schema.org JSON-LD to the page's `<head>`, and removes it when the element goes. When absent, it adds nothing, because your page may already describe the same product. |
 
 When a document cannot be shown, the element sets `data-error` to the
