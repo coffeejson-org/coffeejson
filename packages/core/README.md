@@ -202,7 +202,19 @@ with JavaScript off keeps a working link.
 | `lang` | A BCP-47 tag for the digits, for example `de` for a decimal comma. |
 | `viewer` | A viewer's URL, absolute or a path on your site, `http` or `https` only. Adds an "Open" link to it with the payload as `?d=`. Without it there is no such link, because the package picks no host for you. |
 | `viewer-label` | The text of that link, in your page's words and language. The default is "Open". The value is shown as text, never as markup. Without `viewer` it does nothing. |
+| `labels` | Captions in your page's words, as JSON: a `PartialLabels` object, merged over the English defaults the way the React cards' `config.labels` is, so you name only what changes. `actions.download` is the Download button. A value that is not a JSON object keeps the defaults; the element still renders and reports nothing, because the document is fine. Every label is shown as text, never as markup. |
 | `jsonld` | When present, the element adds the document's schema.org JSON-LD to the page's `<head>`, and removes it when the element goes. When absent, it adds nothing, because your page may already describe the same product. |
+
+A page with script sets the same overrides as an object on the `labels`
+property, with no JSON to escape. The property, while it is not `null`, wins
+over the attribute. `viewer-label` is the Open link's text either way.
+
+```js
+document.querySelector("coffee-json").labels = {
+  facts: { coffee: "Kaffee", waterTemp: "Temperatur" },
+  actions: { download: "Herunterladen" },
+};
+```
 
 When a document cannot be shown, the element sets `data-error` to the
 failure's name and fires `coffeejson-error` with it as `detail.kind`. The

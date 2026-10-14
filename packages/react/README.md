@@ -106,7 +106,8 @@ changes. See `@coffeejson/core`'s `LabelSet` for the full shape (`facts`, the
 `brew` timer strings, `beanFallback`, `badge`, and one table per closed
 vocabulary: `methods`, `processes`, `stepKinds`, `roastLevels`, `grindSizes`,
 `filterMaterials`, `producerRoles`; plus `decodeErrors`, one sentence per decode
-reason, for a page that reports one).
+reason, for a page that reports one, and `actions`, the controls of core's
+`<coffee-json>` element, which these cards do not draw).
 
 ```tsx
 <RecipeCard recipe={recipe} config={{

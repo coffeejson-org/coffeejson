@@ -1,7 +1,8 @@
 import type { DecodedDocument, DecodeError, DecodeResult } from "../codec.js";
 import { decodeDocumentText, decodePayload, encodePayload } from "../codec.js";
 import { documentJsonLd } from "../jsonld.js";
-import { defaultLabels } from "../labels.js";
+import type { LabelSet, PartialLabels } from "../labels.js";
+import { mergeLabels } from "../labels.js";
 import { normalize } from "../normalize.js";
 import type { UnitSystem } from "../units.js";
 import { MEDIA_TYPE } from "../version.js";
@@ -35,12 +36,14 @@ export class CoffeeJsonElement extends HTMLElement {
     "units",
     "viewer",
     "viewer-label",
+    "labels",
     "jsonld",
   ];
 
   #root: ShadowRoot;
   #doc: DecodedDocument | null = null;
   #jsonLd: HTMLScriptElement | null = null;
+  #labels: PartialLabels | null = null;
   #run = 0;
   #connected = false;
   #abort: AbortController | null = null;
@@ -54,6 +57,20 @@ export class CoffeeJsonElement extends HTMLElement {
   /** The document on show, or `null` while the fallback is. */
   get document(): DecodedDocument | null {
     return this.#doc;
+  }
+
+  /**
+   * Label overrides for a page with script, merged over the English defaults
+   * the way the React cards' `config.labels` is. Set, it wins over the
+   * `labels` attribute; `null` makes the attribute apply again.
+   */
+  get labels(): PartialLabels | null {
+    return this.#labels;
+  }
+
+  set labels(overrides: PartialLabels | null) {
+    this.#labels = overrides;
+    if (this.#connected) this.#paint();
   }
 
   connectedCallback(): void {
@@ -143,11 +160,12 @@ export class CoffeeJsonElement extends HTMLElement {
     const d = this.ownerDocument;
     const doc = this.#doc;
     const units = this.getAttribute("units") as UnitSystem | null;
+    const labels = this.#resolveLabels();
     const view = doc
       ? renderView(
           normalize(doc),
           {
-            labels: defaultLabels,
+            labels,
             units: units && UNITS.includes(units) ? units : "as-authored",
             locale: this.getAttribute("lang") || "en",
           },
@@ -160,7 +178,7 @@ export class CoffeeJsonElement extends HTMLElement {
     }
     const style = d.createElement("style");
     style.textContent = ELEMENT_STYLES;
-    this.#root.replaceChildren(style, view, this.#actions(doc));
+    this.#root.replaceChildren(style, view, this.#actions(doc, labels));
     if (this.hasAttribute("jsonld")) {
       const nodes = documentJsonLd(doc);
       if (nodes.length) {
@@ -177,7 +195,25 @@ export class CoffeeJsonElement extends HTMLElement {
     return true;
   }
 
-  #actions(doc: DecodedDocument): HTMLElement {
+  // The page's script sets the property, so it wins over the markup.
+  // An attribute that is not a JSON object keeps the defaults and reports nothing:
+  // the document is on show, and `data-error` names why one is not.
+  #resolveLabels(): LabelSet {
+    let overrides = this.#labels;
+    const attr = this.getAttribute("labels");
+    if (overrides === null && attr !== null) {
+      try {
+        const parsed: unknown = JSON.parse(attr);
+        if (parsed && typeof parsed === "object" && !Array.isArray(parsed))
+          overrides = parsed as PartialLabels;
+      } catch {
+        // Not JSON.
+      }
+    }
+    return mergeLabels(overrides ?? undefined);
+  }
+
+  #actions(doc: DecodedDocument, labels: LabelSet): HTMLElement {
     const d = this.ownerDocument;
     const row = d.createElement("p");
     row.className = "cj-actions";
@@ -185,7 +221,7 @@ export class CoffeeJsonElement extends HTMLElement {
     const save = d.createElement("button");
     save.type = "button";
     save.setAttribute("part", "cj-download");
-    save.textContent = "Download";
+    save.textContent = labels.actions.download;
     save.addEventListener("click", () => {
       const a = d.createElement("a");
       const url = URL.createObjectURL(

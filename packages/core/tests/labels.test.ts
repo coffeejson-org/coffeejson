@@ -40,6 +40,15 @@ test("addition labels default to English and merge key-by-key", () => {
   expect(merged.additionKinds.other).toBe("Other"); // untouched default kept
 });
 
+test("the action labels default to English and merge key-by-key", () => {
+  expect(defaultLabels.actions).toEqual({ download: "Download" });
+  const merged = mergeLabels({ actions: { download: "Herunterladen" } });
+  expect(merged.actions.download).toBe("Herunterladen");
+  expect(mergeLabels({ facts: { dose: "Dosis" } }).actions.download).toBe(
+    "Download",
+  );
+});
+
 test("brew labels merge key-by-key over the defaults", () => {
   const merged = mergeLabels({
     brew: { pause: "Anhalten", reset: "Neu starten" },

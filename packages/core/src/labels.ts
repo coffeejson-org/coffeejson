@@ -88,6 +88,8 @@ export interface LabelSet {
   decodeErrors: Record<DecodeError["kind"], string>;
   beanFallback: string;
   badge: string;
+  /** The `<coffee-json>` element's own controls. The React cards draw none. */
+  actions: { download: string };
 }
 
 export const defaultLabels: LabelSet = {
@@ -237,6 +239,7 @@ export const defaultLabels: LabelSet = {
   },
   beanFallback: "Coffee",
   badge: "Recommended",
+  actions: { download: "Download" },
 };
 
 export interface PartialLabels {
@@ -257,6 +260,7 @@ export interface PartialLabels {
   decodeErrors?: Partial<LabelSet["decodeErrors"]>;
   beanFallback?: string;
   badge?: string;
+  actions?: Partial<LabelSet["actions"]>;
 }
 
 // Prototype-less for the reason `defaultLabels` is.
@@ -292,5 +296,6 @@ export function mergeLabels(overrides?: PartialLabels): LabelSet {
     decodeErrors: { ...defaultLabels.decodeErrors, ...overrides?.decodeErrors },
     beanFallback: overrides?.beanFallback ?? defaultLabels.beanFallback,
     badge: overrides?.badge ?? defaultLabels.badge,
+    actions: { ...defaultLabels.actions, ...overrides?.actions },
   };
 }

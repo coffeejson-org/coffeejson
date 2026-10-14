@@ -12,15 +12,25 @@ Changes to `@coffeejson/core`. Changes to the format itself are in the
   wording as the `@coffeejson/react` cards. The document comes from `src`, a
   URL that serves one, or `d`, a share-link payload. The element's children
   are its fallback and stay when no document renders. `units`, `lang`,
-  `viewer`, `viewer-label` and `jsonld` are its other attributes. Its
-  `coffeejson-load` and `coffeejson-error` events bubble, and every class name
-  is a `::part()`.
+  `viewer`, `viewer-label`, `labels` and `jsonld` are its other attributes.
+  `labels` carries a `PartialLabels` object as JSON, and the element's
+  `labels` property carries the same object for a page with script; both merge
+  over the English defaults through `mergeLabels`, and the property wins while
+  it is set. Its `coffeejson-load` and `coffeejson-error` events bubble, and
+  every class name is a `::part()`.
   `@coffeejson/core/element/auto` registers it on import, and
   `defineCoffeeJson(tag?)` registers it under a name you choose. The package's
   main entry still imports nothing that needs a DOM.
 - `documentJsonLd(doc, options?)` exports a whole document's JSON-LD: every
   recipe as a `Recipe` node, or, when the document has no recipe, every bean
   as a `Product` node.
+
+### Changed
+
+- `LabelSet` has `actions.download`, the text of the element's Download
+  button, and `PartialLabels` and `mergeLabels` take it. `defaultLabels`
+  carries "Download". A consumer that builds a whole `LabelSet` by hand adds
+  the key; one that goes through `mergeLabels` sees no change.
 
 ## [1.1.0] — 2026-09-11
 

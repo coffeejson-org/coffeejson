@@ -3,7 +3,8 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { defaultLabels, normalize } from "@coffeejson/core";
+import type { PartialLabels } from "@coffeejson/core";
+import { defaultLabels, mergeLabels, normalize } from "@coffeejson/core";
 import { ELEMENT_STYLES, renderView } from "@coffeejson/core/element";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, test } from "vitest";
@@ -55,6 +56,53 @@ describe("the element and the React cards say the same thing", () => {
     expect(element?.querySelectorAll("a").length ?? 0).toBe(
       react?.querySelectorAll("a").length ?? 0,
     );
+  });
+});
+
+describe("the same label overrides re-word both renderers alike", () => {
+  // One override in every table the cards read, so a caption that one renderer
+  // takes from the defaults while the other takes from the overrides shows up.
+  const overrides: PartialLabels = {
+    facts: { dose: "Dosis", water: "Wasser", process: "Aufbereitung" },
+    generatedBy: "Erzeugt von",
+    additionKinds: { ice: "Eis" },
+    filterMaterials: { paper: "Papier" },
+    methods: { pour_over: "Filterkaffee" },
+    processes: { washed: "Gewaschen" },
+    stepKinds: { bloom: "Blühen" },
+    roastLevels: { light: "Hell" },
+    grindSizes: { medium: "Mittel" },
+    producerRoles: { farm: "Hof" },
+    beanFallback: "Kaffee",
+    badge: "Empfohlen",
+  };
+
+  test.each(docs)("%s", (_, doc) => {
+    const host = document.createElement("div");
+    host.innerHTML = renderToStaticMarkup(
+      <CoffeeJSONView doc={doc} config={{ labels: overrides }} />,
+    );
+    const react = host.querySelector(".cj-view");
+    const element = renderView(
+      normalize(doc),
+      { labels: mergeLabels(overrides), units: "as-authored", locale: "en" },
+      document,
+    );
+    expect(facts(element)).toEqual(facts(react));
+    expect(words(element)).toBe(words(react));
+  });
+
+  test("the overrides reach the page: at least one caption differs from English", () => {
+    const changed = docs.filter(([, doc]) => {
+      const host = document.createElement("div");
+      host.innerHTML = renderToStaticMarkup(
+        <CoffeeJSONView doc={doc} config={{ labels: overrides }} />,
+      );
+      const plain = document.createElement("div");
+      plain.innerHTML = renderToStaticMarkup(<CoffeeJSONView doc={doc} />);
+      return words(host) !== words(plain);
+    });
+    expect(changed.length).toBeGreaterThan(docs.length / 2);
   });
 });
 

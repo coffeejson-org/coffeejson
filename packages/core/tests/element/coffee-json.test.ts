@@ -270,6 +270,90 @@ describe("attributes that redraw", () => {
   });
 });
 
+describe("labels", () => {
+  const factLabel = (el: CoffeeJsonElement, id: string) =>
+    el.shadowRoot!.querySelector(`[data-cj-fact="${id}"] .cj-fact-label`)
+      ?.textContent;
+  const download = (el: CoffeeJsonElement) =>
+    el.shadowRoot!.querySelector(".cj-actions button")!.textContent;
+
+  test("a `labels` attribute carrying JSON re-words the captions and the Download control", async () => {
+    const el = await mount({
+      d: encodePayload(recipe),
+      labels: JSON.stringify({
+        facts: { coffee: "Kaffee", waterTemp: "Temperatur" },
+        actions: { download: "Herunterladen" },
+      }),
+    });
+    expect(factLabel(el, "coffee")).toBe("Kaffee");
+    expect(factLabel(el, "waterTemp")).toBe("Temperatur");
+    expect(factLabel(el, "water")).toBe("Water");
+    expect(download(el)).toBe("Herunterladen");
+  });
+
+  test("a change to the `labels` attribute on a live element redraws", async () => {
+    const el = await mount({ d: encodePayload(recipe) });
+    expect(download(el)).toBe("Download");
+    el.setAttribute(
+      "labels",
+      JSON.stringify({ actions: { download: "保存" } }),
+    );
+    expect(download(el)).toBe("保存");
+    el.removeAttribute("labels");
+    expect(download(el)).toBe("Download");
+  });
+
+  test("a `labels` property carrying an object does the same, and wins over the attribute", async () => {
+    const el = await mount({
+      d: encodePayload(recipe),
+      labels: JSON.stringify({ facts: { coffee: "From the attribute" } }),
+    });
+    el.labels = { facts: { coffee: "From the property" } };
+    expect(factLabel(el, "coffee")).toBe("From the property");
+    expect(el.labels).toEqual({ facts: { coffee: "From the property" } });
+    el.labels = null;
+    expect(factLabel(el, "coffee")).toBe("From the attribute");
+  });
+
+  test("a `labels` attribute that is not JSON, or not an object, keeps the defaults and reports nothing", async () => {
+    const heard: string[] = [];
+    document.addEventListener("coffeejson-error", () => heard.push("error"));
+    for (const bad of ["{not json", '"a string"', "[1]", "null", "42"]) {
+      const el = await mount({ d: encodePayload(recipe), labels: bad });
+      expect(title(el)).toBe("Everyday V60");
+      expect(download(el)).toBe("Download");
+      expect(el.hasAttribute("data-error")).toBe(false);
+    }
+    expect(heard).toEqual([]);
+  });
+
+  test("a label value is text, never markup", async () => {
+    const el = await mount({
+      d: encodePayload(recipe),
+      labels: JSON.stringify({
+        facts: { coffee: "<b>Dose</b>" },
+        actions: { download: "<img src=x onerror=alert(1)>" },
+      }),
+    });
+    expect(factLabel(el, "coffee")).toBe("<b>Dose</b>");
+    expect(el.shadowRoot!.querySelector("img, b")).toBeNull();
+    expect(download(el)).toBe("<img src=x onerror=alert(1)>");
+  });
+
+  test("`viewer-label` names the Open link whatever `labels` says", async () => {
+    const el = await mount({
+      d: encodePayload(bag),
+      viewer: "https://coffeejson.org/r/",
+      "viewer-label": "Im Viewer öffnen",
+      labels: JSON.stringify({ actions: { download: "Herunterladen" } }),
+    });
+    expect(el.shadowRoot!.querySelector(".cj-actions a")!.textContent).toBe(
+      "Im Viewer öffnen",
+    );
+    expect(download(el)).toBe("Herunterladen");
+  });
+});
+
 describe("JSON-LD", () => {
   const ld = () =>
     [
