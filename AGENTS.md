@@ -32,6 +32,9 @@ lints, and CI fails on a diff.
                    # registries, scan vectors
     pnpm test:all  # the above plus every workspace suite
 
+`RELEASING.md` says how to cut a package release: versions, changelogs,
+publish order and tags.
+
 ## Generated files — derived, not written
 
 **The authoring schema is derived from the runtime one.** Edit

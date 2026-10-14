@@ -3,7 +3,7 @@
 Changes to `@coffeejson/core`. Changes to the format itself are in the
 [root changelog](https://github.com/coffeejson-org/coffeejson/blob/main/CHANGELOG.md).
 
-## [Unreleased]
+## [1.2.0] — 2026-10-13
 
 ### Added
 

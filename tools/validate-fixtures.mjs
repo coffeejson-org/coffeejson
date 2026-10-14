@@ -597,6 +597,7 @@ const linkedMd = new Map(
     join(root, "README.md"),
     join(root, "CONTRIBUTING.md"),
     join(root, "CHANGELOG.md"),
+    join(root, "RELEASING.md"),
     join(root, "fixtures", "README.md"),
     // The package READMEs are link targets from docs/, so their anchors are part
     // of the graph the docs rely on.
